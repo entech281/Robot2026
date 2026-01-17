@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import frc.entech.subsystems.EntechSubsystem;
+import frc.entech.subsystems.EntechSensor;
 import frc.entech.subsystems.SubsystemInput;
 import frc.entech.subsystems.SubsystemOutput;
 import frc.robot.io.RobotIO;
@@ -36,9 +37,15 @@ public class SubsystemManager {
     return navXSubsystem;
   }
 
+  public List<EntechSensor<? extends SubsystemOutput>> getSensorList() {
+    ArrayList<EntechSensor<? extends SubsystemOutput>> r = new ArrayList<>();
+    r.add(navXSubsystem);
+
+    return r;
+  }
+
   public List<EntechSubsystem<? extends SubsystemInput, ? extends SubsystemOutput>> getSubsystemList() {
     ArrayList<EntechSubsystem<? extends SubsystemInput, ? extends SubsystemOutput>> r = new ArrayList<>();
-    //r.add(navXSubsystem);
     r.add(driveSubsystem);
 
     return r;
