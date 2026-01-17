@@ -1,6 +1,5 @@
 package frc.robot.subsystems.drive;
 
-
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -8,6 +7,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.entech.subsystems.SparkMaxOutput;
 import frc.entech.subsystems.SubsystemOutput;
+import java.util.List;
 
 public class DriveOutput extends SubsystemOutput {
   private SwerveModulePosition[] modulePositions;
@@ -25,6 +25,10 @@ public class DriveOutput extends SubsystemOutput {
   private SparkMaxOutput rearLeftTurn;
   private SparkMaxOutput rearRightTurn;
 
+  private List<double[]> drivePositions;
+  private List<double[]> turningPositions;
+  private double[] timestamps;
+
   @Override
   public void toLog() {
     Logger.recordOutput("DriveOutput/modulePositions", modulePositions);
@@ -32,6 +36,18 @@ public class DriveOutput extends SubsystemOutput {
     Logger.recordOutput("DriveOutput/virtualAbsoluteEncoders", virtualAbsoluteEncoders);
     Logger.recordOutput("DriveOutput/moduleStates", moduleStates);
     Logger.recordOutput("DriveOutput/chassisSpeed", speeds);
+
+    Logger.recordOutput("DriveOutput/drivePositions/frontLeft", drivePositions.get(0));
+    Logger.recordOutput("DriveOutput/drivePositions/frontRight", drivePositions.get(1));
+    Logger.recordOutput("DriveOutput/drivePositions/rearLeft", drivePositions.get(2));
+    Logger.recordOutput("DriveOutput/drivePositions/rearRight", drivePositions.get(3));
+
+    Logger.recordOutput("DriveOutput/turnPosition/frontLeft", turningPositions.get(0));
+    Logger.recordOutput("DriveOutput/turnPosition/frontRight", turningPositions.get(1));
+    Logger.recordOutput("DriveOutput/turnPosition/rearLeft", turningPositions.get(2));
+    Logger.recordOutput("DriveOutput/turnPosition/rearRight", turningPositions.get(3));
+
+    Logger.recordOutput("DriveOutput/timeStamps", timestamps);
 
     frontLeftDrive.log("DriveOutput/frontLeft");
     frontRightDrive.log("DriveOutput/frontRight");
@@ -75,7 +91,6 @@ public class DriveOutput extends SubsystemOutput {
     this.moduleStates = moduleStates;
   }
 
-
   public ChassisSpeeds getSpeeds() {
     return this.speeds;
   }
@@ -84,7 +99,7 @@ public class DriveOutput extends SubsystemOutput {
     this.speeds = speeds;
   }
 
-   public SparkMaxOutput getFrontLeftDrive() {
+  public SparkMaxOutput getFrontLeftDrive() {
     return frontLeftDrive;
   }
 
@@ -146,5 +161,47 @@ public class DriveOutput extends SubsystemOutput {
 
   public void setRearRightTurn(SparkMaxOutput rearRightTurn) {
     this.rearRightTurn = rearRightTurn;
+  }
+
+  /**
+   * @return List<double[]> return the drivePositions
+   */
+  public List<double[]> getDrivePositions() {
+    return drivePositions;
+  }
+
+  /**
+   * @param drivePositions the drivePositions to set
+   */
+  public void setDrivePositions(List<double[]> drivePositions) {
+    this.drivePositions = drivePositions;
+  }
+
+  /**
+   * @return List<double[]> return the turningPositions
+   */
+  public List<double[]> getTurningPositions() {
+    return turningPositions;
+  }
+
+  /**
+   * @param turningPositions the turningPositions to set
+   */
+  public void setTurningPositions(List<double[]> turningPositions) {
+    this.turningPositions = turningPositions;
+  }
+
+  /**
+   * @return double[] return the timestamps
+   */
+  public double[] getTimestamps() {
+    return timestamps;
+  }
+
+  /**
+   * @param timestamps the timestamps to set
+   */
+  public void setTimestamps(double[] timestamps) {
+    this.timestamps = timestamps;
   }
 }

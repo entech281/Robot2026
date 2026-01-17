@@ -4,9 +4,6 @@
 
 package frc.robot.subsystems.drive;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -23,6 +20,11 @@ import frc.entech.subsystems.EntechSubsystem;
 import frc.robot.RobotConstants;
 import frc.robot.RobotConstants.DrivetrainConstants;
 import frc.robot.RobotConstants.SwerveModuleConstants;
+import frc.robot.processors.OdometryThread;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
 
 /**
  * The {@code Drivetrain} class contains fields and methods pertaining to the
@@ -42,6 +44,10 @@ public class DriveSubsystem extends EntechSubsystem<DriveInput, DriveOutput> {
   private SwerveModule rearLeft;
   private SwerveModule rearRight;
 
+  // High-rate queues populated by OdometryThread
+  private final List<Queue<Double>> turningPositionQueues = new ArrayList<>();
+  private final List<Queue<Double>> drivingPositionQueues = new ArrayList<>();
+  private Queue<Double> timestampQueue;
   private double currentTranslationDir = 0.0;
   private double currentTranslationMag = 0.0;
 
@@ -131,35 +137,82 @@ public class DriveSubsystem extends EntechSubsystem<DriveInput, DriveOutput> {
     return lastChassisSpeeds;
   }
 
+  // drain a queue and return the last element or null if empty
+  private Double getLatestFromQueue(Queue<Double> q) {
+    if (q == null) {
+      return null;
+    }
+    Double last = null;
+    Double v;
+    while ((v = q.poll()) != null) {
+      last = v;
+    }
+    return last;
+  }
+
   @Override
   public DriveOutput toOutputs() {
-    DriveOutput output = new DriveOutput();
-    output.setModulePositions(getModulePositions());
-    if (ENABLED) {
-      output.setRawAbsoluteEncoders(new double[] { frontLeft.getTurningAbsoluteEncoder().getPosition(),
-          frontRight.getTurningAbsoluteEncoder().getPosition(),
-          rearLeft.getTurningAbsoluteEncoder().getPosition(),
-          rearRight.getTurningAbsoluteEncoder().getPosition() });
-      output.setVirtualAbsoluteEncoders(
-          new double[] { frontLeft.getTurningAbsoluteEncoder().getVirtualPosition(),
-              frontRight.getTurningAbsoluteEncoder().getVirtualPosition(),
-              rearLeft.getTurningAbsoluteEncoder().getVirtualPosition(),
-              rearRight.getTurningAbsoluteEncoder().getVirtualPosition() });
-      output.setModuleStates(new SwerveModuleState[] { frontLeft.getState(), frontRight.getState(),
-          rearLeft.getState(), rearRight.getState() });
-      output.setSpeeds(lastChassisSpeeds);
+    // Use the odometry lock while reading the high-rate queues to avoid races
+    OdometryThread.odometryLock.lock();
+    try {
+      DriveOutput output = new DriveOutput();
 
-      output.setFrontLeftDrive(frontLeft.getDriveOuput());
-      output.setFrontRightDrive(frontRight.getDriveOuput());
-      output.setRearLeftDrive(rearLeft.getDriveOuput());
-      output.setRearRightDrive(rearRight.getDriveOuput());
-      output.setFrontRightTurn(frontRight.getTurnOutput());
-      output.setRearLeftTurn(rearLeft.getTurnOutput());
-      output.setRearRightTurn(rearRight.getTurnOutput());
-      output.setFrontLeftTurn(frontLeft.getTurnOutput());
+      if (ENABLED) {
+        double[] timestamps = timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
+        List<double[]> moduleDrivePositions = new ArrayList<double[]>();
+        List<double[]> moduleTuringPositions = new ArrayList<double[]>();
+        for (int i = 0; i < 4; i++) {
+          double[] drivePositions = drivingPositionQueues.get(i).stream().mapToDouble((Double value) -> value)
+              .toArray();
+          double[] turningPositions = turningPositionQueues.get(i).stream().mapToDouble((Double value) -> value)
+              .toArray();
 
+          drivingPositionQueues.get(i).clear();
+          turningPositionQueues.get(i).clear();
+
+          moduleDrivePositions.add(drivePositions);
+          moduleTuringPositions.add(turningPositions);
+        }
+
+        timestampQueue.clear();
+
+        output.setTimestamps(timestamps);
+        output.setDrivePositions(moduleDrivePositions);
+        output.setTurningPositions(moduleTuringPositions);
+
+        output.setModulePositions(getModulePositions());
+        output.setModuleStates(new SwerveModuleState[] { frontLeft.getState(), frontRight.getState(),
+            rearLeft.getState(), rearRight.getState() });
+        output.setRawAbsoluteEncoders(new double[] { frontLeft.getTurningAbsoluteEncoder().getPosition(),
+            frontRight.getTurningAbsoluteEncoder().getPosition(),
+            rearLeft.getTurningAbsoluteEncoder().getPosition(),
+            rearRight.getTurningAbsoluteEncoder().getPosition() });
+        output.setVirtualAbsoluteEncoders(
+            new double[] { frontLeft.getTurningAbsoluteEncoder().getVirtualPosition(),
+                frontRight.getTurningAbsoluteEncoder().getVirtualPosition(),
+                rearLeft.getTurningAbsoluteEncoder().getVirtualPosition(),
+                rearRight.getTurningAbsoluteEncoder().getVirtualPosition() });
+        output.setSpeeds(lastChassisSpeeds);
+
+        // keep SparkMax outputs as before
+        output.setFrontLeftDrive(frontLeft.getDriveOuput());
+        output.setFrontRightDrive(frontRight.getDriveOuput());
+        output.setRearLeftDrive(rearLeft.getDriveOuput());
+        output.setRearRightDrive(rearRight.getDriveOuput());
+        output.setFrontRightTurn(frontRight.getTurnOutput());
+        output.setRearLeftTurn(rearLeft.getTurnOutput());
+        output.setRearRightTurn(rearRight.getTurnOutput());
+        output.setFrontLeftTurn(frontLeft.getTurnOutput());
+      } else {
+        // disabled fallback
+        output.setModulePositions(getModulePositions());
+        output.setSpeeds(lastChassisSpeeds);
+      }
+
+      return output;
+    } finally {
+      OdometryThread.odometryLock.unlock();
     }
-    return output;
   }
 
   private SwerveModulePosition[] getModulePositions() {
@@ -320,6 +373,27 @@ public class DriveSubsystem extends EntechSubsystem<DriveInput, DriveOutput> {
       rearRight.calibrateVirtualPosition(RobotConstants.SwerveModuleConstants.REAR_RIGHT_VIRTUAL_OFFSET_RADIANS);
 
       resetEncoders();
+
+      // register high-rate signals with OdometryThread and start it
+      OdometryThread odom = OdometryThread.getInstance();
+      timestampQueue = odom.makeTimestampQueue(); // ensure notifier will start
+      // frontLeft
+      drivingPositionQueues.add(odom.registerSignal(frontLeft.getDrivingEncoder()::getPosition));
+      turningPositionQueues.add(odom.registerSignal(frontLeft.getTurningEncoder()::getPosition));
+
+      // frontRight
+      drivingPositionQueues.add(odom.registerSignal(frontRight.getDrivingEncoder()::getPosition));
+      turningPositionQueues.add(odom.registerSignal(frontRight.getTurningEncoder()::getPosition));
+
+      // rearLeft
+      drivingPositionQueues.add(odom.registerSignal(rearLeft.getDrivingEncoder()::getPosition));
+      turningPositionQueues.add(odom.registerSignal(rearLeft.getTurningEncoder()::getPosition));
+
+      // rearRight
+      drivingPositionQueues.add(odom.registerSignal(rearRight.getDrivingEncoder()::getPosition));
+      turningPositionQueues.add(odom.registerSignal(rearRight.getTurningEncoder()::getPosition));
+
+      odom.start();
     }
   }
 

@@ -332,7 +332,7 @@ public final class RobotConstants {
   }
 
   public static interface ODOMETRY {
-    public static final int ODOMETRY_FREQUENCY = 1000;
+    public static final int ODOMETRY_FREQUENCY = 500;
     public static final double FIELD_LENGTH_INCHES = 54 * 12 + 3.25;
     public static final double FIELD_WIDTH_INCHES = 26 * 12 + 11.25;
 

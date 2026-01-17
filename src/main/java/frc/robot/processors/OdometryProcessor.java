@@ -3,10 +3,13 @@ package frc.robot.processors;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
 import frc.robot.io.RobotIO;
+
+import java.util.List;
 
 public class OdometryProcessor {
   private SwerveDrivePoseEstimator estimator;
@@ -29,8 +32,21 @@ public class OdometryProcessor {
   }
 
   public void update() {
-    estimator.update(Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()),
-        RobotIO.getInstance().getDriveOutput().getModulePositions());
+    double[] timestamps = RobotIO.getInstance().getDriveOutput().getTimestamps();
+
+    for (int i = 0; i < timestamps.length; i++) {
+      List<double[]> drivePositions = RobotIO.getInstance().getDriveOutput().getDrivePositions();
+      List<double[]> turningPositions = RobotIO.getInstance().getDriveOutput().getTurningPositions();
+
+      SwerveModulePosition[] positionsAtTime = { null, null, null, null };
+      for (int j = 0; j < 4; j++) {
+        positionsAtTime[j] = (new SwerveModulePosition(drivePositions.get(j)[i],
+            new Rotation2d(turningPositions.get(j)[i])));
+      }
+
+      estimator.updateWithTime(timestamps[i], Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()),
+          positionsAtTime);
+    }
 
     RobotIO.getInstance().updateOdometryPose(getEstimatedPose());
     field.setRobotPose(getEstimatedPose());
@@ -61,7 +77,7 @@ public class OdometryProcessor {
   /**
    * Resets the odometry to the specified pose.
    *
-   * @param pose The pose to which to set the odometry.
+   * @param pose      The pose to which to set the odometry.
    * @param gyroAngle the latest gyro angle.
    */
   public void resetOdometry(Pose2d pose, Rotation2d gyroAngle) {
