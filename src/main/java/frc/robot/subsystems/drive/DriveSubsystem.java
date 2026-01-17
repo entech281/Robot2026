@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems.drive;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -272,12 +275,28 @@ public class DriveSubsystem extends EntechSubsystem<DriveInput, DriveOutput> {
               SwerveModuleConstants.DRIVING_FF, ClosedLoopSlot.kSlot0)
           .outputRange(SwerveModuleConstants.DRIVING_MIN_OUTPUT_NORMALIZED,
               SwerveModuleConstants.DRIVING_MAX_OUTPUT_NORMALIZED, ClosedLoopSlot.kSlot0);
+      drivingConfig.signals
+          .primaryEncoderPositionAlwaysOn(true)
+          .primaryEncoderPositionPeriodMs((int) (1000.0 / RobotConstants.ODOMETRY.ODOMETRY_FREQUENCY))
+          .primaryEncoderVelocityAlwaysOn(true)
+          .primaryEncoderVelocityPeriodMs(20)
+          .appliedOutputPeriodMs(20)
+          .busVoltagePeriodMs(20)
+          .outputCurrentPeriodMs(20);
       turningConfig.closedLoop
           .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
           .pidf(SwerveModuleConstants.TURNING_P, SwerveModuleConstants.TURNING_I, SwerveModuleConstants.TURNING_D,
               SwerveModuleConstants.TURNING_FF, ClosedLoopSlot.kSlot0)
           .outputRange(SwerveModuleConstants.TURNING_MIN_OUTPUT_NORMALIZED,
               SwerveModuleConstants.TURNING_MAX_OUTPUT_NORMALIZED, ClosedLoopSlot.kSlot0);
+      turningConfig.signals
+          .primaryEncoderPositionAlwaysOn(true)
+          .primaryEncoderPositionPeriodMs((int) (1000.0 / RobotConstants.ODOMETRY.ODOMETRY_FREQUENCY))
+          .primaryEncoderVelocityAlwaysOn(true)
+          .primaryEncoderVelocityPeriodMs(20)
+          .appliedOutputPeriodMs(20)
+          .busVoltagePeriodMs(20)
+          .outputCurrentPeriodMs(20);
 
       frontLeft = new SwerveModule(RobotConstants.PORTS.CAN.FRONT_LEFT_DRIVING,
           RobotConstants.PORTS.CAN.FRONT_LEFT_TURNING,

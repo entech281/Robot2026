@@ -128,10 +128,10 @@ public final class RobotConstants {
     public static final int DRIVING_MOTOR_CURRENT_LIMIT_AMPS = 40; // 50; // amps
     public static final int TURNING_MOTOR_CURRENT_LIMIT_AMPS = 20; // amps
 
-    public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 0.25552591580217987;
-    public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = -0.4542734933134782;
-    public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = -2.1838283853944285;
-    public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = -0.8463679267332642;
+    public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 1.482033;
+    public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = -2.289053;
+    public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = 0.727504;
+    public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = 1.66872;
   }
 
   public static interface LiveTuning {
@@ -332,6 +332,7 @@ public final class RobotConstants {
   }
 
   public static interface ODOMETRY {
+    public static final int ODOMETRY_FREQUENCY = 1000;
     public static final double FIELD_LENGTH_INCHES = 54 * 12 + 3.25;
     public static final double FIELD_WIDTH_INCHES = 26 * 12 + 11.25;
 
