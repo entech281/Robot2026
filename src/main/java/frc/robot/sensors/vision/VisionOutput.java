@@ -29,6 +29,6 @@ public class VisionOutput extends SubsystemOutput {
         this.yaw = target.getYaw();
         this.pitch = target.getPitch();
         this.area = target.getArea();
-    
+        
     }
 }

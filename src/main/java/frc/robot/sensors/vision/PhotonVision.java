@@ -31,7 +31,7 @@ public class PhotonVision extends EntechSensor<VisionOutput> {
     @Override
     public VisionOutput toOutputs() {
         VisionOutput output = new VisionOutput();
-        
+        output = getCameraOutput();
         return output;
     }
     
@@ -57,12 +57,30 @@ public class PhotonVision extends EntechSensor<VisionOutput> {
 
     @Override
     public void simulationPeriodic() {
-
+        periodic();
     }
     
     @Override
     public void periodic() {
-    
+        boolean targetVisible = false;
+        double targetYaw = 0.0;
+        var results = camera.getAllUnreadResults();
+        if (!results.isEmpty()) {
+            // Camera processed a new frame since last
+            // Get the last one in the list.
+            var result = results.get(results.size() - 1);
+            if (result.hasTargets()) {
+                // At least one AprilTag was seen by the camera
+                for (var target : result.getTargets()) {
+                    if (target.getFiducialId() == 7) {
+                        // Found Tag 7, record its information
+                        targetYaw = target.getYaw();
+                        targetVisible = true;
+                    }
+                }
+        
+            }
+        }
     }
 
    
