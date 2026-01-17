@@ -38,7 +38,7 @@ public class SubsystemManager {
 
   public List<EntechSubsystem<? extends SubsystemInput, ? extends SubsystemOutput>> getSubsystemList() {
     ArrayList<EntechSubsystem<? extends SubsystemInput, ? extends SubsystemOutput>> r = new ArrayList<>();
-    r.add(navXSubsystem);
+    //r.add(navXSubsystem);
     r.add(driveSubsystem);
 
     return r;
