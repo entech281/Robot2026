@@ -22,4 +22,13 @@ public class VisionOutput extends SubsystemOutput {
         return String.format("Vision[hasTargets=%b, height=%2f, width=%2f, yaw=%.2f, pitch=%.2f, area=%.2f, id=%d]",
             hasTargets, height, width, yaw, pitch, area, targetId);
     }
+
+    public void setTarget(org.photonvision.targeting.PhotonTrackedTarget target) {
+        this.hasTargets = true;
+        this.targetId = target.getFiducialId();
+        this.yaw = target.getYaw();
+        this.pitch = target.getPitch();
+        this.area = target.getArea();
+    
+    }
 }
