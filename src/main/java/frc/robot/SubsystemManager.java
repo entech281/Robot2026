@@ -37,13 +37,6 @@ public class SubsystemManager {
     return navXSubsystem;
   }
 
-  public List<EntechSensor<? extends SubsystemOutput>> getSensorList() {
-    ArrayList<EntechSensor<? extends SubsystemOutput>> r = new ArrayList<>();
-    r.add(navXSubsystem);
-
-    return r;
-  }
-
   public List<EntechSubsystem<? extends SubsystemInput, ? extends SubsystemOutput>> getSubsystemList() {
     ArrayList<EntechSubsystem<? extends SubsystemInput, ? extends SubsystemOutput>> r = new ArrayList<>();
     r.add(driveSubsystem);
