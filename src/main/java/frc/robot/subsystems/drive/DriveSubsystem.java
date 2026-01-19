@@ -137,19 +137,6 @@ public class DriveSubsystem extends EntechSubsystem<DriveInput, DriveOutput> {
     return lastChassisSpeeds;
   }
 
-  // drain a queue and return the last element or null if empty
-  private Double getLatestFromQueue(Queue<Double> q) {
-    if (q == null) {
-      return null;
-    }
-    Double last = null;
-    Double v;
-    while ((v = q.poll()) != null) {
-      last = v;
-    }
-    return last;
-  }
-
   @Override
   public DriveOutput toOutputs() {
     // Use the odometry lock while reading the high-rate queues to avoid races
@@ -324,10 +311,11 @@ public class DriveSubsystem extends EntechSubsystem<DriveInput, DriveOutput> {
 
       drivingConfig.closedLoop
           .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-          .pidf(SwerveModuleConstants.DRIVING_P, SwerveModuleConstants.DRIVING_I, SwerveModuleConstants.DRIVING_D,
-              SwerveModuleConstants.DRIVING_FF, ClosedLoopSlot.kSlot0)
+          .pid(SwerveModuleConstants.DRIVING_P, SwerveModuleConstants.DRIVING_I, SwerveModuleConstants.DRIVING_D,
+              ClosedLoopSlot.kSlot0)
           .outputRange(SwerveModuleConstants.DRIVING_MIN_OUTPUT_NORMALIZED,
               SwerveModuleConstants.DRIVING_MAX_OUTPUT_NORMALIZED, ClosedLoopSlot.kSlot0);
+      drivingConfig.closedLoop.feedForward.kV(SwerveModuleConstants.DRIVING_FF, ClosedLoopSlot.kSlot0);
       drivingConfig.signals
           .primaryEncoderPositionAlwaysOn(true)
           .primaryEncoderPositionPeriodMs((int) (1000.0 / RobotConstants.ODOMETRY.ODOMETRY_FREQUENCY))
@@ -338,10 +326,11 @@ public class DriveSubsystem extends EntechSubsystem<DriveInput, DriveOutput> {
           .outputCurrentPeriodMs(20);
       turningConfig.closedLoop
           .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-          .pidf(SwerveModuleConstants.TURNING_P, SwerveModuleConstants.TURNING_I, SwerveModuleConstants.TURNING_D,
-              SwerveModuleConstants.TURNING_FF, ClosedLoopSlot.kSlot0)
+          .pid(SwerveModuleConstants.TURNING_P, SwerveModuleConstants.TURNING_I, SwerveModuleConstants.TURNING_D,
+              ClosedLoopSlot.kSlot0)
           .outputRange(SwerveModuleConstants.TURNING_MIN_OUTPUT_NORMALIZED,
               SwerveModuleConstants.TURNING_MAX_OUTPUT_NORMALIZED, ClosedLoopSlot.kSlot0);
+      turningConfig.closedLoop.feedForward.kV(SwerveModuleConstants.TURNING_FF, ClosedLoopSlot.kSlot0);
       turningConfig.signals
           .primaryEncoderPositionAlwaysOn(true)
           .primaryEncoderPositionPeriodMs((int) (1000.0 / RobotConstants.ODOMETRY.ODOMETRY_FREQUENCY))
