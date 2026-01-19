@@ -1,4 +1,4 @@
-package frc.robot.subsystems.vision;
+package frc.robot.sensors.vision;
 
 import frc.entech.subsystems.SubsystemOutput;
 

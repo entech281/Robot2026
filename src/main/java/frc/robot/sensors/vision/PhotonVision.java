@@ -1,9 +1,9 @@
-package frc.robot.subsystems.vision;
+package frc.robot.sensors.vision;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.entech.subsystems.EntechSensor;
+import frc.entech.sensors.EntechSensor;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
