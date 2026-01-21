@@ -13,6 +13,7 @@ import frc.entech.subsystems.SubsystemOutput;
 import frc.robot.io.RobotIO;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.navx.NavXSubsystem;
+import frc.robot.subsystems.turret.TurretSubsystem;
 
 /**
  * Manages the subsystems and the interactions between them.
@@ -20,10 +21,12 @@ import frc.robot.subsystems.navx.NavXSubsystem;
 public class SubsystemManager {
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final NavXSubsystem navXSubsystem = new NavXSubsystem();
+  private final TurretSubsystem turretSubsystem = new TurretSubsystem();
 
   public SubsystemManager() {
     navXSubsystem.initialize();
     driveSubsystem.initialize();
+  turretSubsystem.initialize();
 
     periodic();
   }
@@ -40,6 +43,7 @@ public class SubsystemManager {
     ArrayList<EntechSubsystem<? extends SubsystemInput, ? extends SubsystemOutput>> r = new ArrayList<>();
     r.add(navXSubsystem);
     r.add(driveSubsystem);
+  r.add(turretSubsystem);
 
     return r;
   }
@@ -50,5 +54,10 @@ public class SubsystemManager {
     outputs.updateDrive(driveSubsystem.getOutputs());
 
     outputs.updateNavx(navXSubsystem.getOutputs());
+    outputs.updateTurret(turretSubsystem.getOutputs());
+  }
+
+  public TurretSubsystem getTurretSubsystem() {
+    return turretSubsystem;
   }
 }

@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.RobotConstants;
 import frc.robot.subsystems.drive.DriveInput;
 import frc.robot.subsystems.drive.DriveOutput;
+import frc.robot.subsystems.turret.TurretOutput;
 import frc.robot.subsystems.navx.NavXOutput;
 
 public class RobotIO implements DriveInputSupplier {
@@ -45,6 +46,10 @@ public class RobotIO implements DriveInputSupplier {
     return latestNavXOutput;
   }
 
+  public TurretOutput getTurretOutput() {
+    return latestTurretOutput;
+  }
+
   public Pose2d getOdometryPose() {
     return latestOdometryPose;
   }
@@ -59,6 +64,11 @@ public class RobotIO implements DriveInputSupplier {
     dro.log();
   }
 
+  public void updateTurret(TurretOutput to) {
+    latestTurretOutput = to;
+    to.log();
+  }
+
   public void updateOdometryPose(Pose2d pose) {
     latestOdometryPose = pose;
     Logger.recordOutput("OdometryPose", pose);
@@ -67,4 +77,5 @@ public class RobotIO implements DriveInputSupplier {
   private NavXOutput latestNavXOutput;
   private DriveOutput latestDriveOutput;
   private Pose2d latestOdometryPose = RobotConstants.ODOMETRY.INITIAL_POSE;
+  private TurretOutput latestTurretOutput;
 }

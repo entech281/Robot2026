@@ -160,6 +160,7 @@ public final class RobotConstants {
       public static final int REAR_RIGHT_TURNING = 41;
 
       public static final int POWER_DISTRIBUTION_HUB = 1;
+      public static final int TURRET_MOTOR = 60;
     }
 
     public static interface CONTROLLER {
@@ -181,6 +182,7 @@ public final class RobotConstants {
         public static final int GYRO_RESET = 7;
         public static final int DRIVE_X = 3;
         public static final int RESET_ODOMETRY = 8;
+        public static final int B = 2;
       }
     }
 
@@ -260,6 +262,14 @@ public final class RobotConstants {
 
   public static interface TEST_CONSTANTS {
     public static final double STANDARD_TEST_LENGTH = 1;
+  }
+
+  public static interface TURRET {
+    //TODO: Make these real
+    public static final double MAX_TURRET_ANGLE_DEGREES = 180.0;
+    public static final double MIN_TURRET_ANGLE_DEGREES = -180.0;
+    public static final double TURRET_ROTATION_OFFSET_DEGREES = 0.0;
+    public static final double INITIAL_POSITION_DEGREES = 0.0;
   }
 
   private RobotConstants() {
