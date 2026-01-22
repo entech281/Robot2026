@@ -8,17 +8,17 @@ import frc.robot.subsystems.turret.TurretSubsystem;
 public class ManualTurretCommand extends EntechCommand{
     private final TurretInput turretInput = new TurretInput();
     private final TurretSubsystem turretSS;
-    private double speed;
+    private double position;
 
-    public ManualTurretCommand(TurretSubsystem turretSubsystem, double speed) {
+    public ManualTurretCommand(TurretSubsystem turretSubsystem, double position) {
         super(turretSubsystem);
         this.turretSS = turretSubsystem;
-        this.speed = speed;
+        this.position = position;
     }
 
     @Override
     public void initialize() {
-        turretInput.setRequestedSpeed(speed);
+        turretInput.setRequestedPosition(position);
     }
 
     @Override
@@ -33,6 +33,6 @@ public class ManualTurretCommand extends EntechCommand{
 
   @Override
   public boolean isFinished() {
-    return RobotIO.getInstance().getTurretOutput().isAtRequestedSpeed();
+    return RobotIO.getInstance().getTurretOutput().isAtRequestedPosition();
   }
 }

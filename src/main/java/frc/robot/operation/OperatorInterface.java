@@ -9,7 +9,7 @@ import frc.robot.RobotConstants;
 import frc.robot.SubsystemManager;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.GyroReset;
-import frc.robot.commands.ManualTurretCommand;
+// manual turret command removed; using direct setTurretPosition bindings
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.TwistCommand;
 import frc.robot.commands.XDriveCommand;
@@ -102,12 +102,15 @@ public class OperatorInterface
     xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.DRIVE_X)
         .whileTrue(new XDriveCommand(subsystemManager.getDriveSubsystem()));
 
-    xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.RESET_ODOMETRY)
-        .onTrue(new ResetOdometryCommand(odometry));
+  xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.RESET_ODOMETRY)
+    .onTrue(new ResetOdometryCommand(odometry));
 
-    xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.B)
-        .onTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(), 0.1))
-        .onFalse(new ManualTurretCommand(subsystemManager.getTurretSubsystem(), 0.0));
+  // Manual position presets: A -> preset A, B -> preset B
+  xboxController.a().onTrue(Commands.runOnce(() ->
+    subsystemManager.getTurretSubsystem().setTurretPosition(RobotConstants.TURRET.TURRET_POSITION_PRESET_A_DEGREES)));
+
+  xboxController.b().onTrue(Commands.runOnce(() ->
+    subsystemManager.getTurretSubsystem().setTurretPosition(RobotConstants.TURRET.TURRET_POSITION_PRESET_B_DEGREES)));
   }
 
   public void scoreOperatorBindings() {

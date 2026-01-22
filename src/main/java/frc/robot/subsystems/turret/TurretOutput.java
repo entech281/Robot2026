@@ -84,12 +84,5 @@ public class TurretOutput extends SubsystemOutput {
           this.turretMotor = turretMotor;
         }
 
-        public void setAtRequestedSpeed(boolean isAtRequestedSpeed) {
-            this.isAtRequestedSpeed = isAtRequestedSpeed;
-          }
-      
-    
-      public boolean isAtRequestedSpeed() {
-        return this.isAtRequestedSpeed;
-  }
+
 }

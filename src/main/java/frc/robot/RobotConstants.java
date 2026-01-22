@@ -270,6 +270,18 @@ public final class RobotConstants {
     public static final double MIN_TURRET_ANGLE_DEGREES = -180.0;
     public static final double TURRET_ROTATION_OFFSET_DEGREES = 0.0;
     public static final double INITIAL_POSITION_DEGREES = 0.0;
+    // Turret closed-loop settings
+    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 1.0; // encoder units -> degrees (set appropriately)
+    public static final double TURRET_POSITION_P = 0.02;
+    public static final double TURRET_POSITION_I = 0.0;
+    public static final double TURRET_POSITION_D = 0.0;
+    public static final double TURRET_POSITION_FF = 0.0;
+    public static final double TURRET_POSITION_TOLERANCE_DEGREES = 1.0; // considered at setpoint within this
+    // preset manual positions (buttons will command these)
+    public static final double TURRET_POSITION_PRESET_A_DEGREES = 45.0;
+    public static final double TURRET_POSITION_PRESET_B_DEGREES = -45.0;
+    // small adjustment step used by any incremental commands
+    public static final double TURRET_ADJUST_STEP_DEGREES = 5.0;
   }
 
   private RobotConstants() {
