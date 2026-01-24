@@ -151,7 +151,7 @@ public class CommandFactory {
           characterizer.getInitialMeasurements();
         }),
         getSubsystemTestMessageCommand("Generating deltas."),
-        new WaitCommand(30),
+        new WaitCommand(120),
         getSubsystemTestMessageCommand("Calculating Results."),
         getSubsystemTestMessageCommand(() -> characterizer.updateAndCalculate()),
         new InstantCommand(() -> {

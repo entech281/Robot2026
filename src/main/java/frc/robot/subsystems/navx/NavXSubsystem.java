@@ -2,8 +2,7 @@ package frc.robot.subsystems.navx;
 
 import org.ejml.simple.UnsupportedOperation;
 
-import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
+import frc.entech.NavX.AHRS;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -55,7 +54,7 @@ public class NavXSubsystem extends EntechSubsystem<NavXInput, NavXOutput> {
   @Override
   public void initialize() {
     if (ENABLED) {
-      gyro = new AHRS(NavXComType.kMXP_SPI);
+      gyro = new AHRS();
 
       gyro.reset();
 
@@ -71,9 +70,9 @@ public class NavXSubsystem extends EntechSubsystem<NavXInput, NavXOutput> {
     if (ENABLED) {
       double radiansPerSecond = Units.degreesToRadians(gyro.getRate());
       return ChassisSpeeds.fromRobotRelativeSpeeds(gyro.getVelocityX(), gyro.getVelocityY(),
-          radiansPerSecond, gyro.getRotation2d());
+          radiansPerSecond, new Rotation2d(gyro.getYaw()));
     } else {
-        return ChassisSpeeds.fromRobotRelativeSpeeds(0.0, 0.0, 0.0, new Rotation2d(0.0));
+      return ChassisSpeeds.fromRobotRelativeSpeeds(0.0, 0.0, 0.0, new Rotation2d(0.0));
     }
   }
 
@@ -88,9 +87,9 @@ public class NavXSubsystem extends EntechSubsystem<NavXInput, NavXOutput> {
   }
 
   public void zeroYaw() {
-      if (ENABLED) {
-          gyro.zeroYaw();
-      }
+    if (ENABLED) {
+      gyro.zeroYaw();
+    }
   }
 
   @Override
@@ -99,8 +98,8 @@ public class NavXSubsystem extends EntechSubsystem<NavXInput, NavXOutput> {
   }
 
   public void setAngleAdjustment(double angleAdjustment) {
-      if (ENABLED) {
-          gyro.setAngleAdjustment(angleAdjustment);
-      }
+    if (ENABLED) {
+      gyro.setAngleAdjustment(angleAdjustment);
+    }
   }
 }
