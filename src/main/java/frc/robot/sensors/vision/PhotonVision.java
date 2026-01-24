@@ -1,60 +1,114 @@
 package frc.robot.sensors.vision;
 
-import edu.wpi.first.wpilibj.Timer;
+import java.util.Optional;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.sensors.EntechSensor;
-import org.photonvision.PhotonCamera;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
+
 /**
- * Basic PhotonVision subsystem - follows PhotonVision example code
+ * PhotonVision subsystem for AprilTag-based pose estimation
  */
 public class PhotonVision extends EntechSensor<VisionOutput> {
     
     public static final String CAMERA_NAME = "OV5647";
- 
     
-    private PhotonCamera camera;
-
-     @Override
+    private SoloCameraContainer cameraContainer;
+    private AprilTagFieldLayout fieldLayout;
+    
+    @Override
     public void initialize() {
-        camera = new PhotonCamera(CAMERA_NAME);
-
+        // Load the AprilTag field layout
+        try {
+            // loadField doesn't throw IOException in newer versions, just load directly
+            fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
+            System.out.println("AprilTag field layout loaded successfully");
+        } catch (Exception e) {
+            System.err.println("CRITICAL: Failed to load AprilTag field layout: " + e.getMessage());
+            e.printStackTrace();
+            // Create a minimal fallback layout if loading fails
+            fieldLayout = new AprilTagFieldLayout(new java.util.ArrayList<>(), 16.54, 8.21);
+        }
+        
+        // Define where your camera is mounted on the robot/rig
+        // *** YOU MUST MEASURE AND UPDATE THESE VALUES ***
+        // Example values shown below - camera 0.3m forward, centered, 0.4m high, tilted down 25 degrees
+        Transform3d robotToCamera = new Transform3d(
+            new Translation3d(
+                0.3,   // X: meters forward from robot center (positive = forward)
+                0.0,   // Y: meters left from robot center (positive = left)
+                0.4    // Z: meters up from ground (camera height)
+            ),
+            new Rotation3d(
+                0,                      // Roll (rotation around X axis)
+                Math.toRadians(-25),    // Pitch (rotation around Y axis, negative = tilted down)
+                0                       // Yaw (rotation around Z axis)
+            )
+        );
+        
+        // Create the camera container with pose estimation
+        cameraContainer = new SoloCameraContainer(CAMERA_NAME, robotToCamera, fieldLayout);
+        System.out.println("PhotonVision camera container initialized: " + CAMERA_NAME);
     }
-
-     @Override
+    
+    @Override
     public boolean isEnabled() {
-        return true;
+        return cameraContainer != null && cameraContainer.isConnected();
     }
-
+    
     @Override
     public VisionOutput toOutputs() {
         VisionOutput output = new VisionOutput();
-        output = getCameraOutput();
-        return output;
-    }
-    
-
-
-    private VisionOutput getCameraOutput() {
-        var result = camera.getLatestResult();
-        VisionOutput output = new VisionOutput();
-
+        
+        if (cameraContainer == null) {
+            System.err.println("WARNING: Camera container is null");
+            return output;
+        }
+        
+        if (!cameraContainer.isConnected()) {
+            output.cameraConnected = false;
+            return output;
+        }
+        
+        output.cameraConnected = true;
+        
+        // Get filtered camera results
+        var result = cameraContainer.getFilteredResult();
+        
+        // Get basic target info if targets are visible
         if (result.hasTargets()) {
             var bestTarget = result.getBestTarget();
             output.setTarget(bestTarget);
         }
-
+        
+        // Get pose estimate from AprilTags
+        Optional<Pose2d> estimatedPose = cameraContainer.getEstimatedPose();
+        if (estimatedPose.isPresent()) {
+            output.setPoseEstimate(
+                estimatedPose.get(),
+                cameraContainer.getTargetCount(),
+                cameraContainer.getLatency()
+            );
+        }
+        
         return output;
     }
-
-
+    
     @Override
     public Command getTestCommand() {
-        return null;
+        return run(() -> {
+            VisionOutput output = toOutputs();
+            System.out.println("=== VISION TEST ===");
+            System.out.println(output.toString());
+            System.out.println("==================");
+        }).withName("VisionTest");
     }
-
+    
     @Override
     public void simulationPeriodic() {
         periodic();
@@ -62,26 +116,7 @@ public class PhotonVision extends EntechSensor<VisionOutput> {
     
     @Override
     public void periodic() {
-        boolean targetVisible = false;
-        double targetYaw = 0.0;
-        var results = camera.getAllUnreadResults();
-        if (!results.isEmpty()) {
-            // Camera processed a new frame since last
-            // Get the last one in the list.
-            var result = results.get(results.size() - 1);
-            if (result.hasTargets()) {
-                // At least one AprilTag was seen by the camera
-                for (var target : result.getTargets()) {
-                    if (target.getFiducialId() == 7) {
-                        // Found Tag 7, record its information
-                        targetYaw = target.getYaw();
-                        targetVisible = true;
-                    }
-                }
-        
-            }
-        }
+        // Output is calculated in toOutputs()
+        // Add any dashboard updates or logging here if needed
     }
-
-   
 }

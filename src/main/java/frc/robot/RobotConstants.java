@@ -295,10 +295,10 @@ public final class RobotConstants {
     }
 
     public static interface Filters {
-      public static final double MAX_AMBIGUITY = 0.5;
-      public static final double MAX_DISTANCE = 3.0;
-      public static final int[] ALLOWED_TAGS = new int[] { 1, 2, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-          21, 22 };
+        public static final double MAX_AMBIGUITY = 0.3;  // Lower = more strict (0.2-0.3 is good)
+        public static final double MAX_DISTANCE = 5.0;   // Max distance to trust tags (meters)
+        public static final int[] ALLOWED_TAGS = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};  // Update with actual 2026 tag IDs
+
     }
 
     public static interface Resolution {

@@ -8,7 +8,6 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.Timer;
 import frc.entech.util.EntechGeometryUtils;
 
 public class MultiCameraContainer implements CameraContainerI {
@@ -21,51 +20,44 @@ public class MultiCameraContainer implements CameraContainerI {
   @Override
   public Optional<Pose2d> getEstimatedPose() {
     List<Pose2d> estimatedPoses = new ArrayList<>();
-
+    
     for (CameraContainerI cameraContainer : cameraContainers) {
       Optional<Pose2d> estPose = cameraContainer.getEstimatedPose();
       if (estPose.isPresent()) {
         estimatedPoses.add(estPose.get());
       }
     }
-
+    
     if (estimatedPoses.isEmpty())
       return Optional.empty();
-
+    
     if (estimatedPoses.size() == 1)
       return Optional.of(estimatedPoses.get(0));
-
+    
+    // Average multiple camera poses
     Pose2d averagePose = estimatedPoses.get(0);
-
     for (int i = 1; i < estimatedPoses.size(); i++) {
       averagePose = EntechGeometryUtils.averagePose2d(averagePose, estimatedPoses.get(i));
     }
-
+    
     return Optional.of(averagePose);
   }
 
   @Override
   public PhotonPipelineResult getFilteredResult() {
-    List<PhotonTrackedTarget> targets = new ArrayList<>();
-    double timeStamp = 0.0;
-    double latency = 0.0;
-
+    List<PhotonTrackedTarget> allTargets = new ArrayList<>();
+    
     for (CameraContainerI cameraContainer : cameraContainers) {
       PhotonPipelineResult result = cameraContainer.getFilteredResult();
-      targets.addAll(cameraContainer.getFilteredResult().getTargets());
-      timeStamp += result.getTimestampSeconds();
-    //   latency += result.getLatencyMillis();
-        latency += cameraContainer.getLatency();    
+      allTargets.addAll(result.getTargets());
     }
-
-    latency /= cameraContainers.length;
-    timeStamp /= cameraContainers.length;
-
-    PhotonPipelineResult filteredResult = new PhotonPipelineResult();
-    // filteredResult.setTimestampSeconds(timeStamp);
-    // filteredResult.setLatencyMillis(latency);
-    // filteredResult.setTargets(targets);
-    return filteredResult;
+    
+    // Return a simple result with all combined targets
+    // Since we can't easily merge metadata, just return targets
+    PhotonPipelineResult combined = new PhotonPipelineResult();
+    // Note: This creates an empty result - targets will need to be accessed via individual cameras
+    // This is a limitation of the multi-camera approach with the new API
+    return combined;
   }
 
   @Override
@@ -88,11 +80,12 @@ public class MultiCameraContainer implements CameraContainerI {
 
   @Override
   public boolean hasTargets() {
-    boolean hasTargets = false;
     for (CameraContainerI cameraContainer : cameraContainers) {
-      hasTargets = hasTargets || cameraContainer.hasTargets();
+      if (cameraContainer.hasTargets()) {
+        return true;
+      }
     }
-    return hasTargets;
+    return false;
   }
 
   @Override
@@ -106,13 +99,12 @@ public class MultiCameraContainer implements CameraContainerI {
 
   @Override
   public boolean isDriverMode() {
-    boolean isDriverMode = false;
-
     for (CameraContainerI cameraContainer : cameraContainers) {
-      isDriverMode = isDriverMode || cameraContainer.isDriverMode();
+      if (cameraContainer.isDriverMode()) {
+        return true;
+      }
     }
-
-    return isDriverMode;
+    return false;
   }
 
   @Override
@@ -124,12 +116,11 @@ public class MultiCameraContainer implements CameraContainerI {
 
   @Override
   public boolean isConnected() {
-    boolean isConnected = true;
-
     for (CameraContainerI cameraContainer : cameraContainers) {
-      isConnected = isConnected && cameraContainer.isConnected();
+      if (!cameraContainer.isConnected()) {
+        return false;
+      }
     }
-
-    return isConnected;
+    return true;
   }
 }
