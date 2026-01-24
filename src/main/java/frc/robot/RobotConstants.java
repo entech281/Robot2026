@@ -1,6 +1,7 @@
 package frc.robot;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
@@ -135,8 +136,7 @@ public final class RobotConstants {
 
   public static interface LiveTuning {
     public static final Map<String, Double> VALUES = Map.ofEntries(
-
-    );
+        Map.entry("ShooterSubsystem/SetSpeed", 0.0));
   }
 
   public static interface PORTS {
@@ -158,6 +158,9 @@ public final class RobotConstants {
       public static final int FRONT_RIGHT_TURNING = 21;
       public static final int REAR_LEFT_TURNING = 31;
       public static final int REAR_RIGHT_TURNING = 41;
+
+      public static final int SHOOTER_MOTOR_A = 51;
+      public static final int SHOOTER_MOTOR_B = 52;
 
       public static final int POWER_DISTRIBUTION_HUB = 1;
     }

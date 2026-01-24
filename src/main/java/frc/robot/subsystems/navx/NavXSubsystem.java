@@ -20,7 +20,7 @@ public class NavXSubsystem extends EntechSubsystem<NavXInput, NavXOutput> {
   private boolean faultDetected = false;
 
   @Override
-  public NavXOutput toOutputs() {
+  protected NavXOutput toOutputs() {
     NavXOutput output = new NavXOutput();
 
     if (ENABLED) {

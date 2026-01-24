@@ -2,7 +2,7 @@ package frc.entech.subsystems;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase;
 
 public class SparkMaxOutput {
 
@@ -21,7 +21,7 @@ public class SparkMaxOutput {
   private boolean isLowerLimitPressed;
   private double currentPosition;
 
-  public static SparkMaxOutput createOutput(SparkMax sm) {
+  public static SparkMaxOutput createOutput(SparkBase sm) {
     SparkMaxOutput smo = new SparkMaxOutput();
     smo.currentSpeed = sm.getEncoder().getVelocity();
     smo.busVoltage = sm.getBusVoltage();

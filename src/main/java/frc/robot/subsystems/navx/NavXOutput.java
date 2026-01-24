@@ -1,6 +1,7 @@
 package frc.robot.subsystems.navx;
 
 import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.entech.subsystems.SubsystemOutput;
 
@@ -42,7 +43,6 @@ public class NavXOutput extends SubsystemOutput {
     Logger.recordOutput("NavXOutput/chassisSpeeds", chassisSpeeds);
     Logger.recordOutput("NavXOutput/ifFaultDetected", isFaultDetected);
   }
-
 
   public double getYaw() {
     return this.yaw;

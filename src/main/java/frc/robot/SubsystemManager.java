@@ -13,6 +13,7 @@ import frc.entech.subsystems.SubsystemOutput;
 import frc.robot.io.RobotIO;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.navx.NavXSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 /**
  * Manages the subsystems and the interactions between them.
@@ -20,10 +21,12 @@ import frc.robot.subsystems.navx.NavXSubsystem;
 public class SubsystemManager {
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final NavXSubsystem navXSubsystem = new NavXSubsystem();
+  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
 
   public SubsystemManager() {
     navXSubsystem.initialize();
     driveSubsystem.initialize();
+    shooterSubsystem.initialize();
 
     periodic();
   }
@@ -36,10 +39,15 @@ public class SubsystemManager {
     return navXSubsystem;
   }
 
+  public ShooterSubsystem getShooterSubsystem() {
+    return shooterSubsystem;
+  }
+
   public List<EntechSubsystem<? extends SubsystemInput, ? extends SubsystemOutput>> getSubsystemList() {
     ArrayList<EntechSubsystem<? extends SubsystemInput, ? extends SubsystemOutput>> r = new ArrayList<>();
     r.add(navXSubsystem);
     r.add(driveSubsystem);
+    r.add(shooterSubsystem);
 
     return r;
   }
@@ -50,5 +58,7 @@ public class SubsystemManager {
     outputs.updateDrive(driveSubsystem.getOutputs());
 
     outputs.updateNavx(navXSubsystem.getOutputs());
+
+    outputs.updateShooter(shooterSubsystem.getOutputs());
   }
 }

@@ -27,6 +27,7 @@ import frc.entech.commands.AutonomousException;
 import frc.entech.commands.InstantAnytimeCommand;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.robot.commands.GyroResetByAngleCommand;
+import frc.robot.commands.RunShooterAtLiveSpeedCommand;
 import frc.robot.commands.RunTestCommand;
 import frc.robot.io.RobotIO;
 import frc.robot.livetuning.LiveTuningHandler;
@@ -55,7 +56,8 @@ public class CommandFactory {
     this.navXSubsystem = subsystemManager.getNavXSubsystem();
     this.odometry = odometry;
     this.subsystemManager = subsystemManager;
-
+    subsystemManager.getShooterSubsystem()
+        .setDefaultCommand(new RunShooterAtLiveSpeedCommand(subsystemManager.getShooterSubsystem()));
     RobotConfig config;
     try {
       config = RobotConfig.fromGUISettings();
