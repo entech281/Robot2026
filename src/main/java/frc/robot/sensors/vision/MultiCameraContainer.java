@@ -8,6 +8,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.Timer;
 import frc.entech.util.EntechGeometryUtils;
 
 public class MultiCameraContainer implements CameraContainerI {
@@ -53,15 +54,17 @@ public class MultiCameraContainer implements CameraContainerI {
       PhotonPipelineResult result = cameraContainer.getFilteredResult();
       targets.addAll(cameraContainer.getFilteredResult().getTargets());
       timeStamp += result.getTimestampSeconds();
-      latency += result.getLatencyMillis();
+    //   latency += result.getLatencyMillis();
+        latency += cameraContainer.getLatency();    
     }
 
     latency /= cameraContainers.length;
     timeStamp /= cameraContainers.length;
 
-    PhotonPipelineResult filteredResult = new PhotonPipelineResult(latency, targets);
-    filteredResult.setTimestampSeconds(timeStamp);
-
+    PhotonPipelineResult filteredResult = new PhotonPipelineResult();
+    // filteredResult.setTimestampSeconds(timeStamp);
+    // filteredResult.setLatencyMillis(latency);
+    // filteredResult.setTargets(targets);
     return filteredResult;
   }
 

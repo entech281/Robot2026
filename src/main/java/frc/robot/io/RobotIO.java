@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.RobotConstants;
 import frc.robot.subsystems.drive.DriveInput;
 import frc.robot.subsystems.drive.DriveOutput;
-import frc.robot.subsystems.navx.NavXOutput;
+import frc.robot.sensors.navx.NavXOutput;
 
 public class RobotIO implements DriveInputSupplier {
   private static final RobotIO instance = new RobotIO();

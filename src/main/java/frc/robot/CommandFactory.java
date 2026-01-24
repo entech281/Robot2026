@@ -32,7 +32,7 @@ import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.operation.UserPolicy;
 import frc.robot.processors.OdometryProcessor;
 import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.navx.NavXSubsystem;
+import frc.robot.sensors.navx.NavXSubsystem;
 import java.util.Optional;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 

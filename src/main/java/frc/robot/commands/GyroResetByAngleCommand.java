@@ -12,7 +12,7 @@ import frc.entech.commands.AutonomousException;
 import frc.entech.commands.EntechCommand;
 import frc.robot.io.RobotIO;
 import frc.robot.processors.OdometryProcessor;
-import frc.robot.subsystems.navx.NavXSubsystem;
+import frc.robot.sensors.navx.NavXSubsystem;
 
 public class GyroResetByAngleCommand extends EntechCommand {
   private final Runnable reset;

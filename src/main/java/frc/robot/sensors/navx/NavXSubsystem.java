@@ -1,4 +1,4 @@
-package frc.robot.subsystems.navx;
+package frc.robot.sensors.navx;
 
 import org.ejml.simple.UnsupportedOperation;
 
@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
-import frc.entech.subsystems.EntechSensor;
+import frc.entech.sensors.EntechSensor;
 import frc.entech.util.StoppingCounter;
 
 public class NavXSubsystem extends EntechSensor<NavXOutput> {

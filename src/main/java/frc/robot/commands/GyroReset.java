@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.entech.commands.EntechCommand;
 import frc.robot.processors.OdometryProcessor;
-import frc.robot.subsystems.navx.NavXSubsystem;
+import frc.robot.sensors.navx.NavXSubsystem;
 
 public class GyroReset extends EntechCommand {
   private final Runnable reset;

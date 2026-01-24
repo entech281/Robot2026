@@ -24,8 +24,7 @@ public class SoloCameraContainer implements CameraContainerI {
   public SoloCameraContainer(String cameraName, Transform3d robotToCamera,
       AprilTagFieldLayout fieldLayout) {
     camera = new PhotonCamera(cameraName);
-    estimator = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
-        camera, robotToCamera);
+    estimator = new PhotonPoseEstimator(fieldLayout, robotToCamera);
     estimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     camera.setDriverMode(false);
   }
@@ -33,8 +32,7 @@ public class SoloCameraContainer implements CameraContainerI {
   public SoloCameraContainer(String cameraName, Transform3d robotToCamera,
       AprilTagFieldLayout fieldLayout, NetworkTableInstance ni) {
     camera = new PhotonCamera(ni, cameraName);
-    estimator = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
-        camera, robotToCamera);
+    estimator = new PhotonPoseEstimator(fieldLayout, robotToCamera);
     estimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     camera.setDriverMode(false);
   }
@@ -65,10 +63,7 @@ public class SoloCameraContainer implements CameraContainerI {
       filteredTargets.add(target);
     }
 
-    PhotonPipelineResult fliteredResult =
-        new PhotonPipelineResult(result.getLatencyMillis(), filteredTargets);
-    fliteredResult.setTimestampSeconds(result.getTimestampSeconds());
-
+    PhotonPipelineResult fliteredResult = new PhotonPipelineResult();
     return fliteredResult;
   }
 
@@ -82,10 +77,10 @@ public class SoloCameraContainer implements CameraContainerI {
     }
   }
 
-  @Override
-  public double getLatency() {
-    return getFilteredResult().getLatencyMillis();
-  }
+//   @Override
+//   public double getLatency() {
+//     return getFilteredResult().();
+//   }
 
   @Override
   public boolean hasTargets() {
@@ -124,4 +119,9 @@ public class SoloCameraContainer implements CameraContainerI {
   public boolean isConnected() {
     return camera.isConnected();
   }
+
+@Override
+public double getLatency() {
+    return getFilteredResult().getLatencyMillis();
+}
 }

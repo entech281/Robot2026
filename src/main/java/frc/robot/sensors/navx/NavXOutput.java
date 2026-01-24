@@ -1,4 +1,4 @@
-package frc.robot.subsystems.navx;
+package frc.robot.sensors.navx;
 
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;

@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import frc.entech.subsystems.EntechSubsystem;
-import frc.entech.subsystems.EntechSensor;
+import frc.entech.sensors.EntechSensor;
 import frc.entech.subsystems.SubsystemInput;
 import frc.entech.subsystems.SubsystemOutput;
 import frc.robot.io.RobotIO;
 import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.navx.NavXSubsystem;
+import frc.robot.sensors.navx.NavXSubsystem;
 
 /**
  * Manages the subsystems and the interactions between them.
