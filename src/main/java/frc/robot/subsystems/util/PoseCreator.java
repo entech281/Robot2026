@@ -11,7 +11,7 @@ public class PoseCreator {
     private static Pose3d getTagPos(int tagId) {
         
         try {
-            AprilTagFieldLayout tagLayout = new AprilTagFieldLayout("./AprilTags.json");
+            AprilTagFieldLayout tagLayout = new AprilTagFieldLayout(".\\src\\main\\java\\frc\\robot\\subsystems\\util\\AprilTags.json");
             return tagLayout.getTagPose(tagId).get();
         } catch (IOException e) {
             DriverStation.reportError("Error reading Aprlitag json. Stacktrace: " + e.getStackTrace(), null);
