@@ -1,6 +1,10 @@
 package frc.robot.operation;
 
+import java.util.Optional;
+
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -8,6 +12,7 @@ import frc.robot.CommandFactory;
 import frc.robot.RobotConstants;
 import frc.robot.SubsystemManager;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.GyroReset;
 import frc.robot.commands.ManualTurretCommand;
 // manual turret command removed; using direct setTurretPosition bindings
@@ -120,6 +125,18 @@ public class OperatorInterface
   }
 
   public void alignOperatorBindings() {
+
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) {
+      if (alliance.get() == DriverStation.Alliance.Blue) {
+        subsystemManager.getTurretSubsystem().setDefaultCommand(new FaceTargetLocationTurretCommand(subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.BLUE_HUB_LOCATION));
+      } else if (alliance.get() == DriverStation.Alliance.Red) {
+        subsystemManager.getTurretSubsystem().setDefaultCommand(new FaceTargetLocationTurretCommand(subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.RED_HUB_LOCATION));
+      }
+    } else {
+      DriverStation.reportWarning("Could not get alliance, TurretSubsystem not set to track by default", false);
+    }
+
   }
 
   /*

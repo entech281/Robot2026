@@ -1,5 +1,8 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+
 import java.util.Map;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -282,6 +285,9 @@ public final class RobotConstants {
     public static final double TURRET_POSITION_PRESET_B_DEGREES = 25;
     // small adjustment step used by any incremental commands
     public static final double TURRET_ADJUST_STEP_DEGREES = 5.0;
+
+    public static final Pose2d BLUE_HUB_LOCATION = new Pose2d(Inches.of(182.11).in(Meters), Inches.of(158.845).in(Meters), new Rotation2d());
+    public static final Pose2d RED_HUB_LOCATION = new Pose2d(Inches.of(469.11).in(Meters), Inches.of(158.845).in(Meters), new Rotation2d());
   }
 
   private RobotConstants() {
