@@ -21,7 +21,7 @@ public class PoseCreator {
     }
 
     public static Pose3d estimateRobot (int tagId, Transform3d aprilTagtoCamera, Transform3d cameraToRobot) {
-        return getTagPos(tagId).plus(aprilTagtoCamera.plus(cameraToRobot)); //TODO: might need a .inverse()
+        return getTagPos(tagId).plus(aprilTagtoCamera.plus(cameraToRobot).inverse()); //TODO: might need a .inverse()
     }
 
     public static Pose3d estimateTurret (int tagId, Transform3d aprilTagtoCamera, Transform3d cameraToRobot, Transform3d robotToTurret) {
