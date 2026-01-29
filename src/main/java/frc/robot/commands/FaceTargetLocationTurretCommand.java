@@ -31,7 +31,7 @@ public class FaceTargetLocationTurretCommand extends EntechCommand {
         double deltaY = target.getY() - robotPose.getY();
         double angleToTarget = Math.toDegrees(Math.atan2(deltaY, deltaX));
         //TODO: Minus or plus I'm not really sure
-        turretInput.setRequestedPosition(angleToTarget + robotPose.getRotation().getDegrees());
+        turretInput.setRequestedPosition(angleToTarget - robotPose.getRotation().getDegrees());
         turretSubsystem.updateInputs(turretInput);
     }
 
