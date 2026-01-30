@@ -204,13 +204,18 @@ public final class RobotConstants {
     public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(5, 5, 1000000);
 
     public static interface Cameras {
-      public static final String EXAMPLE = "example";
+      public static final String CAMERA_A = "Arducam_Alpha";
+      public static final String CAMERA_B = "Arducam_Beta";
+      public static final String CAMERA_C = "Arducam_Charlie";
+      public static final String CAMERA_D = "Arducam_Delta";
     }
 
     public static interface Filters {
-        public static final double MAX_AMBIGUITY = 0.3;  // Lower = more strict (0.2-0.3 is good)
-        public static final double MAX_DISTANCE = 5.0;   // Max distance to trust tags (meters)
-        public static final int[] ALLOWED_TAGS = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};  // Update with actual 2026 tag IDs
+      public static final double MAX_AMBIGUITY = 0.3; // Lower = more strict (0.2-0.3 is good)
+      public static final double MAX_DISTANCE = 5.0; // Max distance to trust tags (meters)
+      public static final int[] ALLOWED_TAGS = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }; // Update with
+                                                                                                          // actual 2026
+                                                                                                          // tag IDs
 
     }
 

@@ -1,79 +1,84 @@
 package frc.robot.sensors.vision;
 
-import edu.wpi.first.math.geometry.Pose2d;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.littletonrobotics.junction.Logger;
+import org.photonvision.targeting.PhotonPipelineResult;
+
 import frc.entech.subsystems.SubsystemOutput;
 
 public class VisionOutput extends SubsystemOutput {
-    
-    // Basic target information
-    public boolean hasTargets = false;
-    public int targetId = -1;
-    public double yaw = 0.0;
-    public double pitch = 0.0;
-    public double area = 0.0;
-    
-    // Pose estimation information
-    public boolean hasPoseEstimate = false;
-    public Pose2d estimatedPose = new Pose2d();
-    public double latencyMs = 0.0;
-    public int visibleTagCount = 0;
-    
-    // Camera connection status
-    public boolean cameraConnected = false;
-    
+
+    private boolean isDriverMode = false;
+    private boolean isConnected = true;
+    private boolean hasTargets = false;
+
+    private List<PhotonPipelineResult> unreadResults = new ArrayList<>();
+
     @Override
     public void toLog() {
-        // Logging can be implemented here if needed
-    }
-    
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Vision[");
-        
-        if (!cameraConnected) {
-            sb.append("CAMERA_DISCONNECTED");
-        } else if (hasPoseEstimate) {
-            sb.append(String.format(
-                "POSE: x=%.2fm, y=%.2fm, θ=%.1f°, tags=%d, latency=%.1fms",
-                estimatedPose.getX(),
-                estimatedPose.getY(),
-                estimatedPose.getRotation().getDegrees(),
-                visibleTagCount,
-                latencyMs
-            ));
-            
-            if (hasTargets) {
-                sb.append(String.format(
-                    " | TARGET: id=%d, yaw=%.1f°, pitch=%.1f°",
-                    targetId, yaw, pitch
-                ));
-            }
-        } else if (hasTargets) {
-            sb.append(String.format(
-                "TARGET_ONLY: id=%d, yaw=%.1f°, pitch=%.1f°, area=%.2f (NO_POSE)",
-                targetId, yaw, pitch, area
-            ));
-        } else {
-            sb.append("NO_TARGETS");
+        Logger.recordOutput("VisionOutput/isDriverMode", isDriverMode);
+        Logger.recordOutput("VisionOutput/isConnected", isConnected);
+        Logger.recordOutput("VisionOutput/hasTargets", hasTargets);
+        for (int i = 0; i < unreadResults.size(); i++) {
+            Logger.recordOutput("VisionOutput/unreadResult_" + i, unreadResults.get(i));
         }
-        
-        sb.append("]");
-        return sb.toString();
     }
-    
-    public void setTarget(org.photonvision.targeting.PhotonTrackedTarget target) {
-        this.hasTargets = true;
-        this.targetId = target.getFiducialId();
-        this.yaw = target.getYaw();
-        this.pitch = target.getPitch();
-        this.area = target.getArea();
+
+    /**
+     * @return boolean return the isDriverMode
+     */
+    public boolean isDriverMode() {
+        return isDriverMode;
     }
-    
-    public void setPoseEstimate(Pose2d pose, int tagCount, double latency) {
-        this.hasPoseEstimate = true;
-        this.estimatedPose = pose;
-        this.visibleTagCount = tagCount;
-        this.latencyMs = latency;
+
+    /**
+     * @param isDriverMode the isDriverMode to set
+     */
+    public void setIsDriverMode(boolean isDriverMode) {
+        this.isDriverMode = isDriverMode;
+    }
+
+    /**
+     * @return boolean return the isConnected
+     */
+    public boolean isConnected() {
+        return isConnected;
+    }
+
+    /**
+     * @param isConnected the isConnected to set
+     */
+    public void setIsConnected(boolean isConnected) {
+        this.isConnected = isConnected;
+    }
+
+    /**
+     * @return boolean return the hasTargets
+     */
+    public boolean hasTargets() {
+        return hasTargets;
+    }
+
+    /**
+     * @param hasTargets the hasTargets to set
+     */
+    public void setHasTargets(boolean hasTargets) {
+        this.hasTargets = hasTargets;
+    }
+
+    /**
+     * @return List<PhotonPipelineResult> return the unreadResults
+     */
+    public List<PhotonPipelineResult> getUnreadResults() {
+        return unreadResults;
+    }
+
+    /**
+     * @param unreadResults the unreadResults to set
+     */
+    public void setUnreadResults(List<PhotonPipelineResult> unreadResults) {
+        this.unreadResults = unreadResults;
     }
 }

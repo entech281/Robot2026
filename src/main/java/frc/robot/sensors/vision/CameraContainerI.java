@@ -25,4 +25,6 @@ public interface CameraContainerI {
   void setDriverMode(boolean enabled);
 
   boolean isConnected();
+
+  List<PhotonPipelineResult> getAllUnreadResults();
 }

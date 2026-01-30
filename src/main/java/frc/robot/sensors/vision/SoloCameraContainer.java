@@ -40,28 +40,28 @@ public class SoloCameraContainer implements CameraContainerI {
   @Override
   public PhotonPipelineResult getFilteredResult() {
     var results = camera.getAllUnreadResults();
-    
+
     if (results.isEmpty()) {
       return latestResult; // Return the last known result if no new ones
     }
-    
+
     // Get the most recent result and store it
     PhotonPipelineResult result = results.get(results.size() - 1);
     latestResult = result; // Cache for latency access
-    
+
     List<PhotonTrackedTarget> filteredTargets = new ArrayList<>();
-    
+
     for (PhotonTrackedTarget target : result.getTargets()) {
       // Filter by ambiguity
       if (target.getPoseAmbiguity() > RobotConstants.Vision.Filters.MAX_AMBIGUITY) {
         continue;
       }
-      
+
       // Filter by distance
       if (Math.abs(target.getBestCameraToTarget().getX()) > RobotConstants.Vision.Filters.MAX_DISTANCE) {
         continue;
       }
-      
+
       // Filter by allowed tag IDs
       boolean allowed = false;
       for (int id : RobotConstants.Vision.Filters.ALLOWED_TAGS) {
@@ -70,29 +70,28 @@ public class SoloCameraContainer implements CameraContainerI {
           break;
         }
       }
-      
+
       if (!allowed) {
         continue;
       }
-      
+
       filteredTargets.add(target);
     }
-    
+
     // Create new result with filtered targets
     return new PhotonPipelineResult(
         result.metadata,
         filteredTargets,
-        result.getMultiTagResult()
-    );
+        result.getMultiTagResult());
   }
 
   @Override
   public Optional<Pose2d> getEstimatedPose() {
     PhotonPipelineResult filteredResult = getFilteredResult();
-    
+
     // Pass the filtered result to update()
     Optional<EstimatedRobotPose> estimatedPose = estimator.update(filteredResult);
-    
+
     if (estimatedPose.isPresent()) {
       return Optional.of(estimatedPose.get().estimatedPose.toPose2d());
     } else {
@@ -123,11 +122,11 @@ public class SoloCameraContainer implements CameraContainerI {
   public List<EntechTargetData> getTargetData() {
     List<PhotonTrackedTarget> targets = getFilteredResult().getTargets();
     List<Integer> targetIds = new ArrayList<>();
-    
+
     for (PhotonTrackedTarget target : targets) {
       targetIds.add(target.getFiducialId());
     }
-    
+
     List<EntechTargetData> data = new ArrayList<>();
     data.add(new EntechTargetData(targetIds, camera.getName()));
     return data;
@@ -146,5 +145,10 @@ public class SoloCameraContainer implements CameraContainerI {
   @Override
   public boolean isConnected() {
     return camera.isConnected();
+  }
+
+  @Override
+  public List<PhotonPipelineResult> getAllUnreadResults() {
+    return camera.getAllUnreadResults();
   }
 }
