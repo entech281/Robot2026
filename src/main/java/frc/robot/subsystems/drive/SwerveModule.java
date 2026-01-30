@@ -4,8 +4,13 @@
 
 package frc.robot.subsystems.drive;
 
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.ControlType;
+
+import java.util.function.Supplier;
+
 import com.revrobotics.PersistMode;
+import com.revrobotics.REVLibError;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -46,8 +51,21 @@ public class SwerveModule {
     drivingSparkMax = new SparkMax(drivingCANId, MotorType.kBrushless);
     turningSparkMax = new SparkMax(turningCANId, MotorType.kBrushless);
 
-    drivingSparkMax.configure(drivingConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // tryUntilOk(
+    // turningSparkMax,
+    // 5,
+    // () -> turningSparkMax.configure(
+    // turningConfig, ResetMode.kResetSafeParameters,
+    // PersistMode.kPersistParameters));
+    // tryUntilOk(
+    // drivingSparkMax,
+    // 5,
+    // () -> drivingSparkMax.configure(
+    // drivingConfig, ResetMode.kResetSafeParameters,
+    // PersistMode.kPersistParameters));
+
     turningSparkMax.configure(turningConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    drivingSparkMax.configure(drivingConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     drivingEncoder = drivingSparkMax.getEncoder();
     turningEncoder = turningSparkMax.getEncoder();
@@ -159,4 +177,16 @@ public class SwerveModule {
     return smo;
   }
 
+  public static boolean sparkStickyFault = false;
+
+  public static void tryUntilOk(SparkBase spark, int maxAttempts, Supplier<REVLibError> command) {
+    for (int i = 0; i < maxAttempts; i++) {
+      var error = command.get();
+      if (error == REVLibError.kOk) {
+        break;
+      } else {
+        sparkStickyFault = true;
+      }
+    }
+  }
 }

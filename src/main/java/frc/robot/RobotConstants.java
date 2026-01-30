@@ -1,6 +1,7 @@
 package frc.robot;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
@@ -16,7 +17,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
-import frc.entech.util.AprilTagDistanceCalibration;
 
 public final class RobotConstants {
   public static final double TIME_PER_PERIODICAL_LOOP_SECONDS = 0.00;
@@ -42,13 +42,14 @@ public final class RobotConstants {
     // 20.0; //2.0; // percent per second (1 = 100%)
 
     // Chassis configuration
-    public static final double TRACK_WIDTH_METERS = Units.inchesToMeters(21.5);
+    public static final double TRACK_WIDTH_METERS = Units.inchesToMeters(20.75);
 
     // Distance between centers of right and left wheels on robot
-    public static final double WHEEL_BASE_METERS = Units.inchesToMeters(18);
+    public static final double WHEEL_BASE_METERS = Units.inchesToMeters(22.75);
 
     // Distance to farthest module
-    public static final double DRIVE_BASE_RADIUS_METERS = 0.39;
+    public static final double DRIVE_BASE_RADIUS_METERS = Math.sqrt(Math.pow(WHEEL_BASE_METERS / 2.0, 2)
+        + Math.pow(TRACK_WIDTH_METERS / 2.0, 2));
 
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
@@ -80,8 +81,7 @@ public final class RobotConstants {
 
     // Calculations required for driving motor conversion factors and feed forward
     public static final double DRIVING_MOTOR_FREE_SPEED_RPS = FREE_SPEED_RPM / 60;
-    public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(3.8); // 4.125;
-                                                                                  // distance 8.62
+    public static final double WHEEL_DIAMETER_METERS = 0.09645823151376486;
     public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
     public static final double DRIVING_MOTOR_REDUCTION = (45.0 * 17 * 50) / (DRIVING_MOTOR_PINION_TEETH * 15 * 27);
     public static final double DRIVE_WHEEL_FREE_SPEED_RPS = (DRIVING_MOTOR_FREE_SPEED_RPS * WHEEL_CIRCUMFERENCE_METERS)
@@ -128,50 +128,15 @@ public final class RobotConstants {
     public static final int DRIVING_MOTOR_CURRENT_LIMIT_AMPS = 40; // 50; // amps
     public static final int TURNING_MOTOR_CURRENT_LIMIT_AMPS = 20; // amps
 
-    public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 0.25552591580217987;
-    public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = -0.4542734933134782;
-    public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = -2.1838283853944285;
-    public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = -0.8463679267332642;
+    public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 1.482033;
+    public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = -2.289053;
+    public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = 0.727504;
+    public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = 1.66872;
   }
 
   public static interface LiveTuning {
     public static final Map<String, Double> VALUES = Map.ofEntries(
-
-    );
-  }
-
-  public static interface ELEVATOR {
-    public static final double INITIAL_POSITION = 0.0;
-    public static final double UPPER_SOFT_LIMIT_DEG = 22.5;
-    public static final double LOWER_SOFT_LIMIT_DEG = 1;
-    public static final double ELEVATOR_CONVERSION_FACTOR = 1.9;
-    public static final double POSITION_TOLERANCE_DEG = 2;
-    public static final double SLOT0_MAX_VELOCITY = 5600;
-    public static final double SLOT0_MAX_ACCELERATION = 6400;
-    public static final double SLOT1_MAX_VELOCITY = 5600;
-    public static final double SLOT1_MAX_ACCELERATION = 3200;
-    public static final double SLOT0_ALLOWED_ERROR = 0.15;
-    public static final double SLOT1_ALLOWED_ERROR = 0.15;
-  }
-
-  public static interface CORAL {
-    public static final double CORAL_CONVERSION_FACTOR = 2.4;
-    public static final double CORAL_TOLERANCE_DEG = 2;
-  }
-
-  public static interface PIVOT {
-    public static final double POSITION_TOLERANCE_DEG = 2;
-    public static final double POSITION_TOLERANCE_BIG = 4;
-  }
-
-  public static interface LED {
-    public static final int PORT = 0;
-    public static final int NUM_LEDS = 100;
-    public static final double BLINK_INTERVAL = 0.25;
-    public static final int OPERATOR_LEDS_START_INDEX = 0;
-    public static final int OPERATOR_LEDS_END_INDEX = 67;
-    public static final int DRIVER_LEDS_START_INDEX = 68;
-    public static final int DRIVER_LEDS_END_INDEX = NUM_LEDS;
+        Map.entry("ShooterSubsystem/SetSpeed", 0.0));
   }
 
   public static interface PORTS {
@@ -194,12 +159,8 @@ public final class RobotConstants {
       public static final int REAR_LEFT_TURNING = 31;
       public static final int REAR_RIGHT_TURNING = 41;
 
-      public static final int ELEVATOR_A = 13;
-      public static final int ELEVATOR_B = 14;
-
-      public static final int CORAL_MOTOR = 35;
-
-      public static final int PIVOT_MOTOR = 18;
+      public static final int SHOOTER_MOTOR_A = 51;
+      public static final int SHOOTER_MOTOR_B = 52;
 
       public static final int POWER_DISTRIBUTION_HUB = 1;
     }
@@ -217,24 +178,13 @@ public final class RobotConstants {
         public static final int RUN_TESTS = 7;
         public static final int GYRO_RESET = 11;
         public static final int RESET_ODOMETRY = 3;
-        public static final int CLIMB_JOG_LEFT = 9;
-        public static final int CLIMB_JOG_RIGHT = 10;
       }
 
       public static interface BUTTONS_XBOX {
         public static final int GYRO_RESET = 7;
-        public static final int NOTE_ALIGN = 2;
-        public static final int FULL_PIVOT = 8;
-        public static final int TARGET_AMP = 4;
-        public static final int TARGET_SPEAKER = 1;
-        public static final int FEED_SHOOTER = 5;
         public static final int DRIVE_X = 3;
         public static final int RESET_ODOMETRY = 8;
       }
-    }
-
-    public static interface HAS_CORAL {
-      public static final int INTERNAL_SENSOR_FORWARD = 9;
     }
 
     public static interface HAS_ALGAE {
@@ -244,41 +194,6 @@ public final class RobotConstants {
 
   public interface SCORE_OPERATOR_PANEL {
     public static interface BUTTONS {
-      public static final int RUN_TEST = 10;
-      public static final int L1 = 8;
-      public static final int L2 = 7;
-      public static final int L3 = 6;
-      public static final int L4 = 5;
-      public static final int ALGAE_L2 = 2;
-      public static final int ALGAE_L3 = 3;
-      public static final int ALGAE_GROUND = 9;
-      public static final int BARGE = 4;
-      public static final int FIRE = 1;
-    }
-
-    public static interface SWITCHES {
-    }
-  }
-
-  public interface ALIGN_OPERATOR_PANEL {
-    public static interface BUTTONS {
-      /*
-       * All directions are relative to how the branches
-       * are seen from where the driver is standing
-       */
-      public int A = 9;
-      public int B = 10;
-      public int C = 11;
-      public int D = 12;
-      public int E = 1;
-      public int F = 2;
-      public int G = 3;
-      public int H = 4;
-      public int I = 5;
-      public int J = 6;
-      public int K = 7;
-      public int L = 8;
-      public static final int AUTO_DEALGIFY = 13;
     }
 
     public static interface SWITCHES {
@@ -289,9 +204,7 @@ public final class RobotConstants {
     public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(5, 5, 1000000);
 
     public static interface Cameras {
-      public static final String COLOR = "Arducam_OV9782_USB_Camera";
-      public static final String LEFT = "Arducam_OV9281_USB_Camera";
-      public static final String RIGHT = "Arducam_Alpha";
+      public static final String EXAMPLE = "example";
     }
 
     public static interface Filters {
@@ -332,6 +245,7 @@ public final class RobotConstants {
   }
 
   public static interface ODOMETRY {
+    public static final int ODOMETRY_FREQUENCY = 250;
     public static final double FIELD_LENGTH_INCHES = 54 * 12 + 3.25;
     public static final double FIELD_WIDTH_INCHES = 26 * 12 + 11.25;
 
@@ -349,24 +263,6 @@ public final class RobotConstants {
 
   public static interface TEST_CONSTANTS {
     public static final double STANDARD_TEST_LENGTH = 1;
-  }
-
-  public static interface APRIL_TAG_DATA {
-    public static final AprilTagDistanceCalibration CALIBRATION = new AprilTagDistanceCalibration(640, 480, 70.2,
-        37.25 / 12);
-    public static final Map<Integer, Double> TAG_ANGLES = Map.ofEntries(
-        Map.entry(6, 300.0),
-        Map.entry(7, 0.0),
-        Map.entry(8, 60.0),
-        Map.entry(9, 120.0),
-        Map.entry(10, 180.0),
-        Map.entry(11, 240.0),
-        Map.entry(17, 240.0),
-        Map.entry(18, 180.0),
-        Map.entry(19, 120.0),
-        Map.entry(20, 60.0),
-        Map.entry(21, 0.0),
-        Map.entry(22, 300.0));
   }
 
   private RobotConstants() {
