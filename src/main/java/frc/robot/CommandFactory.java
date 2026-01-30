@@ -35,7 +35,7 @@ import frc.robot.livetuning.WheelDiameterCharacterizer;
 import frc.robot.operation.UserPolicy;
 import frc.robot.processors.OdometryProcessor;
 import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.sensors.navx.NavXSubsystem;
+import frc.robot.sensors.navx.NavXSensor;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
@@ -45,13 +45,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 @SuppressWarnings("unused")
 public class CommandFactory {
   private final DriveSubsystem driveSubsystem;
-  private final NavXSubsystem navXSubsystem;
+  private final NavXSensor navXSubsystem;
   private final OdometryProcessor odometry;
-  private final SubsystemManager subsystemManager;
+  private final HardwareManager subsystemManager;
   private final SendableChooser<Command> autoChooser;
   private final SendableChooser<Command> testChooser;
 
-  public CommandFactory(SubsystemManager subsystemManager, OdometryProcessor odometry) {
+  public CommandFactory(HardwareManager subsystemManager, OdometryProcessor odometry) {
     this.driveSubsystem = subsystemManager.getDriveSubsystem();
     this.navXSubsystem = subsystemManager.getNavXSubsystem();
     this.odometry = odometry;

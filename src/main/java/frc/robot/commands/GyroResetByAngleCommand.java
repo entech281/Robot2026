@@ -12,7 +12,7 @@ import frc.entech.commands.AutonomousException;
 import frc.entech.commands.EntechCommand;
 import frc.robot.io.RobotIO;
 import frc.robot.processors.OdometryProcessor;
-import frc.robot.sensors.navx.NavXSubsystem;
+import frc.robot.sensors.navx.NavXSensor;
 
 public class GyroResetByAngleCommand extends EntechCommand {
   private final Runnable reset;
@@ -20,7 +20,7 @@ public class GyroResetByAngleCommand extends EntechCommand {
   private final Runnable correctOdometry;
   private final double angle;
 
-  public GyroResetByAngleCommand(NavXSubsystem navx, OdometryProcessor odometry, String auto) {
+  public GyroResetByAngleCommand(NavXSensor navx, OdometryProcessor odometry, String auto) {
     PathPlannerPath startPath;
 
     try {
@@ -28,7 +28,7 @@ public class GyroResetByAngleCommand extends EntechCommand {
     } catch (Exception e) {
       throw new AutonomousException("Invalid auto file: " + auto, e);
     }
-    
+
     Optional<Pose2d> startingPose = startPath.getStartingHolonomicPose();
     if (startingPose.isPresent()) {
       angle = startingPose.get().getRotation().getDegrees();
@@ -51,8 +51,7 @@ public class GyroResetByAngleCommand extends EntechCommand {
           .setAngleAdjustment(RobotIO.getInstance().getNavXOutput().getAngleAdjustment() + angle);
     }
     correctOdometry = () -> {
-      Pose2d pose =
-          new Pose2d(odometry.getEstimatedPose().getTranslation(), Rotation2d.fromDegrees(angle));
+      Pose2d pose = new Pose2d(odometry.getEstimatedPose().getTranslation(), Rotation2d.fromDegrees(angle));
       odometry.resetOdometry(pose, Rotation2d.fromDegrees(0.0));
     };
   }
@@ -74,4 +73,3 @@ public class GyroResetByAngleCommand extends EntechCommand {
     return true;
   }
 }
-

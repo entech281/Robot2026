@@ -34,7 +34,7 @@ public class Robot extends LoggedRobot {
 
   public static final double SIMULATION_TIME_MILLIS = 5000;
   private Command autonomousCommand;
-  private SubsystemManager subsystemManager;
+  private HardwareManager subsystemManager;
   private CommandFactory commandFactory;
   private OdometryProcessor odometry;
   private OperatorInterface operatorInterface;
@@ -70,7 +70,7 @@ public class Robot extends LoggedRobot {
       DriverStation.reportWarning("Logger init failed.", e.getStackTrace());
     }
     LiveTuningHandler.getInstance().init();
-    subsystemManager = new SubsystemManager();
+    subsystemManager = new HardwareManager();
     odometry = new OdometryProcessor();
     commandFactory = new CommandFactory(subsystemManager, odometry);
     operatorInterface = new OperatorInterface(commandFactory, subsystemManager, odometry);

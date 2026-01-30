@@ -8,23 +8,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import frc.entech.subsystems.EntechSubsystem;
-import frc.entech.sensors.EntechSensor;
 import frc.entech.subsystems.SubsystemInput;
 import frc.entech.subsystems.SubsystemOutput;
 import frc.robot.io.RobotIO;
+import frc.robot.sensors.navx.NavXSensor;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 /**
  * Manages the subsystems and the interactions between them.
  */
-public class SubsystemManager {
+public class HardwareManager {
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
-  private final NavXSubsystem navXSubsystem = new NavXSubsystem();
+  private final NavXSensor navXSensor = new NavXSensor();
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
 
-  public SubsystemManager() {
-    navXSubsystem.initialize();
+  public HardwareManager() {
+    navXSensor.initialize();
     driveSubsystem.initialize();
     shooterSubsystem.initialize();
 
@@ -35,8 +35,8 @@ public class SubsystemManager {
     return driveSubsystem;
   }
 
-  public NavXSubsystem getNavXSubsystem() {
-    return navXSubsystem;
+  public NavXSensor getNavXSubsystem() {
+    return navXSensor;
   }
 
   public ShooterSubsystem getShooterSubsystem() {
@@ -56,7 +56,7 @@ public class SubsystemManager {
 
     outputs.updateDrive(driveSubsystem.getOutputs());
 
-    outputs.updateNavx(navXSubsystem.getOutputs());
+    outputs.updateNavx(navXSensor.getOutputs());
 
     outputs.updateShooter(shooterSubsystem.getOutputs());
   }

@@ -12,7 +12,7 @@ public abstract class SubsystemOutput {
     toLog();
   }
 
-  public abstract void toLog();
+  protected abstract void toLog();
 
   public String getLogName(String val) {
     return getClass().getSimpleName() + "/" + val;

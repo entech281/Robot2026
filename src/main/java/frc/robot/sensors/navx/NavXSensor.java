@@ -1,7 +1,5 @@
 package frc.robot.sensors.navx;
 
-import org.ejml.simple.UnsupportedOperation;
-
 import frc.entech.NavX.AHRS;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -10,11 +8,10 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.sensors.EntechSensor;
 import frc.entech.util.StoppingCounter;
 
-public class NavXSubsystem extends EntechSensor<NavXOutput> {
+public class NavXSensor extends EntechSensor<NavXOutput> {
   private static final boolean ENABLED = true;
   private AHRS gyro;
   private final StoppingCounter faultCounter = new StoppingCounter(3.5);
@@ -84,7 +81,7 @@ public class NavXSubsystem extends EntechSensor<NavXOutput> {
 
   // @Override
   // public void updateInputs(NavXInput input) {
-  //   throw new UnsupportedOperation();
+  // throw new UnsupportedOperation();
   // }
 
   public void zeroYaw() {

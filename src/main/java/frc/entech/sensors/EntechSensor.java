@@ -4,9 +4,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.entech.subsystems.SubsystemOutput;
 
-
 public abstract class EntechSensor<R extends SubsystemOutput> extends SubsystemBase {
-  protected EntechSensor() {}
+  protected EntechSensor() {
+  }
 
   public abstract void initialize();
 
@@ -14,7 +14,7 @@ public abstract class EntechSensor<R extends SubsystemOutput> extends SubsystemB
 
   public abstract Command getTestCommand();
 
-  public abstract R toOutputs();
+  protected abstract R toOutputs();
 
   public R getOutputs() {
     R out = toOutputs();
