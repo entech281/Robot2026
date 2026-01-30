@@ -2,10 +2,12 @@ package frc.robot.sensors.vision;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.targeting.PhotonPipelineResult;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import frc.entech.subsystems.SubsystemOutput;
 
 public class VisionOutput extends SubsystemOutput {
@@ -13,6 +15,7 @@ public class VisionOutput extends SubsystemOutput {
     private boolean isDriverMode = false;
     private boolean isConnected = true;
     private boolean hasTargets = false;
+    private Optional<Pose2d> estimatedPose = Optional.empty();
 
     private List<PhotonPipelineResult> unreadResults = new ArrayList<>();
 
@@ -81,4 +84,19 @@ public class VisionOutput extends SubsystemOutput {
     public void setUnreadResults(List<PhotonPipelineResult> unreadResults) {
         this.unreadResults = unreadResults;
     }
+
+    /**
+     * @return Optional<Pose2d> return the estimatedPose
+     */
+    public Optional<Pose2d> getEstimatedPose() {
+        return estimatedPose;
+    }
+
+    /**
+     * @param estimatedPose the estimatedPose to set
+     */
+    public void setEstimatedPose(Optional<Pose2d> estimatedPose) {
+        this.estimatedPose = estimatedPose;
+    }
+
 }
