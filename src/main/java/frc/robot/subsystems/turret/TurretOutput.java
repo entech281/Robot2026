@@ -14,7 +14,6 @@ public class TurretOutput extends SubsystemOutput {
   private double currentPosition = 0.0;
 
   private SparkMaxOutput turretMotor;
-        private boolean isAtRequestedSpeed;
       
         @Override
         public void toLog() {

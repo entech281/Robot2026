@@ -140,7 +140,13 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         // Position control: continuously ensure setpoint equals latest requested position
         double desiredPos = latestInput.getRequestedPosition();
         if (turretPIDController != null) {
-            turretPIDController.setSetpoint(desiredPos, ControlType.kPosition);
+            if (desiredPos <= RobotConstants.TURRET.TURRET_UPPER_LIMIT_DEGREES && desiredPos >= RobotConstants.TURRET.TURRET_LOWER_LIMIT_DEGREES) {
+                turretPIDController.setSetpoint(desiredPos, ControlType.kPosition);
+            } else if (desiredPos > RobotConstants.TURRET.TURRET_UPPER_LIMIT_DEGREES) {
+                turretPIDController.setSetpoint(RobotConstants.TURRET.TURRET_UPPER_LIMIT_DEGREES, ControlType.kPosition);
+            } else if (desiredPos < RobotConstants.TURRET.TURRET_LOWER_LIMIT_DEGREES) {
+                turretPIDController.setSetpoint(RobotConstants.TURRET.TURRET_LOWER_LIMIT_DEGREES, ControlType.kPosition);
+            }
         }
     }
     
