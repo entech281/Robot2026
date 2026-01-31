@@ -20,8 +20,7 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
 
     private HoodInput currentInput = new HoodInput();
 
-    private SparkMax hoodLeft;
-    private SparkMax hoodRight;
+    private SparkMax hood;
 
     private IdleMode mode;
 
@@ -34,15 +33,11 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
       if (ENABLED) {
       // IMPORTANT! DO NOT BURN FLASH OR SET SETTINGS FOR THIS SUBSYSTEM in code!
       // we want to avoid accidently disabling the controller soft limits
-      hoodLeft = new SparkMax(RobotConstants.PORTS.CAN.HOOD_A, MotorType.kBrushless);
-      hoodRight = new SparkMax(RobotConstants.PORTS.CAN.HOOD_B, MotorType.kBrushless);
-      hoodLeft.follow(hoodRight);
-      hoodRight.getEncoder().setPosition(0.0);
+      hood = new SparkMax(RobotConstants.PORTS.CAN.HOOD_B, MotorType.kBrushless);
+      hood.getEncoder().setPosition(0.0);
 
-      hoodLeft.setInverted(IS_INVERTED);
-      hoodRight.setInverted(IS_INVERTED);
-      hoodLeft.setIdleMode(IdleMode.kBrake);
-      hoodRight.setIdleMode(IdleMode.kBrake);
+      hood.setInverted(IS_INVERTED);
+      hood.idleMode(IdleMode.kBrake);
       mode = IdleMode.kBrake;
       }
   }
@@ -80,15 +75,15 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
     @Override
     protected HoodOutput toOutputs() {
         HoodOutput hoodOutput = new HoodOutput();
-        hoodOutput.setMoving(hoodLeft.getEncoder().getVelocity() != 0);
+        hoodOutput.setMoving(hood.getEncoder().getVelocity() != 0);
         hoodOutput.setLeftBrakeModeEnabled(IdleMode.kBrake == mode);
         hoodOutput.setRightBrakeModeEnabled(IdleMode.kBrake == mode);
         hoodOutput.setCurrentPosition(
-            hoodLeft.getEncoder().getPosition() * RobotConstants.HOOD.HOOD_CONVERSION_FACTOR);
+            hood.getEncoder().getPosition() * RobotConstants.HOOD.HOOD_CONVERSION_FACTOR);
         hoodOutput.setAtRequestedPosition(EntechUtils.isWithinTolerance(2,
             hoodOutput.getCurrentPosition(), currentInput.getRequestedPosition()));
         hoodOutput.setAtLowerLimit(
-            hoodLeft.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed());
+            hood.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed());
         hoodOutput.setRequestedPosition(currentInput.getRequestedPosition());
         return hoodOutput;
     }
