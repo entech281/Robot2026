@@ -50,7 +50,8 @@ public final class RobotConstants {
     public static final double WHEEL_BASE_METERS = Units.inchesToMeters(18);
 
     // Distance to farthest module
-    public static final double DRIVE_BASE_RADIUS_METERS = 0.39;
+    public static final double DRIVE_BASE_RADIUS_METERS = Math.sqrt(Math.pow(WHEEL_BASE_METERS / 2.0, 2)
+        + Math.pow(TRACK_WIDTH_METERS / 2.0, 2));
 
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
