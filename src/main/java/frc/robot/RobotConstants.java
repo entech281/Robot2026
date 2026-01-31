@@ -163,6 +163,9 @@ public final class RobotConstants {
       public static final int SHOOTER_MOTOR_B = 52;
 
       public static final int POWER_DISTRIBUTION_HUB = 1;
+
+      public static final int HOOD_A = 53;
+      public static final int HOOD_B = 54;
     }
 
     public static interface CONTROLLER {
@@ -269,6 +272,17 @@ public final class RobotConstants {
   public static interface TEST_CONSTANTS {
     public static final double STANDARD_TEST_LENGTH = 1;
   }
+
+  public static interface HOOD{
+    public static final boolean ENABLED = true;
+
+    public static final double HOOD_CONVERSION_FACTOR = 0.090; // degrees per motor rotation
+
+    public static final double INITIAL_POSITION = 15.0; // degrees
+
+    public static final double UPPER_SOFT_LIMIT_DEG = 40.0; // degrees
+    public static final double LOWER_SOFT_LIMIT_DEG = 0.0; // degrees
+  };
 
   private RobotConstants() {
   }

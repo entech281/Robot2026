@@ -2,6 +2,7 @@ package frc.robot.subsystems.hood;
 
 import com.revrobotics.jni.CANSparkJNI;
 import com.revrobotics.spark.SparkLimitSwitch;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -19,8 +20,8 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
 
     private HoodInput currentInput = new HoodInput();
 
-    private CANSparkMax hoodLeft;
-    private CANSparkMax hoodRight;
+    private SparkMax hoodLeft;
+    private SparkMax hoodRight;
 
     private IdleMode mode;
 
@@ -33,8 +34,8 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
       if (ENABLED) {
       // IMPORTANT! DO NOT BURN FLASH OR SET SETTINGS FOR THIS SUBSYSTEM in code!
       // we want to avoid accidently disabling the controller soft limits
-      hoodLeft = new CANSparkJNI(RobotConstants.PORTS.CAN.HOOD_A, MotorType.kBrushless);
-      hoodRight = new CANSparkJNI(RobotConstants.PORTS.CAN.HOOD_B, MotorType.kBrushless);
+      hoodLeft = new SparkMax(RobotConstants.PORTS.CAN.HOOD_A, MotorType.kBrushless);
+      hoodRight = new SparkMax(RobotConstants.PORTS.CAN.HOOD_B, MotorType.kBrushless);
       hoodLeft.follow(hoodRight);
       hoodRight.getEncoder().setPosition(0.0);
 
@@ -72,7 +73,8 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
 
     @Override
     public Command getTestCommand() {
-        return new TestHoodCommand(this);
+        //havent created test command yet
+        return null;
     }
 
     @Override
