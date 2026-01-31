@@ -20,7 +20,7 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.entech.subsystems.SparkMaxOutput;
+import frc.entech.subsystems.SparkOutput;
 import frc.robot.sensors.ThriftyEncoder;
 
 /**
@@ -167,13 +167,13 @@ public class SwerveModule {
     return desiredState;
   }
 
-  public SparkMaxOutput getTurnOutput() {
-    SparkMaxOutput smo = SparkMaxOutput.createOutput(turningSparkMax);
+  public SparkOutput getTurnOutput() {
+    SparkOutput smo = SparkOutput.createOutput(turningSparkMax);
     return smo;
   }
 
-  public SparkMaxOutput getDriveOuput() {
-    SparkMaxOutput smo = SparkMaxOutput.createOutput(drivingSparkMax);
+  public SparkOutput getDriveOuput() {
+    SparkOutput smo = SparkOutput.createOutput(drivingSparkMax);
     return smo;
   }
 

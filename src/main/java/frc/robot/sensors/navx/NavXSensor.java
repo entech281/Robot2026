@@ -1,6 +1,4 @@
-package frc.robot.subsystems.navx;
-
-import org.ejml.simple.UnsupportedOperation;
+package frc.robot.sensors.navx;
 
 import frc.entech.NavX.AHRS;
 
@@ -10,10 +8,10 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.entech.subsystems.EntechSubsystem;
+import frc.entech.sensors.EntechSensor;
 import frc.entech.util.StoppingCounter;
 
-public class NavXSubsystem extends EntechSubsystem<NavXInput, NavXOutput> {
+public class NavXSensor extends EntechSensor<NavXOutput> {
   private static final boolean ENABLED = true;
   private AHRS gyro;
   private final StoppingCounter faultCounter = new StoppingCounter(3.5);
@@ -40,16 +38,19 @@ public class NavXSubsystem extends EntechSubsystem<NavXInput, NavXOutput> {
       output.setIsRotating(gyro.isRotating());
       output.setIsFaultDetected(faultDetected);
     }
-    return output;
-  }
 
-  @Override
-  public void periodic() {
     if (ENABLED) {
       SmartDashboard.putData(gyro);
       faultDetected = faultCounter.isFinished(gyro.isCalibrating());
     }
+
+    return output;
   }
+
+  @Override
+    public String getName() {
+        return "NavXSensor";
+    }
 
   @Override
   public void initialize() {
@@ -81,10 +82,10 @@ public class NavXSubsystem extends EntechSubsystem<NavXInput, NavXOutput> {
     return ENABLED;
   }
 
-  @Override
-  public void updateInputs(NavXInput input) {
-    throw new UnsupportedOperation();
-  }
+  // @Override
+  // public void updateInputs(NavXInput input) {
+  // throw new UnsupportedOperation();
+  // }
 
   public void zeroYaw() {
     if (ENABLED) {

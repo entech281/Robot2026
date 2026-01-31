@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.entech.TestableHardwareI;
 import frc.entech.commands.AutonomousException;
 import frc.entech.commands.InstantAnytimeCommand;
 import frc.entech.subsystems.EntechSubsystem;
@@ -35,7 +36,7 @@ import frc.robot.livetuning.WheelDiameterCharacterizer;
 import frc.robot.operation.UserPolicy;
 import frc.robot.processors.OdometryProcessor;
 import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.navx.NavXSubsystem;
+import frc.robot.sensors.navx.NavXSensor;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
@@ -45,13 +46,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 @SuppressWarnings("unused")
 public class CommandFactory {
   private final DriveSubsystem driveSubsystem;
-  private final NavXSubsystem navXSubsystem;
+  private final NavXSensor navXSubsystem;
   private final OdometryProcessor odometry;
-  private final SubsystemManager subsystemManager;
+  private final HardwareManager subsystemManager;
   private final SendableChooser<Command> autoChooser;
   private final SendableChooser<Command> testChooser;
 
-  public CommandFactory(SubsystemManager subsystemManager, OdometryProcessor odometry) {
+  public CommandFactory(HardwareManager subsystemManager, OdometryProcessor odometry) {
     this.driveSubsystem = subsystemManager.getDriveSubsystem();
     this.navXSubsystem = subsystemManager.getNavXSubsystem();
     this.odometry = odometry;
@@ -110,7 +111,7 @@ public class CommandFactory {
 
   public Command getTestCommand() {
     SequentialCommandGroup allTests = new SequentialCommandGroup();
-    for (EntechSubsystem<?, ?> subsystem : subsystemManager.getSubsystemList()) {
+    for (TestableHardwareI subsystem : subsystemManager.getSubsystemList()) {
       if (subsystem.isEnabled()) {
         addSubsystemTest(allTests, subsystem);
       }
@@ -121,7 +122,7 @@ public class CommandFactory {
   }
 
   private static void addSubsystemTest(SequentialCommandGroup group,
-      EntechSubsystem<?, ?> subsystem) {
+      TestableHardwareI subsystem) {
 
     group.addCommands(
         Commands.runOnce(() -> Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST,
@@ -133,7 +134,7 @@ public class CommandFactory {
 
   private SendableChooser<Command> getTestCommandChooser() {
     SendableChooser<Command> testCommandChooser = new SendableChooser<>();
-    for (EntechSubsystem<?, ?> subsystem : subsystemManager.getSubsystemList()) {
+    for (TestableHardwareI subsystem : subsystemManager.getSubsystemList()) {
       testCommandChooser.addOption(subsystem.getName(), subsystem.getTestCommand());
     }
     return testCommandChooser;

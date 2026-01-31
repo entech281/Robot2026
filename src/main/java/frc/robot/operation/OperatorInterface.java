@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.CommandFactory;
 import frc.robot.RobotConstants;
-import frc.robot.SubsystemManager;
+import frc.robot.HardwareManager;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.GyroReset;
 import frc.robot.commands.ResetOdometryCommand;
@@ -32,10 +32,10 @@ public class OperatorInterface
   private CommandJoystick alignOperatorPanel;
 
   private final CommandFactory commandFactory;
-  private final SubsystemManager subsystemManager;
+  private final HardwareManager subsystemManager;
   private final OdometryProcessor odometry;
 
-  public OperatorInterface(CommandFactory commandFactory, SubsystemManager subsystemManager,
+  public OperatorInterface(CommandFactory commandFactory, HardwareManager subsystemManager,
       OdometryProcessor odometry) {
     this.commandFactory = commandFactory;
     this.subsystemManager = subsystemManager;

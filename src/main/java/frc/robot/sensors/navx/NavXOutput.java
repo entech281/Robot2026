@@ -1,11 +1,11 @@
-package frc.robot.subsystems.navx;
+package frc.robot.sensors.navx;
 
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import frc.entech.subsystems.SubsystemOutput;
+import frc.entech.sensors.SensorOutput;
 
-public class NavXOutput extends SubsystemOutput {
+public class NavXOutput extends SensorOutput {
   private double yaw;
   private double pitch;
   private double roll;
