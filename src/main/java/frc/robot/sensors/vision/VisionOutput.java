@@ -76,4 +76,85 @@ public class VisionOutput extends SubsystemOutput {
         this.visibleTagCount = tagCount;
         this.latencyMs = latency;
     }
+
+    public void setYaw(double yaw){
+        this.yaw = yaw;
+    }
+
+    public double getYaw(){
+        return this.yaw;
+    }
+
+    public void setHasTargets(boolean hasTargets) {
+        this.hasTargets = hasTargets;
+    }
+
+    public boolean hasTargets() {
+        return this.hasTargets;
+    }
+
+    public void setTargetId(int targetId) {
+        this.targetId = targetId;
+    }
+
+    public int getTargetId() {
+        return this.targetId;
+    }
+
+    public void setPitch(double pitch) {
+        this.pitch = pitch;
+    }
+
+    public double getPitch() {
+        return this.pitch;
+    }
+
+    public void setArea(double area) {
+        this.area = area;
+    }
+
+    public double getArea() {
+        return this.area;
+    }
+
+    public void setHasPoseEstimate(boolean hasPoseEstimate) {
+        this.hasPoseEstimate = hasPoseEstimate;
+    }
+
+    public boolean hasPoseEstimate() {
+        return this.hasPoseEstimate;
+    }
+
+    public void setEstimatedPose(Pose2d estimatedPose) {
+        this.estimatedPose = estimatedPose;
+    }
+
+    public Pose2d getEstimatedPose() {
+        return this.estimatedPose;
+    }
+
+    public void setLatencyMs(double latencyMs) {
+        this.latencyMs = latencyMs;
+    }
+
+    public double getLatencyMs() {
+        return this.latencyMs;
+    }
+
+    public void setVisibleTagCount(int visibleTagCount) {
+        this.visibleTagCount = visibleTagCount;
+    }
+
+    public int getVisibleTagCount() {
+        return this.visibleTagCount;
+    }
+
+    public void setCameraConnected(boolean cameraConnected) {
+        this.cameraConnected = cameraConnected;
+    }
+
+    public boolean isCameraConnected() {
+        return this.cameraConnected;
+    }
+    
 }

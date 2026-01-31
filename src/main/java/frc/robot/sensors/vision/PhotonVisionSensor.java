@@ -14,7 +14,7 @@ import frc.entech.sensors.EntechSensor;
 /**
  * PhotonVision subsystem for AprilTag-based pose estimation
  */
-public class PhotonVision extends EntechSensor<VisionOutput> {
+public class PhotonVisionSensor extends EntechSensor<VisionOutput> {
     
     public static final String CAMERA_NAME = "OV5647";
     
