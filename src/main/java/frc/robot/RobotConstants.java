@@ -289,6 +289,8 @@ public final class RobotConstants {
 
     public static final Pose2d BLUE_HUB_LOCATION = new Pose2d(Inches.of(182.11).in(Meters), Inches.of(158.845).in(Meters), new Rotation2d());
     public static final Pose2d RED_HUB_LOCATION = new Pose2d(Inches.of(469.11).in(Meters), Inches.of(158.845).in(Meters), new Rotation2d());
+
+    public static final Translation2d TURRET_OFFSET = new Translation2d();
   }
 
   private RobotConstants() {
