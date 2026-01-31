@@ -9,6 +9,7 @@ import frc.robot.RobotConstants;
 import frc.robot.subsystems.drive.DriveInput;
 import frc.robot.subsystems.drive.DriveOutput;
 import frc.robot.sensors.navx.NavXOutput;
+import frc.robot.sensors.vision.VisionOutput;
 import frc.robot.subsystems.shooter.ShooterOutput;
 
 public class RobotIO implements DriveInputSupplier {
@@ -54,6 +55,10 @@ public class RobotIO implements DriveInputSupplier {
     return latestShooterOutput;
   }
 
+  public VisionOutput getVisionOutput() {
+    return latestVisionOutput;
+  }
+
   public void updateNavx(NavXOutput no) {
     latestNavXOutput = no;
     no.log();
@@ -74,8 +79,14 @@ public class RobotIO implements DriveInputSupplier {
     Logger.recordOutput("OdometryPose", pose);
   }
 
+  public void updateVision(VisionOutput vi) {
+    latestVisionOutput = vi;
+    vi.log();
+  }
+
   private NavXOutput latestNavXOutput;
   private DriveOutput latestDriveOutput;
   private ShooterOutput latestShooterOutput;
+  private VisionOutput latestVisionOutput;
   private Pose2d latestOdometryPose = RobotConstants.ODOMETRY.INITIAL_POSE;
 }

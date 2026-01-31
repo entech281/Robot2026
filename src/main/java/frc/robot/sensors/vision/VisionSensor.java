@@ -1,10 +1,7 @@
 package frc.robot.sensors.vision;
 
-import java.util.Optional;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -15,7 +12,7 @@ import frc.robot.RobotConstants;
 /**
  * PhotonVision subsystem for AprilTag-based pose estimation
  */
-public class PhotonVision extends EntechSensor<VisionOutput> {
+public class VisionSensor extends EntechSensor<VisionOutput> {
     private CameraContainerI cameraContainer;
     private AprilTagFieldLayout fieldLayout;
 
@@ -72,7 +69,7 @@ public class PhotonVision extends EntechSensor<VisionOutput> {
     }
 
     @Override
-    public VisionOutput toOutputs() {
+    protected VisionOutput toOutputs() {
         VisionOutput output = new VisionOutput();
 
         output.setIsDriverMode(cameraContainer.isDriverMode());

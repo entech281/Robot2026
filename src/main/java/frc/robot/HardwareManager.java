@@ -12,6 +12,7 @@ import frc.entech.subsystems.SubsystemInput;
 import frc.entech.subsystems.SubsystemOutput;
 import frc.robot.io.RobotIO;
 import frc.robot.sensors.navx.NavXSensor;
+import frc.robot.sensors.vision.VisionSensor;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
@@ -22,11 +23,13 @@ public class HardwareManager {
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final NavXSensor navXSensor = new NavXSensor();
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  private final VisionSensor visionSensor = new VisionSensor();
 
   public HardwareManager() {
     navXSensor.initialize();
     driveSubsystem.initialize();
     shooterSubsystem.initialize();
+    visionSensor.initialize();
 
     periodic();
   }
@@ -41,6 +44,10 @@ public class HardwareManager {
 
   public ShooterSubsystem getShooterSubsystem() {
     return shooterSubsystem;
+  }
+
+  public VisionSensor getVisionSensor() {
+    return visionSensor;
   }
 
   public List<EntechSubsystem<? extends SubsystemInput, ? extends SubsystemOutput>> getSubsystemList() {
@@ -59,5 +66,7 @@ public class HardwareManager {
     outputs.updateNavx(navXSensor.getOutputs());
 
     outputs.updateShooter(shooterSubsystem.getOutputs());
+
+    outputs.updateVision(visionSensor.getOutputs());
   }
 }

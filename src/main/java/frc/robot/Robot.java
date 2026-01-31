@@ -90,9 +90,8 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     subsystemManager.periodic();
-    CommandScheduler.getInstance().run();
     odometry.update();
-
+    CommandScheduler.getInstance().run();
   }
 
   @Override
