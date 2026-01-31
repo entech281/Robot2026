@@ -1,9 +1,9 @@
 package frc.entech.sensors;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.entech.TestableHardwareI;
 
-public abstract class EntechSensor<R extends SensorOutput> extends SubsystemBase {
+public abstract class EntechSensor<R extends SensorOutput> implements TestableHardwareI {
   protected EntechSensor() {
   }
 

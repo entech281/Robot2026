@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.sensors.EntechSensor;
 import frc.robot.RobotConstants;
 
@@ -82,22 +83,11 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
 
     @Override
     public Command getTestCommand() {
-        return run(() -> {
-            VisionOutput output = toOutputs();
-            System.out.println("=== VISION TEST ===");
-            System.out.println(output.toString());
-            System.out.println("==================");
-        }).withName("VisionTest");
+        return Commands.none();
     }
 
     @Override
-    public void simulationPeriodic() {
-        periodic();
-    }
-
-    @Override
-    public void periodic() {
-        // Output is calculated in toOutputs()
-        // Add any dashboard updates or logging here if needed
+    public String getName() {
+        return "VisionSensor";
     }
 }

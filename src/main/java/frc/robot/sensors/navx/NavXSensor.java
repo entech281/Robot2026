@@ -38,16 +38,19 @@ public class NavXSensor extends EntechSensor<NavXOutput> {
       output.setIsRotating(gyro.isRotating());
       output.setIsFaultDetected(faultDetected);
     }
-    return output;
-  }
 
-  @Override
-  public void periodic() {
     if (ENABLED) {
       SmartDashboard.putData(gyro);
       faultDetected = faultCounter.isFinished(gyro.isCalibrating());
     }
+
+    return output;
   }
+
+  @Override
+    public String getName() {
+        return "NavXSensor";
+    }
 
   @Override
   public void initialize() {

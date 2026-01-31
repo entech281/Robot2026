@@ -5,7 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.entech.subsystems.SparkMaxOutput;
+import frc.entech.subsystems.SparkOutput;
 import frc.entech.subsystems.SubsystemOutput;
 import java.util.List;
 
@@ -16,14 +16,14 @@ public class DriveOutput extends SubsystemOutput {
   private SwerveModuleState[] moduleStates;
   private ChassisSpeeds speeds;
 
-  private SparkMaxOutput frontLeftDrive;
-  private SparkMaxOutput frontRightDrive;
-  private SparkMaxOutput rearLeftDrive;
-  private SparkMaxOutput rearRightDrive;
-  private SparkMaxOutput frontLeftTurn;
-  private SparkMaxOutput frontRightTurn;
-  private SparkMaxOutput rearLeftTurn;
-  private SparkMaxOutput rearRightTurn;
+  private SparkOutput frontLeftDrive;
+  private SparkOutput frontRightDrive;
+  private SparkOutput rearLeftDrive;
+  private SparkOutput rearRightDrive;
+  private SparkOutput frontLeftTurn;
+  private SparkOutput frontRightTurn;
+  private SparkOutput rearLeftTurn;
+  private SparkOutput rearRightTurn;
 
   private List<double[]> drivePositions;
   private List<double[]> turningPositions;
@@ -99,67 +99,67 @@ public class DriveOutput extends SubsystemOutput {
     this.speeds = speeds;
   }
 
-  public SparkMaxOutput getFrontLeftDrive() {
+  public SparkOutput getFrontLeftDrive() {
     return frontLeftDrive;
   }
 
-  public void setFrontLeftDrive(SparkMaxOutput frontLeftDrive) {
+  public void setFrontLeftDrive(SparkOutput frontLeftDrive) {
     this.frontLeftDrive = frontLeftDrive;
   }
 
-  public SparkMaxOutput getFrontRightDrive() {
+  public SparkOutput getFrontRightDrive() {
     return frontRightDrive;
   }
 
-  public void setFrontRightDrive(SparkMaxOutput frontRightDrive) {
+  public void setFrontRightDrive(SparkOutput frontRightDrive) {
     this.frontRightDrive = frontRightDrive;
   }
 
-  public SparkMaxOutput getRearLeftDrive() {
+  public SparkOutput getRearLeftDrive() {
     return rearLeftDrive;
   }
 
-  public void setRearLeftDrive(SparkMaxOutput rearLeftDrive) {
+  public void setRearLeftDrive(SparkOutput rearLeftDrive) {
     this.rearLeftDrive = rearLeftDrive;
   }
 
-  public SparkMaxOutput getRearRightDrive() {
+  public SparkOutput getRearRightDrive() {
     return rearRightDrive;
   }
 
-  public void setRearRightDrive(SparkMaxOutput rearRightDrive) {
+  public void setRearRightDrive(SparkOutput rearRightDrive) {
     this.rearRightDrive = rearRightDrive;
   }
 
-  public SparkMaxOutput getFrontLeftTurn() {
+  public SparkOutput getFrontLeftTurn() {
     return frontLeftTurn;
   }
 
-  public void setFrontLeftTurn(SparkMaxOutput frontLeftTurn) {
+  public void setFrontLeftTurn(SparkOutput frontLeftTurn) {
     this.frontLeftTurn = frontLeftTurn;
   }
 
-  public SparkMaxOutput getFrontRightTurn() {
+  public SparkOutput getFrontRightTurn() {
     return frontRightTurn;
   }
 
-  public void setFrontRightTurn(SparkMaxOutput frontRightTurn) {
+  public void setFrontRightTurn(SparkOutput frontRightTurn) {
     this.frontRightTurn = frontRightTurn;
   }
 
-  public SparkMaxOutput getRearLeftTurn() {
+  public SparkOutput getRearLeftTurn() {
     return rearLeftTurn;
   }
 
-  public void setRearLeftTurn(SparkMaxOutput rearLeftTurn) {
+  public void setRearLeftTurn(SparkOutput rearLeftTurn) {
     this.rearLeftTurn = rearLeftTurn;
   }
 
-  public SparkMaxOutput getRearRightTurn() {
+  public SparkOutput getRearRightTurn() {
     return rearRightTurn;
   }
 
-  public void setRearRightTurn(SparkMaxOutput rearRightTurn) {
+  public void setRearRightTurn(SparkOutput rearRightTurn) {
     this.rearRightTurn = rearRightTurn;
   }
 

@@ -2,15 +2,15 @@ package frc.robot.subsystems.shooter;
 
 import org.littletonrobotics.junction.Logger;
 
-import frc.entech.subsystems.SparkMaxOutput;
+import frc.entech.subsystems.SparkOutput;
 import frc.entech.subsystems.SubsystemOutput;
 
 public class ShooterOutput extends SubsystemOutput {
     private double speed = 0.0;
     private boolean braking = false;
     private boolean atSpeed = true;
-    private SparkMaxOutput shooterMotorA;
-    private SparkMaxOutput shooterMotorB;
+    private SparkOutput shooterMotorA;
+    private SparkOutput shooterMotorB;
 
     @Override
     public void toLog() {
@@ -66,28 +66,28 @@ public class ShooterOutput extends SubsystemOutput {
     /**
      * @return SparkMaxOutput return the shooterMotorA
      */
-    public SparkMaxOutput getShooterMotorA() {
+    public SparkOutput getShooterMotorA() {
         return shooterMotorA;
     }
 
     /**
      * @param shooterMotorA the shooterMotorA to set
      */
-    public void setShooterMotorA(SparkMaxOutput shooterMotorA) {
+    public void setShooterMotorA(SparkOutput shooterMotorA) {
         this.shooterMotorA = shooterMotorA;
     }
 
     /**
      * @return SparkMaxOutput return the shooterMotorB
      */
-    public SparkMaxOutput getShooterMotorB() {
+    public SparkOutput getShooterMotorB() {
         return shooterMotorB;
     }
 
     /**
      * @param shooterMotorB the shooterMotorB to set
      */
-    public void setShooterMotorB(SparkMaxOutput shooterMotorB) {
+    public void setShooterMotorB(SparkOutput shooterMotorB) {
         this.shooterMotorB = shooterMotorB;
     }
 
