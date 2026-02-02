@@ -270,9 +270,6 @@ public final class RobotConstants {
 
   public static interface TURRET {
     //TODO: Make these real
-    public static final double MAX_TURRET_ANGLE_DEGREES = 180.0;
-    public static final double MIN_TURRET_ANGLE_DEGREES = -180.0;
-    public static final double TURRET_ROTATION_OFFSET_DEGREES = 0.0;
     public static final double INITIAL_POSITION_DEGREES = 0.0;
     // Turret closed-loop settings
     public static final double POSITION_CONVERSION_FACTOR_DEGREES = 0.625;//;//207360 // encoder units -> degrees (set appropriately)
@@ -282,15 +279,15 @@ public final class RobotConstants {
     public static final double TURRET_POSITION_FF = 0.0;
     public static final double TURRET_POSITION_TOLERANCE_DEGREES = 1.0; // considered at setpoint within this
     // preset manual positions (buttons will command these)
-    public static final double TURRET_POSITION_PRESET_A_DEGREES = 45.0;
-    public static final double TURRET_POSITION_PRESET_B_DEGREES = 25;
+    public static final double TURRET_POSITION_PRESET_A_DEGREES = 0.0;
+    public static final double TURRET_POSITION_PRESET_B_DEGREES = 90.0;
     // small adjustment step used by any incremental commands
     public static final double TURRET_ADJUST_STEP_DEGREES = 5.0;
 
     public static final Pose2d BLUE_HUB_LOCATION = new Pose2d(Inches.of(182.11).in(Meters), Inches.of(158.845).in(Meters), new Rotation2d());
     public static final Pose2d RED_HUB_LOCATION = new Pose2d(Inches.of(469.11).in(Meters), Inches.of(158.845).in(Meters), new Rotation2d());
 
-    public static final Translation2d TURRET_OFFSET = new Translation2d();
+    public static final Translation2d TURRET_OFFSET = new Translation2d(-DrivetrainConstants.WHEEL_BASE_METERS / 2.0, 0.0);
 
     public static final double TURRET_LOWER_LIMIT_DEGREES = -120.0;
     public static final double TURRET_UPPER_LIMIT_DEGREES = 120.0;

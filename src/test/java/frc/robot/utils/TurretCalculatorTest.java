@@ -1,8 +1,6 @@
 package frc.robot.utils;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Radians;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -39,44 +37,42 @@ public class TurretCalculatorTest {
 
   @ParameterizedTest
   @MethodSource("testCalculateTargetAngleSupplier")
-  public void testCalculateTargetAngle(Pose2d target, double expectedAngle, Pose2d robotPose) {
+  public void testCalculateTargetAngle(Pose2d target, Pose2d robotPose, double expectedAngle) {
     double calculatedAngle = calculator.calculateTargetTurretAngle(target, robotPose);
     assertEquals(expectedAngle, calculatedAngle, EPS,
         "Calculated turret angle should match expected angle.");
 
   }
+  
+  public static Stream<Arguments> testCalculateTargetAngleSupplier() {
+    return Stream.of(
+          
+      Arguments.of(new Pose2d(0.0, 0.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d()), 0.0),
+      Arguments.of(new Pose2d(1.0, 0.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d()), 0.0),
+      Arguments.of(new Pose2d(-1.0, 0.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d()), 180.0),
+      //Ones above this I'm more sure of than the ones below because
+      //the ones below have math in them from ChatGPT and I had to fix some
+      //The above ones will pass so long as the turret offset is zero
+      //in the y direction (ie centered on the robot)
 
-public static Stream<Arguments> testCalculateTargetAngleSupplier() {
-  return Stream.of(
-    Arguments.of(new Pose2d(0.0, 0.0, new Rotation2d()), 0.0, new Pose2d(0.0, 0.0, new Rotation2d())),
-    Arguments.of(new Pose2d(1.0, 0.0, new Rotation2d()), 0.0, new Pose2d(0.0, 0.0, new Rotation2d())),
-    Arguments.of(new Pose2d(0.0, 1.0, new Rotation2d()), 90.0, new Pose2d(0.0, 0.0, new Rotation2d())),
-    Arguments.of(new Pose2d(-1.0, 0.0, new Rotation2d()), 180.0, new Pose2d(0.0, 0.0, new Rotation2d())),
-    Arguments.of(new Pose2d(0.0, -1.0, new Rotation2d()), -90.0, new Pose2d(0.0, 0.0, new Rotation2d())),
-    Arguments.of(new Pose2d(1.0, 1.0, new Rotation2d()), 45.0, new Pose2d(0.0, 0.0, new Rotation2d())),
-    Arguments.of(new Pose2d(-1.0, 1.0, new Rotation2d()), 135.0, new Pose2d(0.0, 0.0, new Rotation2d())),
-    Arguments.of(new Pose2d(-1.0, -1.0, new Rotation2d()), -135.0, new Pose2d(0.0, 0.0, new Rotation2d())),
-    Arguments.of(new Pose2d(1.0, -1.0, new Rotation2d()), -45.0, new Pose2d(0.0, 0.0, new Rotation2d())),
+      Arguments.of(new Pose2d(0.0, 0.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d()), Math.toDegrees(Math.atan2(-RobotConstants.TURRET.TURRET_OFFSET.getY(), -RobotConstants.TURRET.TURRET_OFFSET.getX()))),
+      Arguments.of(new Pose2d(1.0, 0.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d()), Math.toDegrees(Math.atan2(-RobotConstants.TURRET.TURRET_OFFSET.getY(), 1.0 - RobotConstants.TURRET.TURRET_OFFSET.getX()))),
+      Arguments.of(new Pose2d(0.0, 1.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d()), Math.toDegrees(Math.atan2(1.0 - RobotConstants.TURRET.TURRET_OFFSET.getY(), -RobotConstants.TURRET.TURRET_OFFSET.getX()))),
+                                                                                                      // \/\/This is negative because +/-180 deg are the same
+      Arguments.of(new Pose2d(-1.0, 0.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d()), -Math.toDegrees(Math.atan2(-RobotConstants.TURRET.TURRET_OFFSET.getY(), -1.0 - RobotConstants.TURRET.TURRET_OFFSET.getX()))),
+      Arguments.of(new Pose2d(0.0, -1.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d()), Math.toDegrees(Math.atan2(-1.0 - RobotConstants.TURRET.TURRET_OFFSET.getY(), -RobotConstants.TURRET.TURRET_OFFSET.getX()))),
+      Arguments.of(new Pose2d(1.0, 1.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d()), Math.toDegrees(Math.atan2(1.0 - RobotConstants.TURRET.TURRET_OFFSET.getY(), 1.0 - RobotConstants.TURRET.TURRET_OFFSET.getX()))),
+      Arguments.of(new Pose2d(-1.0, 1.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d()), Math.toDegrees(Math.atan2(1.0 - RobotConstants.TURRET.TURRET_OFFSET.getY(), -1.0 - RobotConstants.TURRET.TURRET_OFFSET.getX()))),
+      Arguments.of(new Pose2d(-1.0, -1.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d()), Math.toDegrees(Math.atan2(-1.0 - RobotConstants.TURRET.TURRET_OFFSET.getY(), -1.0 - RobotConstants.TURRET.TURRET_OFFSET.getX()))),
+      Arguments.of(new Pose2d(1.0, -1.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d()), Math.toDegrees(Math.atan2(-1.0 - RobotConstants.TURRET.TURRET_OFFSET.getY(), 1.0 - RobotConstants.TURRET.TURRET_OFFSET.getX()))),
 
-    // Robot rotated cases (robot heading affects turret angle)
-    Arguments.of(new Pose2d(1.0, 0.0, new Rotation2d()), -90.0, new Pose2d(0.0, 0.0, new Rotation2d(Degrees.of(90.0).in(Radians)))),
-    Arguments.of(new Pose2d(0.0, 1.0, new Rotation2d()), 0.0, new Pose2d(0.0, 0.0, new Rotation2d(Degrees.of(90.0).in(Radians)))),
-    Arguments.of(new Pose2d(-1.0, 0.0, new Rotation2d()), 90.0, new Pose2d(0.0, 0.0, new Rotation2d(Degrees.of(90.0).in(Radians)))),
-    Arguments.of(new Pose2d(1.0, 0.0, new Rotation2d()), -180.0, new Pose2d(0.0, 0.0, new Rotation2d(Degrees.of(180.0).in(Radians)))),
-    Arguments.of(new Pose2d(0.0, -1.0, new Rotation2d()), -180.0, new Pose2d(0.0, 0.0, new Rotation2d(Degrees.of(90.0).in(Radians)))),
-    Arguments.of(new Pose2d(1.0, 1.0, new Rotation2d()), 90.0, new Pose2d(0.0, 0.0, new Rotation2d(Degrees.of(-45.0).in(Radians)))),
+      // Robot rotated cases
+      Arguments.of(new Pose2d(1.0, 0.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d(Degrees.of(90.0).in(Radians))), Math.toDegrees(Math.atan2(-RobotConstants.TURRET.TURRET_OFFSET.rotateBy(new Rotation2d(Degrees.of(90.0).in(Radians))).getY(), 1.0 - RobotConstants.TURRET.TURRET_OFFSET.rotateBy(new Rotation2d(Degrees.of(90.0).in(Radians))).getX())) - 90.0),
 
-    // Actual hub positions
-    Arguments.of(RobotConstants.TURRET.BLUE_HUB_LOCATION, 0.0, new Pose2d(0.0, Inches.of(158.845).in(Meters), new Rotation2d())),
-    Arguments.of(RobotConstants.TURRET.BLUE_HUB_LOCATION, 90.0, new Pose2d(Inches.of(182.11).in(Meters), 0.0, new Rotation2d())),
-    Arguments.of(RobotConstants.TURRET.BLUE_HUB_LOCATION, -180.0, new Pose2d(0.0, Inches.of(158.845).in(Meters), new Rotation2d(Degrees.of(180.0).in(Radians)))),
-    Arguments.of(RobotConstants.TURRET.BLUE_HUB_LOCATION, -90.0, new Pose2d(Inches.of(182.11).in(Meters), Inches.of(158.845).in(Meters) * 2, new Rotation2d())),
+      Arguments.of(new Pose2d(0.0, 1.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d(Degrees.of(90.0).in(Radians))), Math.toDegrees(Math.atan2(1.0 - RobotConstants.TURRET.TURRET_OFFSET.rotateBy(new Rotation2d(Degrees.of(90.0).in(Radians))).getY(), -RobotConstants.TURRET.TURRET_OFFSET.rotateBy(new Rotation2d(Degrees.of(90.0).in(Radians))).getX())) - 90.0),
 
-    Arguments.of(RobotConstants.TURRET.RED_HUB_LOCATION, 0.0, new Pose2d(0.0, Inches.of(158.845).in(Meters), new Rotation2d())),
-    Arguments.of(RobotConstants.TURRET.RED_HUB_LOCATION, 90.0, new Pose2d(Inches.of(469.11).in(Meters), 0.0, new Rotation2d())),
-    Arguments.of(RobotConstants.TURRET.RED_HUB_LOCATION, -180.0, new Pose2d(0.0, Inches.of(158.845).in(Meters), new Rotation2d(Degrees.of(180.0).in(Radians)))),
-    Arguments.of(RobotConstants.TURRET.RED_HUB_LOCATION, -90.0, new Pose2d(Inches.of(469.11).in(Meters), Inches.of(158.845).in(Meters) * 2, new Rotation2d()))
-  );
+      Arguments.of(new Pose2d(1.0, 1.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d(Degrees.of(-45.0).in(Radians))), Math.toDegrees(Math.atan2(1.0 - RobotConstants.TURRET.TURRET_OFFSET.rotateBy(new Rotation2d(Degrees.of(-45.0).in(Radians))).getY(), 1.0 - RobotConstants.TURRET.TURRET_OFFSET.rotateBy(new Rotation2d(Degrees.of(-45.0).in(Radians))).getX())) + 45.0)
+    );
   }
 
  

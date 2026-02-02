@@ -7,9 +7,7 @@ import frc.robot.RobotConstants;
 public class TurretCalculator {
     
     public double calculateTargetTurretAngle(Pose2d target, Pose2d robotPose) {
-        //TODO: Find out what happens if I request an angle that is outside
-        //of the range of motion
-        Translation2d targetTranslation = target.getTranslation().minus(robotPose.getTranslation().plus(RobotConstants.TURRET.TURRET_OFFSET));
+        Translation2d targetTranslation = target.getTranslation().minus(robotPose.getTranslation().plus(RobotConstants.TURRET.TURRET_OFFSET.rotateBy(robotPose.getRotation())));
         return targetTranslation.getAngle().getDegrees() - robotPose.getRotation().getDegrees();
     }
 

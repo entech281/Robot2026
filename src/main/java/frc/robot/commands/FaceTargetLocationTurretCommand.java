@@ -5,12 +5,14 @@ import frc.entech.commands.EntechCommand;
 import frc.robot.io.RobotIO;
 import frc.robot.subsystems.turret.TurretInput;
 import frc.robot.subsystems.turret.TurretSubsystem;
+import frc.robot.util.TurretCalculator;
 
 public class FaceTargetLocationTurretCommand extends EntechCommand {
 
     private final TurretSubsystem turretSubsystem;
     private final TurretInput turretInput = new TurretInput();
     private final Pose2d target;
+    private TurretCalculator calculator = new TurretCalculator();
 
 
     public FaceTargetLocationTurretCommand(TurretSubsystem turretSubsystem, Pose2d target) {
@@ -24,14 +26,11 @@ public class FaceTargetLocationTurretCommand extends EntechCommand {
 
     @Override
     public void execute() {
-        //TODO: Find out what happens if I request and angle that is outside
-        //of the range of motion
         Pose2d robotPose = RobotIO.getInstance().getOdometryPose();
-        double deltaX = target.getX() - robotPose.getX();
-        double deltaY = target.getY() - robotPose.getY();
-        double angleToTarget = Math.toDegrees(Math.atan2(deltaY, deltaX));
-        //TODO: Minus or plus I'm not really sure
-        turretInput.setRequestedPosition(angleToTarget - robotPose.getRotation().getDegrees());
+        
+        double targetAngle = calculator.calculateTargetTurretAngle(target, robotPose);
+        
+        turretInput.setRequestedPosition(targetAngle);
         turretSubsystem.updateInputs(turretInput);
     }
 

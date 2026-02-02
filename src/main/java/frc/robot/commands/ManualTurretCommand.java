@@ -19,6 +19,7 @@ public class ManualTurretCommand extends EntechCommand{
     @Override
     public void initialize() {
         turretInput.setRequestedPosition(position);
+        turretSS.updateInputs(turretInput);
     }
 
     @Override

@@ -36,11 +36,6 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     private TurretInput latestInput = new TurretInput();
     private SparkMaxConfig turretConfig;
 
-    // private final ClampedDouble desiredTurretPositionEncoder = ClampedDouble.builder()
-    //         .bounds(-5000000, 5000000)
-    //         .withIncrement(10000.0)
-    //         .withValue(0.0).build();
-
     @Override
     public void initialize() {
         if (!ENABLED) return;
@@ -118,14 +113,13 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         setTurretPosition(turretEncoder.getPosition() + RobotConstants.TURRET.TURRET_ADJUST_STEP_DEGREES);
     }
 
-    // position control not implemented in this simplified turret. Use percent output via turnTurret().
-
     public void setTurretPosition(double desiredAngle) {
         if (!ENABLED) return;
         // clamp to allowed range
-        double clamped = Math.max(RobotConstants.TURRET.MIN_TURRET_ANGLE_DEGREES,
-            Math.min(RobotConstants.TURRET.MAX_TURRET_ANGLE_DEGREES, desiredAngle));
+        double clamped = Math.max(RobotConstants.TURRET.TURRET_LOWER_LIMIT_DEGREES,
+            Math.min(RobotConstants.TURRET.TURRET_UPPER_LIMIT_DEGREES, desiredAngle));
         latestInput.setRequestedPosition(clamped);
+
         if (turretPIDController != null) {
             turretPIDController.setSetpoint(clamped, ControlType.kPosition);
         } else {
@@ -137,16 +131,9 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     @Override
     public void periodic() {
         if (!ENABLED) return;
-        // Position control: continuously ensure setpoint equals latest requested position
         double desiredPos = latestInput.getRequestedPosition();
         if (turretPIDController != null) {
-            if (desiredPos <= RobotConstants.TURRET.TURRET_UPPER_LIMIT_DEGREES && desiredPos >= RobotConstants.TURRET.TURRET_LOWER_LIMIT_DEGREES) {
-                turretPIDController.setSetpoint(desiredPos, ControlType.kPosition);
-            } else if (desiredPos > RobotConstants.TURRET.TURRET_UPPER_LIMIT_DEGREES) {
-                turretPIDController.setSetpoint(RobotConstants.TURRET.TURRET_UPPER_LIMIT_DEGREES, ControlType.kPosition);
-            } else if (desiredPos < RobotConstants.TURRET.TURRET_LOWER_LIMIT_DEGREES) {
-                turretPIDController.setSetpoint(RobotConstants.TURRET.TURRET_LOWER_LIMIT_DEGREES, ControlType.kPosition);
-            }
+            setTurretPosition(desiredPos);
         }
     }
     
@@ -158,7 +145,6 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
 
     @Override
     public void updateInputs(TurretInput input) {
-        // store latest requested position from input for toOutputs
         this.latestInput = input;
     }
 
@@ -176,13 +162,13 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         double currentPos = turretEncoder.getPosition();
         double reqPos = latestInput.getRequestedPosition();
 
-    // moving = whether position controller is actively trying to move (approx via velocity)
-    out.setMoving(Math.abs(turretEncoder.getVelocity()) > 1e-3);
+        // moving = whether position controller is actively trying to move (approx via velocity)
+        out.setMoving(Math.abs(turretEncoder.getVelocity()) > 1e-3);
         out.setRequestedPosition(reqPos);
         out.setCurrentPosition(currentPos);
-        out.setAtBlueLimit(turretMotor.getForwardLimitSwitch().isPressed());
-        out.setAtRedLimit(turretMotor.getReverseLimitSwitch().isPressed());
-    out.setAtRequestedPosition(Math.abs(currentPos - reqPos) <= RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES);
+        out.setAtForwardLimit(turretMotor.getForwardLimitSwitch().isPressed());
+        out.setAtReverseLimit(turretMotor.getReverseLimitSwitch().isPressed());
+        out.setAtRequestedPosition(Math.abs(currentPos - reqPos) <= RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES);
 
         out.setTurretMotor(SparkMaxOutput.createOutput(turretMotor));
 
