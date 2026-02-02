@@ -138,7 +138,7 @@ public class DriveSubsystem extends EntechSubsystem<DriveInput, DriveOutput> {
   }
 
   @Override
-  public DriveOutput toOutputs() {
+  protected DriveOutput toOutputs() {
     // Use the odometry lock while reading the high-rate queues to avoid races
     OdometryThread.odometryLock.lock();
     try {

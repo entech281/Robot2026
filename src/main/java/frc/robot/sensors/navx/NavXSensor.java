@@ -1,9 +1,6 @@
-package frc.robot.subsystems.navx;
+package frc.robot.sensors.navx;
 
-import org.ejml.simple.UnsupportedOperation;
-
-import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
+import frc.entech.NavX.AHRS;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -11,17 +8,17 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.entech.subsystems.EntechSubsystem;
+import frc.entech.sensors.EntechSensor;
 import frc.entech.util.StoppingCounter;
 
-public class NavXSubsystem extends EntechSubsystem<NavXInput, NavXOutput> {
+public class NavXSensor extends EntechSensor<NavXOutput> {
   private static final boolean ENABLED = true;
   private AHRS gyro;
   private final StoppingCounter faultCounter = new StoppingCounter(3.5);
   private boolean faultDetected = false;
 
   @Override
-  public NavXOutput toOutputs() {
+  protected NavXOutput toOutputs() {
     NavXOutput output = new NavXOutput();
 
     if (ENABLED) {
@@ -41,21 +38,24 @@ public class NavXSubsystem extends EntechSubsystem<NavXInput, NavXOutput> {
       output.setIsRotating(gyro.isRotating());
       output.setIsFaultDetected(faultDetected);
     }
-    return output;
-  }
 
-  @Override
-  public void periodic() {
     if (ENABLED) {
       SmartDashboard.putData(gyro);
       faultDetected = faultCounter.isFinished(gyro.isCalibrating());
     }
+
+    return output;
   }
+
+  @Override
+    public String getName() {
+        return "NavXSensor";
+    }
 
   @Override
   public void initialize() {
     if (ENABLED) {
-      gyro = new AHRS(NavXComType.kMXP_SPI);
+      gyro = new AHRS();
 
       gyro.reset();
 
@@ -71,9 +71,9 @@ public class NavXSubsystem extends EntechSubsystem<NavXInput, NavXOutput> {
     if (ENABLED) {
       double radiansPerSecond = Units.degreesToRadians(gyro.getRate());
       return ChassisSpeeds.fromRobotRelativeSpeeds(gyro.getVelocityX(), gyro.getVelocityY(),
-          radiansPerSecond, gyro.getRotation2d());
+          radiansPerSecond, new Rotation2d(gyro.getYaw()));
     } else {
-        return ChassisSpeeds.fromRobotRelativeSpeeds(0.0, 0.0, 0.0, new Rotation2d(0.0));
+      return ChassisSpeeds.fromRobotRelativeSpeeds(0.0, 0.0, 0.0, new Rotation2d(0.0));
     }
   }
 
@@ -82,15 +82,15 @@ public class NavXSubsystem extends EntechSubsystem<NavXInput, NavXOutput> {
     return ENABLED;
   }
 
-  @Override
-  public void updateInputs(NavXInput input) {
-    throw new UnsupportedOperation();
-  }
+  // @Override
+  // public void updateInputs(NavXInput input) {
+  // throw new UnsupportedOperation();
+  // }
 
   public void zeroYaw() {
-      if (ENABLED) {
-          gyro.zeroYaw();
-      }
+    if (ENABLED) {
+      gyro.zeroYaw();
+    }
   }
 
   @Override
@@ -99,8 +99,8 @@ public class NavXSubsystem extends EntechSubsystem<NavXInput, NavXOutput> {
   }
 
   public void setAngleAdjustment(double angleAdjustment) {
-      if (ENABLED) {
-          gyro.setAngleAdjustment(angleAdjustment);
-      }
+    if (ENABLED) {
+      gyro.setAngleAdjustment(angleAdjustment);
+    }
   }
 }

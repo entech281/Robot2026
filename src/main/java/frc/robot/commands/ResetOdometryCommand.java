@@ -1,10 +1,10 @@
 package frc.robot.commands;
 
 import java.util.Optional;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.entech.commands.EntechCommand;
+import frc.robot.RobotConstants;
 import frc.robot.processors.OdometryProcessor;
 
 public class ResetOdometryCommand extends EntechCommand {
@@ -18,10 +18,10 @@ public class ResetOdometryCommand extends EntechCommand {
   public void initialize() {
     Optional<Alliance> team = DriverStation.getAlliance();
     if (team.isPresent() && team.get() == Alliance.Blue) {
-      odometry.resetOdometry(new Pose2d(1.38, 5.53, odometry.getEstimatedPose().getRotation()));
+      odometry.resetOdometry(RobotConstants.ODOMETRY.INITIAL_POSE);
       return;
     }
-    odometry.resetOdometry(new Pose2d(15.17, 5.53, odometry.getEstimatedPose().getRotation()));
+    odometry.resetOdometry(RobotConstants.ODOMETRY.INITIAL_POSE);
   }
 
   @Override

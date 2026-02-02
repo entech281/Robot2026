@@ -8,22 +8,23 @@ package frc.entech.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.entech.TestableHardwareI;
 
 public abstract class EntechSubsystem<I extends SubsystemInput, R extends SubsystemOutput>
-    extends SubsystemBase {
+    extends SubsystemBase implements TestableHardwareI {
 
-  protected EntechSubsystem() {}
+  protected EntechSubsystem() {
+  }
 
   public abstract void initialize();
-  
+
   public abstract boolean isEnabled();
 
   public abstract void updateInputs(I input);
 
   public abstract Command getTestCommand();
 
-
-  public abstract R toOutputs();
+  protected abstract R toOutputs();
 
   public R getOutputs() {
     R out = toOutputs();

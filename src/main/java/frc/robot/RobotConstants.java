@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
@@ -44,10 +45,10 @@ public final class RobotConstants {
     // 20.0; //2.0; // percent per second (1 = 100%)
 
     // Chassis configuration
-    public static final double TRACK_WIDTH_METERS = Units.inchesToMeters(21.5);
+    public static final double TRACK_WIDTH_METERS = Units.inchesToMeters(20.75);
 
     // Distance between centers of right and left wheels on robot
-    public static final double WHEEL_BASE_METERS = Units.inchesToMeters(18);
+    public static final double WHEEL_BASE_METERS = Units.inchesToMeters(22.75);
 
     // Distance to farthest module
     public static final double DRIVE_BASE_RADIUS_METERS = Math.sqrt(Math.pow(WHEEL_BASE_METERS / 2.0, 2)
@@ -83,8 +84,7 @@ public final class RobotConstants {
 
     // Calculations required for driving motor conversion factors and feed forward
     public static final double DRIVING_MOTOR_FREE_SPEED_RPS = FREE_SPEED_RPM / 60;
-    public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(3.8); // 4.125;
-                                                                                  // distance 8.62
+    public static final double WHEEL_DIAMETER_METERS = 0.09645823151376486;
     public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
     public static final double DRIVING_MOTOR_REDUCTION = (45.0 * 17 * 50) / (DRIVING_MOTOR_PINION_TEETH * 15 * 27);
     public static final double DRIVE_WHEEL_FREE_SPEED_RPS = (DRIVING_MOTOR_FREE_SPEED_RPS * WHEEL_CIRCUMFERENCE_METERS)
@@ -139,8 +139,7 @@ public final class RobotConstants {
 
   public static interface LiveTuning {
     public static final Map<String, Double> VALUES = Map.ofEntries(
-
-    );
+        Map.entry("ShooterSubsystem/SetSpeed", 0.0));
   }
 
   public static interface PORTS {
@@ -162,6 +161,9 @@ public final class RobotConstants {
       public static final int FRONT_RIGHT_TURNING = 21;
       public static final int REAR_LEFT_TURNING = 31;
       public static final int REAR_RIGHT_TURNING = 41;
+
+      public static final int SHOOTER_MOTOR_A = 51;
+      public static final int SHOOTER_MOTOR_B = 52;
 
       public static final int POWER_DISTRIBUTION_HUB = 1;
       public static final int TURRET_MOTOR = 60;
@@ -207,14 +209,19 @@ public final class RobotConstants {
     public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(5, 5, 1000000);
 
     public static interface Cameras {
-      public static final String EXAMPLE = "example";
+      public static final String CAMERA_A = "Arducam_Alpha";
+      public static final String CAMERA_B = "Arducam_Beta";
+      public static final String CAMERA_C = "Arducam_Charlie";
+      public static final String CAMERA_D = "Arducam_Delta";
     }
 
     public static interface Filters {
-      public static final double MAX_AMBIGUITY = 0.5;
-      public static final double MAX_DISTANCE = 3.0;
-      public static final int[] ALLOWED_TAGS = new int[] { 1, 2, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-          21, 22 };
+      public static final double MAX_AMBIGUITY = 0.3; // Lower = more strict (0.2-0.3 is good)
+      public static final double MAX_DISTANCE = 5.0; // Max distance to trust tags (meters)
+      public static final int[] ALLOWED_TAGS = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }; // Update with
+                                                                                                          // actual 2026
+                                                                                                          // tag IDs
+
     }
 
     public static interface Resolution {
@@ -248,7 +255,7 @@ public final class RobotConstants {
   }
 
   public static interface ODOMETRY {
-    public static final int ODOMETRY_FREQUENCY = 500;
+    public static final int ODOMETRY_FREQUENCY = 250;
     public static final double FIELD_LENGTH_INCHES = 54 * 12 + 3.25;
     public static final double FIELD_WIDTH_INCHES = 26 * 12 + 11.25;
 

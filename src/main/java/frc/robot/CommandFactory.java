@@ -11,6 +11,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -22,35 +23,42 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.entech.TestableHardwareI;
 import frc.entech.commands.AutonomousException;
 import frc.entech.commands.InstantAnytimeCommand;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.robot.commands.GyroResetByAngleCommand;
+import frc.robot.commands.RunShooterAtLiveSpeedCommand;
 import frc.robot.commands.RunTestCommand;
 import frc.robot.io.RobotIO;
 import frc.robot.livetuning.LiveTuningHandler;
+import frc.robot.livetuning.WheelDiameterCharacterizer;
 import frc.robot.operation.UserPolicy;
 import frc.robot.processors.OdometryProcessor;
 import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.navx.NavXSubsystem;
+import frc.robot.sensors.navx.NavXSensor;
 import java.util.Optional;
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 @SuppressWarnings("unused")
 public class CommandFactory {
   private final DriveSubsystem driveSubsystem;
-  private final NavXSubsystem navXSubsystem;
+  private final NavXSensor navXSubsystem;
   private final OdometryProcessor odometry;
-  private final SubsystemManager subsystemManager;
+  private final HardwareManager subsystemManager;
   private final SendableChooser<Command> autoChooser;
   private final SendableChooser<Command> testChooser;
 
-  public CommandFactory(SubsystemManager subsystemManager, OdometryProcessor odometry) {
+  public CommandFactory(HardwareManager subsystemManager, OdometryProcessor odometry) {
     this.driveSubsystem = subsystemManager.getDriveSubsystem();
     this.navXSubsystem = subsystemManager.getNavXSubsystem();
     this.odometry = odometry;
     this.subsystemManager = subsystemManager;
-
+    subsystemManager.getShooterSubsystem()
+        .setDefaultCommand(new RunShooterAtLiveSpeedCommand(subsystemManager.getShooterSubsystem()));
     RobotConfig config;
     try {
       config = RobotConfig.fromGUISettings();
@@ -64,6 +72,7 @@ public class CommandFactory {
     tab.add("Save", new InstantAnytimeCommand(() -> LiveTuningHandler.getInstance().saveToJSON()));
     tab.add("Load", new InstantAnytimeCommand(() -> LiveTuningHandler.getInstance().resetToJSON()));
     tab.add("Code Defaults", new InstantAnytimeCommand(() -> LiveTuningHandler.getInstance().resetToDefaults()));
+    tab.add("Characterize Wheel Diameter", getWheelCharacterizationCommand());
     this.testChooser = getTestCommandChooser();
     testChooser.addOption("All tests", getTestCommand());
     Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST, "No Current Test");
@@ -102,7 +111,7 @@ public class CommandFactory {
 
   public Command getTestCommand() {
     SequentialCommandGroup allTests = new SequentialCommandGroup();
-    for (EntechSubsystem<?, ?> subsystem : subsystemManager.getSubsystemList()) {
+    for (TestableHardwareI subsystem : subsystemManager.getSubsystemList()) {
       if (subsystem.isEnabled()) {
         addSubsystemTest(allTests, subsystem);
       }
@@ -113,7 +122,7 @@ public class CommandFactory {
   }
 
   private static void addSubsystemTest(SequentialCommandGroup group,
-      EntechSubsystem<?, ?> subsystem) {
+      TestableHardwareI subsystem) {
 
     group.addCommands(
         Commands.runOnce(() -> Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST,
@@ -125,9 +134,43 @@ public class CommandFactory {
 
   private SendableChooser<Command> getTestCommandChooser() {
     SendableChooser<Command> testCommandChooser = new SendableChooser<>();
-    for (EntechSubsystem<?, ?> subsystem : subsystemManager.getSubsystemList()) {
+    for (TestableHardwareI subsystem : subsystemManager.getSubsystemList()) {
       testCommandChooser.addOption(subsystem.getName(), subsystem.getTestCommand());
     }
     return testCommandChooser;
+  }
+
+  public Command getWheelCharacterizationCommand() {
+    WheelDiameterCharacterizer characterizer = new WheelDiameterCharacterizer();
+    return new SequentialCommandGroup(
+        getSubsystemTestMessageCommand("Preparing to move."),
+        new InstantCommand(() -> {
+          driveSubsystem.pathFollowDrive(new ChassisSpeeds(0.0, 0.0, 0.35));
+        }, driveSubsystem),
+        getSubsystemTestMessageCommand("Waiting for system movement to stabilize."),
+        new WaitCommand(5),
+        getSubsystemTestMessageCommand("Taking initial measurement."),
+        new InstantCommand(() -> {
+          characterizer.getInitialMeasurements();
+        }),
+        getSubsystemTestMessageCommand("Generating deltas."),
+        new WaitCommand(120),
+        getSubsystemTestMessageCommand("Calculating Results."),
+        getSubsystemTestMessageCommand(() -> characterizer.updateAndCalculate()),
+        new InstantCommand(() -> {
+          driveSubsystem.pathFollowDrive(new ChassisSpeeds(0.0, 0.0, 0.0));
+        }, driveSubsystem));
+  }
+
+  private Command getSubsystemTestMessageCommand(String message) {
+    return new InstantCommand(() -> {
+      Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST, message);
+    });
+  }
+
+  private Command getSubsystemTestMessageCommand(DoubleSupplier message) {
+    return new InstantCommand(() -> {
+      Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST, "" + (message.getAsDouble() * 2));
+    });
   }
 }
