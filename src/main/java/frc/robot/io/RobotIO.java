@@ -54,10 +54,6 @@ public class RobotIO implements DriveInputSupplier {
     return latestNavXOutput;
   }
 
-  public TurretOutput getTurretOutput() {
-    return latestTurretOutput;
-  }
-
   public Pose2d getOdometryPose() {
     return latestOdometryPose;
   }
@@ -102,11 +98,6 @@ public class RobotIO implements DriveInputSupplier {
   public void updateDrive(DriveOutput dro) {
     latestDriveOutput = dro;
     dro.log();
-  }
-
-  public void updateTurret(TurretOutput to) {
-    latestTurretOutput = to;
-    to.log();
   }
 
   public void updateShooter(ShooterOutput so) {
@@ -158,7 +149,6 @@ public class RobotIO implements DriveInputSupplier {
   private DriveOutput latestDriveOutput;
   private ShooterOutput latestShooterOutput;
   private VisionOutput latestVisionOutput;
-  private TurretOutput latestTurretOutput;
   private HoodOutput latestHoodOutput;
   private HopperOutput latestHopperOutput;
   private ClimbOutput latestClimbOutput;

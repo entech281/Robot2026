@@ -18,7 +18,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
-import frc.entech.subsystems.SparkMaxOutput;
+import frc.entech.subsystems.SparkOutput;
 import frc.robot.RobotConstants;
 
 /**
@@ -170,7 +170,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         out.setAtReverseLimit(turretMotor.getReverseLimitSwitch().isPressed());
         out.setAtRequestedPosition(Math.abs(currentPos - reqPos) <= RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES);
 
-        out.setTurretMotor(SparkMaxOutput.createOutput(turretMotor));
+        out.setTurretMotor(SparkOutput.createOutput(turretMotor));
 
         return out;
     }

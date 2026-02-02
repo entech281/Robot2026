@@ -1,7 +1,7 @@
 package frc.robot.subsystems.turret;
 import org.littletonrobotics.junction.Logger;
 
-import frc.entech.subsystems.SparkMaxOutput;
+import frc.entech.subsystems.SparkOutput;
 import frc.entech.subsystems.SubsystemOutput;
 
 public class TurretOutput extends SubsystemOutput {
@@ -13,7 +13,7 @@ public class TurretOutput extends SubsystemOutput {
   private boolean isAtReverseLimit = false;
   private double currentPosition = 0.0;
 
-  private SparkMaxOutput turretMotor;
+  private SparkOutput turretMotor;
       
         @Override
         public void toLog() {
@@ -75,11 +75,11 @@ public class TurretOutput extends SubsystemOutput {
           this.requestedPosition = requestedPosition;
         }
       
-        public SparkMaxOutput getTurretMotor() {
+        public SparkOutput getTurretMotor() {
           return this.turretMotor;
         }
       
-        public void setTurretMotor(SparkMaxOutput turretMotor) {
+        public void setTurretMotor(SparkOutput turretMotor) {
           this.turretMotor = turretMotor;
         }
 
