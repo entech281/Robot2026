@@ -31,32 +31,32 @@ public class DriveOutput extends SubsystemOutput {
 
   @Override
   public void toLog() {
-    Logger.recordOutput("DriveOutput/modulePositions", modulePositions);
-    Logger.recordOutput("DriveOutput/rawAbsoluteEncoders", rawAbsoluteEncoders);
-    Logger.recordOutput("DriveOutput/virtualAbsoluteEncoders", virtualAbsoluteEncoders);
-    Logger.recordOutput("DriveOutput/moduleStates", moduleStates);
-    Logger.recordOutput("DriveOutput/chassisSpeed", speeds);
+    // Logger.recordOutput("DriveOutput/modulePositions", modulePositions);
+    // Logger.recordOutput("DriveOutput/rawAbsoluteEncoders", rawAbsoluteEncoders);
+    // Logger.recordOutput("DriveOutput/virtualAbsoluteEncoders", virtualAbsoluteEncoders);
+    // Logger.recordOutput("DriveOutput/moduleStates", moduleStates);
+    // Logger.recordOutput("DriveOutput/chassisSpeed", speeds);
 
-    Logger.recordOutput("DriveOutput/drivePositions/frontLeft", drivePositions.get(0));
-    Logger.recordOutput("DriveOutput/drivePositions/frontRight", drivePositions.get(1));
-    Logger.recordOutput("DriveOutput/drivePositions/rearLeft", drivePositions.get(2));
-    Logger.recordOutput("DriveOutput/drivePositions/rearRight", drivePositions.get(3));
+    // Logger.recordOutput("DriveOutput/drivePositions/frontLeft", drivePositions.get(0));
+    // Logger.recordOutput("DriveOutput/drivePositions/frontRight", drivePositions.get(1));
+    // Logger.recordOutput("DriveOutput/drivePositions/rearLeft", drivePositions.get(2));
+    // Logger.recordOutput("DriveOutput/drivePositions/rearRight", drivePositions.get(3));
 
-    Logger.recordOutput("DriveOutput/turnPosition/frontLeft", turningPositions.get(0));
-    Logger.recordOutput("DriveOutput/turnPosition/frontRight", turningPositions.get(1));
-    Logger.recordOutput("DriveOutput/turnPosition/rearLeft", turningPositions.get(2));
-    Logger.recordOutput("DriveOutput/turnPosition/rearRight", turningPositions.get(3));
+    // Logger.recordOutput("DriveOutput/turnPosition/frontLeft", turningPositions.get(0));
+    // Logger.recordOutput("DriveOutput/turnPosition/frontRight", turningPositions.get(1));
+    // Logger.recordOutput("DriveOutput/turnPosition/rearLeft", turningPositions.get(2));
+    // Logger.recordOutput("DriveOutput/turnPosition/rearRight", turningPositions.get(3));
 
     Logger.recordOutput("DriveOutput/timeStamps", timestamps);
 
-    frontLeftDrive.log("DriveOutput/frontLeft");
-    frontRightDrive.log("DriveOutput/frontRight");
-    rearLeftDrive.log("DriveOutput/rearLeft");
-    rearRightDrive.log("DriveOutput/rearRight");
-    frontRightTurn.log("DriveOutput/frontRightTurn");
-    rearLeftTurn.log("DriveOutput/rearLeftTurn");
-    rearRightTurn.log("DriveOutput/rearRightTurn");
-    frontLeftTurn.log("DriveOutput/frontLeftTurn");
+    // frontLeftDrive.log("DriveOutput/frontLeft");
+    // frontRightDrive.log("DriveOutput/frontRight");
+    // rearLeftDrive.log("DriveOutput/rearLeft");
+    // rearRightDrive.log("DriveOutput/rearRight");
+    // frontRightTurn.log("DriveOutput/frontRightTurn");
+    // rearLeftTurn.log("DriveOutput/rearLeftTurn");
+    // rearRightTurn.log("DriveOutput/rearRightTurn");
+    // frontLeftTurn.log("DriveOutput/frontLeftTurn");
   }
 
   public SwerveModulePosition[] getModulePositions() {
