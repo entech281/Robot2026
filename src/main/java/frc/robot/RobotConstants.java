@@ -1,5 +1,8 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -163,6 +166,7 @@ public final class RobotConstants {
       public static final int SHOOTER_MOTOR_B = 52;
 
       public static final int POWER_DISTRIBUTION_HUB = 1;
+      public static final int TURRET_MOTOR = 60;
     }
 
     public static interface CONTROLLER {
@@ -184,6 +188,7 @@ public final class RobotConstants {
         public static final int GYRO_RESET = 7;
         public static final int DRIVE_X = 3;
         public static final int RESET_ODOMETRY = 8;
+        public static final int B = 2;
       }
     }
 
@@ -268,6 +273,31 @@ public final class RobotConstants {
 
   public static interface TEST_CONSTANTS {
     public static final double STANDARD_TEST_LENGTH = 1;
+  }
+
+  public static interface TURRET {
+    //TODO: Make these real
+    public static final double INITIAL_POSITION_DEGREES = 0.0;
+    // Turret closed-loop settings
+    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 0.625;//;//207360 // encoder units -> degrees (set appropriately)
+    public static final double TURRET_POSITION_P = 0.2;
+    public static final double TURRET_POSITION_I = 0.0;
+    public static final double TURRET_POSITION_D = 0.0;
+    public static final double TURRET_POSITION_FF = 0.0;
+    public static final double TURRET_POSITION_TOLERANCE_DEGREES = 1.0; // considered at setpoint within this
+    // preset manual positions (buttons will command these)
+    public static final double TURRET_POSITION_PRESET_A_DEGREES = 0.0;
+    public static final double TURRET_POSITION_PRESET_B_DEGREES = 90.0;
+    // small adjustment step used by any incremental commands
+    public static final double TURRET_ADJUST_STEP_DEGREES = 5.0;
+
+    public static final Pose2d BLUE_HUB_LOCATION = new Pose2d(Inches.of(182.11).in(Meters), Inches.of(158.845).in(Meters), new Rotation2d());
+    public static final Pose2d RED_HUB_LOCATION = new Pose2d(Inches.of(469.11).in(Meters), Inches.of(158.845).in(Meters), new Rotation2d());
+
+    public static final Translation2d TURRET_OFFSET = new Translation2d(-DrivetrainConstants.WHEEL_BASE_METERS / 2.0, 0.0);
+
+    public static final double TURRET_LOWER_LIMIT_DEGREES = -120.0;
+    public static final double TURRET_UPPER_LIMIT_DEGREES = 120.0;
   }
 
   private RobotConstants() {

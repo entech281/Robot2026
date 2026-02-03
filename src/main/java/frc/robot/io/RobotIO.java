@@ -9,6 +9,7 @@ import frc.robot.RobotConstants;
 import frc.robot.subsystems.climb.ClimbOutput;
 import frc.robot.subsystems.drive.DriveInput;
 import frc.robot.subsystems.drive.DriveOutput;
+import frc.robot.subsystems.turret.TurretOutput;
 import frc.robot.subsystems.hood.HoodOutput;
 import frc.robot.subsystems.hopper.HopperOutput;
 import frc.robot.subsystems.intake.IntakeOutput;
@@ -148,11 +149,11 @@ public class RobotIO implements DriveInputSupplier {
   private DriveOutput latestDriveOutput;
   private ShooterOutput latestShooterOutput;
   private VisionOutput latestVisionOutput;
-  private TurretOutput latestTurretOutput;
   private HoodOutput latestHoodOutput;
   private HopperOutput latestHopperOutput;
   private ClimbOutput latestClimbOutput;
   private TransferOutput latestTransferOutput;
   private IntakeOutput latestIntakeOutput;
   private Pose2d latestOdometryPose = RobotConstants.ODOMETRY.INITIAL_POSE;
+  private TurretOutput latestTurretOutput;
 }
