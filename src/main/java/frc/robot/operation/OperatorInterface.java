@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -110,12 +111,13 @@ public class OperatorInterface
   xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.RESET_ODOMETRY)
     .onTrue(new ResetOdometryCommand(odometry));
 
-  xboxController.a().onTrue(Commands.runOnce( () -> 
-    new ManualTurretCommand(subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.TURRET_POSITION_PRESET_A_DEGREES)));
+  xboxController.a().onTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.TURRET_POSITION_PRESET_A_DEGREES));
 
-  xboxController.b().onTrue(Commands.runOnce( () ->
-    subsystemManager.getTurretSubsystem().setTurretPosition(RobotConstants.TURRET.TURRET_POSITION_PRESET_B_DEGREES)));
-  }
+  xboxController.b().onTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.TURRET_POSITION_PRESET_B_DEGREES));
+    
+
+  xboxController.y().onTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.TURRET_POSITION_PRESET_Y_DEGREES));
+}
 
   public void scoreOperatorBindings() {
 

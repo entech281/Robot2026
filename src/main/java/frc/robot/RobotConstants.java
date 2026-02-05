@@ -291,6 +291,7 @@ public final class RobotConstants {
     // preset manual positions (buttons will command these)
     public static final double TURRET_POSITION_PRESET_A_DEGREES = 0.0;
     public static final double TURRET_POSITION_PRESET_B_DEGREES = -90.0;
+    public static final double TURRET_POSITION_PRESET_Y_DEGREES = 90;
     // small adjustment step used by any incremental commands
     public static final double TURRET_ADJUST_STEP_DEGREES = 5.0;
 
