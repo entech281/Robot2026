@@ -4,9 +4,9 @@ import org.littletonrobotics.junction.Logger;
 
 import com.revrobotics.spark.SparkBase;
 
-public class SparkMaxOutput {
+public class SparkOutput {
 
-  private SparkMaxOutput() {
+  private SparkOutput() {
   }
 
   private double currentSpeed;
@@ -21,8 +21,8 @@ public class SparkMaxOutput {
   private boolean isLowerLimitPressed;
   private double currentPosition;
 
-  public static SparkMaxOutput createOutput(SparkBase sm) {
-    SparkMaxOutput smo = new SparkMaxOutput();
+  public static SparkOutput createOutput(SparkBase sm) {
+    SparkOutput smo = new SparkOutput();
     smo.currentSpeed = sm.getEncoder().getVelocity();
     smo.busVoltage = sm.getBusVoltage();
     smo.motorTemperature = sm.getMotorTemperature();

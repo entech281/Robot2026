@@ -1,10 +1,9 @@
 package frc.entech.sensors;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.entech.subsystems.SubsystemOutput;
+import frc.entech.TestableHardwareI;
 
-public abstract class EntechSensor<R extends SubsystemOutput> extends SubsystemBase {
+public abstract class EntechSensor<R extends SensorOutput> implements TestableHardwareI {
   protected EntechSensor() {
   }
 
@@ -18,8 +17,6 @@ public abstract class EntechSensor<R extends SubsystemOutput> extends SubsystemB
 
   public R getOutputs() {
     R out = toOutputs();
-    out.setCurrentCommand(this.getClass().getSimpleName() + "");
-    out.setDefaultCommand("N/A");
     return out;
   }
 }

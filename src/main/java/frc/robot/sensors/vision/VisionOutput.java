@@ -6,9 +6,9 @@ import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.targeting.PhotonPipelineResult;
 
-import frc.entech.subsystems.SubsystemOutput;
+import frc.entech.sensors.SensorOutput;
 
-public class VisionOutput extends SubsystemOutput {
+public class VisionOutput extends SensorOutput {
     private boolean connected = false;
 
     private List<PhotonPipelineResult> unreadResultsA = new ArrayList<>();
