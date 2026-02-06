@@ -1,15 +1,22 @@
 package frc.robot.processors;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
 import frc.robot.io.RobotIO;
+import frc.robot.sensors.vision.VisionPose;
 
 import java.util.List;
+
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 public class OdometryProcessor {
   private SwerveDrivePoseEstimator estimator;
@@ -46,6 +53,13 @@ public class OdometryProcessor {
 
       estimator.updateWithTime(timestamps[i], Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()),
           positionsAtTime);
+    }
+
+    if (integrateVision && !RobotIO.getInstance().getVisionOutput().getVisionPoses().isEmpty()) {
+      for (VisionPose vp : RobotIO.getInstance().getVisionOutput().getVisionPoses()) {
+        addVisionEstimatedPose(vp.getPose(), vp.getTimeStamp(),
+            Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()));
+      }
     }
 
     RobotIO.getInstance().updateOdometryPose(getEstimatedPose());

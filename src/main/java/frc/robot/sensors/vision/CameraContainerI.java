@@ -12,6 +12,8 @@ public interface CameraContainerI {
 
   Optional<Pose2d> getEstimatedPose();
 
+  Optional<List<VisionPose>> getEstimatedPoses();
+
   double getLatency();
 
   boolean hasTargets();
