@@ -41,19 +41,22 @@ public class OdometryProcessor {
   public void update() {
     double[] timestamps = RobotIO.getInstance().getDriveOutput().getTimestamps();
 
-    for (int i = 0; i < timestamps.length; i++) {
-      List<double[]> drivePositions = RobotIO.getInstance().getDriveOutput().getDrivePositions();
-      List<double[]> turningPositions = RobotIO.getInstance().getDriveOutput().getTurningPositions();
+    // for (int i = 0; i < timestamps.length; i++) {
+    // List<double[]> drivePositions =
+    // RobotIO.getInstance().getDriveOutput().getDrivePositions();
+    // List<double[]> turningPositions =
+    // RobotIO.getInstance().getDriveOutput().getTurningPositions();
 
-      SwerveModulePosition[] positionsAtTime = { null, null, null, null };
-      for (int j = 0; j < 4; j++) {
-        positionsAtTime[j] = (new SwerveModulePosition(drivePositions.get(j)[i],
-            new Rotation2d(turningPositions.get(j)[i])));
-      }
+    // SwerveModulePosition[] positionsAtTime = { null, null, null, null };
+    // for (int j = 0; j < 4; j++) {
+    // positionsAtTime[j] = (new SwerveModulePosition(drivePositions.get(j)[i],
+    // new Rotation2d(turningPositions.get(j)[i])));
+    // }
 
-      estimator.updateWithTime(timestamps[i], Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()),
-          positionsAtTime);
-    }
+    // estimator.updateWithTime(timestamps[i],
+    // Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()),
+    // positionsAtTime);
+    // }
 
     if (integrateVision && !RobotIO.getInstance().getVisionOutput().getVisionPoses().isEmpty()) {
       for (VisionPose vp : RobotIO.getInstance().getVisionOutput().getVisionPoses()) {

@@ -1,9 +1,11 @@
 package frc.robot.subsystems.transfer;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
 
 public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOutput> {
+    private static final boolean ENABLED = false;
 
     @Override
     public void initialize() {
@@ -13,8 +15,7 @@ public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOu
 
     @Override
     public boolean isEnabled() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isEnabled'");
+        return ENABLED;
     }
 
     @Override
@@ -25,8 +26,7 @@ public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOu
 
     @Override
     public Command getTestCommand() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTestCommand'");
+        return Commands.none();
     }
 
     @Override
@@ -34,5 +34,5 @@ public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOu
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'toOutputs'");
     }
-    
+
 }

@@ -41,12 +41,12 @@ public class HardwareManager {
     driveSubsystem.initialize();
     shooterSubsystem.initialize();
     visionSensor.initialize();
-    hoodSubsystem.initialize();
-    turretSubsystem.initialize();
-    hopperSubsystem.initialize();
-    intakeSubsystem.initialize();
-    climbSubsystem.initialize();
-    transferSubsystem.initialize();
+    // hoodSubsystem.initialize();
+    // turretSubsystem.initialize();
+    // hopperSubsystem.initialize();
+    // intakeSubsystem.initialize();
+    // climbSubsystem.initialize();
+    // transferSubsystem.initialize();
 
     periodic();
   }
@@ -118,16 +118,16 @@ public class HardwareManager {
 
     outputs.updateVision(visionSensor.getOutputs());
 
-    outputs.updateClimb(climbSubsystem.getOutputs());
+    // outputs.updateClimb(climbSubsystem.getOutputs());
 
-    outputs.updateHopper(hopperSubsystem.getOutputs());
+    // outputs.updateHopper(hopperSubsystem.getOutputs());
 
-    outputs.updateHood(hoodSubsystem.getOutputs());
+    // outputs.updateHood(hoodSubsystem.getOutputs());
 
-    outputs.updateIntake(intakeSubsystem.getOutputs());
+    // outputs.updateIntake(intakeSubsystem.getOutputs());
 
-    outputs.updateTransfer(transferSubsystem.getOutputs());
+    // outputs.updateTransfer(transferSubsystem.getOutputs());
 
-    outputs.updateTurret(turretSubsystem.getOutputs());
+    // outputs.updateTurret(turretSubsystem.getOutputs());
   }
 }

@@ -100,17 +100,17 @@ public class SoloCameraContainer implements CameraContainerI {
       }
 
       // Filter by allowed tag IDs
-      boolean allowed = false;
-      for (int id : RobotConstants.Vision.Filters.ALLOWED_TAGS) {
-        if (target.getFiducialId() == id) {
-          allowed = true;
-          break;
-        }
-      }
+      // boolean allowed = false;
+      // for (int id : RobotConstants.Vision.Filters.ALLOWED_TAGS) {
+      // if (target.getFiducialId() == id) {
+      // allowed = true;
+      // break;
+      // }
+      // }
 
-      if (!allowed) {
-        continue;
-      }
+      // if (!allowed) {
+      // continue;
+      // }
 
       filteredTargets.add(target);
     }
