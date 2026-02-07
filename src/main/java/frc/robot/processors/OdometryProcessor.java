@@ -40,7 +40,7 @@ public class OdometryProcessor {
   }
 
   public void update() {
-    // double[] timestamps = RobotIO.getInstance().getDriveOutput().getTimestamps();
+    double[] timestamps = RobotIO.getInstance().getDriveOutput().getTimestamps();
 
     for (int i = 0; i < timestamps.length; i++) {
       List<double[]> drivePositions = RobotIO.getInstance().getDriveOutput().getDrivePositions();
@@ -56,12 +56,16 @@ public class OdometryProcessor {
           positionsAtTime);
     }
 
-    if (integrateVision && !RobotIO.getInstance().getVisionOutput().getVisionPoses().isEmpty()) {
-      for (VisionPose vp : RobotIO.getInstance().getVisionOutput().getVisionPoses()) {
-        addVisionEstimatedPose(vp.getPose(), vp.getTimeStamp(),
-            Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()));
-      }
-    }
+    // if (integrateVision) {
+    // for (VisionPose vp :
+    // RobotIO.getInstance().getVisionOutput().getVisionPoses()) {
+    // addVisionEstimatedPose(vp.getPose(), vp.getTimeStamp(),
+    // Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()));
+    // }
+    // }
+
+    // estimator.update(Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()),
+    // RobotIO.getInstance().getDriveOutput().getModulePositions());
 
     RobotIO.getInstance().updateOdometryPose(getEstimatedPose());
     field.setRobotPose(getEstimatedPose());
