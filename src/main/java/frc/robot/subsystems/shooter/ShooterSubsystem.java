@@ -15,7 +15,7 @@ import frc.entech.subsystems.SparkOutput;
 import frc.robot.RobotConstants;
 
 public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutput> {
-    private boolean ENABLED = true;
+    private boolean ENABLED = false;
     private SparkFlex shooterMotorA;
     private SparkFlex shooterMotorB;
 
