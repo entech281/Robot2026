@@ -15,7 +15,7 @@ import frc.entech.subsystems.SparkOutput;
 import frc.robot.RobotConstants;
 
 public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutput> {
-    private boolean ENABLED = false;
+    private boolean ENABLED = true;
     private SparkFlex shooterMotorA;
     private SparkFlex shooterMotorB;
 
@@ -33,9 +33,11 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
 
             shooterAConfig.idleMode(BRAKING ? IdleMode.kBrake : IdleMode.kCoast);
             // shooterAConfig.smartCurrentLimit(40);
-            shooterAConfig.closedLoop.feedForward.kV(0.33);
-            shooterAConfig.closedLoop.feedForward.kA(0.20);
-            shooterAConfig.closedLoop.pid(0.001, 0.0, 0.0, ClosedLoopSlot.kSlot0);
+            shooterAConfig.closedLoop.feedForward.kV(0.01 / 12);
+            shooterAConfig.closedLoop.feedForward.kA(0.0);
+            shooterAConfig.encoder.velocityConversionFactor(1.0);
+            shooterAConfig.closedLoop.pid(0.06 / 12, 0.0, 0.0, ClosedLoopSlot.kSlot0);
+            // shooterAConfig.closedLoop.iMaxAccum(0.1, ClosedLoopSlot.kSlot0);
 
             shooterMotorA.configure(shooterAConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
