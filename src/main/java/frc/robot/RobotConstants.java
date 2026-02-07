@@ -300,6 +300,15 @@ public final class RobotConstants {
     public static final double TURRET_UPPER_LIMIT_DEGREES = 120.0;
   }
 
+  public static interface SHOOTER {
+    
+    public static final double SHOOTER_P = 0.001;
+    public static final double SHOOTER_I = 0.0;
+    public static final double SHOOTER_D = 0.0;
+    public static final double SHOOTER_FF = 0.0;
+
+  }
+
   private RobotConstants() {
   }
 }

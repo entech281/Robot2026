@@ -34,7 +34,8 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
             shooterAConfig.idleMode(BRAKING ? IdleMode.kBrake : IdleMode.kCoast);
             // shooterAConfig.smartCurrentLimit(40);
             // shooterConfig.closedLoop.feedForward.;
-            shooterAConfig.closedLoop.pid(0.001, 0.0, 0.0, ClosedLoopSlot.kSlot0);
+            shooterAConfig.closedLoop.pid(RobotConstants.SHOOTER.SHOOTER_P, RobotConstants.SHOOTER.SHOOTER_I, RobotConstants.SHOOTER.SHOOTER_D, ClosedLoopSlot.kSlot0)
+            .feedForward.kV(RobotConstants.SHOOTER.SHOOTER_FF, ClosedLoopSlot.kSlot0);
 
             shooterMotorA.configure(shooterAConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -57,7 +58,6 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
                 shooterMotorA.getClosedLoopController().setSetpoint(input.getSpeed(), ControlType.kVelocity,
                         ClosedLoopSlot.kSlot0);
                 setSpeed = input.getSpeed();
-                shooterMotorA.set(setSpeed);
             }
         }
     }
