@@ -15,7 +15,7 @@ import frc.entech.subsystems.SparkOutput;
 import frc.robot.RobotConstants;
 
 public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutput> {
-    private boolean ENABLED = true;
+    private boolean ENABLED = false;
     private SparkFlex shooterMotorA;
     private SparkFlex shooterMotorB;
 
@@ -70,12 +70,16 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
     @Override
     protected ShooterOutput toOutputs() {
         ShooterOutput so = new ShooterOutput();
-        so.setSpeed(setSpeed);
-        so.setBraking(BRAKING);
-        so.setAtSpeed(shooterMotorA.getClosedLoopController().isAtSetpoint());
 
-        so.setShooterMotorA(SparkOutput.createOutput(shooterMotorA));
-        so.setShooterMotorB(SparkOutput.createOutput(shooterMotorB));
+        if (ENABLED) {
+            so.setSpeed(setSpeed);
+            so.setBraking(BRAKING);
+            so.setAtSpeed(shooterMotorA.getClosedLoopController().isAtSetpoint());
+
+            so.setShooterMotorA(SparkOutput.createOutput(shooterMotorA));
+            so.setShooterMotorB(SparkOutput.createOutput(shooterMotorB));
+        }
+
         return so;
     }
 }

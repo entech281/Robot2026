@@ -32,7 +32,7 @@ import java.util.Queue;
  * drivetrain.
  */
 public class DriveSubsystem extends EntechSubsystem<DriveInput, DriveOutput> {
-  private static final boolean ENABLED = true;
+  private static final boolean ENABLED = false;
 
   public static final int GYRO_ORIENTATION = 1; // might be able to merge with kGyroReversed
 

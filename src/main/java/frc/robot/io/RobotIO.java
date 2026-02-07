@@ -147,8 +147,8 @@ public class RobotIO implements DriveInputSupplier {
 
   private NavXOutput latestNavXOutput;
   private DriveOutput latestDriveOutput;
-  private ShooterOutput latestShooterOutput;
   private VisionOutput latestVisionOutput;
+  private ShooterOutput latestShooterOutput;
   private HoodOutput latestHoodOutput;
   private HopperOutput latestHopperOutput;
   private ClimbOutput latestClimbOutput;

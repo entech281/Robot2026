@@ -31,7 +31,7 @@ public class HardwareManager {
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   private final HoodSubsystem hoodSubsystem = new HoodSubsystem();
   private final TurretSubsystem turretSubsystem = new TurretSubsystem();
-  private final TransferSubsystem transferSubsystem= new TransferSubsystem();
+  private final TransferSubsystem transferSubsystem = new TransferSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
   private final HopperSubsystem hopperSubsystem = new HopperSubsystem();
@@ -41,12 +41,12 @@ public class HardwareManager {
     driveSubsystem.initialize();
     shooterSubsystem.initialize();
     visionSensor.initialize();
-    hoodSubsystem.initialize();
-    turretSubsystem.initialize();
-    hopperSubsystem.initialize();
-    intakeSubsystem.initialize();
-    climbSubsystem.initialize();
-    transferSubsystem.initialize();
+    // hoodSubsystem.initialize();
+    // turretSubsystem.initialize();
+    // hopperSubsystem.initialize();
+    // intakeSubsystem.initialize();
+    // climbSubsystem.initialize();
+    // transferSubsystem.initialize();
 
     periodic();
   }
@@ -118,16 +118,16 @@ public class HardwareManager {
 
     outputs.updateVision(visionSensor.getOutputs());
 
-    outputs.updateClimb(climbSubsystem.getOutputs());
+    // outputs.updateClimb(climbSubsystem.getOutputs());
 
-    outputs.updateHopper(hopperSubsystem.getOutputs());
+    // outputs.updateHopper(hopperSubsystem.getOutputs());
 
-    outputs.updateHood(hoodSubsystem.getOutputs());
+    // outputs.updateHood(hoodSubsystem.getOutputs());
 
-    outputs.updateIntake(intakeSubsystem.getOutputs());
+    // outputs.updateIntake(intakeSubsystem.getOutputs());
 
-    outputs.updateTransfer(transferSubsystem.getOutputs());
+    // outputs.updateTransfer(transferSubsystem.getOutputs());
 
-    outputs.updateTurret(turretSubsystem.getOutputs());
+    // outputs.updateTurret(turretSubsystem.getOutputs());
   }
 }

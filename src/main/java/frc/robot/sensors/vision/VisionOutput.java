@@ -9,76 +9,126 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import frc.entech.sensors.SensorOutput;
 
 public class VisionOutput extends SensorOutput {
+    private boolean connected = false;
 
-    private boolean isDriverMode = false;
-    private boolean isConnected = true;
-    private boolean hasTargets = false;
+    private List<PhotonPipelineResult> unreadResultsA = new ArrayList<>();
+    private List<PhotonPipelineResult> unreadResultsB = new ArrayList<>();
+    private List<PhotonPipelineResult> unreadResultsC = new ArrayList<>();
+    private List<PhotonPipelineResult> unreadResultsD = new ArrayList<>();
 
-    private List<PhotonPipelineResult> unreadResults = new ArrayList<>();
+    private List<VisionPose> visionPoses = new ArrayList<>();
 
     @Override
     public void toLog() {
-        Logger.recordOutput("VisionOutput/isDriverMode", isDriverMode);
-        Logger.recordOutput("VisionOutput/isConnected", isConnected);
-        Logger.recordOutput("VisionOutput/hasTargets", hasTargets);
-        for (int i = 0; i < unreadResults.size(); i++) {
-            Logger.recordOutput("VisionOutput/unreadResult_" + i, unreadResults.get(i));
+        for (int i = 0; i < unreadResultsA.size(); i++) {
+            Logger.recordOutput("VisionOutput/cameraA/unreadResult_" + i, unreadResultsA.get(i));
         }
+
+        for (int i = 0; i < unreadResultsB.size(); i++) {
+            Logger.recordOutput("VisionOutput/cameraB/unreadResult_" + i, unreadResultsB.get(i));
+        }
+
+        for (int i = 0; i < unreadResultsC.size(); i++) {
+            Logger.recordOutput("VisionOutput/cameraC/unreadResult_" + i, unreadResultsC.get(i));
+        }
+
+        for (int i = 0; i < unreadResultsD.size(); i++) {
+            Logger.recordOutput("VisionOutput/cameraD/unreadResult_" + i, unreadResultsD.get(i));
+        }
+
+        for (int i = 0; i < visionPoses.size(); i++) {
+            Logger.recordOutput("VisionOutput/visionPose_" + i, visionPoses.get(i).getPose());
+        }
+
+        for (int i = 0; i < visionPoses.size(); i++) {
+            Logger.recordOutput("VisionOutput/visionPoseTimeStamps_" + i, visionPoses.get(i).getTimeStamp());
+        }
+
+        Logger.recordOutput("VisionOutput/connected", connected);
     }
 
     /**
-     * @return boolean return the isDriverMode
+     * @return List<PhotonPipelineResult> return the unreadResultsA
      */
-    public boolean isDriverMode() {
-        return isDriverMode;
+    public List<PhotonPipelineResult> getUnreadResultsA() {
+        return unreadResultsA;
     }
 
     /**
-     * @param isDriverMode the isDriverMode to set
+     * @param unreadResultsA the unreadResultsA to set
      */
-    public void setIsDriverMode(boolean isDriverMode) {
-        this.isDriverMode = isDriverMode;
+    public void setUnreadResultsA(List<PhotonPipelineResult> unreadResultsA) {
+        this.unreadResultsA = unreadResultsA;
     }
 
     /**
-     * @return boolean return the isConnected
+     * @return List<PhotonPipelineResult> return the unreadResultsB
+     */
+    public List<PhotonPipelineResult> getUnreadResultsB() {
+        return unreadResultsB;
+    }
+
+    /**
+     * @param unreadResultsB the unreadResultsB to set
+     */
+    public void setUnreadResultsB(List<PhotonPipelineResult> unreadResultsB) {
+        this.unreadResultsB = unreadResultsB;
+    }
+
+    /**
+     * @return List<PhotonPipelineResult> return the unreadResultsC
+     */
+    public List<PhotonPipelineResult> getUnreadResultsC() {
+        return unreadResultsC;
+    }
+
+    /**
+     * @param unreadResultsC the unreadResultsC to set
+     */
+    public void setUnreadResultsC(List<PhotonPipelineResult> unreadResultsC) {
+        this.unreadResultsC = unreadResultsC;
+    }
+
+    /**
+     * @return List<PhotonPipelineResult> return the unreadResultsD
+     */
+    public List<PhotonPipelineResult> getUnreadResultsD() {
+        return unreadResultsD;
+    }
+
+    /**
+     * @param unreadResultsD the unreadResultsD to set
+     */
+    public void setUnreadResultsD(List<PhotonPipelineResult> unreadResultsD) {
+        this.unreadResultsD = unreadResultsD;
+    }
+
+    /**
+     * @return boolean return the connected
      */
     public boolean isConnected() {
-        return isConnected;
+        return connected;
     }
 
     /**
-     * @param isConnected the isConnected to set
+     * @param connected the connected to set
      */
-    public void setIsConnected(boolean isConnected) {
-        this.isConnected = isConnected;
+    public void setConnected(boolean connected) {
+        this.connected = connected;
     }
 
     /**
-     * @return boolean return the hasTargets
+     * @return List<VisionPose> return the visionPoses
      */
-    public boolean hasTargets() {
-        return hasTargets;
+    public List<VisionPose> getVisionPoses() {
+        return visionPoses;
     }
 
     /**
-     * @param hasTargets the hasTargets to set
+     * @param visionPoses the visionPoses to set
      */
-    public void setHasTargets(boolean hasTargets) {
-        this.hasTargets = hasTargets;
+    public void setVisionPoses(List<VisionPose> visionPoses) {
+        this.visionPoses = visionPoses;
     }
 
-    /**
-     * @return List<PhotonPipelineResult> return the unreadResults
-     */
-    public List<PhotonPipelineResult> getUnreadResults() {
-        return unreadResults;
-    }
-
-    /**
-     * @param unreadResults the unreadResults to set
-     */
-    public void setUnreadResults(List<PhotonPipelineResult> unreadResults) {
-        this.unreadResults = unreadResults;
-    }
 }
