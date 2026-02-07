@@ -9,9 +9,11 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
+import frc.entech.subsystems.SparkOutput;
 import frc.robot.RobotConstants;
-import frc.robot.subsystems.turret.TurretInput;
+import frc.robot.subsystems.turret.TurretOutput;
 
 public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
 
@@ -58,20 +60,61 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
 
     @Override
     public void updateInputs(HoodInput input) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateInputs'");
+        this.latestInput = input;
     }
 
     @Override
     public Command getTestCommand() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTestCommand'");
+        return Commands.none();
     }
 
     @Override
-    protected HoodOutput toOutputs() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'toOutputs'");
+    public HoodOutput toOutputs() {
+        HoodOutput out = new HoodOutput();
+
+        if (!ENABLED) return out;
+
+        double currentPos = hoodEncoder.getPosition();
+        double reqPos = latestInput.getRequestedPosition();
+
+        // moving = whether position controller is actively trying to move (approx via velocity)
+        out.setMoving(Math.abs(hoodEncoder.getVelocity()) > 1e-3);
+        out.setRequestedPosition(reqPos);
+        out.setCurrentPosition(currentPos);
+        out.setAtForwardLimit(hoodMotor.getForwardLimitSwitch().isPressed());
+        out.setAtReverseLimit(hoodMotor.getReverseLimitSwitch().isPressed());
+        out.setAtRequestedPosition(Math.abs(currentPos - reqPos) <= RobotConstants.HOOD.HOOD_POSITION_TOLERANCE_DEGREES);
+
+        out.setHoodMotor(SparkOutput.createOutput(hoodMotor));
+
+        return out;
+    }
+
+    public void setHoodPosition(double desiredAngle) {
+        if (!ENABLED) return;
+        // clamp to allowed range
+        double clamped = Math.max(RobotConstants.HOOD.HOOD_LOWER_LIMIT_DEGREES,
+            Math.min(RobotConstants.HOOD.HOOD_UPPER_LIMIT_DEGREES, desiredAngle));
+        latestInput.setRequestedPosition(clamped);
+
+        if (hoodPIDController != null) {
+            hoodPIDController.setSetpoint(clamped, ControlType.kPosition);
+        } else {
+            // if closed-loop is not ready, seed encoder
+            hoodEncoder.setPosition(clamped);
+        }
+    }
+
+    @Override
+    public void periodic() {
+
+        if (!ENABLED) return;
+
+        double desiredPos = latestInput.getRequestedPosition();
+        if (hoodPIDController != null) {
+            setHoodPosition(desiredPos);
+        }
+
     }
     
 }

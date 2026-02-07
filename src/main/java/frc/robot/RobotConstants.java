@@ -306,6 +306,7 @@ public final class RobotConstants {
     public static final double HOOD_P = 0.2;
     public static final double HOOD_I = 0.0;
     public static final double HOOD_D = 0.0;
+    public static final double INITIAL_POSITION_DEGREES = 0.0;
   }
 
   private RobotConstants() {
