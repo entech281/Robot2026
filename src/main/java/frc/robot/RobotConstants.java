@@ -206,7 +206,7 @@ public final class RobotConstants {
   }
 
   public static interface Vision {
-    public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(5, 5, 1000000);
+    public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(5000, 5000, 1000000);
 
     public static interface Cameras {
       public static final String CAMERA_A = "Arducam_Alpha";
