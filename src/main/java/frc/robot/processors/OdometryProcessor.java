@@ -56,6 +56,13 @@ public class OdometryProcessor {
           positionsAtTime);
     }
 
+    if (integrateVision && !RobotIO.getInstance().getVisionOutput().getVisionPoses().isEmpty()) {
+      for (VisionPose vp : RobotIO.getInstance().getVisionOutput().getVisionPoses()) {
+        addVisionEstimatedPose(vp.getPose(), vp.getTimeStamp(),
+            Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()));
+      }
+    }
+
     RobotIO.getInstance().updateOdometryPose(getEstimatedPose());
     field.setRobotPose(getEstimatedPose());
   }
