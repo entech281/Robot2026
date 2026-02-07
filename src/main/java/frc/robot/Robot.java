@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.entech.util.StoppingCounter;
 import frc.robot.commands.ResetTurningEncoderCommand;
 import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.operation.OperatorInterface;
@@ -39,6 +40,7 @@ public class Robot extends LoggedRobot {
   private OdometryProcessor odometry;
   private OperatorInterface operatorInterface;
   private long robotStartTime = 0;
+  private StoppingCounter gcCounter = new StoppingCounter(5);
 
   public void loggerInit() {
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
@@ -89,6 +91,10 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotPeriodic() {
+    // if (gcCounter.isFinished(true)) {
+    // gcCounter.reset();
+    // System.gc();
+    // }
     subsystemManager.periodic();
     odometry.update();
     CommandScheduler.getInstance().run();
