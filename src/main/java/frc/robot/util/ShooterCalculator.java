@@ -1,7 +1,19 @@
 package frc.robot.util;
 
+import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RPM;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.AngleUnit;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.units.measure.Velocity;
 
 public class ShooterCalculator {
 
@@ -10,25 +22,29 @@ public class ShooterCalculator {
     }
 
     public class ShotData {
-        private double hoodAngle;
-        private double shooterRPM;
+        private Angle hoodAngle;
+        private LinearVelocity shotVelocity;
 
-        public ShotData(double hoodAngle, double shooterRPM) {
+        public ShotData(Angle hoodAngle, LinearVelocity shotVelocity) {
             this.hoodAngle = hoodAngle;
-            this.shooterRPM = shooterRPM;
+            this.shotVelocity = shotVelocity;
         }
 
         public ShotData() {
-            this.hoodAngle = 0.0;
-            this.shooterRPM = 0.0;
+            this.hoodAngle = Degree.of(0.0);
+            this.shotVelocity = MetersPerSecond.of(0.0);
         }
 
-        public double getHoodAngle() {
+        public Angle getHoodAngle() {
             return hoodAngle;
         }
 
-        public double getShooterRPM() {
-            return shooterRPM;
+        public LinearVelocity getShotVelocity() {
+            return shotVelocity;
+        }
+
+        public AngularVelocity getShotAngularVelocity(Distance wheelRadius) {
+            return RPM.of( (shotVelocity.in(MetersPerSecond) * 60.0) / (Math.PI * 2 * wheelRadius.in(Meters)) );
         }
     }
     

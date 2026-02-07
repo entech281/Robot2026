@@ -300,6 +300,10 @@ public final class RobotConstants {
     public static final double TURRET_UPPER_LIMIT_DEGREES = 120.0;
   }
 
+  public static interface SHOOTER {
+    public static final Transform3d SHOT_TRANSFORM = new Transform3d(0, 0, 0, new Rotation3d());
+  }
+
   private RobotConstants() {
   }
 }
