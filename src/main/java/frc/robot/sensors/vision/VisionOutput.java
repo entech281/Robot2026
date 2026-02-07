@@ -37,11 +37,12 @@ public class VisionOutput extends SensorOutput {
         }
 
         for (int i = 0; i < visionPoses.size(); i++) {
-            Logger.recordOutput("VisionOutput/visionPose_" + i, visionPoses.get(i).getPose());
+            Logger.recordOutput("VisionOutput/visionPoses/visionPose_" + i + "/pose", visionPoses.get(i).getPose());
         }
 
         for (int i = 0; i < visionPoses.size(); i++) {
-            Logger.recordOutput("VisionOutput/visionPoseTimeStamps_" + i, visionPoses.get(i).getTimeStamp());
+            Logger.recordOutput("VisionOutput/visionPoses/visionPose_" + i + "/timestamp",
+                    visionPoses.get(i).getTimeStamp());
         }
 
         Logger.recordOutput("VisionOutput/connected", connected);

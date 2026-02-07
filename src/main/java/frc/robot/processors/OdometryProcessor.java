@@ -20,7 +20,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
 
 public class OdometryProcessor {
   private SwerveDrivePoseEstimator estimator;
-  private boolean integrateVision = false;
+  private boolean integrateVision = true;
   private Field2d field = new Field2d();
 
   public Pose2d getEstimatedPose() {
@@ -39,7 +39,7 @@ public class OdometryProcessor {
   }
 
   public void update() {
-    double[] timestamps = RobotIO.getInstance().getDriveOutput().getTimestamps();
+    // double[] timestamps = RobotIO.getInstance().getDriveOutput().getTimestamps();
 
     // for (int i = 0; i < timestamps.length; i++) {
     // List<double[]> drivePositions =

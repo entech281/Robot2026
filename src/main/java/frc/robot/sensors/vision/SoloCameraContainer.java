@@ -90,14 +90,16 @@ public class SoloCameraContainer implements CameraContainerI {
 
     for (PhotonTrackedTarget target : result.getTargets()) {
       // Filter by ambiguity
-      if (target.getPoseAmbiguity() > RobotConstants.Vision.Filters.MAX_AMBIGUITY) {
-        continue;
-      }
+      // if (target.getPoseAmbiguity() > RobotConstants.Vision.Filters.MAX_AMBIGUITY)
+      // {
+      // continue;
+      // }
 
       // Filter by distance
-      if (Math.abs(target.getBestCameraToTarget().getX()) > RobotConstants.Vision.Filters.MAX_DISTANCE) {
-        continue;
-      }
+      // if (Math.abs(target.getBestCameraToTarget().getX()) >
+      // RobotConstants.Vision.Filters.MAX_DISTANCE) {
+      // continue;
+      // }
 
       // Filter by allowed tag IDs
       // boolean allowed = false;

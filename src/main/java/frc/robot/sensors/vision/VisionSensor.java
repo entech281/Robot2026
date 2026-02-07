@@ -1,5 +1,8 @@
 package frc.robot.sensors.vision;
 
+import java.util.List;
+import java.util.Optional;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,7 +26,7 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
         // Load the AprilTag field layout
         try {
             // loadField doesn't throw IOException in newer versions, just load directly
-            fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
+            fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
             System.out.println("AprilTag field layout loaded successfully");
         } catch (Exception e) {
             System.err.println("CRITICAL: Failed to load AprilTag field layout: " + e.getMessage());
@@ -70,8 +73,9 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
 
         output.setConnected(isEnabled());
 
-        if (cameraNet.getEstimatedPoses().isPresent()) {
-            output.setVisionPoses(cameraNet.getEstimatedPoses().get());
+        Optional<List<VisionPose>> poses = cameraNet.getEstimatedPoses();
+        if (poses.isPresent()) {
+            output.setVisionPoses(poses.get());
         } else {
             output.setVisionPoses(new java.util.ArrayList<>());
         }
