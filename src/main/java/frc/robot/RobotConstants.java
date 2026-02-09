@@ -139,7 +139,8 @@ public final class RobotConstants {
 
   public static interface LiveTuning {
     public static final Map<String, Double> VALUES = Map.ofEntries(
-        Map.entry("ShooterSubsystem/SetSpeed", 0.0));
+        Map.entry("ShooterSubsystem/SetSpeed", 0.0),
+        Map.entry("IntakeSubsystem/SetSpeed", 0.0));
   }
 
   public static interface PORTS {
@@ -164,6 +165,8 @@ public final class RobotConstants {
 
       public static final int SHOOTER_MOTOR_A = 51;
       public static final int SHOOTER_MOTOR_B = 52;
+
+      public static final int INTAKE_MOTOR = 55;
 
       public static final int POWER_DISTRIBUTION_HUB = 1;
       public static final int TURRET_MOTOR = 60;

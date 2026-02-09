@@ -40,7 +40,6 @@ public class Robot extends LoggedRobot {
   private OdometryProcessor odometry;
   private OperatorInterface operatorInterface;
   private long robotStartTime = 0;
-  private StoppingCounter gcCounter = new StoppingCounter(5);
 
   public void loggerInit() {
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
@@ -91,10 +90,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotPeriodic() {
-    // if (gcCounter.isFinished(true)) {
-    // gcCounter.reset();
-    // System.gc();
-    // }
     subsystemManager.periodic();
     odometry.update();
     CommandScheduler.getInstance().run();
