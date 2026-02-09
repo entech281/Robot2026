@@ -38,6 +38,12 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
             // Closed-loop PIDF
             hoodConfig.closedLoop
                 .pid(RobotConstants.HOOD.HOOD_P, RobotConstants.HOOD.HOOD_I, RobotConstants.HOOD.HOOD_D, ClosedLoopSlot.kSlot0);
+
+            hoodConfig.closedLoop
+            .maxMotion
+            .cruiseVelocity(RobotConstants.HOOD.HOOD_CRUISE_VELOCITY_RPM)
+            .maxAcceleration(RobotConstants.HOOD.HOOD_MAX_ACCELERATION_RPM_PER_SECOND)
+            .allowedProfileError(RobotConstants.HOOD.HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS);
     
             // Apply conservative signals update rates similar to other subsystems
             hoodConfig.signals
@@ -74,18 +80,15 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
 
         if (!ENABLED) return out;
 
-        double currentPos = hoodEncoder.getPosition();
         double reqPos = latestInput.getRequestedPosition();
+        SparkOutput spark = SparkOutput.createOutput(hoodMotor);
 
         // moving = whether position controller is actively trying to move (approx via velocity)
-        out.setMoving(Math.abs(hoodEncoder.getVelocity()) > 1e-3);
+        out.setMoving(Math.abs(spark.getCurrentSpeed()) > RobotConstants.HOOD.HOOD_POSITION_TOLERANCE_DEGREES);
         out.setRequestedPosition(reqPos);
-        out.setCurrentPosition(currentPos);
-        out.setAtForwardLimit(hoodMotor.getForwardLimitSwitch().isPressed());
-        out.setAtReverseLimit(hoodMotor.getReverseLimitSwitch().isPressed());
-        out.setAtRequestedPosition(Math.abs(currentPos - reqPos) <= RobotConstants.HOOD.HOOD_POSITION_TOLERANCE_DEGREES);
+        out.setAtRequestedPosition(Math.abs(spark.getCurrentPosition() - reqPos) <= RobotConstants.HOOD.HOOD_POSITION_TOLERANCE_DEGREES);
 
-        out.setHoodMotor(SparkOutput.createOutput(hoodMotor));
+        out.setHoodMotor(spark);
 
         return out;
     }
@@ -98,7 +101,7 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
         latestInput.setRequestedPosition(clamped);
 
         if (hoodPIDController != null) {
-            hoodPIDController.setSetpoint(clamped, ControlType.kPosition);
+            hoodPIDController.setSetpoint(clamped, ControlType.kMAXMotionPositionControl);
         } else {
             // if closed-loop is not ready, seed encoder
             hoodEncoder.setPosition(clamped);
