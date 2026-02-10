@@ -6,10 +6,11 @@ import frc.robot.subsystems.intake.IntakeInput;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 
 public class RunIntakeCommand extends EntechCommand {
-    private IntakeSubsystem intakeSS;
+    private final IntakeSubsystem intakeSS;
 
     public RunIntakeCommand(IntakeSubsystem intake) {
         super(intake);
+        intakeSS = intake;
     }
 
     @Override
@@ -20,14 +21,14 @@ public class RunIntakeCommand extends EntechCommand {
     @Override
     public void execute() {
         IntakeInput input = new IntakeInput();
-        input.setSpeed(LiveTuningHandler.getInstance().getValue("IntakeSubsystem/speed"));
+        input.setSpeed(LiveTuningHandler.getInstance().getValue("IntakeSubsystem/SetSpeed"));
         intakeSS.updateInputs(input);
     }
 
     @Override
     public void initialize() {
         IntakeInput input = new IntakeInput();
-        input.setSpeed(LiveTuningHandler.getInstance().getValue("IntakeSubsystem/speed"));
+        input.setSpeed(LiveTuningHandler.getInstance().getValue("IntakeSubsystem/SetSpeed"));
         intakeSS.updateInputs(input);
     }
 

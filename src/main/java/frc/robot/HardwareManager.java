@@ -44,7 +44,7 @@ public class HardwareManager {
     // hoodSubsystem.initialize();
     // turretSubsystem.initialize();
     // hopperSubsystem.initialize();
-    // intakeSubsystem.initialize();
+    intakeSubsystem.initialize();
     // climbSubsystem.initialize();
     // transferSubsystem.initialize();
 
@@ -124,7 +124,7 @@ public class HardwareManager {
 
     // outputs.updateHood(hoodSubsystem.getOutputs());
 
-    // outputs.updateIntake(intakeSubsystem.getOutputs());
+    outputs.updateIntake(intakeSubsystem.getOutputs());
 
     // outputs.updateTransfer(transferSubsystem.getOutputs());
 

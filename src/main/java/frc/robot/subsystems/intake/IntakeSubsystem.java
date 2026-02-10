@@ -1,7 +1,11 @@
 package frc.robot.subsystems.intake;
 
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -18,6 +22,12 @@ public class IntakeSubsystem extends EntechSubsystem<IntakeInput, IntakeOutput> 
     public void initialize() {
         if (ENABLED) {
             intakeMotor = new SparkFlex(RobotConstants.PORTS.CAN.INTAKE_MOTOR, MotorType.kBrushless);
+
+            SparkFlexConfig config = new SparkFlexConfig();
+            config.idleMode(IdleMode.kBrake);
+
+            intakeMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
         }
     }
 
