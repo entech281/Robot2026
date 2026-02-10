@@ -321,6 +321,10 @@ public final class RobotConstants {
     public static final double HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5;
   }
 
+  public static interface SHOOTER {
+    public static final Transform3d SHOT_TRANSFORM = new Transform3d(0, 0, 0, new Rotation3d());
+  }
+
   private RobotConstants() {
   }
 }
