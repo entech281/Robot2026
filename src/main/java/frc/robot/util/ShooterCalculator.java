@@ -7,13 +7,10 @@ import static edu.wpi.first.units.Units.RPM;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.units.AngleUnit;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
-import edu.wpi.first.units.measure.Velocity;
 
 public class ShooterCalculator {
 
