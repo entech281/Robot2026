@@ -8,31 +8,36 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
     @Override
     public void initialize() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'initialize'");
+        // throw new UnsupportedOperationException("Unimplemented method 'initialize'");
     }
 
     @Override
     public boolean isEnabled() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isEnabled'");
+        // throw new UnsupportedOperationException("Unimplemented method 'isEnabled'");
+        return false;
     }
 
     @Override
     public void updateInputs(HoodInput input) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateInputs'");
+        // throw new UnsupportedOperationException("Unimplemented method 'updateInputs'");
     }
 
     @Override
     public Command getTestCommand() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTestCommand'");
+        // throw new UnsupportedOperationException("Unimplemented method 'getTestCommand'");
+        return new Command() {
+            
+        };
     }
 
     @Override
     protected HoodOutput toOutputs() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'toOutputs'");
+        // throw new UnsupportedOperationException("Unimplemented method 'toOutputs'");
+        return new HoodOutput();
     }
     
 }
