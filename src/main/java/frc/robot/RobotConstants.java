@@ -167,6 +167,7 @@ public final class RobotConstants {
 
       public static final int POWER_DISTRIBUTION_HUB = 1;
       public static final int TURRET_MOTOR = 60;
+      public static final int HOOD_MOTOR = 53;
     }
 
     public static interface CONTROLLER {
@@ -303,6 +304,21 @@ public final class RobotConstants {
 
     public static final double TURRET_LOWER_LIMIT_DEGREES = -120.0;
     public static final double TURRET_UPPER_LIMIT_DEGREES = 120.0;
+  }
+
+  public static interface HOOD {
+    //TODO: make these real
+    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 1.0;
+    public static final double HOOD_P = 0.2;
+    public static final double HOOD_I = 0.0;
+    public static final double HOOD_D = 0.0;
+    public static final double INITIAL_POSITION_DEGREES = 0.0;
+    public static final double HOOD_LOWER_LIMIT_DEGREES = 0.0;
+    public static final double HOOD_UPPER_LIMIT_DEGREES = 180.0;
+    public static final double HOOD_POSITION_TOLERANCE_DEGREES = 1.0;
+    public static final double HOOD_CRUISE_VELOCITY_RPM = 100.0;
+    public static final double HOOD_MAX_ACCELERATION_RPM_PER_SECOND = 100.0;
+    public static final double HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5;
   }
 
   private RobotConstants() {
