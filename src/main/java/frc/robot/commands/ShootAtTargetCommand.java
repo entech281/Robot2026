@@ -41,7 +41,7 @@ public class ShootAtTargetCommand extends EntechCommand {
 
     @Override
     public boolean isFinished() {
-        return RobotIO.getInstance().getHoodOutput().isAtTargetAngle() &&
+        return RobotIO.getInstance().getHoodOutput().isAtRequestedPosition() &&
                RobotIO.getInstance().getShooterOutput().isAtSpeed();
     }
     
