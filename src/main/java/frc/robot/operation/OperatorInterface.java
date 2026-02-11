@@ -125,6 +125,7 @@ public class OperatorInterface
 
   public void alignOperatorBindings() {
 
+    //TODO: Move to CommandFactory
     Optional<Alliance> alliance = DriverStation.getAlliance();
     if (alliance.isPresent()) {
       if (alliance.get() == DriverStation.Alliance.Blue) {
