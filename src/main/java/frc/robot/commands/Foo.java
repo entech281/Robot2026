@@ -70,7 +70,7 @@ public class Foo extends EntechCommand {
     shoooterout
 
     Chassis
-    targetPose
+    targetPose (needs alliance)
     currentPose
     
     button

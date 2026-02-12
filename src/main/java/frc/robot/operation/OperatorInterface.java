@@ -129,9 +129,9 @@ public class OperatorInterface
     Optional<Alliance> alliance = DriverStation.getAlliance();
     if (alliance.isPresent()) {
       if (alliance.get() == DriverStation.Alliance.Blue) {
-        subsystemManager.getTurretSubsystem().setDefaultCommand(new FaceTargetLocationTurretCommand(subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.BLUE_HUB_LOCATION));
+        subsystemManager.getTurretSubsystem().setDefaultCommand(new FaceTargetLocationTurretCommand(subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.BLUE_HUB_LOCATION.toPose2d()));
       } else if (alliance.get() == DriverStation.Alliance.Red) {
-        subsystemManager.getTurretSubsystem().setDefaultCommand(new FaceTargetLocationTurretCommand(subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.RED_HUB_LOCATION));
+        subsystemManager.getTurretSubsystem().setDefaultCommand(new FaceTargetLocationTurretCommand(subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.RED_HUB_LOCATION.toPose2d()));
       }
     } else {
       DriverStation.reportWarning("Could not get alliance, TurretSubsystem not set to track by default", false);

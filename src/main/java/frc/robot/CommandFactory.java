@@ -11,6 +11,8 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -21,14 +23,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.entech.TestableHardwareI;
 import frc.entech.commands.AutonomousException;
 import frc.entech.commands.InstantAnytimeCommand;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.robot.commands.GyroResetByAngleCommand;
 import frc.robot.commands.HomeTurretCommand;
+import frc.robot.commands.FaceTargetLocationTurretCommand;
+import frc.robot.commands.ShootAtTargetCommand;
 import frc.robot.commands.RunShooterAtLiveSpeedCommand;
 import frc.robot.commands.RunTestCommand;
 import frc.robot.io.RobotIO;
@@ -162,6 +168,27 @@ public class CommandFactory {
         new InstantCommand(() -> {
           driveSubsystem.pathFollowDrive(new ChassisSpeeds(0.0, 0.0, 0.0));
         }, driveSubsystem));
+  }
+
+  public Command getFullShootCommand() {
+    Pose3d target;
+    
+    if (DriverStation.getAlliance().get() == Alliance.Red) {
+      target = RobotConstants.TURRET.RED_HUB_LOCATION;
+    } else if (DriverStation.getAlliance().get() == Alliance.Blue) {
+      target = RobotConstants.TURRET.BLUE_HUB_LOCATION;
+    } else {
+      return Commands.none();
+    }
+
+    return new SequentialCommandGroup(
+        new ParallelCommandGroup(
+            new RunShooterAtLiveSpeedCommand(subsystemManager.getShooterSubsystem()),
+            new FaceTargetLocationTurretCommand(subsystemManager.getTurretSubsystem(), target.toPose2d())
+        ),
+
+        new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), target)
+      );
   }
 
   private Command getSubsystemTestMessageCommand(String message) {

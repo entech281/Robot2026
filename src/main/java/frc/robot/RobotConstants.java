@@ -11,6 +11,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -297,8 +298,8 @@ public final class RobotConstants {
     // small adjustment step used by any incremental commands
     public static final double TURRET_ADJUST_STEP_DEGREES = 5.0;
 
-    public static final Pose2d BLUE_HUB_LOCATION = new Pose2d(Inches.of(182.11).in(Meters), Inches.of(158.845).in(Meters), new Rotation2d());
-    public static final Pose2d RED_HUB_LOCATION = new Pose2d(Inches.of(469.11).in(Meters), Inches.of(158.845).in(Meters), new Rotation2d());
+    public static final Pose3d BLUE_HUB_LOCATION = new Pose3d(Inches.of(182.11).in(Meters), Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
+    public static final Pose3d RED_HUB_LOCATION = new Pose3d(Inches.of(469.11).in(Meters), Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
 
     public static final Translation2d TURRET_OFFSET = new Translation2d(-DrivetrainConstants.WHEEL_BASE_METERS / 2.0, 0.0);
 
