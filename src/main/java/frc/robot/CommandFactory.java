@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -43,6 +44,7 @@ import frc.robot.livetuning.WheelDiameterCharacterizer;
 import frc.robot.operation.UserPolicy;
 import frc.robot.processors.OdometryProcessor;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.util.ShooterCalculator;
 import frc.robot.sensors.navx.NavXSensor;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
@@ -181,14 +183,25 @@ public class CommandFactory {
       return Commands.none();
     }
 
-    return new SequentialCommandGroup(
-        new ParallelCommandGroup(
-            new RunShooterAtLiveSpeedCommand(subsystemManager.getShooterSubsystem()),
-            new FaceTargetLocationTurretCommand(subsystemManager.getTurretSubsystem(), target.toPose2d())
-        ),
+    Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose()).transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
 
-        new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), target)
-      );
+    ShooterCalculator calculator = new ShooterCalculator(RobotIO.getInstance().getNavXOutput().getChassisSpeeds(), shooterCurrentPose, target);
+
+    return new SequentialCommandGroup(
+      new ParallelCommandGroup(
+          new RunShooterAtLiveSpeedCommand(subsystemManager.getShooterSubsystem()),
+          new FaceTargetLocationTurretCommand(subsystemManager.getTurretSubsystem(), target.toPose2d())
+      ),
+
+      new ParallelCommandGroup(
+        new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), calculator),
+        new Command() {
+          public void execute() {
+            calculator.refresh(RobotIO.getInstance().getNavXOutput().getChassisSpeeds(), new Pose3d(RobotIO.getInstance().getOdometryPose()).transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM), target);
+          };
+        }
+      )
+    );
   }
 
   private Command getSubsystemTestMessageCommand(String message) {

@@ -14,8 +14,30 @@ import edu.wpi.first.units.measure.LinearVelocity;
 
 public class ShooterCalculator {
 
-    public ShotData calculateShot(ChassisSpeeds robotVelocity, Pose3d currentPose, Pose3d targetPose) {
+    private ChassisSpeeds robotVelocity;
+    private Pose3d currentPose;
+    private Pose3d targetPose;
+
+    public ShooterCalculator() {
+        this.robotVelocity = new ChassisSpeeds();
+        this.currentPose = new Pose3d();
+        this.targetPose = new Pose3d();
+    }
+
+    public ShooterCalculator(ChassisSpeeds robotVelocity, Pose3d currentPose, Pose3d targetPose) {
+        this.robotVelocity = robotVelocity;
+        this.currentPose = currentPose;
+        this.targetPose = targetPose;
+    }
+
+    public ShotData calculateShot() {
         return new ShotData();
+    }
+
+    public void refresh(ChassisSpeeds robotVelocity, Pose3d currentPose, Pose3d targetPose) {
+        this.robotVelocity = robotVelocity;
+        this.currentPose = currentPose;
+        this.targetPose = targetPose;
     }
 
     public class ShotData {

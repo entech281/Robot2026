@@ -40,6 +40,6 @@ public class FaceTargetLocationTurretCommand extends EntechCommand {
     @Override
     public boolean isFinished() {
         //never ends, continously tracks target
-        return false;
+        return turretSubsystem.getOutputs().isAtRequestedPosition();
     }
 }

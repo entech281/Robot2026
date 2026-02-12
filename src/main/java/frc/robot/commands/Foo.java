@@ -12,68 +12,68 @@ import frc.robot.util.ShooterCalculator;
 
 public class Foo extends EntechCommand {
 
-    private double shooterRPM;
-    private final ShooterSubsystem shooterSubsystem;
-    private Pose3d target;
-    private final TurretSubsystem turretSubsystem;
+    // private double shooterRPM;
+    // private final ShooterSubsystem shooterSubsystem;
+    // private Pose3d target;
+    // private final TurretSubsystem turretSubsystem;
 
-    public Foo(ShooterSubsystem shooterSubsystem, TurretSubsystem turretSubsystem, Pose3d target) {
-        super();
-        this.shooterSubsystem = shooterSubsystem;
-        this.turretSubsystem = turretSubsystem;
-        this.target = target;
-    }
+    // public Foo(ShooterSubsystem shooterSubsystem, TurretSubsystem turretSubsystem, Pose3d target) {
+    //     super();
+    //     this.shooterSubsystem = shooterSubsystem;
+    //     this.turretSubsystem = turretSubsystem;
+    //     this.target = target;
+    // }
 
-    @Override
-    public void end(boolean interrupted) {
-        // TODO Auto-generated method stub
-        super.end(interrupted);
-    }
+    // @Override
+    // public void end(boolean interrupted) {
+    //     // TODO Auto-generated method stub
+    //     super.end(interrupted);
+    // }
 
-    @Override
-    public void execute() {}
+    // @Override
+    // public void execute() {}
 
-    @Override
-    public void initialize() {
-        // TODO Auto-generated method stub
-          if (!new ShooterCalculator().hasValidShot()) return;
-        new ParallelCommandGroup(
+    // @Override
+    // public void initialize() {
+    //     // TODO Auto-generated method stub
+    //       if (!new ShooterCalculator().hasValidShot()) return;
+    //     new ParallelCommandGroup(
       
 
-        new ParallelCommandGroup(
-            new ShooterRPM(shooterSubsystem, this.shooterRPM),
-            new FaceTargetLocationTurretCommand(turretSubsystem, this.target),
-            new HoodAtTarget();
-        );
+    //     new ParallelCommandGroup(
+    //         new ShooterRPM(shooterSubsystem, this.shooterRPM),
+    //         new FaceTargetLocationTurretCommand(turretSubsystem, this.target),
+    //         new HoodAtTarget();
+    //     );
 
-        new WaitUntilCommand(turretOutput.isFacingTarget && shooterOutput.isAtSpeed);
+    //     new WaitUntilCommand(turretOutput.isFacingTarget && shooterOutput.isAtSpeed);
 
-        new RunTransferCommand();
-        ).schedule();
-    }
+    //     new RunTransferCommand();
+    //     ).schedule();
+    // }
 
-    @Override
-    public boolean isFinished() {
-        // TODO Auto-generated method stub
-        return !new ShooterCalculator().hasValidShot() || buttonReleased;
-    }
+    // @Override
+    // public boolean isFinished() {
+    //     // TODO Auto-generated method stub
+    //     return !new ShooterCalculator().hasValidShot() || buttonReleased;
+    // }
   
 
-    kickerss
-    shooterSS
-    turretSubsystem
-    hoodSS
+    // kickerss
+    // shooterSS
+    // turretSubsystem
+    // hoodSS
 
-    shooterOutput
-    turretOutput
-    HoodOutput
-    shoooterout
+    // shooterOutput
+    // turretOutput
+    // HoodOutput
+    // shoooterout
 
-    Chassis
-    targetPose (needs alliance)
-    currentPose
+    // Chassis
+    // targetPose (needs alliance)
+    // currentPose
     
-    button
+    // button
 
     
 }
