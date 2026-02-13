@@ -10,7 +10,7 @@ public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOu
     @Override
     public void initialize() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'initialize'");
+        // throw new UnsupportedOperationException("Unimplemented method 'initialize'");
     }
 
     @Override
@@ -21,7 +21,8 @@ public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOu
     @Override
     public void updateInputs(TransferInput input) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateInputs'");
+        // throw new UnsupportedOperationException("Unimplemented method
+        // 'updateInputs'");
     }
 
     @Override
@@ -32,7 +33,8 @@ public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOu
     @Override
     protected TransferOutput toOutputs() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'toOutputs'");
+        // throw new UnsupportedOperationException("Unimplemented method 'toOutputs'");
+        return new TransferOutput();
     }
 
 }

@@ -9,13 +9,13 @@ public class TransferInput implements SubsystemInput {
     @Override
     public void fromLog(LogTable arg0) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'fromLog'");
+        // throw new UnsupportedOperationException("Unimplemented method 'fromLog'");
     }
 
     @Override
     public void toLog(LogTable arg0) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'toLog'");
+        // throw new UnsupportedOperationException("Unimplemented method 'toLog'");
     }
     
 }

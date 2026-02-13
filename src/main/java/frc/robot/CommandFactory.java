@@ -11,6 +11,8 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -21,13 +23,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.entech.TestableHardwareI;
 import frc.entech.commands.AutonomousException;
 import frc.entech.commands.InstantAnytimeCommand;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.robot.commands.GyroResetByAngleCommand;
+import frc.robot.commands.HomeTurretCommand;
+import frc.robot.commands.FaceTargetLocationTurretCommand;
+import frc.robot.commands.ShootAtTargetCommand;
 import frc.robot.commands.RunShooterAtLiveSpeedCommand;
 import frc.robot.commands.RunTestCommand;
 import frc.robot.io.RobotIO;
@@ -36,6 +44,7 @@ import frc.robot.livetuning.WheelDiameterCharacterizer;
 import frc.robot.operation.UserPolicy;
 import frc.robot.processors.OdometryProcessor;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.util.ShooterCalculator;
 import frc.robot.sensors.navx.NavXSensor;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
@@ -78,6 +87,7 @@ public class CommandFactory {
     Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST, "No Current Test");
     SmartDashboard.putData("Test Chooser", testChooser);
     Shuffleboard.getTab("stuffs").add("Run Test", new RunTestCommand(testChooser));
+    Shuffleboard.getTab("stuffs").add("Home Turret", new HomeTurretCommand(subsystemManager.getTurretSubsystem()));
 
     AutoBuilder.configure(odometry::getEstimatedPose,
         odometry::resetOdometry,
@@ -160,6 +170,38 @@ public class CommandFactory {
         new InstantCommand(() -> {
           driveSubsystem.pathFollowDrive(new ChassisSpeeds(0.0, 0.0, 0.0));
         }, driveSubsystem));
+  }
+
+  public Command getFullShootCommand() {
+    Pose3d target;
+    
+    if (DriverStation.getAlliance().get() == Alliance.Red) {
+      target = RobotConstants.TURRET.RED_HUB_LOCATION;
+    } else if (DriverStation.getAlliance().get() == Alliance.Blue) {
+      target = RobotConstants.TURRET.BLUE_HUB_LOCATION;
+    } else {
+      return Commands.none();
+    }
+
+    Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose()).transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
+
+    ShooterCalculator calculator = new ShooterCalculator(RobotIO.getInstance().getNavXOutput().getChassisSpeeds(), shooterCurrentPose, target);
+
+    return new SequentialCommandGroup(
+      new ParallelCommandGroup(
+          new RunShooterAtLiveSpeedCommand(subsystemManager.getShooterSubsystem()),
+          new FaceTargetLocationTurretCommand(subsystemManager.getTurretSubsystem(), target.toPose2d())
+      ),
+
+      new ParallelCommandGroup(
+        new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), calculator),
+        new Command() {
+          public void execute() {
+            calculator.refresh(RobotIO.getInstance().getNavXOutput().getChassisSpeeds(), new Pose3d(RobotIO.getInstance().getOdometryPose()).transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM), target);
+          };
+        }
+      )
+    );
   }
 
   private Command getSubsystemTestMessageCommand(String message) {

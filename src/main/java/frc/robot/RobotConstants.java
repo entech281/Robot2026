@@ -11,6 +11,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -170,6 +171,7 @@ public final class RobotConstants {
 
       public static final int POWER_DISTRIBUTION_HUB = 1;
       public static final int TURRET_MOTOR = 60;
+      public static final int HOOD_MOTOR = 53;
     }
 
     public static interface CONTROLLER {
@@ -330,23 +332,48 @@ public final class RobotConstants {
     public static final double TURRET_POSITION_I = 0.0;
     public static final double TURRET_POSITION_D = 0.0;
     public static final double TURRET_POSITION_FF = 0.0;
+    public static final double TURRET_CRUISE_VELOCITY_RPM = 100.0; // max velocity for motion magic
+    public static final double TURRET_MAX_ACCELERATION_RPM_PER_SECOND = 100.0; // max acceleration for motion magic
+    public static final double TURRET_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.1; // allowable error for motion magic
     public static final double TURRET_POSITION_TOLERANCE_DEGREES = 1.0; // considered at setpoint within this
+    public static final double HOME_POSITION_DEGREES = 0.0; // position to reset to
     // preset manual positions (buttons will command these)
     public static final double TURRET_POSITION_PRESET_A_DEGREES = 0.0;
-    public static final double TURRET_POSITION_PRESET_B_DEGREES = 90.0;
+    public static final double TURRET_POSITION_PRESET_B_DEGREES = -90.0;
+    public static final double TURRET_POSITION_PRESET_Y_DEGREES = 90;
     // small adjustment step used by any incremental commands
     public static final double TURRET_ADJUST_STEP_DEGREES = 5.0;
 
-    public static final Pose2d BLUE_HUB_LOCATION = new Pose2d(Inches.of(182.11).in(Meters),
-        Inches.of(158.845).in(Meters), new Rotation2d());
-    public static final Pose2d RED_HUB_LOCATION = new Pose2d(Inches.of(469.11).in(Meters),
-        Inches.of(158.845).in(Meters), new Rotation2d());
+    public static final Pose3d BLUE_HUB_LOCATION = new Pose3d(Inches.of(182.11).in(Meters),
+        Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
+    public static final Pose3d RED_HUB_LOCATION = new Pose3d(Inches.of(469.11).in(Meters),
+        Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
 
     public static final Translation2d TURRET_OFFSET = new Translation2d(-DrivetrainConstants.WHEEL_BASE_METERS / 2.0,
         0.0);
 
     public static final double TURRET_LOWER_LIMIT_DEGREES = -120.0;
     public static final double TURRET_UPPER_LIMIT_DEGREES = 120.0;
+  }
+
+  public static interface HOOD {
+    // TODO: make these real
+    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 1.0;
+    public static final double HOOD_P = 0.2;
+    public static final double HOOD_I = 0.0;
+    public static final double HOOD_D = 0.0;
+    public static final double INITIAL_POSITION_DEGREES = 0.0;
+    public static final double HOOD_LOWER_LIMIT_DEGREES = 0.0;
+    public static final double HOOD_UPPER_LIMIT_DEGREES = 180.0;
+    public static final double HOOD_POSITION_TOLERANCE_DEGREES = 1.0;
+    public static final double HOOD_CRUISE_VELOCITY_RPM = 100.0;
+    public static final double HOOD_MAX_ACCELERATION_RPM_PER_SECOND = 100.0;
+    public static final double HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5;
+  }
+
+  public static interface SHOOTER {
+    public static final Transform3d SHOT_TRANSFORM = new Transform3d(0, 0, 0, new Rotation3d());
+    public static final double WHEEL_RADIUS_METERS = 0.048229115; // TODO: Idk my ai made this number
   }
 
   private RobotConstants() {

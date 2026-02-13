@@ -10,7 +10,7 @@ public class HopperSubsystem extends EntechSubsystem<HopperInput, HopperOutput> 
     @Override
     public void initialize() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'initialize'");
+        // throw new UnsupportedOperationException("Unimplemented method 'initialize'");
     }
 
     @Override
@@ -21,7 +21,8 @@ public class HopperSubsystem extends EntechSubsystem<HopperInput, HopperOutput> 
     @Override
     public void updateInputs(HopperInput input) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateInputs'");
+        // throw new UnsupportedOperationException("Unimplemented method
+        // 'updateInputs'");
     }
 
     @Override
@@ -32,7 +33,8 @@ public class HopperSubsystem extends EntechSubsystem<HopperInput, HopperOutput> 
     @Override
     protected HopperOutput toOutputs() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'toOutputs'");
+        // throw new UnsupportedOperationException("Unimplemented method 'toOutputs'");
+        return new HopperOutput();
     }
 
 }
