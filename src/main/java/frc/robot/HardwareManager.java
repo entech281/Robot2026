@@ -9,6 +9,7 @@ import java.util.List;
 
 import frc.entech.TestableHardwareI;
 import frc.robot.io.RobotIO;
+import frc.robot.sensors.HallEffectSensor.HallEffectSensor;
 import frc.robot.sensors.navx.NavXSensor;
 import frc.robot.sensors.vision.VisionSensor;
 import frc.robot.subsystems.climb.ClimbSubsystem;
@@ -31,22 +32,24 @@ public class HardwareManager {
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   private final HoodSubsystem hoodSubsystem = new HoodSubsystem();
   private final TurretSubsystem turretSubsystem = new TurretSubsystem();
-  private final TransferSubsystem transferSubsystem= new TransferSubsystem();
+  private final TransferSubsystem transferSubsystem = new TransferSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
   private final HopperSubsystem hopperSubsystem = new HopperSubsystem();
+  private final HallEffectSensor hallEffectSensor = new HallEffectSensor();
 
   public HardwareManager() {
     navXSensor.initialize();
     driveSubsystem.initialize();
     shooterSubsystem.initialize();
     visionSensor.initialize();
-    hoodSubsystem.initialize();
-    turretSubsystem.initialize();
-    hopperSubsystem.initialize();
+    // hoodSubsystem.initialize();
+    // turretSubsystem.initialize();
+    // hopperSubsystem.initialize();
     intakeSubsystem.initialize();
-    climbSubsystem.initialize();
-    transferSubsystem.initialize();
+    // climbSubsystem.initialize();
+    // transferSubsystem.initialize();
+    hallEffectSensor.initialize();
 
     periodic();
   }
@@ -91,6 +94,10 @@ public class HardwareManager {
     return transferSubsystem;
   }
 
+  public HallEffectSensor getHallEffectSensor() {
+    return hallEffectSensor;
+  }
+
   public List<TestableHardwareI> getSubsystemList() {
     ArrayList<TestableHardwareI> r = new ArrayList<>();
     r.add(driveSubsystem);
@@ -103,6 +110,7 @@ public class HardwareManager {
     r.add(climbSubsystem);
     r.add(navXSensor);
     r.add(visionSensor);
+    r.add(hallEffectSensor);
 
     return r;
   }
@@ -118,16 +126,18 @@ public class HardwareManager {
 
     outputs.updateVision(visionSensor.getOutputs());
 
-    outputs.updateClimb(climbSubsystem.getOutputs());
+    // outputs.updateClimb(climbSubsystem.getOutputs());
 
-    outputs.updateHopper(hopperSubsystem.getOutputs());
+    // outputs.updateHopper(hopperSubsystem.getOutputs());
 
-    outputs.updateHood(hoodSubsystem.getOutputs());
+    // outputs.updateHood(hoodSubsystem.getOutputs());
 
     outputs.updateIntake(intakeSubsystem.getOutputs());
 
-    outputs.updateTransfer(transferSubsystem.getOutputs());
+    // outputs.updateTransfer(transferSubsystem.getOutputs());
 
-    outputs.updateTurret(turretSubsystem.getOutputs());
+    // outputs.updateTurret(turretSubsystem.getOutputs());
+
+    outputs.updateHallEffect(hallEffectSensor.getOutputs());
   }
 }

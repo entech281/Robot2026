@@ -1,43 +1,65 @@
 package frc.robot.subsystems.intake;
 
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
+import frc.entech.subsystems.SparkOutput;
+import frc.robot.RobotConstants;
 
 public class IntakeSubsystem extends EntechSubsystem<IntakeInput, IntakeOutput> {
+    private static final boolean ENABLED = true;
+    private SparkFlex intakeMotor;
+    private double setSpeed = 0.0;
 
     @Override
     public void initialize() {
-        // TODO Auto-generated method stub
-        // throw new UnsupportedOperationException("Unimplemented method 'initialize'");
+        if (ENABLED) {
+            intakeMotor = new SparkFlex(RobotConstants.PORTS.CAN.INTAKE_MOTOR, MotorType.kBrushless);
+
+            SparkFlexConfig config = new SparkFlexConfig();
+            config.idleMode(IdleMode.kBrake);
+
+            intakeMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        }
     }
 
     @Override
     public boolean isEnabled() {
-        // TODO Auto-generated method stub
-        // throw new UnsupportedOperationException("Unimplemented method 'isEnabled'");
-        return false;
+        return ENABLED;
     }
 
     @Override
     public void updateInputs(IntakeInput input) {
-        // TODO Auto-generated method stub
-        // throw new UnsupportedOperationException("Unimplemented method 'updateInputs'");
+        if (ENABLED) {
+            if (setSpeed != input.getSpeed()) {
+                intakeMotor.set(input.getSpeed());
+                setSpeed = input.getSpeed();
+            }
+        }
     }
 
     @Override
     public Command getTestCommand() {
-        // TODO Auto-generated method stub
-        // throw new UnsupportedOperationException("Unimplemented method 'getTestCommand'");
-        return new Command() {
-            
-        };
+        return Commands.none();
     }
 
     @Override
     protected IntakeOutput toOutputs() {
-        // TODO Auto-generated method stub
-        // throw new UnsupportedOperationException("Unimplemented method 'toOutputs'");
-        return new IntakeOutput();
+        IntakeOutput output = new IntakeOutput();
+
+        if (ENABLED) {
+            output.setIntakeMotorOutput(SparkOutput.createOutput(intakeMotor));
+        }
+
+        return output;
     }
-    
+
 }

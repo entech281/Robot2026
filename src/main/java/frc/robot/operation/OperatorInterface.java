@@ -17,6 +17,7 @@ import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.GyroReset;
 import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.ResetOdometryCommand;
+import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.TwistCommand;
 import frc.robot.commands.XDriveCommand;
 import frc.robot.io.DebugInput;
@@ -108,16 +109,18 @@ public class OperatorInterface
     xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.DRIVE_X)
         .whileTrue(new XDriveCommand(subsystemManager.getDriveSubsystem()));
 
-  xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.RESET_ODOMETRY)
-    .onTrue(new ResetOdometryCommand(odometry));
+    xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.RESET_ODOMETRY)
+        .onTrue(new ResetOdometryCommand(odometry));
 
-  xboxController.a().onTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.TURRET_POSITION_PRESET_A_DEGREES));
+    xboxController.a().onTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
+        RobotConstants.TURRET.TURRET_POSITION_PRESET_A_DEGREES));
 
-  xboxController.b().onTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.TURRET_POSITION_PRESET_B_DEGREES));
-    
+    xboxController.b().onTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
+        RobotConstants.TURRET.TURRET_POSITION_PRESET_B_DEGREES));
 
-  xboxController.y().onTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.TURRET_POSITION_PRESET_Y_DEGREES));
-}
+    xboxController.y().onTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
+        RobotConstants.TURRET.TURRET_POSITION_PRESET_Y_DEGREES));
+  }
 
   public void scoreOperatorBindings() {
 
@@ -125,13 +128,15 @@ public class OperatorInterface
 
   public void alignOperatorBindings() {
 
-    //TODO: Move to CommandFactory
+    // TODO: Move to CommandFactory
     Optional<Alliance> alliance = DriverStation.getAlliance();
     if (alliance.isPresent()) {
       if (alliance.get() == DriverStation.Alliance.Blue) {
-        subsystemManager.getTurretSubsystem().setDefaultCommand(new FaceTargetLocationTurretCommand(subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.BLUE_HUB_LOCATION.toPose2d()));
+        subsystemManager.getTurretSubsystem().setDefaultCommand(new FaceTargetLocationTurretCommand(
+            subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.BLUE_HUB_LOCATION.toPose2d()));
       } else if (alliance.get() == DriverStation.Alliance.Red) {
-        subsystemManager.getTurretSubsystem().setDefaultCommand(new FaceTargetLocationTurretCommand(subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.RED_HUB_LOCATION.toPose2d()));
+        subsystemManager.getTurretSubsystem().setDefaultCommand(new FaceTargetLocationTurretCommand(
+            subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.RED_HUB_LOCATION.toPose2d()));
       }
     } else {
       DriverStation.reportWarning("Could not get alliance, TurretSubsystem not set to track by default", false);
