@@ -324,6 +324,7 @@ public final class RobotConstants {
 
   public static interface SHOOTER {
     public static final Transform3d SHOT_TRANSFORM = new Transform3d(0, 0, 0, new Rotation3d());
+    public static final double WHEEL_RADIUS_METERS = 0.048229115; //TODO: Idk my ai made this number
   }
 
   private RobotConstants() {
