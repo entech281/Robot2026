@@ -193,10 +193,11 @@ public final class RobotConstants {
         public static final int RESET_ODOMETRY = 8;
         public static final int B = 2;
       }
+
     }
 
-    public static interface HAS_ALGAE {
-      public static final int INTERNAL_ALGAE_SENSOR = 8;
+    public static interface DIO {
+      public static final int HALL_EFFECT_SENSOR = 0;
     }
   }
 
