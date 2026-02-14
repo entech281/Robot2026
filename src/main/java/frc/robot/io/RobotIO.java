@@ -18,7 +18,6 @@ import frc.robot.sensors.navx.NavXOutput;
 import frc.robot.sensors.vision.VisionOutput;
 import frc.robot.subsystems.shooter.ShooterOutput;
 import frc.robot.subsystems.transfer.TransferOutput;
-import frc.robot.subsystems.turret.TurretOutput;
 
 public class RobotIO implements DriveInputSupplier {
   private static final RobotIO instance = new RobotIO();
