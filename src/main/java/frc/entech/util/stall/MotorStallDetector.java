@@ -1,13 +1,13 @@
 package frc.entech.util.stall;
 
-import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase;
 import java.util.Objects;
 
 public final class MotorStallDetector {
 
   private final double minAppliedOutput;
-  private final double maxAbsVelocity;
-  private final double minCurrentAmps;
+  private final double minMovingVelocity;
+  private final double maxAllowableCurrent;
   private final int requiredLoops;
 
   private int consecutiveTrueLoops = 0;
@@ -17,8 +17,8 @@ public final class MotorStallDetector {
     validate(minAppliedOutput, maxAbsVelocity, minCurrentAmps, requiredLoops);
 
     this.minAppliedOutput = minAppliedOutput;
-    this.maxAbsVelocity = maxAbsVelocity;
-    this.minCurrentAmps = minCurrentAmps;
+    this.minMovingVelocity = maxAbsVelocity;
+    this.maxAllowableCurrent = minCurrentAmps;
     this.requiredLoops = requiredLoops;
   }
 
@@ -26,17 +26,17 @@ public final class MotorStallDetector {
     return new Builder();
   }
 
-  public boolean isStalled(SparkMax max) {
-    return isStalled(new SparkMaxStallTelemetry(max));
+  public boolean isStalled(SparkBase spark) {
+    return isStalled(new SparkStallTelemetry(spark));
   }
 
   public boolean isStalled(MotorStallTelemetry t) {
     Objects.requireNonNull(t, "telemetry");
 
     final boolean looksStalled =
-        Math.abs(t.appliedOutput()) >= minAppliedOutput
-            && Math.abs(t.velocity()) <= maxAbsVelocity
-            && t.outputCurrent() >= minCurrentAmps;
+        Math.abs(t.thresholdVoltage()) >= minAppliedOutput
+            && Math.abs(t.thresholdVelocity()) <= minMovingVelocity
+            && t.thresholdCurrent() >= maxAllowableCurrent;
 
     if (looksStalled) {
       incrementStallCountUpToLimit();
@@ -59,12 +59,12 @@ public final class MotorStallDetector {
     return minAppliedOutput;
   }
 
-  public double getMaxAbsVelocity() {
-    return maxAbsVelocity;
+  public double getMinMovingVelocity() {
+    return minMovingVelocity;
   }
 
-  public double getMinCurrentAmps() {
-    return minCurrentAmps;
+  public double getMaxAllowableCurrent() {
+    return maxAllowableCurrent;
   }
 
   public int getRequiredLoops() {

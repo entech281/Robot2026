@@ -35,19 +35,19 @@ public class TestMotorStallDetector {
     }
 
     @Override
-    public double appliedOutput() {
+    public double thresholdVoltage() {
       callsAppliedOutput++;
       return appliedOutput;
     }
 
     @Override
-    public double velocity() {
+    public double thresholdVelocity() {
       callsVelocity++;
       return velocity;
     }
 
     @Override
-    public double outputCurrent() {
+    public double thresholdCurrent() {
       callsCurrent++;
       return current;
     }

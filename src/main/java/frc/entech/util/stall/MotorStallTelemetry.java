@@ -8,11 +8,11 @@ package frc.entech.util.stall;
 public interface MotorStallTelemetry {
 
   /** Applied output in the range [-1, 1]. */
-  double appliedOutput();
+  double thresholdVoltage();
 
   /** Mechanism velocity in user units (typically RPM for Spark encoder). */
-  double velocity();
+  double thresholdVelocity();
 
   /** Output current in amps. */
-  double outputCurrent();
+  double thresholdCurrent();
 }
