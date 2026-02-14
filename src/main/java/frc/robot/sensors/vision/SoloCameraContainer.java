@@ -85,18 +85,85 @@ public class SoloCameraContainer implements CameraContainerI {
         result.getMultiTagResult());
   }
 
+  private PhotonPipelineResult getFilteredResult(PhotonPipelineResult result) {
+    List<PhotonTrackedTarget> filteredTargets = new ArrayList<>();
+
+    for (PhotonTrackedTarget target : result.getTargets()) {
+      // Filter by ambiguity
+      // if (target.getPoseAmbiguity() > RobotConstants.Vision.Filters.MAX_AMBIGUITY)
+      // {
+      // continue;
+      // }
+
+      // Filter by distance
+      // if (Math.abs(target.getBestCameraToTarget().getX()) >
+      // RobotConstants.Vision.Filters.MAX_DISTANCE) {
+      // continue;
+      // }
+
+      // Filter by allowed tag IDs
+      // boolean allowed = false;
+      // for (int id : RobotConstants.Vision.Filters.ALLOWED_TAGS) {
+      // if (target.getFiducialId() == id) {
+      // allowed = true;
+      // break;
+      // }
+      // }
+
+      // if (!allowed) {
+      // continue;
+      // }
+
+      filteredTargets.add(target);
+    }
+
+    // Create new result with filtered targets
+    return new PhotonPipelineResult(
+        result.metadata,
+        filteredTargets,
+        result.getMultiTagResult());
+  }
+
+  @Override
+  public Optional<List<VisionPose>> getEstimatedPoses() {
+    List<PhotonPipelineResult> unfilteredList = getAllUnreadResults();
+    List<PhotonPipelineResult> filteredList = new ArrayList<>();
+
+    for (PhotonPipelineResult result : unfilteredList) {
+      filteredList.add(getFilteredResult(result));
+    }
+
+    List<VisionPose> visionPoses = new ArrayList<>();
+
+    for (PhotonPipelineResult result : filteredList) {
+      if (!result.hasTargets()) {
+        continue;
+      }
+      Optional<EstimatedRobotPose> estimatedPose = estimator.estimateAverageBestTargetsPose(result);
+
+      if (estimatedPose.isPresent()) {
+        Pose2d pose = estimatedPose.get().estimatedPose.toPose2d();
+        double timeStamp = result.metadata.getCaptureTimestampMicros() / 1_000_000.0;
+        visionPoses.add(new VisionPose(pose, timeStamp));
+      }
+    }
+
+    if (visionPoses.isEmpty()) {
+      return Optional.empty();
+    } else {
+      return Optional.of(visionPoses);
+    }
+  }
+
   @Override
   public Optional<Pose2d> getEstimatedPose() {
-    PhotonPipelineResult filteredResult = getFilteredResult();
+    Optional<List<VisionPose>> latestVisionPose = getEstimatedPoses();
 
-    // Pass the filtered result to update()
-    Optional<EstimatedRobotPose> estimatedPose = estimator.update(filteredResult);
-
-    if (estimatedPose.isPresent()) {
-      return Optional.of(estimatedPose.get().estimatedPose.toPose2d());
-    } else {
+    if (latestVisionPose.isEmpty()) {
       return Optional.empty();
     }
+
+    return Optional.of(latestVisionPose.get().get(latestVisionPose.get().size() - 1).getPose());
   }
 
   @Override

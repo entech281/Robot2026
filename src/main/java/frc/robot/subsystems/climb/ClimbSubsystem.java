@@ -1,9 +1,11 @@
 package frc.robot.subsystems.climb;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
 
 public class ClimbSubsystem extends EntechSubsystem<ClimbInput, ClimbOutput> {
+    private static final boolean ENABLED = false;
 
     @Override
     public void initialize() {
@@ -13,24 +15,19 @@ public class ClimbSubsystem extends EntechSubsystem<ClimbInput, ClimbOutput> {
 
     @Override
     public boolean isEnabled() {
-        // TODO Auto-generated method stub
-        // throw new UnsupportedOperationException("Unimplemented method 'isEnabled'");
-        return false;
+        return ENABLED;
     }
 
     @Override
     public void updateInputs(ClimbInput input) {
         // TODO Auto-generated method stub
-        // throw new UnsupportedOperationException("Unimplemented method 'updateInputs'");
+        // throw new UnsupportedOperationException("Unimplemented method
+        // 'updateInputs'");
     }
 
     @Override
     public Command getTestCommand() {
-        // TODO Auto-generated method stub
-        // throw new UnsupportedOperationException("Unimplemented method 'getTestCommand'");
-        return new Command() {
-            
-        };
+        return Commands.none();
     }
 
     @Override
@@ -39,5 +36,5 @@ public class ClimbSubsystem extends EntechSubsystem<ClimbInput, ClimbOutput> {
         // throw new UnsupportedOperationException("Unimplemented method 'toOutputs'");
         return new ClimbOutput();
     }
-    
+
 }

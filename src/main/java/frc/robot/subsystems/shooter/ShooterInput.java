@@ -9,12 +9,12 @@ public class ShooterInput implements SubsystemInput {
 
     @Override
     public void toLog(LogTable table) {
-        table.put("ShooterOutput/speed", speed);
+        table.put("speed", speed);
     }
 
     @Override
     public void fromLog(LogTable table) {
-        speed = table.get("ShooterOutput/speed", 0);
+        speed = table.get("speed", 0);
     }
 
     /**
