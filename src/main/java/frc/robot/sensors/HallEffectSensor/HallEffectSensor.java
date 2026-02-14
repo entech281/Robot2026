@@ -37,9 +37,9 @@ public class HallEffectSensor extends EntechSensor<HallEffectOutput> {
         HallEffectOutput output = new HallEffectOutput();
 
         if (ENABLED) {
-            output.setValue(sensor.get() ? 1.0 : 0.0);
+            output.setMagnetDetected(!sensor.get());
         } else {
-            output.setValue(0.0);
+            output.setMagnetDetected(false);
         }
 
         return output;

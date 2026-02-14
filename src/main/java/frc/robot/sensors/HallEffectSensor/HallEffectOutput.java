@@ -5,25 +5,24 @@ import org.littletonrobotics.junction.Logger;
 import frc.entech.sensors.SensorOutput;
 
 public class HallEffectOutput extends SensorOutput {
-    private double value = 0;
+    private boolean magnetDetected = false;
 
     @Override
     protected void toLog() {
-        Logger.recordOutput("HallEffectSensor/value", value);
+        Logger.recordOutput("HallEffectSensor/magnetDetected", magnetDetected);
     }
 
     /**
-     * @return double return the value
+     * @return boolean return the magnetDetected
      */
-    public double getValue() {
-        return value;
+    public boolean isMagnetDetected() {
+        return magnetDetected;
     }
 
     /**
-     * @param value the value to set
+     * @param magnetDetected the magnetDetected to set
      */
-    public void setValue(double value) {
-        this.value = value;
+    public void setMagnetDetected(boolean magnetDetected) {
+        this.magnetDetected = magnetDetected;
     }
-
 }
