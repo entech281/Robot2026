@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.subsystems.SparkOutput;
 import frc.robot.RobotConstants;
+import frc.robot.livetuning.LiveTuningHandler;
 
 /**
  *
@@ -121,8 +122,8 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         if (!ENABLED)
             return;
         // clamp to allowed range
-        double clamped = Math.max(RobotConstants.TURRET.TURRET_LOWER_LIMIT_DEGREES,
-                Math.min(RobotConstants.TURRET.TURRET_UPPER_LIMIT_DEGREES, desiredAngle));
+        double clamped = Math.max(LiveTuningHandler.getInstance().getValue("TurretSubsystem/LowerLimitDegrees"),
+                Math.min(LiveTuningHandler.getInstance().getValue("TurretSubsystem/UpperLimitDegrees"), desiredAngle));
         latestInput.setRequestedPosition(clamped);
 
         if (turretPIDController != null) {
