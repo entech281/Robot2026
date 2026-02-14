@@ -36,6 +36,7 @@ import frc.robot.commands.GyroResetByAngleCommand;
 import frc.robot.commands.HomeTurretCommand;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.ShootAtTargetCommand;
+import frc.robot.commands.ShootAtTargetCommand2;
 import frc.robot.commands.RunShooterAtLiveSpeedCommand;
 import frc.robot.commands.RunTestCommand;
 import frc.robot.io.RobotIO;
@@ -45,6 +46,7 @@ import frc.robot.operation.UserPolicy;
 import frc.robot.processors.OdometryProcessor;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.util.ShooterCalculator;
+import frc.robot.util.TurretCalculator;
 import frc.robot.sensors.navx.NavXSensor;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
@@ -202,6 +204,35 @@ public class CommandFactory {
         }
       )
     );
+  }
+
+  public Command getOtherShootCommand() {
+    Pose3d target;
+    
+    if (DriverStation.getAlliance().get() == Alliance.Red) {
+      target = RobotConstants.TURRET.RED_HUB_LOCATION;
+    } else if (DriverStation.getAlliance().get() == Alliance.Blue) {
+      target = RobotConstants.TURRET.BLUE_HUB_LOCATION;
+    } else {
+      return Commands.none();
+    }
+
+    Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose()).transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
+
+    ShooterCalculator shooterCalculator = new ShooterCalculator(RobotIO.getInstance().getNavXOutput().getChassisSpeeds(), shooterCurrentPose, target);
+    TurretCalculator turretCalculator = new TurretCalculator(target.toPose2d(), RobotIO.getInstance().getOdometryPose());
+
+    return new ParallelCommandGroup(
+      new ShootAtTargetCommand2(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculator, shooterCalculator),
+      new Command() {
+        public void execute() {
+          shooterCalculator.refresh(RobotIO.getInstance().getNavXOutput().getChassisSpeeds(), new Pose3d(RobotIO.getInstance().getOdometryPose()).transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM), target);
+          turretCalculator.refresh(target.toPose2d(), RobotIO.getInstance().getOdometryPose());
+        };
+      }
+    );
+    
+
   }
 
   private Command getSubsystemTestMessageCommand(String message) {

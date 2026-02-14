@@ -38,7 +38,8 @@ public class TurretCalculatorTest {
   @ParameterizedTest
   @MethodSource("testCalculateTargetAngleSupplier")
   public void testCalculateTargetAngle(Pose2d target, Pose2d robotPose, double expectedAngle) {
-    double calculatedAngle = calculator.calculateTargetTurretAngle(target, robotPose);
+    calculator.refresh(target, robotPose);
+    double calculatedAngle = calculator.calculateTargetTurretAngle();
     assertEquals(expectedAngle, calculatedAngle, EPS,
         "Calculated turret angle should match expected angle.");
 

@@ -12,13 +12,14 @@ public class FaceTargetLocationTurretCommand extends EntechCommand {
     private final TurretSubsystem turretSubsystem;
     private final TurretInput turretInput = new TurretInput();
     private final Pose2d target;
-    private TurretCalculator calculator = new TurretCalculator();
+    private TurretCalculator calculator;
 
 
     public FaceTargetLocationTurretCommand(TurretSubsystem turretSubsystem, Pose2d target) {
         super(turretSubsystem);
         this.turretSubsystem = turretSubsystem;
         this.target = target;
+        this.calculator = new TurretCalculator(target, RobotIO.getInstance().getOdometryPose());
     }
 
     @Override
@@ -27,8 +28,10 @@ public class FaceTargetLocationTurretCommand extends EntechCommand {
     @Override
     public void execute() {
         Pose2d robotPose = RobotIO.getInstance().getOdometryPose();
-        
-        double targetAngle = calculator.calculateTargetTurretAngle(target, robotPose);
+
+        calculator.refresh(target, robotPose);
+
+        double targetAngle = calculator.calculateTargetTurretAngle();
         
         turretInput.setRequestedPosition(targetAngle);
         turretSubsystem.updateInputs(turretInput);
