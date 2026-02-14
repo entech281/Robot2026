@@ -14,8 +14,8 @@ public final class Triboolean implements Comparable<Triboolean> {
     }
 
     public static final Triboolean FALSE = new Triboolean(0);
-    public static final Triboolean TRUE = new Triboolean(1);
-    public static final Triboolean YESNT = new Triboolean(2);
+    public static final Triboolean TRUE = new Triboolean(2);
+    public static final Triboolean YESNT = new Triboolean(1);
 
     public boolean collapse() {
         if (this == FALSE) {
@@ -68,5 +68,28 @@ public final class Triboolean implements Comparable<Triboolean> {
     @Override
     public int compareTo(Triboolean o) {
         return trind(o).e;
+    }
+
+    public Triboolean isOrMaybent(Triboolean a, Triboolean b) {
+        int sum = this.e + a.e + b.e;
+
+        double avg = sum / 3.0;
+
+        if (avg == 0.0) {
+            return FALSE;
+        }
+        if (avg == 2.0) {
+            return TRUE;
+        }
+        if (avg == 1.0) {
+            return YESNT;
+        }
+
+        random.setSeed(RobotController.getFPGATime() + random.nextLong(10_000));
+        if (avg < 1) {
+            return random.nextBoolean() ? YESNT : FALSE;
+        } else {
+            return random.nextBoolean() ? TRUE : YESNT;
+        }
     }
 }
