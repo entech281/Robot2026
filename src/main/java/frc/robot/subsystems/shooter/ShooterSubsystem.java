@@ -70,7 +70,7 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
     }
 
     @Override
-    protected ShooterOutput toOutputs() {
+    public ShooterOutput toOutputs() {
         ShooterOutput so = new ShooterOutput();
 
         if (ENABLED) {

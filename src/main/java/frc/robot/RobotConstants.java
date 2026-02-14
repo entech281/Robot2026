@@ -376,6 +376,18 @@ public final class RobotConstants {
     public static final double WHEEL_RADIUS_METERS = 0.048229115; // TODO: Idk my ai made this number
   }
 
+  public static interface SHOOTING_PRESETS {
+    // Position A preset values
+    public static final double POS_A_TURRET_ANGLE = 0.0;      // degrees
+    public static final double POS_A_HOOD_ANGLE = 30.0;       // degrees
+    public static final double POS_A_SHOOTER_SPEED = 3500.0;  // RPM
+    
+    // Position B preset values
+    public static final double POS_B_TURRET_ANGLE = 15.0;     // degrees
+    public static final double POS_B_HOOD_ANGLE = 45.0;       // degrees
+    public static final double POS_B_SHOOTER_SPEED = 4000.0;  // RPM
+  }
+
   private RobotConstants() {
   }
 }
