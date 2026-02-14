@@ -95,6 +95,11 @@ public class ShooterCalculator {
             return maxShot;
         }
 
+        @Override
+        public String toString() {
+            return "ShotDataRange:\n" + "Min Shot: " + minShot.toString() + "\nIdeal Shot: " + idealShot.toString() + "\nMax Shot: " + maxShot.toString();
+        }
+
         public class ShotData {
             private Angle hoodAngle;
             private LinearVelocity shotVelocity;
@@ -119,6 +124,11 @@ public class ShooterCalculator {
 
             public AngularVelocity getShotAngularVelocity(Distance wheelRadius) {
                 return RPM.of( (shotVelocity.in(MetersPerSecond) * 60.0) / (Math.PI * 2 * wheelRadius.in(Meters)) );
+            }
+
+            @Override
+            public String toString() {
+                return "ShotData:\nShot Velocity (m/s): " + shotVelocity.in(MetersPerSecond) + "\nHood Angle (deg): " + hoodAngle.in(Degree);
             }
         }   
     }

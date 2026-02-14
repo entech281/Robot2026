@@ -7,6 +7,8 @@ import static edu.wpi.first.units.Units.RPM;
 
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import frc.entech.commands.EntechCommand;
 import frc.robot.RobotConstants;
 import frc.robot.livetuning.LiveTuningHandler;
@@ -63,13 +65,22 @@ public class ShootAtTargetCommand extends EntechCommand{
         hoodSS.updateInputs(hoodInput);
         turretSS.updateInputs(turretInput);
 
-        if (shooterCalculatorSupplier.get().isValidShot(Degrees.of(hoodSS.getOutputs().getHoodMotor().getCurrentPosition()), RPM.of(shooterSS.getOutputs().getShooterMotorA().getCurrentSpeed()), Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS)) && turretCalculatorSupplier.get().isValidTurretAngle(turretSS.getOutputs().getTurretMotor().getCurrentPosition(), RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES)) {
+        boolean turretIsReady = turretCalculatorSupplier.get().isValidTurretAngle(turretSS.getOutputs().getTurretMotor().getCurrentPosition(), RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES);
+        boolean shotIsReady = shooterCalculatorSupplier.get().isValidShot(Degrees.of(hoodSS.getOutputs().getHoodMotor().getCurrentPosition()), RPM.of(shooterSS.getOutputs().getShooterMotorA().getCurrentSpeed()), Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS));
+        boolean isReadyToShoot = shotIsReady && turretIsReady;
+
+        if (isReadyToShoot) {
             transferInput.setSpeed(LiveTuningHandler.getInstance().getValue("TransferSubsystem/SetSpeed"));
             transferSS.updateInputs(transferInput);
         } else {
             transferInput.setSpeed(0.0);
             transferSS.updateInputs(transferInput);
         }
+
+        Logger.recordOutput("TurretCalculatorIsReadyToShoot", turretIsReady);
+        Logger.recordOutput("ShotIsReady", shotIsReady);
+        Logger.recordOutput("IsReadyToShoot", isReadyToShoot);
+        Logger.recordOutput("ShotRange", shotRange.toString());
         
     }
 
