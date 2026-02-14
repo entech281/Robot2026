@@ -1,6 +1,7 @@
 package frc.robot.util;
 
 import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RPM;
@@ -12,6 +13,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import frc.entech.util.Triboolean;
+import frc.robot.RobotConstants;
 
 public class ShooterCalculator {
 
@@ -32,16 +34,23 @@ public class ShooterCalculator {
     }
 
     public ShotDataRange calculateShot() {
-        //TODO: implement
-        return new ShotDataRange();
+        LinearVelocity shooterLaunchVelocity = angularVelocityToLinearVelocity(RPM.of(RobotConstants.SHOOTER.MAX_RPM), Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS));
+        double g = 9.80665;
+        double TOLERANCE_DEGREES = 1;
+        double TOLERANCE_LINEAR_VELOCITY = 2;
+        double deltaX = currentPose.getTranslation().getDistance(targetPose.getTranslation());
+        double deltaY = targetPose.getZ() - currentPose.getZ();
+        Angle theta = Degree.of(Math.atan(Math.pow(shooterLaunchVelocity.in(MetersPerSecond), 2) * Math.sqrt(Math.pow(shooterLaunchVelocity.in(MetersPerSecond), 4) - g * (g * Math.pow(deltaX, 2) + 2 * deltaY * Math.pow(shooterLaunchVelocity.in(MetersPerSecond), 2))) / g * deltaX));
+
+        return new ShotDataRange(theta, Degrees.of(TOLERANCE_DEGREES), shooterLaunchVelocity, MetersPerSecond.of(TOLERANCE_LINEAR_VELOCITY));
     }
 
     /**
      * The "new" method that we want tested but are not sure of
      */
     public ShotDataRange calculateShotBeta () {
-        //TODO: Implement
-        return new ShotDataRange();
+        //TODO: same as primary now until new formula
+        return calculateShot();
     }
 
     private boolean isValidShotPrimary(Angle hoodAngle, LinearVelocity shotVelocity) {
