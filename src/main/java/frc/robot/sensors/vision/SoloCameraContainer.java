@@ -144,7 +144,14 @@ public class SoloCameraContainer implements CameraContainerI {
       if (estimatedPose.isPresent()) {
         Pose2d pose = estimatedPose.get().estimatedPose.toPose2d();
         double timeStamp = result.metadata.getCaptureTimestampMicros() / 1_000_000.0;
-        visionPoses.add(new VisionPose(pose, timeStamp));
+
+        double ambiguity = 0.0;
+        for (PhotonTrackedTarget target : estimatedPose.get().targetsUsed) {
+          ambiguity += target.getPoseAmbiguity();
+        }
+        ambiguity /= estimatedPose.get().targetsUsed.size();
+
+        visionPoses.add(new VisionPose(pose, timeStamp, ambiguity, camera.getName()));
       }
     }
 

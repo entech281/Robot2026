@@ -23,7 +23,7 @@ public final class Triboolean implements Comparable<Triboolean> {
         } else if (this == TRUE) {
             return true;
         } else {
-            random.setSeed(RobotController.getFPGATime() + random.nextLong(10_000));
+            random.setSeed(RobotController.getFPGATime() + random.nextLong(1_000_000));
             return random.nextBoolean();
         }
     }

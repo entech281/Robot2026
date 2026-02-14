@@ -18,6 +18,8 @@ public class VisionOutput extends SensorOutput {
 
     private List<VisionPose> visionPoses = new ArrayList<>();
 
+    private double averagePoseAmbiguity = 0.0;
+
     @Override
     public void toLog() {
         for (int i = 0; i < unreadResultsA.size(); i++) {
@@ -44,6 +46,18 @@ public class VisionOutput extends SensorOutput {
             Logger.recordOutput("VisionOutput/visionPoses/visionPose_" + i + "/timestamp",
                     visionPoses.get(i).getTimeStamp());
         }
+
+        for (int i = 0; i < visionPoses.size(); i++) {
+            Logger.recordOutput("VisionOutput/visionPoses/visionPose_" + i + "/ambiguity",
+                    visionPoses.get(i).getAmbiguity());
+        }
+
+        for (int i = 0; i < visionPoses.size(); i++) {
+            Logger.recordOutput("VisionOutput/visionPoses/visionPose_" + i + "/cameraUsed",
+                    visionPoses.get(i).getCameraUsed());
+        }
+
+        Logger.recordOutput("VisionOutput/averagePoseAmbiguity", averagePoseAmbiguity);
 
         Logger.recordOutput("VisionOutput/connected", connected);
     }
