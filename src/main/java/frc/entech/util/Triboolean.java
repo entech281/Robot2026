@@ -4,6 +4,12 @@ import java.util.Random;
 
 import edu.wpi.first.wpilibj.RobotController;
 
+/**
+ * A crime against certainty, probably.
+ * 
+ * @author WhyDoesGodDoThis
+ * @author tadpoleAngel
+ */
 public final class Triboolean implements Comparable<Triboolean> {
     private final int e;
 
@@ -16,6 +22,14 @@ public final class Triboolean implements Comparable<Triboolean> {
     public static final Triboolean FALSE = new Triboolean(0);
     public static final Triboolean TRUE = new Triboolean(2);
     public static final Triboolean YESNT = new Triboolean(1);
+
+    public static Triboolean of(boolean a) {
+        if (a) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    } 
 
     public boolean collapse() {
         if (this == FALSE) {
@@ -32,6 +46,16 @@ public final class Triboolean implements Comparable<Triboolean> {
         boolean a = this.collapse();
         boolean b = other.collapse();
         return (a && b) ? TRUE : FALSE;
+    }
+
+    public Triboolean fand(Triboolean o) {
+        if (this == o) {
+            return this;
+        } else if (this == FALSE || o == FALSE) {
+            return FALSE;
+        } else {
+            return YESNT;
+        }
     }
 
     public Triboolean or(Triboolean other) {
@@ -101,5 +125,20 @@ public final class Triboolean implements Comparable<Triboolean> {
         double avg = sum / values.length;
 
         return avg / 2;
+    }
+
+    public int getProbability() {
+        return e;
+    }
+
+    @Override
+    public String toString() {
+        if (this == FALSE) {
+            return "FALSE";
+        } else if (this == TRUE) {
+            return "TRUE";
+        } else {
+            return "YESNT";
+        }
     }
 }

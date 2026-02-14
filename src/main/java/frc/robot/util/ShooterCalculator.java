@@ -7,12 +7,11 @@ import static edu.wpi.first.units.Units.RPM;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
-import frc.robot.RobotConstants;
+import frc.entech.util.Triboolean;
 
 public class ShooterCalculator {
 
@@ -37,7 +36,15 @@ public class ShooterCalculator {
         return new ShotDataRange();
     }
 
-    public boolean isValidShot(Angle hoodAngle, LinearVelocity shotVelocity) {
+    /**
+     * The "new" method that we want tested but are not sure of
+     */
+    public ShotDataRange calculateShotBeta () {
+        //TODO: Implement
+        return new ShotDataRange();
+    }
+
+    private boolean isValidShotPrimary(Angle hoodAngle, LinearVelocity shotVelocity) {
         ShotDataRange shotRange = calculateShot();
         return hoodAngle.in(Degree) >= shotRange.getMinShot().getHoodAngle().in(Degree) &&
                hoodAngle.in(Degree) <= shotRange.getMaxShot().getHoodAngle().in(Degree) &&
@@ -45,7 +52,25 @@ public class ShooterCalculator {
                shotVelocity.in(MetersPerSecond) <= shotRange.getMaxShot().getShotVelocity().in(MetersPerSecond);
     }
 
-    public boolean isValidShot(Angle hoodAngle, AngularVelocity shooterAngularVelocity, Distance wheelRadius) {
+    private boolean isValidShotBeta(Angle hoodAngle, LinearVelocity shotVelocity) {
+        ShotDataRange shotRange = calculateShotBeta();
+        return hoodAngle.in(Degree) >= shotRange.getMinShot().getHoodAngle().in(Degree) &&
+               hoodAngle.in(Degree) <= shotRange.getMaxShot().getHoodAngle().in(Degree) &&
+               shotVelocity.in(MetersPerSecond) >= shotRange.getMinShot().getShotVelocity().in(MetersPerSecond) &&
+               shotVelocity.in(MetersPerSecond) <= shotRange.getMaxShot().getShotVelocity().in(MetersPerSecond);
+    }
+
+    public Triboolean isValidShot(Angle hoodAngle, LinearVelocity shotVelocity) {
+        if (isValidShotPrimary(hoodAngle, shotVelocity)) {
+            return Triboolean.TRUE;
+        } else if (isValidShotBeta(hoodAngle, shotVelocity)) {
+            return Triboolean.YESNT;
+        } else {
+            return Triboolean.FALSE;
+        }
+    }
+
+    public Triboolean isValidShot(Angle hoodAngle, AngularVelocity shooterAngularVelocity, Distance wheelRadius) {
         LinearVelocity shotVelocity = angularVelocityToLinearVelocity(shooterAngularVelocity, wheelRadius);
         return isValidShot(hoodAngle, shotVelocity);
     }

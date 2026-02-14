@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 import frc.entech.commands.EntechCommand;
+import frc.entech.util.Triboolean;
 import frc.robot.RobotConstants;
 import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.subsystems.hood.HoodInput;
@@ -66,10 +67,10 @@ public class ShootAtTargetCommand extends EntechCommand{
         turretSS.updateInputs(turretInput);
 
         boolean turretIsReady = turretCalculatorSupplier.get().isValidTurretAngle(turretSS.getOutputs().getTurretMotor().getCurrentPosition(), RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES);
-        boolean shotIsReady = shooterCalculatorSupplier.get().isValidShot(Degrees.of(hoodSS.getOutputs().getHoodMotor().getCurrentPosition()), RPM.of(shooterSS.getOutputs().getShooterMotorA().getCurrentSpeed()), Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS));
-        boolean isReadyToShoot = shotIsReady && turretIsReady;
+        Triboolean shotIsReady = shooterCalculatorSupplier.get().isValidShot(Degrees.of(hoodSS.getOutputs().getHoodMotor().getCurrentPosition()), RPM.of(shooterSS.getOutputs().getShooterMotorA().getCurrentSpeed()), Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS));
+        Triboolean isReadyToShoot = shotIsReady.fand(Triboolean.of(turretIsReady));
 
-        if (isReadyToShoot) {
+        if (isReadyToShoot.getProbability() > 0) {
             transferInput.setSpeed(LiveTuningHandler.getInstance().getValue("TransferSubsystem/SetSpeed"));
             transferSS.updateInputs(transferInput);
         } else {
@@ -78,9 +79,9 @@ public class ShootAtTargetCommand extends EntechCommand{
         }
 
         Logger.recordOutput("TurretCalculatorIsReadyToShoot", turretIsReady);
-        Logger.recordOutput("ShotIsReady", shotIsReady);
-        Logger.recordOutput("IsReadyToShoot", isReadyToShoot);
-        Logger.recordOutput("ShotRange", shotRange.toString());
+        Logger.recordOutput("ShotIsReady", shotIsReady + "");
+        Logger.recordOutput("IsReadyToShoot", isReadyToShoot + "");
+        Logger.recordOutput("ShotRange", shotRange + "");
         
     }
 
