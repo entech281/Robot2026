@@ -8,7 +8,7 @@ import frc.robot.io.RobotIO;
 import frc.robot.subsystems.hood.HoodSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.util.ShooterCalculator;
-import frc.robot.util.ShooterCalculator.ShotData;
+import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
 
 public class ShootAtTargetCommand extends EntechCommand {
 

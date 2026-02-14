@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RPM;
 
@@ -12,7 +13,8 @@ import frc.robot.subsystems.shooter.ShooterInput;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.turret.TurretInput;
 import frc.robot.util.ShooterCalculator;
-import frc.robot.util.ShooterCalculator.ShotData;
+import frc.robot.util.ShooterCalculator.ShotDataRange;
+import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
 
 public class ShootAtTargetCommand2 extends EntechCommand{
     private final HoodSubsystem hoodSS;
@@ -34,13 +36,20 @@ public class ShootAtTargetCommand2 extends EntechCommand{
 
     @Override
     public void execute() {
-        ShotData shot = calculator.calculateShot();
+        //TODO: Transfer stuff
+        ShotDataRange shotRange = calculator.calculateShot();
+
+        ShotData shot = shotRange.getIdealShot();
 
         shooterInput.setSpeed(shot.getShotAngularVelocity(Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS)).in(RPM));
         hoodInput.setRequestedPosition(shot.getHoodAngle().in(Degree));
 
         shooterSS.updateInputs(shooterInput);
         hoodSS.updateInputs(hoodInput);
+
+        if (calculator.isValidShot(Degrees.of(hoodSS.getOutputs().getHoodMotor().getCurrentPosition()), RPM.of(shooterSS.getOutputs().getShooterMotorA().getCurrentSpeed()), Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS)) ) {
+            //TODO: Transfer shoot
+        }
         
     }
 
