@@ -92,4 +92,14 @@ public final class Triboolean implements Comparable<Triboolean> {
             return random.nextBoolean() ? TRUE : YESNT;
         }
     }
+
+    public static double probably(Triboolean... values) {
+        int sum = 0;
+        for (Triboolean value : values) {
+            sum += value.e;
+        }
+        double avg = sum / values.length;
+
+        return avg / 2;
+    }
 }
