@@ -36,7 +36,6 @@ import frc.robot.commands.GyroResetByAngleCommand;
 import frc.robot.commands.HomeTurretCommand;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.ShootAtTargetCommand;
-import frc.robot.commands.ShootAtTargetCommand2;
 import frc.robot.commands.RunShooterAtLiveSpeedCommand;
 import frc.robot.commands.RunTestCommand;
 import frc.robot.io.RobotIO;
@@ -50,6 +49,7 @@ import frc.robot.util.TurretCalculator;
 import frc.robot.sensors.navx.NavXSensor;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -187,50 +187,10 @@ public class CommandFactory {
 
     Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose()).transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
 
-    ShooterCalculator calculator = new ShooterCalculator(RobotIO.getInstance().getNavXOutput().getChassisSpeeds(), shooterCurrentPose, target);
+    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(RobotIO.getInstance().getNavXOutput().getChassisSpeeds(), shooterCurrentPose, target);
+    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(target.toPose2d(), RobotIO.getInstance().getOdometryPose());
 
-    return new SequentialCommandGroup(
-      new ParallelCommandGroup(
-          new RunShooterAtLiveSpeedCommand(subsystemManager.getShooterSubsystem()),
-          new FaceTargetLocationTurretCommand(subsystemManager.getTurretSubsystem(), target.toPose2d())
-      ),
-
-      new ParallelCommandGroup(
-        new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), calculator),
-        new Command() {
-          public void execute() {
-            calculator.refresh(RobotIO.getInstance().getNavXOutput().getChassisSpeeds(), new Pose3d(RobotIO.getInstance().getOdometryPose()).transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM), target);
-          };
-        }
-      )
-    );
-  }
-
-  public Command getOtherShootCommand() {
-    Pose3d target;
-    
-    if (DriverStation.getAlliance().get() == Alliance.Red) {
-      target = RobotConstants.TURRET.RED_HUB_LOCATION;
-    } else if (DriverStation.getAlliance().get() == Alliance.Blue) {
-      target = RobotConstants.TURRET.BLUE_HUB_LOCATION;
-    } else {
-      return Commands.none();
-    }
-
-    Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose()).transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
-
-    ShooterCalculator shooterCalculator = new ShooterCalculator(RobotIO.getInstance().getNavXOutput().getChassisSpeeds(), shooterCurrentPose, target);
-    TurretCalculator turretCalculator = new TurretCalculator(target.toPose2d(), RobotIO.getInstance().getOdometryPose());
-
-    return new ParallelCommandGroup(
-      new ShootAtTargetCommand2(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculator, shooterCalculator),
-      new Command() {
-        public void execute() {
-          shooterCalculator.refresh(RobotIO.getInstance().getNavXOutput().getChassisSpeeds(), new Pose3d(RobotIO.getInstance().getOdometryPose()).transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM), target);
-          turretCalculator.refresh(target.toPose2d(), RobotIO.getInstance().getOdometryPose());
-        };
-      }
-    );
+    return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier, shooterCalculatorSupplier);
     
 
   }
