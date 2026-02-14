@@ -23,7 +23,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
 public final class RobotConstants {
-  public static final double TIME_PER_PERIODICAL_LOOP_SECONDS = 0.00;
+  public static final double TIME_PER_PERIODICAL_LOOP_SECONDS = 0.02;
 
   public static interface AccelerationFilter {
     public static final double DIRECTION_SLEW_RATE = 0.95; // radians per second
@@ -69,7 +69,7 @@ public final class RobotConstants {
   }
 
   public static interface SwerveModuleConstants {
-    public static final double FREE_SPEED_RPM = 5676;
+    public static final double FREE_SPEED_RPM = 6784;
 
     // The MAXSwerve module can be configured with one of three pinion gears: 12T,
     // 13T, or 14T.

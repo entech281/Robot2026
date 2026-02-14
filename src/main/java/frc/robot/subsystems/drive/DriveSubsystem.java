@@ -6,7 +6,8 @@ package frc.robot.subsystems.drive;
 
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -281,8 +282,8 @@ public class DriveSubsystem extends EntechSubsystem<DriveInput, DriveOutput> {
   @Override
   public void initialize() {
     if (ENABLED) {
-      SparkMaxConfig drivingConfig = new SparkMaxConfig();
-      SparkMaxConfig turningConfig = new SparkMaxConfig();
+      SparkBaseConfig drivingConfig = new SparkFlexConfig();
+      SparkBaseConfig turningConfig = new SparkFlexConfig();
 
       drivingConfig.smartCurrentLimit(RobotConstants.SwerveModuleConstants.DRIVING_MOTOR_CURRENT_LIMIT_AMPS);
       turningConfig.smartCurrentLimit(RobotConstants.SwerveModuleConstants.TURNING_MOTOR_CURRENT_LIMIT_AMPS);

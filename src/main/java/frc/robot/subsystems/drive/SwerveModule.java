@@ -13,9 +13,9 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.REVLibError;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -29,8 +29,8 @@ import frc.robot.sensors.ThriftyEncoder;
  * module.
  */
 public class SwerveModule {
-  private final SparkMax drivingSparkMax;
-  private final SparkMax turningSparkMax;
+  private final SparkFlex drivingSparkMax;
+  private final SparkFlex turningSparkMax;
 
   private final RelativeEncoder drivingEncoder;
   private final RelativeEncoder turningEncoder;
@@ -46,23 +46,10 @@ public class SwerveModule {
    * encoder, and PID
    * controller.
    */
-  public SwerveModule(int drivingCANId, int turningCANId, int turningAnalogPort, SparkMaxConfig turningConfig,
-      SparkMaxConfig drivingConfig) {
-    drivingSparkMax = new SparkMax(drivingCANId, MotorType.kBrushless);
-    turningSparkMax = new SparkMax(turningCANId, MotorType.kBrushless);
-
-    // tryUntilOk(
-    // turningSparkMax,
-    // 5,
-    // () -> turningSparkMax.configure(
-    // turningConfig, ResetMode.kResetSafeParameters,
-    // PersistMode.kPersistParameters));
-    // tryUntilOk(
-    // drivingSparkMax,
-    // 5,
-    // () -> drivingSparkMax.configure(
-    // drivingConfig, ResetMode.kResetSafeParameters,
-    // PersistMode.kPersistParameters));
+  public SwerveModule(int drivingCANId, int turningCANId, int turningAnalogPort, SparkBaseConfig turningConfig,
+      SparkBaseConfig drivingConfig) {
+    drivingSparkMax = new SparkFlex(drivingCANId, MotorType.kBrushless);
+    turningSparkMax = new SparkFlex(turningCANId, MotorType.kBrushless);
 
     turningSparkMax.configure(turningConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     drivingSparkMax.configure(drivingConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
