@@ -15,6 +15,7 @@ import frc.robot.RobotConstants;
 
 public class IntakeSubsystem extends EntechSubsystem<IntakeInput, IntakeOutput> {
     private static final boolean ENABLED = true;
+    private static final boolean BRAKING = true;
     private SparkFlex intakeMotor;
     private double setSpeed = 0.0;
 
@@ -24,7 +25,7 @@ public class IntakeSubsystem extends EntechSubsystem<IntakeInput, IntakeOutput> 
             intakeMotor = new SparkFlex(RobotConstants.PORTS.CAN.INTAKE_MOTOR, MotorType.kBrushless);
 
             SparkFlexConfig config = new SparkFlexConfig();
-            config.idleMode(IdleMode.kBrake);
+            config.idleMode(BRAKING ? IdleMode.kBrake : IdleMode.kCoast);
 
             intakeMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 

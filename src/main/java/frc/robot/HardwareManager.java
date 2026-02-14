@@ -48,7 +48,7 @@ public class HardwareManager {
     // hopperSubsystem.initialize();
     intakeSubsystem.initialize();
     // climbSubsystem.initialize();
-    // transferSubsystem.initialize();
+    transferSubsystem.initialize();
     hallEffectSensor.initialize();
 
     periodic();
@@ -134,7 +134,7 @@ public class HardwareManager {
 
     outputs.updateIntake(intakeSubsystem.getOutputs());
 
-    // outputs.updateTransfer(transferSubsystem.getOutputs());
+    outputs.updateTransfer(transferSubsystem.getOutputs());
 
     // outputs.updateTurret(turretSubsystem.getOutputs());
 

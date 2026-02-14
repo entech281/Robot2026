@@ -1,16 +1,36 @@
 package frc.robot.subsystems.transfer;
 
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
+import frc.entech.subsystems.SparkOutput;
 
 public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOutput> {
     private static final boolean ENABLED = false;
+    private static final boolean BRAKING = true;
+
+    private double setSpeed = 0.0;
+
+    private SparkMax transferMotor;
 
     @Override
     public void initialize() {
-        // TODO Auto-generated method stub
-        // throw new UnsupportedOperationException("Unimplemented method 'initialize'");
+        if (ENABLED) {
+            transferMotor = new SparkMax(9, MotorType.kBrushless);
+
+            SparkMaxConfig config = new SparkMaxConfig();
+
+            config.idleMode(BRAKING ? IdleMode.kBrake : IdleMode.kCoast);
+
+            transferMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        }
     }
 
     @Override
@@ -20,9 +40,12 @@ public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOu
 
     @Override
     public void updateInputs(TransferInput input) {
-        // TODO Auto-generated method stub
-        // throw new UnsupportedOperationException("Unimplemented method
-        // 'updateInputs'");
+        if (ENABLED) {
+            if (input.getSpeed() != setSpeed) {
+                setSpeed = input.getSpeed();
+                transferMotor.set(input.getSpeed());
+            }
+        }
     }
 
     @Override
@@ -32,9 +55,14 @@ public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOu
 
     @Override
     protected TransferOutput toOutputs() {
-        // TODO Auto-generated method stub
-        // throw new UnsupportedOperationException("Unimplemented method 'toOutputs'");
-        return new TransferOutput();
+        TransferOutput output = new TransferOutput();
+
+        output.setBraking(BRAKING);
+        if (ENABLED) {
+            output.setTransferMotorOutput(SparkOutput.createOutput(transferMotor));
+        }
+
+        return output;
     }
 
 }
