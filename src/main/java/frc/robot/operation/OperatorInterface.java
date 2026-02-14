@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.CommandFactory;
 import frc.robot.RobotConstants;
 import frc.robot.HardwareManager;
+import frc.robot.Robot;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.GyroReset;
@@ -123,7 +124,7 @@ public class OperatorInterface
   }
 
   public void scoreOperatorBindings() {
-
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.FIRE).whileTrue(commandFactory.getFullShootCommand());
   }
 
   public void alignOperatorBindings() {

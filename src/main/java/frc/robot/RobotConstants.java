@@ -207,6 +207,8 @@ public final class RobotConstants {
 
   public interface SCORE_OPERATOR_PANEL {
     public static interface BUTTONS {
+      //TODO: make real
+      public static final int FIRE = 0;
     }
 
     public static interface SWITCHES {
