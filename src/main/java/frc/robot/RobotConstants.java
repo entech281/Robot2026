@@ -4,7 +4,6 @@ import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
@@ -169,6 +168,9 @@ public final class RobotConstants {
       public static final int POWER_DISTRIBUTION_HUB = 1;
       public static final int TURRET_MOTOR = 60;
       public static final int HOOD_MOTOR = 53;
+
+            public static final int CLIMB_B = 54;
+      public static final int CLIMB_A = 55;
     }
 
     public static interface CONTROLLER {
@@ -325,6 +327,17 @@ public final class RobotConstants {
   public static interface SHOOTER {
     public static final Transform3d SHOT_TRANSFORM = new Transform3d(0, 0, 0, new Rotation3d());
     public static final double WHEEL_RADIUS_METERS = 0.048229115; //TODO: Idk my ai made this number
+  }
+
+  public static interface CLIMB {
+    public static final double UPPER_SOFT_LIMIT_Inches = 25.0;
+    public static final double CLIMB_CONVERSION_FACTOR = 1.0;
+    public static final double CLIMB_RETRACTED = 0;
+    public static final double CLIMB_EXTENDED = 250;
+    public static final double KP = 0.00015;
+    public static final double KI = 0;
+    public static final double KD = 0;
+    
   }
 
   private RobotConstants() {
