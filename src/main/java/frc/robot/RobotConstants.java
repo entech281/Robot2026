@@ -172,6 +172,7 @@ public final class RobotConstants {
       public static final int POWER_DISTRIBUTION_HUB = 1;
       public static final int TURRET_MOTOR = 60;
       public static final int HOOD_MOTOR = 53;
+      public static final int HOPPER_MOTOR = 54;
     }
 
     public static interface CONTROLLER {
