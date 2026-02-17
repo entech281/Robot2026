@@ -132,10 +132,10 @@ public final class RobotConstants {
     public static final int DRIVING_MOTOR_CURRENT_LIMIT_AMPS = 40; // 50; // amps
     public static final int TURNING_MOTOR_CURRENT_LIMIT_AMPS = 20; // amps
 
-    public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 1.482033;
-    public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = -2.289053;
-    public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = 0.727504;
-    public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = 1.66872;
+    public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 2.285;
+    public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = 0.91;
+    public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = 2.71;
+    public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = -2.9;
   }
 
   public static interface LiveTuning {
