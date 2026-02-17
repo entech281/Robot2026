@@ -118,7 +118,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         setTurretPosition(turretEncoder.getPosition() + RobotConstants.TURRET.TURRET_ADJUST_STEP_DEGREES);
     }
 
-    public void setTurretPosition(double desiredAngle) {
+    private void setTurretPosition(double desiredAngle) {
         if (!ENABLED)
             return;
         // clamp to allowed range
@@ -169,13 +169,28 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         double currentPos = turretEncoder.getPosition();
         double reqPos = latestInput.getRequestedPosition();
 
+        MotorStallDetector stallDetector = MotorStallDetector.Builder.defaults();
+
+        boolean isStalled = stallDetector.isStalled(turretMotor);
+
+        out.setIsStalled(isStalled);
+
+        if (isStalled && turretEncoder.getPosition() < 0) {
+            out.setAtReverseLimitStall(true);
+            out.setAtForwardLimitStall(false);
+        } else if (isStalled && turretEncoder.getPosition() > 0) {
+            out.setAtReverseLimitStall(false);
+            out.setAtForwardLimitStall(true);
+        } else {
+            out.setAtReverseLimitStall(false);
+            out.setAtForwardLimitStall(false);
+        }
+
         // moving = whether position controller is actively trying to move (approx via
         // velocity)
         out.setMoving(Math.abs(turretEncoder.getVelocity()) > 1e-3);
         out.setRequestedPosition(reqPos);
         out.setCurrentPosition(currentPos);
-        out.setAtForwardLimit(turretMotor.getForwardLimitSwitch().isPressed());
-        out.setAtReverseLimit(turretMotor.getReverseLimitSwitch().isPressed());
         out.setAtRequestedPosition(
                 Math.abs(currentPos - reqPos) <= RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES);
 

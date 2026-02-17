@@ -8,10 +8,10 @@ public class TurretOutput extends SubsystemOutput {
   private boolean moving = false;
   private boolean isAtRequestedPosition = false;
   private double requestedPosition = 0.0;
-  //TODO: match with physical appearance
-  private boolean isAtForwardLimit = false;
-  private boolean isAtReverseLimit = false;
+  private boolean isAtForwardLimitStall = false;
+  private boolean isAtReverseLimitStall = false;
   private double currentPosition = 0.0;
+  private boolean isStalled = false;
 
   private SparkOutput turretMotor;
       
@@ -83,5 +83,11 @@ public class TurretOutput extends SubsystemOutput {
           this.turretMotor = turretMotor;
         }
 
+        public boolean isStalled() {
+          return this.isStalled;
+        }
 
+        public void setIsStalled(boolean isStalled) {
+          this.isStalled = isStalled;
+        }
 }
