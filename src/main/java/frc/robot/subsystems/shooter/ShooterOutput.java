@@ -14,11 +14,15 @@ public class ShooterOutput extends SubsystemOutput {
 
     @Override
     public void toLog() {
-        // Logger.recordOutput("ShooterOutput/speed", speed);
-        // Logger.recordOutput("ShooterOutput/braking", braking);
-        // Logger.recordOutput("ShooterOutput/atSpeed", atSpeed);
-        // shooterMotorA.log("ShooterOutput/motorA");
-        // shooterMotorB.log("ShooterOutput/motorB");
+        Logger.recordOutput("ShooterOutput/speed", speed);
+        Logger.recordOutput("ShooterOutput/braking", braking);
+        Logger.recordOutput("ShooterOutput/atSpeed", atSpeed);
+        if (shooterMotorA != null) {
+            shooterMotorA.log("ShooterOutput/motorA");
+        }
+        if (shooterMotorB != null) {
+            shooterMotorB.log("ShooterOutput/motorB");
+        }
     }
 
     /**

@@ -140,7 +140,8 @@ public final class RobotConstants {
 
   public static interface LiveTuning {
     public static final Map<String, Double> VALUES = Map.ofEntries(
-        Map.entry("ShooterSubsystem/SetSpeed", 0.0));
+        Map.entry("ShooterSubsystem/SetSpeed", 0.0),
+        Map.entry("IntakeSubsystem/SetSpeed", 0.0));
   }
 
   public static interface PORTS {
@@ -165,6 +166,8 @@ public final class RobotConstants {
 
       public static final int SHOOTER_MOTOR_A = 51;
       public static final int SHOOTER_MOTOR_B = 52;
+
+      public static final int INTAKE_MOTOR = 55;
 
       public static final int POWER_DISTRIBUTION_HUB = 1;
       public static final int TURRET_MOTOR = 60;
@@ -192,10 +195,11 @@ public final class RobotConstants {
         public static final int RESET_ODOMETRY = 8;
         public static final int B = 2;
       }
+
     }
 
-    public static interface HAS_ALGAE {
-      public static final int INTERNAL_ALGAE_SENSOR = 8;
+    public static interface DIO {
+      public static final int HALL_EFFECT_SENSOR = 0;
     }
   }
 
@@ -231,16 +235,57 @@ public final class RobotConstants {
     }
 
     public static interface Transforms {
-      public static final Transform3d LEFT = new Transform3d(
-          new Translation3d(Units.inchesToMeters(-6), Units.inchesToMeters(6.5),
-              Units.inchesToMeters(18.5)),
-          new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(10),
-              Units.degreesToRadians(90)));
-      public static final Transform3d RIGHT = new Transform3d(
-          new Translation3d(Units.inchesToMeters(-6), Units.inchesToMeters(-6.5),
-              Units.inchesToMeters(18.5)),
-          new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(10),
-              Units.degreesToRadians(-90)));
+      // Define where your camera is mounted on the robot/rig
+      // *** YOU MUST MEASURE AND UPDATE THESE VALUES ***
+      // Example values shown below - camera 0.3m forward, centered, 0.4m high, tilted
+      // down 25 degrees
+      Transform3d robotToCameraA = new Transform3d(
+          new Translation3d(
+              0.3, // X: meters forward from robot center (positive = forward)
+              0.0, // Y: meters left from robot center (positive = left)
+              0.4 // Z: meters up from ground (camera height)
+          ),
+          new Rotation3d(
+              0, // Roll (rotation around X axis)
+              Math.toRadians(-25), // Pitch (rotation around Y axis, negative = tilted down)
+              0 // Yaw (rotation around Z axis)
+          ));
+
+      Transform3d robotToCameraB = new Transform3d(
+          new Translation3d(
+              0.3, // X: meters forward from robot center (positive = forward)
+              0.0, // Y: meters left from robot center (positive = left)
+              0.4 // Z: meters up from ground (camera height)
+          ),
+          new Rotation3d(
+              0, // Roll (rotation around X axis)
+              Math.toRadians(-25), // Pitch (rotation around Y axis, negative = tilted down)
+              0 // Yaw (rotation around Z axis)
+          ));
+
+      Transform3d robotToCameraC = new Transform3d(
+          new Translation3d(
+              0.3, // X: meters forward from robot center (positive = forward)
+              0.0, // Y: meters left from robot center (positive = left)
+              0.4 // Z: meters up from ground (camera height)
+          ),
+          new Rotation3d(
+              0, // Roll (rotation around X axis)
+              Math.toRadians(-25), // Pitch (rotation around Y axis, negative = tilted down)
+              0 // Yaw (rotation around Z axis)
+          ));
+
+      Transform3d robotToCameraD = new Transform3d(
+          new Translation3d(
+              0.3, // X: meters forward from robot center (positive = forward)
+              0.0, // Y: meters left from robot center (positive = left)
+              0.4 // Z: meters up from ground (camera height)
+          ),
+          new Rotation3d(
+              0, // Roll (rotation around X axis)
+              Math.toRadians(-25), // Pitch (rotation around Y axis, negative = tilted down)
+              0 // Yaw (rotation around Z axis)
+          ));
     }
   }
 
@@ -257,7 +302,7 @@ public final class RobotConstants {
   }
 
   public static interface ODOMETRY {
-    public static final int ODOMETRY_FREQUENCY = 250;
+    public static final int ODOMETRY_FREQUENCY = 150;
     public static final double FIELD_LENGTH_INCHES = 54 * 12 + 3.25;
     public static final double FIELD_WIDTH_INCHES = 26 * 12 + 11.25;
 
@@ -278,10 +323,11 @@ public final class RobotConstants {
   }
 
   public static interface TURRET {
-    //TODO: Make these real
+    // TODO: Make these real
     public static final double INITIAL_POSITION_DEGREES = 0.0;
     // Turret closed-loop settings
-    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 0.625;//;//207360 // encoder units -> degrees (set appropriately)
+    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 0.625;// ;//207360 // encoder units -> degrees (set
+                                                                          // appropriately)
     public static final double TURRET_POSITION_P = 0.2;
     public static final double TURRET_POSITION_I = 0.0;
     public static final double TURRET_POSITION_D = 0.0;
@@ -298,17 +344,20 @@ public final class RobotConstants {
     // small adjustment step used by any incremental commands
     public static final double TURRET_ADJUST_STEP_DEGREES = 5.0;
 
-    public static final Pose3d BLUE_HUB_LOCATION = new Pose3d(Inches.of(182.11).in(Meters), Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
-    public static final Pose3d RED_HUB_LOCATION = new Pose3d(Inches.of(469.11).in(Meters), Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
+    public static final Pose3d BLUE_HUB_LOCATION = new Pose3d(Inches.of(182.11).in(Meters),
+        Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
+    public static final Pose3d RED_HUB_LOCATION = new Pose3d(Inches.of(469.11).in(Meters),
+        Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
 
-    public static final Translation2d TURRET_OFFSET = new Translation2d(-DrivetrainConstants.WHEEL_BASE_METERS / 2.0, 0.0);
+    public static final Translation2d TURRET_OFFSET = new Translation2d(-DrivetrainConstants.WHEEL_BASE_METERS / 2.0,
+        0.0);
 
     public static final double TURRET_LOWER_LIMIT_DEGREES = -120.0;
     public static final double TURRET_UPPER_LIMIT_DEGREES = 120.0;
   }
 
   public static interface HOOD {
-    //TODO: make these real
+    // TODO: make these real
     public static final double POSITION_CONVERSION_FACTOR_DEGREES = 1.0;
     public static final double HOOD_P = 0.2;
     public static final double HOOD_I = 0.0;
@@ -324,7 +373,7 @@ public final class RobotConstants {
 
   public static interface SHOOTER {
     public static final Transform3d SHOT_TRANSFORM = new Transform3d(0, 0, 0, new Rotation3d());
-    public static final double WHEEL_RADIUS_METERS = 0.048229115; //TODO: Idk my ai made this number
+    public static final double WHEEL_RADIUS_METERS = 0.048229115; // TODO: Idk my ai made this number
   }
 
   private RobotConstants() {

@@ -13,11 +13,11 @@ import frc.robot.subsystems.turret.TurretOutput;
 import frc.robot.subsystems.hood.HoodOutput;
 import frc.robot.subsystems.hopper.HopperOutput;
 import frc.robot.subsystems.intake.IntakeOutput;
+import frc.robot.sensors.HallEffectSensor.HallEffectOutput;
 import frc.robot.sensors.navx.NavXOutput;
 import frc.robot.sensors.vision.VisionOutput;
 import frc.robot.subsystems.shooter.ShooterOutput;
 import frc.robot.subsystems.transfer.TransferOutput;
-import frc.robot.subsystems.turret.TurretOutput;
 
 public class RobotIO implements DriveInputSupplier {
   private static final RobotIO instance = new RobotIO();
@@ -90,6 +90,10 @@ public class RobotIO implements DriveInputSupplier {
     return latestIntakeOutput;
   }
 
+  public HallEffectOutput getHallEffectOutput() {
+    return latestHallEffectOutput;
+  }
+
   public void updateNavx(NavXOutput no) {
     latestNavXOutput = no;
     no.log();
@@ -145,10 +149,15 @@ public class RobotIO implements DriveInputSupplier {
     to.log();
   }
 
+  public void updateHallEffect(HallEffectOutput heo) {
+    latestHallEffectOutput = heo;
+    heo.log();
+  }
+
   private NavXOutput latestNavXOutput;
   private DriveOutput latestDriveOutput;
-  private ShooterOutput latestShooterOutput;
   private VisionOutput latestVisionOutput;
+  private ShooterOutput latestShooterOutput;
   private HoodOutput latestHoodOutput;
   private HopperOutput latestHopperOutput;
   private ClimbOutput latestClimbOutput;
@@ -156,4 +165,5 @@ public class RobotIO implements DriveInputSupplier {
   private IntakeOutput latestIntakeOutput;
   private Pose2d latestOdometryPose = RobotConstants.ODOMETRY.INITIAL_POSE;
   private TurretOutput latestTurretOutput;
+  private HallEffectOutput latestHallEffectOutput;
 }

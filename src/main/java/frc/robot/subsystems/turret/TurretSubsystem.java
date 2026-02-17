@@ -28,7 +28,7 @@ import frc.robot.RobotConstants;
  */
 public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> {
 
-    private static final boolean ENABLED = true;
+    private static final boolean ENABLED = false;
 
     private SparkMax turretMotor;
     private SparkClosedLoopController turretPIDController;
@@ -38,23 +38,25 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
 
     @Override
     public void initialize() {
-        if (!ENABLED) return;
+        if (!ENABLED)
+            return;
         turretMotor = new SparkMax(RobotConstants.PORTS.CAN.TURRET_MOTOR, MotorType.kBrushless);
 
         turretConfig = new SparkMaxConfig();
-        // Make encoder report degrees directly (adjust if your encoder reports rotations)
+        // Make encoder report degrees directly (adjust if your encoder reports
+        // rotations)
         turretConfig.encoder.positionConversionFactor(RobotConstants.TURRET.POSITION_CONVERSION_FACTOR_DEGREES);
 
         // Closed-loop PIDF
         turretConfig.closedLoop
-            .pid(RobotConstants.TURRET.TURRET_POSITION_P, RobotConstants.TURRET.TURRET_POSITION_I,
-                RobotConstants.TURRET.TURRET_POSITION_D, ClosedLoopSlot.kSlot0)
-            .feedForward.kV(RobotConstants.TURRET.TURRET_POSITION_FF, ClosedLoopSlot.kSlot0);
+                .pid(RobotConstants.TURRET.TURRET_POSITION_P, RobotConstants.TURRET.TURRET_POSITION_I,
+                        RobotConstants.TURRET.TURRET_POSITION_D, ClosedLoopSlot.kSlot0).feedForward
+                .kV(RobotConstants.TURRET.TURRET_POSITION_FF, ClosedLoopSlot.kSlot0);
 
         // Apply conservative signals update rates similar to other subsystems
         turretConfig.signals
-            .primaryEncoderPositionAlwaysOn(true)
-            .primaryEncoderPositionPeriodMs((int) (1000.0 / 50.0));
+                .primaryEncoderPositionAlwaysOn(true)
+                .primaryEncoderPositionPeriodMs((int) (1000.0 / 50.0));
 
         // Configure the motor with these settings
         turretMotor.configure(turretConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -71,12 +73,14 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     }
 
     public boolean isClockLimitHit() {
-        if (!ENABLED) return false;
+        if (!ENABLED)
+            return false;
         return turretMotor.getForwardLimitSwitch().isPressed();
     }
 
-    public void reset(){
-        if (!ENABLED) return;
+    public void reset() {
+        if (!ENABLED)
+            return;
         // stop motor and reset desired speed and requests
         turretMotor.set(0);
         turretEncoder.setPosition(RobotConstants.TURRET.HOME_POSITION_DEGREES);
@@ -87,12 +91,11 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         }
     }
 
-
     public boolean isCounterClockLimitHit() {
-        if (!ENABLED) return false;
+        if (!ENABLED)
+            return false;
         return turretMotor.getReverseLimitSwitch().isPressed();
     }
-
 
     public void adjustTurretCounterClockwise() {
         // simple percent output based adjust
@@ -115,10 +118,11 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     }
 
     public void setTurretPosition(double desiredAngle) {
-        if (!ENABLED) return;
+        if (!ENABLED)
+            return;
         // clamp to allowed range
         double clamped = Math.max(RobotConstants.TURRET.TURRET_LOWER_LIMIT_DEGREES,
-            Math.min(RobotConstants.TURRET.TURRET_UPPER_LIMIT_DEGREES, desiredAngle));
+                Math.min(RobotConstants.TURRET.TURRET_UPPER_LIMIT_DEGREES, desiredAngle));
         latestInput.setRequestedPosition(clamped);
 
         if (turretPIDController != null) {
@@ -131,13 +135,13 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
 
     @Override
     public void periodic() {
-        if (!ENABLED) return;
+        if (!ENABLED)
+            return;
         double desiredPos = latestInput.getRequestedPosition();
         if (turretPIDController != null) {
             setTurretPosition(desiredPos);
         }
     }
-    
 
     @Override
     public boolean isEnabled() {
@@ -158,18 +162,21 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     public TurretOutput toOutputs() {
         TurretOutput out = new TurretOutput();
 
-        if (!ENABLED) return out;
+        if (!ENABLED)
+            return out;
 
         double currentPos = turretEncoder.getPosition();
         double reqPos = latestInput.getRequestedPosition();
 
-        // moving = whether position controller is actively trying to move (approx via velocity)
+        // moving = whether position controller is actively trying to move (approx via
+        // velocity)
         out.setMoving(Math.abs(turretEncoder.getVelocity()) > 1e-3);
         out.setRequestedPosition(reqPos);
         out.setCurrentPosition(currentPos);
         out.setAtForwardLimit(turretMotor.getForwardLimitSwitch().isPressed());
         out.setAtReverseLimit(turretMotor.getReverseLimitSwitch().isPressed());
-        out.setAtRequestedPosition(Math.abs(currentPos - reqPos) <= RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES);
+        out.setAtRequestedPosition(
+                Math.abs(currentPos - reqPos) <= RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES);
 
         out.setTurretMotor(SparkOutput.createOutput(turretMotor));
 
@@ -177,7 +184,8 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     }
 
     public void setSpeed(double speed) {
-        if (!ENABLED) return;
+        if (!ENABLED)
+            return;
 
         turretMotor.set(speed);
     }

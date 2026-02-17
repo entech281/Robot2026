@@ -133,4 +133,20 @@ public class MultiCameraContainer implements CameraContainerI {
     }
     return allResults;
   }
+
+  @Override
+  public Optional<List<VisionPose>> getEstimatedPoses() {
+    List<VisionPose> allPoses = new ArrayList<>();
+
+    for (CameraContainerI cameraContainer : cameraContainers) {
+      Optional<List<VisionPose>> poses = cameraContainer.getEstimatedPoses();
+      poses.ifPresent(allPoses::addAll);
+    }
+
+    if (allPoses.isEmpty()) {
+      return Optional.empty();
+    } else {
+      return Optional.of(allPoses);
+    }
+  }
 }

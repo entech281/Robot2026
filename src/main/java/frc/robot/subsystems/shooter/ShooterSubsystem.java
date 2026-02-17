@@ -33,8 +33,11 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
 
             shooterAConfig.idleMode(BRAKING ? IdleMode.kBrake : IdleMode.kCoast);
             // shooterAConfig.smartCurrentLimit(40);
-            // shooterConfig.closedLoop.feedForward.;
-            shooterAConfig.closedLoop.pid(0.001, 0.0, 0.0, ClosedLoopSlot.kSlot0);
+            shooterAConfig.closedLoop.feedForward.kV(0.01 / 12);
+            shooterAConfig.closedLoop.feedForward.kA(0.0);
+            shooterAConfig.encoder.velocityConversionFactor(1.0);
+            shooterAConfig.closedLoop.pid(0.06 / 12, 0.0, 0.0, ClosedLoopSlot.kSlot0);
+            // shooterAConfig.closedLoop.iMaxAccum(0.1, ClosedLoopSlot.kSlot0);
 
             shooterMotorA.configure(shooterAConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -57,7 +60,6 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
                 shooterMotorA.getClosedLoopController().setSetpoint(input.getSpeed(), ControlType.kVelocity,
                         ClosedLoopSlot.kSlot0);
                 setSpeed = input.getSpeed();
-                shooterMotorA.set(setSpeed);
             }
         }
     }
@@ -70,12 +72,16 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
     @Override
     protected ShooterOutput toOutputs() {
         ShooterOutput so = new ShooterOutput();
-        // so.setSpeed(setSpeed);
-        // so.setBraking(BRAKING);
-        // so.setAtSpeed(shooterMotorA.getClosedLoopController().isAtSetpoint());
 
-        // so.setShooterMotorA(SparkOutput.createOutput(shooterMotorA));
-        // so.setShooterMotorB(SparkOutput.createOutput(shooterMotorB));
+        if (ENABLED) {
+            so.setSpeed(setSpeed);
+            so.setBraking(BRAKING);
+            so.setAtSpeed(shooterMotorA.getClosedLoopController().isAtSetpoint());
+
+            so.setShooterMotorA(SparkOutput.createOutput(shooterMotorA));
+            so.setShooterMotorB(SparkOutput.createOutput(shooterMotorB));
+        }
+
         return so;
     }
 }

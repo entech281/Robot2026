@@ -8,17 +8,17 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
 import frc.robot.io.RobotIO;
+import frc.robot.sensors.vision.VisionPose;
 
 import java.util.List;
 
 public class OdometryProcessor {
   private SwerveDrivePoseEstimator estimator;
-  private boolean integrateVision = false;
+  private boolean integrateVision = true;
   private Field2d field = new Field2d();
 
   public Pose2d getEstimatedPose() {
-    // return estimator.getEstimatedPosition();
-    return new Pose2d();
+    return estimator.getEstimatedPosition();
   }
 
   public void createEstimator() {
@@ -32,28 +32,36 @@ public class OdometryProcessor {
     SmartDashboard.putData(field);
   }
 
-  public void update(){}
+  public void update() {
+    double[] timestamps = RobotIO.getInstance().getDriveOutput().getTimestamps();
 
-  // public void update() {
-  //   // double[] timestamps = RobotIO.getInstance().getDriveOutput().getTimestamps();
+    for (int i = 0; i < timestamps.length; i++) {
+      List<double[]> drivePositions = RobotIO.getInstance().getDriveOutput().getDrivePositions();
+      List<double[]> turningPositions = RobotIO.getInstance().getDriveOutput().getTurningPositions();
 
-  //   for (int i = 0; i < timestamps.length; i++) {
-  //     List<double[]> drivePositions = RobotIO.getInstance().getDriveOutput().getDrivePositions();
-  //     List<double[]> turningPositions = RobotIO.getInstance().getDriveOutput().getTurningPositions();
+      SwerveModulePosition[] positionsAtTime = { null, null, null, null };
+      for (int j = 0; j < 4; j++) {
+        positionsAtTime[j] = (new SwerveModulePosition(drivePositions.get(j)[i],
+            new Rotation2d(turningPositions.get(j)[i])));
+      }
 
-  //     SwerveModulePosition[] positionsAtTime = { null, null, null, null };
-  //     for (int j = 0; j < 4; j++) {
-  //       positionsAtTime[j] = (new SwerveModulePosition(drivePositions.get(j)[i],
-  //           new Rotation2d(turningPositions.get(j)[i])));
-  //     }
+      estimator.updateWithTime(timestamps[i], Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()),
+          positionsAtTime);
+    }
 
-  //     estimator.updateWithTime(timestamps[i], Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()),
-  //         positionsAtTime);
-  //   }
+    if (integrateVision) {
+      for (VisionPose vp : RobotIO.getInstance().getVisionOutput().getVisionPoses()) {
+        addVisionEstimatedPose(vp.getPose(), vp.getTimeStamp(),
+            Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()));
+      }
+    }
 
-  //   RobotIO.getInstance().updateOdometryPose(getEstimatedPose());
-  //   field.setRobotPose(getEstimatedPose());
-  // }
+    estimator.update(Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()),
+        RobotIO.getInstance().getDriveOutput().getModulePositions());
+
+    RobotIO.getInstance().updateOdometryPose(getEstimatedPose());
+    field.setRobotPose(getEstimatedPose());
+  }
 
   public void addVisionEstimatedPose(Pose2d visionPose, double timeStamp, Rotation2d yaw) {
     Pose2d fixedVisionPose = new Pose2d(visionPose.getTranslation(), yaw);
