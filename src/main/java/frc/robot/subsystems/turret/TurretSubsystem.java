@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.subsystems.SparkOutput;
+import frc.entech.util.stall.MotorStallDetector;
 import frc.robot.RobotConstants;
 
 /**
@@ -168,13 +169,20 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         double currentPos = turretEncoder.getPosition();
         double reqPos = latestInput.getRequestedPosition();
 
+        MotorStallDetector stallDetector = MotorStallDetector.builder()
+                .minAppliedOutput(0.1)
+                .maxAbsVelocity(1.0) // degrees per second
+                .minCurrentAmps(5.0)
+                .requiredLoops(5)
+                .build();
+
         // moving = whether position controller is actively trying to move (approx via
         // velocity)
         out.setMoving(Math.abs(turretEncoder.getVelocity()) > 1e-3);
         out.setRequestedPosition(reqPos);
         out.setCurrentPosition(currentPos);
-        out.setAtForwardLimit(turretMotor.getForwardLimitSwitch().isPressed());
-        out.setAtReverseLimit(turretMotor.getReverseLimitSwitch().isPressed());
+        out.setAtForwardLimitStall(turretMotor.getForwardLimitSwitch().isPressed());
+        out.setAtReverseLimitStall(turretMotor.getReverseLimitSwitch().isPressed());
         out.setAtRequestedPosition(
                 Math.abs(currentPos - reqPos) <= RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES);
 

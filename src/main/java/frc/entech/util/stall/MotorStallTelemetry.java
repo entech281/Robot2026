@@ -6,7 +6,7 @@ package frc.entech.util.stall;
  * NOTE: MotorStallDetector assumes ONE detector instance per device.
  */
 public interface MotorStallTelemetry {
-
+ 
   /** Applied output in the range [-1, 1]. */
   double thresholdVoltage();
 

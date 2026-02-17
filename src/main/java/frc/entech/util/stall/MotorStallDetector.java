@@ -2,7 +2,7 @@ package frc.entech.util.stall;
 
 import com.revrobotics.spark.SparkBase;
 import java.util.Objects;
-
+ 
 public final class MotorStallDetector {
 
   private final double minAppliedOutput;

@@ -7,7 +7,7 @@ import com.revrobotics.spark.SparkBase;
  * This class is intentionally small and focused only on telemetry extraction.
  */
 public final class SparkStallTelemetry implements MotorStallTelemetry {
-
+ 
   private final SparkBase spark;
 
   public SparkStallTelemetry(SparkBase spark) {

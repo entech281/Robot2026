@@ -9,8 +9,8 @@ public class TurretOutput extends SubsystemOutput {
   private boolean isAtRequestedPosition = false;
   private double requestedPosition = 0.0;
   //TODO: match with physical appearance
-  private boolean isAtForwardLimit = false;
-  private boolean isAtReverseLimit = false;
+  private boolean isAtForwardLimitStall = false;
+  private boolean isAtReverseLimitStall = false;
   private double currentPosition = 0.0;
 
   private SparkOutput turretMotor;
@@ -20,8 +20,8 @@ public class TurretOutput extends SubsystemOutput {
           Logger.recordOutput("TurretOutput/moving", moving);
           Logger.recordOutput("TurretOutput/requestedPosition", requestedPosition);
           Logger.recordOutput("TurretOutput/currentPosition", currentPosition);
-          Logger.recordOutput("TurretOutput/isAtForwardLimit", isAtForwardLimit);
-          Logger.recordOutput("TurretOutput/isAtReverseLimit", isAtReverseLimit);
+          Logger.recordOutput("TurretOutput/isAtForwardLimitStall", isAtForwardLimitStall);
+          Logger.recordOutput("TurretOutput/isAtReverseLimitStall", isAtReverseLimitStall);
           Logger.recordOutput("TurretOutput/isAtRequestedPosition", isAtRequestedPosition);
       
           turretMotor.log("TurretOutput/turretMotor");
@@ -51,20 +51,20 @@ public class TurretOutput extends SubsystemOutput {
           this.currentPosition = currentPosition;
         }
       
-        public boolean isAtForwardLimit() {
-          return this.isAtForwardLimit;
+        public boolean isAtForwardLimitStall() {
+          return this.isAtForwardLimitStall;
         }
       
-        public void setAtForwardLimit(boolean isAtForwardLimit) {
-          this.isAtForwardLimit = isAtForwardLimit;
+        public void setAtForwardLimitStall(boolean isAtForwardLimitStall) {
+          this.isAtForwardLimitStall = isAtForwardLimitStall;
         }
       
-        public boolean isAtReverseLimit() {
-          return this.isAtReverseLimit;
+        public boolean isAtReverseLimitStall() {
+          return this.isAtReverseLimitStall;
         }
       
-        public void setAtReverseLimit(boolean isAtReverseLimit) {
-          this.isAtReverseLimit = isAtReverseLimit;
+        public void setAtReverseLimitStall(boolean isAtReverseLimitStall) {
+          this.isAtReverseLimitStall = isAtReverseLimitStall;
         }
       
         public double getRequestedPosition() {
