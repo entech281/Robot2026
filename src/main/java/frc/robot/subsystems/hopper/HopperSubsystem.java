@@ -3,11 +3,11 @@ package frc.robot.subsystems.hopper;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkFlexConfig;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -17,20 +17,27 @@ import frc.robot.RobotConstants;
 
 public class HopperSubsystem extends EntechSubsystem<HopperInput, HopperOutput> {
     private static final boolean ENABLED = true;
-    private static final boolean BRAKING = false; 
+    private static final boolean BRAKING = false; // Set to false for compliance (coast mode) to allow movement if hit
 
-    private SparkMax hopperMotor;
+    private SparkFlex hopperMotor;
+    private SparkLimitSwitch lowerLimitSwitch;
     private double setSpeed = 0.0;
 
     @Override
     public void initialize() {
         if (ENABLED) {
-            hopperMotor = new SparkMax(RobotConstants.PORTS.CAN.HOPPER_MOTOR, MotorType.kBrushless);
+            hopperMotor = new SparkFlex(RobotConstants.PORTS.CAN.HOPPER_MOTOR, MotorType.kBrushless);
 
-            SparkMaxConfig config = new SparkMaxConfig();
+            SparkFlexConfig config = new SparkFlexConfig();
             config.idleMode(BRAKING ? IdleMode.kBrake : IdleMode.kCoast);
 
+            LimitSwitchConfig limitConfig = new LimitSwitchConfig();
+            limitConfig.forwardLimitSwitchType(LimitSwitchConfig.Type.kNormallyOpen);
+            config.apply(limitConfig);
+
             hopperMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+            lowerLimitSwitch = hopperMotor.getForwardLimitSwitch();
         }
     }
 
@@ -60,9 +67,23 @@ public class HopperSubsystem extends EntechSubsystem<HopperInput, HopperOutput> 
 
         if (ENABLED) {
             output.setHopperMotorOutput(SparkOutput.createOutput(hopperMotor));
+            output.setAtLowerLimit(lowerLimitSwitch.isPressed());
         }
 
         return output;
+    }
+
+    @Override
+    public void periodic() {
+        if (!ENABLED) {
+            return;
+        }
+
+        if (lowerLimitSwitch.isPressed()) {
+            HopperInput newInput = new HopperInput();
+            newInput.setSpeed(0.0);
+            updateInputs(newInput);
+        }
     }
 
 }
