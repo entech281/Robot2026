@@ -6,12 +6,16 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.CommandFactory;
 import frc.robot.RobotConstants;
 import frc.robot.HardwareManager;
+import frc.robot.Robot;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.GyroReset;
@@ -63,6 +67,8 @@ public class OperatorInterface
       tuningController = new CommandXboxController(RobotConstants.PORTS.CONTROLLER.TUNING_CONTROLLER);
       enableTuningControllerBindings();
     }
+
+    enableTriggers();
 
     scoreOperatorPanel = new CommandJoystick(RobotConstants.PORTS.CONTROLLER.SCORE_PANEL);
     scoreOperatorBindings();
@@ -122,8 +128,18 @@ public class OperatorInterface
         RobotConstants.TURRET.TURRET_POSITION_PRESET_Y_DEGREES));
   }
 
-  public void scoreOperatorBindings() {
+  public void enableTriggers() {
+    new Trigger(() -> RobotIO.getInstance().getTurretOutput().isPastSofterLowerLimit())
+      .onTrue( new InstantCommand(() -> DriverStation.reportWarning("Turret past softer lower limit!", false)))
+      .onTrue( new InstantCommand( () -> xboxController.setRumble(RumbleType.kLeftRumble, 0.5)));
 
+    new Trigger(() -> RobotIO.getInstance().getTurretOutput().isPastSofterUpperLimit())
+      .onTrue( new InstantCommand(() -> DriverStation.reportWarning("Turret past softer upper limit!", false)))
+      .onTrue( new InstantCommand( () -> xboxController.setRumble(RumbleType.kRightRumble, 0.5)));
+  }
+
+  public void scoreOperatorBindings() {
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.FIRE).whileTrue(commandFactory.getFullShootCommand());
   }
 
   public void alignOperatorBindings() {

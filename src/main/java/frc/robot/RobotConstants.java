@@ -141,7 +141,13 @@ public final class RobotConstants {
   public static interface LiveTuning {
     public static final Map<String, Double> VALUES = Map.ofEntries(
         Map.entry("ShooterSubsystem/SetSpeed", 0.0),
-        Map.entry("IntakeSubsystem/SetSpeed", 0.0));
+        Map.entry("IntakeSubsystem/SetSpeed", 0.0),
+        Map.entry("TransferSubsystem/SetSpeed", 0.0),
+        Map.entry("TurretSubsystem/LowerLimitDegrees", -120.0),
+        Map.entry("TurretSubsystem/UpperLimitDegrees", 120.0),
+        Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -110.0),
+        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 110.0)
+    );
   }
 
   public static interface PORTS {
@@ -205,6 +211,8 @@ public final class RobotConstants {
 
   public interface SCORE_OPERATOR_PANEL {
     public static interface BUTTONS {
+      //TODO: make real
+      public static final int FIRE = 0;
     }
 
     public static interface SWITCHES {
@@ -374,6 +382,7 @@ public final class RobotConstants {
   public static interface SHOOTER {
     public static final Transform3d SHOT_TRANSFORM = new Transform3d(0, 0, 0, new Rotation3d());
     public static final double WHEEL_RADIUS_METERS = 0.048229115; // TODO: Idk my ai made this number
+    public static final double MAX_RPM = 6000.0;
   }
 
   private RobotConstants() {
