@@ -68,6 +68,8 @@ public class OperatorInterface
       enableTuningControllerBindings();
     }
 
+    enableTriggers();
+
     scoreOperatorPanel = new CommandJoystick(RobotConstants.PORTS.CONTROLLER.SCORE_PANEL);
     scoreOperatorBindings();
 

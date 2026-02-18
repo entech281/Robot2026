@@ -187,6 +187,8 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
             out.setAtForwardLimitStall(false);
         }
 
+        //TODO: soft limit utility class
+
         if (turretEncoder.getPosition() < LiveTuningHandler.getInstance().getValue("TurretSubsystem/SofterLowerLimitDegrees")) {
             out.setPastSofterLowerLimit(true);
         } else {
