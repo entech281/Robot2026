@@ -187,13 +187,25 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
             out.setAtForwardLimitStall(false);
         }
 
+        if (turretEncoder.getPosition() < LiveTuningHandler.getInstance().getValue("TurretSubsystem/SofterLowerLimitDegrees")) {
+            out.setPastSofterLowerLimit(true);
+        } else {
+            out.setPastSofterLowerLimit(false);
+        }
+
+        if (turretEncoder.getPosition() > LiveTuningHandler.getInstance().getValue("TurretSubsystem/SofterUpperLimitDegrees")) {
+            out.setPastSofterUpperLimit(true);
+        } else {
+            out.setPastSofterUpperLimit(false);
+        }
+
         // moving = whether position controller is actively trying to move (approx via
         // velocity)
         out.setMoving(Math.abs(turretEncoder.getVelocity()) > 1e-3);
         out.setRequestedPosition(reqPos);
         out.setCurrentPosition(currentPos);
-        out.setAtForwardLimit(turretMotor.getForwardLimitSwitch().isPressed());
-        out.setAtReverseLimit(turretMotor.getReverseLimitSwitch().isPressed());
+        out.setAtForwardLimitStall(turretMotor.getForwardLimitSwitch().isPressed());
+        out.setAtReverseLimitStall(turretMotor.getReverseLimitSwitch().isPressed());
         out.setAtRequestedPosition(
                 Math.abs(currentPos - reqPos) <= RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES);
 

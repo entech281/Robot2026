@@ -13,6 +13,8 @@ public class TurretOutput extends SubsystemOutput {
   private boolean isAtReverseLimitStall = false;
   private double currentPosition = 0.0;
   private boolean isStalled = false;
+  private boolean isPastSofterLowerLimit = false;
+  private boolean isPastSofterUpperLimit = false;
 
   private SparkOutput turretMotor;
       
@@ -90,5 +92,21 @@ public class TurretOutput extends SubsystemOutput {
 
         public void setIsStalled(boolean isStalled) {
           this.isStalled = isStalled;
+        }
+
+        public boolean isPastSofterLowerLimit() {
+          return isPastSofterLowerLimit;
+        }
+
+        public void setPastSofterLowerLimit(boolean isPastSofterLowerLimit) {
+          this.isPastSofterLowerLimit = isPastSofterLowerLimit;
+        }
+
+        public boolean isPastSofterUpperLimit() {
+          return isPastSofterUpperLimit;
+        }
+
+        public void setPastSofterUpperLimit(boolean isPastSofterUpperLimit) {
+          this.isPastSofterUpperLimit = isPastSofterUpperLimit;
         }
 }
