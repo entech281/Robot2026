@@ -73,12 +73,6 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         reset();
     }
 
-    public boolean isClockLimitHit() {
-        if (!ENABLED)
-            return false;
-        return turretMotor.getForwardLimitSwitch().isPressed();
-    }
-
     public void reset() {
         if (!ENABLED)
             return;
@@ -92,33 +86,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         }
     }
 
-    public boolean isCounterClockLimitHit() {
-        if (!ENABLED)
-            return false;
-        return turretMotor.getReverseLimitSwitch().isPressed();
-    }
-
-    public void adjustTurretCounterClockwise() {
-        // simple percent output based adjust
-        adjustTurretCounterClockwisePercent();
-    }
-
-    public void adjustTurretClockwise() {
-        // simple percent output based adjust
-        adjustTurretClockwisePercent();
-    }
-
-    private void adjustTurretCounterClockwisePercent() {
-        // incremental position change
-        setTurretPosition(turretEncoder.getPosition() - RobotConstants.TURRET.TURRET_ADJUST_STEP_DEGREES);
-    }
-
-    private void adjustTurretClockwisePercent() {
-        // incremental position change
-        setTurretPosition(turretEncoder.getPosition() + RobotConstants.TURRET.TURRET_ADJUST_STEP_DEGREES);
-    }
-
-    public void setTurretPosition(double desiredAngle) {
+    private void setTurretPosition(double desiredAngle) {
         if (!ENABLED)
             return;
         // clamp to allowed range
