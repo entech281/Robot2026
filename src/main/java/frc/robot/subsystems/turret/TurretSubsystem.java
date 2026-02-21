@@ -5,6 +5,8 @@
  */
 package frc.robot.subsystems.turret;
 
+import java.time.format.FormatStyle;
+
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -15,6 +17,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
@@ -30,7 +33,7 @@ import frc.robot.livetuning.LiveTuningHandler;
  */
 public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> {
 
-    private static final boolean ENABLED = false;
+    private static final boolean ENABLED = true;
 
     private SparkMax turretMotor;
     private SparkClosedLoopController turretPIDController;
@@ -64,6 +67,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         turretMotor.configure(turretConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         turretEncoder = turretMotor.getEncoder();
+        DriverStation.reportWarning("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + turretEncoder, false);
         turretEncoder.setPosition(RobotConstants.TURRET.INITIAL_POSITION_DEGREES);
 
         turretPIDController = turretMotor.getClosedLoopController();
@@ -105,8 +109,10 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
 
     @Override
     public void periodic() {
+                DriverStation.reportWarning("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + turretEncoder, false);
         if (!ENABLED)
             return;
+                DriverStation.reportWarning("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + turretEncoder, false);
         double desiredPos = latestInput.getRequestedPosition();
         if (turretPIDController != null) {
             setTurretPosition(desiredPos);

@@ -143,10 +143,10 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/SetSpeed", 0.0),
         Map.entry("IntakeSubsystem/SetSpeed", 0.0),
         Map.entry("TransferSubsystem/SetSpeed", 0.0),
-        Map.entry("TurretSubsystem/LowerLimitDegrees", -120.0),
-        Map.entry("TurretSubsystem/UpperLimitDegrees", 120.0),
-        Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -110.0),
-        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 110.0)
+        Map.entry("TurretSubsystem/LowerLimitDegrees", -25.0), // -120.0
+        Map.entry("TurretSubsystem/UpperLimitDegrees", 25.0), //120.0
+        Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -10.0), //-110.0
+        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 10.0) //110.0
     );
   }
 
@@ -347,8 +347,8 @@ public final class RobotConstants {
     public static final double HOME_POSITION_DEGREES = 0.0; // position to reset to
     // preset manual positions (buttons will command these)
     public static final double TURRET_POSITION_PRESET_A_DEGREES = 0.0;
-    public static final double TURRET_POSITION_PRESET_B_DEGREES = -90.0;
-    public static final double TURRET_POSITION_PRESET_Y_DEGREES = 90;
+    public static final double TURRET_POSITION_PRESET_B_DEGREES = -5.0;
+    public static final double TURRET_POSITION_PRESET_Y_DEGREES = 5;
     // small adjustment step used by any incremental commands
     public static final double TURRET_ADJUST_STEP_DEGREES = 5.0;
 
@@ -359,9 +359,6 @@ public final class RobotConstants {
 
     public static final Translation2d TURRET_OFFSET = new Translation2d(-DrivetrainConstants.WHEEL_BASE_METERS / 2.0,
         0.0);
-
-    public static final double TURRET_LOWER_LIMIT_DEGREES = -120.0;
-    public static final double TURRET_UPPER_LIMIT_DEGREES = 120.0;
   }
 
   public static interface HOOD {
