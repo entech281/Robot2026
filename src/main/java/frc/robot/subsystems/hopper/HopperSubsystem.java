@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.subsystems.SparkOutput;
 import frc.robot.RobotConstants;
+import frc.robot.commands.DeployHopper;
 
 public class HopperSubsystem extends EntechSubsystem<HopperInput, HopperOutput> {
     private static final boolean ENABLED = true;
@@ -58,7 +59,7 @@ public class HopperSubsystem extends EntechSubsystem<HopperInput, HopperOutput> 
 
     @Override
     public Command getTestCommand() {
-        return Commands.none();
+        return new DeployHopper(this);
     }
 
     @Override
