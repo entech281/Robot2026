@@ -1,5 +1,6 @@
 package frc.robot.operation;
 
+import java.lang.annotation.Repeatable;
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -9,6 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -126,6 +128,8 @@ public class OperatorInterface
 
     xboxController.y().onTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
         RobotConstants.TURRET.TURRET_POSITION_PRESET_Y_DEGREES));
+
+    xboxController.leftBumper().whileTrue(new RepeatCommand( commandFactory.getRotateForBumpCommand() ));
   }
 
   public void enableTriggers() {
