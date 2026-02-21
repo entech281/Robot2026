@@ -129,13 +129,15 @@ public class OperatorInterface
   }
 
   public void enableTriggers() {
-    // new Trigger(() -> RobotIO.getInstance().getTurretOutput().isPastSofterLowerLimit())
-    //   .onTrue( new InstantCommand(() -> DriverStation.reportWarning("Turret past softer lower limit!", false)))
-    //   .onTrue( new InstantCommand( () -> xboxController.setRumble(RumbleType.kLeftRumble, 0.5)));
+    new Trigger(() -> RobotIO.getInstance().getTurretOutput().isPastSofterLowerLimit())
+      .onTrue( new InstantCommand(() -> DriverStation.reportWarning("Turret past softer lower limit!", false)))
+      .onTrue( new InstantCommand( () -> xboxController.setRumble(RumbleType.kLeftRumble, 0.5)))
+      .onFalse( new InstantCommand( () -> xboxController.setRumble(RumbleType.kLeftRumble, 0)));
 
-    // new Trigger(() -> RobotIO.getInstance().getTurretOutput().isPastSofterUpperLimit())
-    //   .onTrue( new InstantCommand(() -> DriverStation.reportWarning("Turret past softer upper limit!", false)))
-    //   .onTrue( new InstantCommand( () -> xboxController.setRumble(RumbleType.kRightRumble, 0.5)));
+    new Trigger(() -> RobotIO.getInstance().getTurretOutput().isPastSofterUpperLimit())
+      .onTrue( new InstantCommand(() -> DriverStation.reportWarning("Turret past softer upper limit!", false)))
+      .onTrue( new InstantCommand( () -> xboxController.setRumble(RumbleType.kRightRumble, 0.5)))
+      .onFalse( new InstantCommand( () -> xboxController.setRumble(RumbleType.kRightRumble, 0)));
   }
 
   public void scoreOperatorBindings() {
@@ -145,18 +147,18 @@ public class OperatorInterface
   public void alignOperatorBindings() {
 
     // TODO: Move to CommandFactory
-    Optional<Alliance> alliance = DriverStation.getAlliance();
-    if (alliance.isPresent()) {
-      if (alliance.get() == DriverStation.Alliance.Blue) {
-        subsystemManager.getTurretSubsystem().setDefaultCommand(new FaceTargetLocationTurretCommand(
-            subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.BLUE_HUB_LOCATION.toPose2d()));
-      } else if (alliance.get() == DriverStation.Alliance.Red) {
-        subsystemManager.getTurretSubsystem().setDefaultCommand(new FaceTargetLocationTurretCommand(
-            subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.RED_HUB_LOCATION.toPose2d()));
-      }
-    } else {
-      DriverStation.reportWarning("Could not get alliance, TurretSubsystem not set to track by default", false);
-    }
+    // Optional<Alliance> alliance = DriverStation.getAlliance();
+    // if (alliance.isPresent()) {
+    //   if (alliance.get() == DriverStation.Alliance.Blue) {
+    //     subsystemManager.getTurretSubsystem().setDefaultCommand(new FaceTargetLocationTurretCommand(
+    //         subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.BLUE_HUB_LOCATION.toPose2d()));
+    //   } else if (alliance.get() == DriverStation.Alliance.Red) {
+    //     subsystemManager.getTurretSubsystem().setDefaultCommand(new FaceTargetLocationTurretCommand(
+    //         subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.RED_HUB_LOCATION.toPose2d()));
+    //   }
+    // } else {
+    //   DriverStation.reportWarning("Could not get alliance, TurretSubsystem not set to track by default", false);
+    // }
 
   }
 

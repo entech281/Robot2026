@@ -143,8 +143,8 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/SetSpeed", 0.0),
         Map.entry("IntakeSubsystem/SetSpeed", 0.0),
         Map.entry("TransferSubsystem/SetSpeed", 0.0),
-        Map.entry("TurretSubsystem/LowerLimitDegrees", -25.0), // -120.0
-        Map.entry("TurretSubsystem/UpperLimitDegrees", 25.0), //120.0
+        Map.entry("TurretSubsystem/LowerLimitDegrees", -110.0), // -120.0
+        Map.entry("TurretSubsystem/UpperLimitDegrees", 110.0), //120.0
         Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -10.0), //-110.0
         Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 10.0) //110.0
     );
@@ -334,8 +334,8 @@ public final class RobotConstants {
     // TODO: Make these real
     public static final double INITIAL_POSITION_DEGREES = 0.0;
     // Turret closed-loop settings
-    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 0.625;// ;//207360 // encoder units -> degrees (set
-                                                                          // appropriately)
+    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 3.2;// ;//207360 // encoder units (rotations) -> degrees (set
+                                                                          // appropriately) 112.5 
     public static final double TURRET_POSITION_P = 0.2;
     public static final double TURRET_POSITION_I = 0.0;
     public static final double TURRET_POSITION_D = 0.0;
@@ -347,7 +347,7 @@ public final class RobotConstants {
     public static final double HOME_POSITION_DEGREES = 0.0; // position to reset to
     // preset manual positions (buttons will command these)
     public static final double TURRET_POSITION_PRESET_A_DEGREES = 0.0;
-    public static final double TURRET_POSITION_PRESET_B_DEGREES = -5.0;
+    public static final double TURRET_POSITION_PRESET_B_DEGREES = 90;
     public static final double TURRET_POSITION_PRESET_Y_DEGREES = 5;
     // small adjustment step used by any incremental commands
     public static final double TURRET_ADJUST_STEP_DEGREES = 5.0;

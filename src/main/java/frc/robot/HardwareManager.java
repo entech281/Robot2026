@@ -44,7 +44,7 @@ public class HardwareManager {
     shooterSubsystem.initialize();
     visionSensor.initialize();
     // hoodSubsystem.initialize();
-    // turretSubsystem.initialize();
+    turretSubsystem.initialize();
     // hopperSubsystem.initialize();
     intakeSubsystem.initialize();
     // climbSubsystem.initialize();
@@ -136,7 +136,7 @@ public class HardwareManager {
 
     outputs.updateTransfer(transferSubsystem.getOutputs());
 
-    // outputs.updateTurret(turretSubsystem.getOutputs());
+    outputs.updateTurret(turretSubsystem.getOutputs());
 
     outputs.updateHallEffect(hallEffectSensor.getOutputs());
   }

@@ -66,8 +66,8 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         // Configure the motor with these settings
         turretMotor.configure(turretConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        turretEncoder = turretMotor.getEncoder();
-        DriverStation.reportWarning("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + turretEncoder, false);
+        this.turretEncoder = turretMotor.getEncoder();
+
         turretEncoder.setPosition(RobotConstants.TURRET.INITIAL_POSITION_DEGREES);
 
         turretPIDController = turretMotor.getClosedLoopController();
@@ -109,10 +109,8 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
 
     @Override
     public void periodic() {
-                DriverStation.reportWarning("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + turretEncoder, false);
         if (!ENABLED)
             return;
-                DriverStation.reportWarning("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + turretEncoder, false);
         double desiredPos = latestInput.getRequestedPosition();
         if (turretPIDController != null) {
             setTurretPosition(desiredPos);
