@@ -23,7 +23,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
 public final class RobotConstants {
-  public static final double TIME_PER_PERIODICAL_LOOP_SECONDS = 0.00;
+  public static final double TIME_PER_PERIODICAL_LOOP_SECONDS = 0.02;
 
   public static interface AccelerationFilter {
     public static final double DIRECTION_SLEW_RATE = 0.95; // radians per second
@@ -69,7 +69,7 @@ public final class RobotConstants {
   }
 
   public static interface SwerveModuleConstants {
-    public static final double FREE_SPEED_RPM = 5676;
+    public static final double FREE_SPEED_RPM = 6784;
 
     // The MAXSwerve module can be configured with one of three pinion gears: 12T,
     // 13T, or 14T.
@@ -141,7 +141,13 @@ public final class RobotConstants {
   public static interface LiveTuning {
     public static final Map<String, Double> VALUES = Map.ofEntries(
         Map.entry("ShooterSubsystem/SetSpeed", 0.0),
-        Map.entry("IntakeSubsystem/SetSpeed", 0.0));
+        Map.entry("IntakeSubsystem/SetSpeed", 0.0),
+        Map.entry("TransferSubsystem/SetSpeed", 0.0),
+        Map.entry("TurretSubsystem/LowerLimitDegrees", -120.0),
+        Map.entry("TurretSubsystem/UpperLimitDegrees", 120.0),
+        Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -110.0),
+        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 110.0)
+    );
   }
 
   public static interface PORTS {
@@ -172,6 +178,7 @@ public final class RobotConstants {
       public static final int POWER_DISTRIBUTION_HUB = 1;
       public static final int TURRET_MOTOR = 60;
       public static final int HOOD_MOTOR = 53;
+      public static final int HOPPER_MOTOR = 54;
     }
 
     public static interface CONTROLLER {
@@ -205,6 +212,8 @@ public final class RobotConstants {
 
   public interface SCORE_OPERATOR_PANEL {
     public static interface BUTTONS {
+      //TODO: make real
+      public static final int FIRE = 0;
     }
 
     public static interface SWITCHES {
@@ -374,6 +383,7 @@ public final class RobotConstants {
   public static interface SHOOTER {
     public static final Transform3d SHOT_TRANSFORM = new Transform3d(0, 0, 0, new Rotation3d());
     public static final double WHEEL_RADIUS_METERS = 0.048229115; // TODO: Idk my ai made this number
+    public static final double MAX_RPM = 6000.0;
   }
 
   private RobotConstants() {
