@@ -4,6 +4,7 @@ import java.lang.annotation.Repeatable;
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -130,6 +131,7 @@ public class OperatorInterface
         RobotConstants.TURRET.TURRET_POSITION_PRESET_Y_DEGREES));
 
     xboxController.leftBumper().whileTrue(new RepeatCommand( commandFactory.getRotateForBumpCommand() ));
+    xboxController.rightBumper().whileTrue(new RepeatCommand( commandFactory.getRotateForBumpCommand() ));
   }
 
   public void enableTriggers() {
