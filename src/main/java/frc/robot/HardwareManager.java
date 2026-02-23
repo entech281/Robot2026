@@ -41,14 +41,14 @@ public class HardwareManager {
   public HardwareManager() {
     navXSensor.initialize();
     driveSubsystem.initialize();
-    shooterSubsystem.initialize();
+    // shooterSubsystem.initialize();
     visionSensor.initialize();
     // hoodSubsystem.initialize();
     // turretSubsystem.initialize();
     // hopperSubsystem.initialize();
-    intakeSubsystem.initialize();
+    // intakeSubsystem.initialize();
     // climbSubsystem.initialize();
-    transferSubsystem.initialize();
+    // transferSubsystem.initialize();
     hallEffectSensor.initialize();
 
     periodic();
@@ -122,7 +122,7 @@ public class HardwareManager {
 
     outputs.updateNavx(navXSensor.getOutputs());
 
-    outputs.updateShooter(shooterSubsystem.getOutputs());
+    // outputs.updateShooter(shooterSubsystem.getOutputs());
 
     outputs.updateVision(visionSensor.getOutputs());
 
@@ -132,9 +132,9 @@ public class HardwareManager {
 
     // outputs.updateHood(hoodSubsystem.getOutputs());
 
-    outputs.updateIntake(intakeSubsystem.getOutputs());
+    // outputs.updateIntake(intakeSubsystem.getOutputs());
 
-    outputs.updateTransfer(transferSubsystem.getOutputs());
+    // outputs.updateTransfer(transferSubsystem.getOutputs());
 
     // outputs.updateTurret(turretSubsystem.getOutputs());
 

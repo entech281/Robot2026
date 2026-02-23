@@ -5,6 +5,7 @@ import frc.entech.NavX.AHRS;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -13,7 +14,7 @@ import frc.entech.util.StoppingCounter;
 
 public class NavXSensor extends EntechSensor<NavXOutput> {
   private static final boolean ENABLED = true;
-  private AHRS gyro;
+  private ADIS16448_IMU gyro;
   private final StoppingCounter faultCounter = new StoppingCounter(3.5);
   private boolean faultDetected = false;
 
@@ -23,55 +24,51 @@ public class NavXSensor extends EntechSensor<NavXOutput> {
 
     if (ENABLED) {
       output.setYaw(gyro.getAngle());
-      output.setPitch(gyro.getPitch());
-      output.setRoll(gyro.getRoll());
+      output.setPitch(gyro.getGyroAngleY());
+      output.setRoll(gyro.getGyroAngleX());
       output.setYawRate(gyro.getRate());
       output.setChassisSpeeds(getChassisSpeeds());
-      output.setZVelocity(gyro.getVelocityZ());
-      output.setTemperature(gyro.getTempC());
-      output.setAngleAdjustment(gyro.getAngleAdjustment());
-      output.setCompassHeading(gyro.getCompassHeading());
-      output.setIsCalibrating(gyro.isCalibrating());
-      output.setIsMagneticDisturbance(gyro.isMagneticDisturbance());
-      output.setIsMagnetometerCalibrated(gyro.isMagnetometerCalibrated());
-      output.setIsMoving(gyro.isMoving());
-      output.setIsRotating(gyro.isRotating());
+      output.setZVelocity(0);
+      output.setTemperature(gyro.getTemperature());
+      output.setAngleAdjustment(0);
+      output.setCompassHeading(gyro.getMagneticFieldZ());
+      output.setIsCalibrating(false);
+      output.setIsMagneticDisturbance(false);
+      output.setIsMagnetometerCalibrated(false);
+      output.setIsMoving(false);
+      output.setIsRotating(false);
       output.setIsFaultDetected(faultDetected);
     }
 
     if (ENABLED) {
       SmartDashboard.putData(gyro);
-      faultDetected = faultCounter.isFinished(gyro.isCalibrating());
+      faultDetected = faultCounter.isFinished(gyro.isConnected());
     }
 
     return output;
   }
 
   @Override
-    public String getName() {
-        return "NavXSensor";
-    }
+  public String getName() {
+    return "NavXSensor";
+  }
 
   @Override
   public void initialize() {
     if (ENABLED) {
-      gyro = new AHRS();
+      gyro = new ADIS16448_IMU();
+
+      gyro.calibrate();
 
       gyro.reset();
-
-      while (gyro.isCalibrating()) {
-        ;
-      }
-
-      gyro.zeroYaw();
     }
   }
 
   private ChassisSpeeds getChassisSpeeds() {
     if (ENABLED) {
       double radiansPerSecond = Units.degreesToRadians(gyro.getRate());
-      return ChassisSpeeds.fromRobotRelativeSpeeds(gyro.getVelocityX(), gyro.getVelocityY(),
-          radiansPerSecond, new Rotation2d(gyro.getYaw()));
+      return ChassisSpeeds.fromRobotRelativeSpeeds(0, 0,
+          radiansPerSecond, new Rotation2d(gyro.getAngle()));
     } else {
       return ChassisSpeeds.fromRobotRelativeSpeeds(0.0, 0.0, 0.0, new Rotation2d(0.0));
     }
@@ -89,7 +86,7 @@ public class NavXSensor extends EntechSensor<NavXOutput> {
 
   public void zeroYaw() {
     if (ENABLED) {
-      gyro.zeroYaw();
+      gyro.reset();
     }
   }
 
@@ -100,7 +97,7 @@ public class NavXSensor extends EntechSensor<NavXOutput> {
 
   public void setAngleAdjustment(double angleAdjustment) {
     if (ENABLED) {
-      gyro.setAngleAdjustment(angleAdjustment);
+      // gyro.setAngleAdjustment(angleAdjustment);
     }
   }
 }
