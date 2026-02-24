@@ -198,18 +198,22 @@ public class CommandFactory {
   }
 
   public Command getRotateForBumpCommand() {
+    return new RotateToAngleCommand(() -> {
+      
+      double angle = RobotIO.getInstance().getNavXOutput().getYaw();
 
-    double angle = RobotIO.getInstance().getNavXOutput().getYaw();
-
-    if (angle > 0 && angle < 90) {
-      return new RotateToAngleCommand(() -> 45.0);
-    } else if (angle >= 90 && angle <= 180) {
-      return new RotateToAngleCommand(() -> 135.0);
-    } else if (angle < 0 && angle > -90) {
-      return new RotateToAngleCommand(() -> 225.0);
-    } else {
-      return new RotateToAngleCommand(() -> 315.0);
-    }
+      angle = Math.abs(angle % 360);
+      Logger.recordOutput("angle", angle);
+      if (angle > 0 && angle < 90) {
+        return 45;
+      } else if (angle >= 90 && angle <= 180) {
+        return 135;
+      } else if (angle < 0 && angle > -90) {
+        return -45;
+      } else {
+        return -135;
+      }
+    });
   }
 
   private Command getSubsystemTestMessageCommand(String message) {

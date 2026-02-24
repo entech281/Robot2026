@@ -60,7 +60,7 @@ public class NavXSensor extends EntechSensor<NavXOutput> {
 
       gyro.calibrate();
 
-      gyro.reset();
+      // gyro.reset();
     }
   }
 

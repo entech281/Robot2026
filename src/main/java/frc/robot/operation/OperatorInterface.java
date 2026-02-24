@@ -133,7 +133,7 @@ public class OperatorInterface
     xboxController.leftBumper().whileTrue(new RepeatCommand( commandFactory.getRotateForBumpCommand() ));
     xboxController.rightBumper().whileTrue(new RepeatCommand( commandFactory.getRotateForBumpCommand() ));
   }
-
+ 
   public void enableTriggers() {
     new Trigger(() -> RobotIO.getInstance().getTurretOutput().isPastSofterLowerLimit())
       .onTrue( new InstantCommand(() -> DriverStation.reportWarning("Turret past softer lower limit!", false)))
