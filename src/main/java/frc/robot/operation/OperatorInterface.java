@@ -142,6 +142,9 @@ public class OperatorInterface
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.FIRE).whileTrue(commandFactory.getFullShootCommand());
   }
 
+  public void driverShiftWarning(){
+    
+  }
   public void alignOperatorBindings() {
 
     // TODO: Move to CommandFactory
