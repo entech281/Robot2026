@@ -109,6 +109,7 @@ public class CommandFactory {
         }, driveSubsystem);
 
     NamedCommands.registerCommand("example", Commands.deferredProxy(Commands::none));
+    NamedCommands.registerCommand("", getAutoCommand());
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
