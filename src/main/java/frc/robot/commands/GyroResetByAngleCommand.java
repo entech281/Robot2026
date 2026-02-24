@@ -1,18 +1,21 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import java.util.Optional;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.entech.commands.AutonomousException;
 import frc.entech.commands.EntechCommand;
 import frc.robot.io.RobotIO;
 import frc.robot.processors.OdometryProcessor;
-import frc.robot.sensors.navx.NavXSensor;
+import frc.robot.sensors.gyro.GyroSensor;
 
 public class GyroResetByAngleCommand extends EntechCommand {
   private final Runnable reset;
@@ -20,7 +23,7 @@ public class GyroResetByAngleCommand extends EntechCommand {
   private final Runnable correctOdometry;
   private final double angle;
 
-  public GyroResetByAngleCommand(NavXSensor navx, OdometryProcessor odometry, String auto) {
+  public GyroResetByAngleCommand(GyroSensor gyro, OdometryProcessor odometry, String auto) {
     PathPlannerPath startPath;
 
     try {
@@ -36,19 +39,22 @@ public class GyroResetByAngleCommand extends EntechCommand {
       angle = startPath.getStartingDifferentialPose().getRotation().getDegrees();
     }
 
-    reset = navx::zeroYaw;
+    reset = gyro::zeroYaw;
     Optional<Alliance> teamOpt = DriverStation.getAlliance();
     if (teamOpt.isPresent()) {
       if (teamOpt.get() == Alliance.Blue) {
-        set = () -> navx
-            .setAngleAdjustment(RobotIO.getInstance().getNavXOutput().getAngleAdjustment() + angle);
+        set = () -> gyro
+            .setAngleAdjustment(
+                RobotIO.getInstance().getGyroOutput().getAngleAdjustment().plus(Angle.ofBaseUnits(angle, Degrees)));
       } else {
-        set = () -> navx
-            .setAngleAdjustment(RobotIO.getInstance().getNavXOutput().getAngleAdjustment() - angle);
+        set = () -> gyro
+            .setAngleAdjustment(
+                RobotIO.getInstance().getGyroOutput().getAngleAdjustment().minus(Angle.ofBaseUnits(angle, Degrees)));
       }
     } else {
-      set = () -> navx
-          .setAngleAdjustment(RobotIO.getInstance().getNavXOutput().getAngleAdjustment() + angle);
+      set = () -> gyro
+          .setAngleAdjustment(
+              RobotIO.getInstance().getGyroOutput().getAngleAdjustment().plus(Angle.ofBaseUnits(angle, Degrees)));
     }
     correctOdometry = () -> {
       Pose2d pose = new Pose2d(odometry.getEstimatedPose().getTranslation(), Rotation2d.fromDegrees(angle));

@@ -1,5 +1,7 @@
 package frc.robot.livetuning;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import java.util.Arrays;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -34,7 +36,7 @@ public class WheelDiameterCharacterizer {
     }
 
     public Rotation2d getGyroAngle() {
-        return Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw());
+        return Rotation2d.fromDegrees(RobotIO.getInstance().getGyroOutput().getYaw().in(Degrees));
     }
 
     public void getInitialMeasurements() {
