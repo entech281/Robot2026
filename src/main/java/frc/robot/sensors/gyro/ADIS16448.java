@@ -28,7 +28,7 @@ public class ADIS16448 implements GyroI {
         GyroOutput out = new GyroOutput();
 
         out.setAngleAdjustment(angleOffset);
-        out.setYaw(Angle.ofRelativeUnits(gyro.getGyroAngleZ(), Degrees));
+        out.setYaw(Angle.ofRelativeUnits(gyro.getAngle(), Degrees).minus(angleOffset));
         out.setYawRate(AngularVelocity.ofRelativeUnits(gyro.getRate(), DegreesPerSecond));
         out.setTemperature(Temperature.ofRelativeUnits(gyro.getTemperature(), Celsius));
         out.setChassisSpeeds(getChassisSpeeds());
