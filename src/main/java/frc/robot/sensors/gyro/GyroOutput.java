@@ -1,5 +1,9 @@
 package frc.robot.sensors.gyro;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.Kelvin;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -9,14 +13,14 @@ import edu.wpi.first.units.measure.Temperature;
 import frc.entech.sensors.SensorOutput;
 
 public class GyroOutput extends SensorOutput {
-  private Angle yaw;
-  private Angle pitch;
-  private Angle roll;
-  private AngularVelocity yawRate;
-  private Temperature temperature;
-  private Angle angleAdjustment;
+  private Angle yaw = Angle.ofBaseUnits(0, Degrees);
+  private Angle pitch = Angle.ofBaseUnits(0, Degrees);
+  private Angle roll = Angle.ofBaseUnits(0, Degrees);
+  private AngularVelocity yawRate = AngularVelocity.ofBaseUnits(0.0, DegreesPerSecond);
+  private Temperature temperature = Temperature.ofBaseUnits(0, Kelvin);
+  private Angle angleAdjustment = Angle.ofBaseUnits(0, Degrees);
 
-  private ChassisSpeeds chassisSpeeds;
+  private ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
 
   @Override
   public void toLog() {

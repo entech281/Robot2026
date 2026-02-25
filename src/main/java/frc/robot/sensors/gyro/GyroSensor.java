@@ -4,10 +4,19 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.sensors.EntechSensor;
+import frc.robot.RobotConstants;
 
 public class GyroSensor extends EntechSensor<GyroOutput> {
   private static final boolean ENABLED = true;
   private GyroI gyro;
+
+  public enum GyroHardware {
+    ADIS16448,
+    NAVX3,
+    NAVX_USB1,
+    NAVX_USB2,
+    NAVX_MXP
+  }
 
   @Override
   protected GyroOutput toOutputs() {
@@ -30,7 +39,15 @@ public class GyroSensor extends EntechSensor<GyroOutput> {
   @Override
   public void initialize() {
     if (ENABLED) {
-      gyro = null;
+      switch (RobotConstants.GYRO_HARDWARE) {
+        case ADIS16448:
+          gyro = new ADIS16448();
+          break;
+        default:
+          gyro = new ADIS16448();
+          break;
+      }
+      gyro.initialize();
     }
   }
 
@@ -41,6 +58,7 @@ public class GyroSensor extends EntechSensor<GyroOutput> {
 
   public void zeroYaw() {
     if (ENABLED) {
+      gyro.reset();
       gyro.zeroYaw();
     }
   }

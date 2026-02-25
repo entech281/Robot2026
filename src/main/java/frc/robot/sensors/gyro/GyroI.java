@@ -12,4 +12,6 @@ public interface GyroI {
     void setAngleOffset(Angle angle);
 
     void zeroYaw();
+
+    void reset();
 }
