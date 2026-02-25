@@ -7,10 +7,21 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 
 public class RunIntakeCommand extends EntechCommand {
     private final IntakeSubsystem intakeSS;
+    private boolean direction;
 
     public RunIntakeCommand(IntakeSubsystem intake) {
+        this(intake, true);
+    }
+
+    /**
+     * 
+     * @param intake
+     * @param direction true for intake false for extake
+     */
+    public RunIntakeCommand(IntakeSubsystem intake, boolean direction) {
         super(intake);
         intakeSS = intake;
+        this.direction = direction;
     }
 
     @Override
@@ -21,14 +32,22 @@ public class RunIntakeCommand extends EntechCommand {
     @Override
     public void execute() {
         IntakeInput input = new IntakeInput();
-        input.setSpeed(LiveTuningHandler.getInstance().getValue("IntakeSubsystem/SetSpeed"));
+        if (direction) {
+            input.setSpeed(LiveTuningHandler.getInstance().getValue("IntakeSubsystem/SetSpeed"));
+        } else {
+            input.setSpeed(-LiveTuningHandler.getInstance().getValue("IntakeSubsystem/SetSpeed"));
+        }
         intakeSS.updateInputs(input);
     }
 
     @Override
     public void initialize() {
         IntakeInput input = new IntakeInput();
-        input.setSpeed(LiveTuningHandler.getInstance().getValue("IntakeSubsystem/SetSpeed"));
+        if (direction) {
+            input.setSpeed(LiveTuningHandler.getInstance().getValue("IntakeSubsystem/SetSpeed"));
+        } else {
+            input.setSpeed(-LiveTuningHandler.getInstance().getValue("IntakeSubsystem/SetSpeed"));
+        }
         intakeSS.updateInputs(input);
     }
 

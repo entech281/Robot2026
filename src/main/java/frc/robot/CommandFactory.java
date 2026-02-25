@@ -1,6 +1,9 @@
 package frc.robot;
 
 import java.io.IOException;
+import java.util.Optional;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import org.json.simple.parser.ParseException;
 import org.littletonrobotics.junction.Logger;
@@ -11,49 +14,39 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.entech.TestableHardwareI;
 import frc.entech.commands.AutonomousException;
 import frc.entech.commands.InstantAnytimeCommand;
-import frc.entech.subsystems.EntechSubsystem;
 import frc.robot.commands.GyroResetByAngleCommand;
 import frc.robot.commands.HomeTurretCommand;
-import frc.robot.commands.FaceTargetLocationTurretCommand;
-import frc.robot.commands.ShootAtTargetCommand;
+import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.RunShooterAtLiveSpeedCommand;
 import frc.robot.commands.RunTestCommand;
+import frc.robot.commands.ShootAtTargetCommand;
 import frc.robot.io.RobotIO;
 import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.livetuning.WheelDiameterCharacterizer;
-import frc.robot.operation.UserPolicy;
 import frc.robot.processors.OdometryProcessor;
+import frc.robot.sensors.navx.NavXSensor;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.util.ShooterCalculator;
+import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
 import frc.robot.util.TurretCalculator;
-import frc.robot.sensors.navx.NavXSensor;
-import java.util.Optional;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj2.command.Commands;
 
 @SuppressWarnings("unused")
 public class CommandFactory {
@@ -194,6 +187,32 @@ public class CommandFactory {
     return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier, shooterCalculatorSupplier);
     
 
+  }
+
+  public Command getPresetShootCommand (ShotData preset) {
+    //TODO, just make a manual shoot command that consumes
+    //positions for everything and handles it
+    if (preset == RobotConstants.SHOOTER.SHOT_PRESET_ONE) {
+      return new RepeatCommand(
+          new SequentialCommandGroup(
+            new ParallelCommandGroup(
+              new ManualTurretCommand(subsystemManager.getTurretSubsystem(), LiveTuningHandler.getInstance().getValue("TurretSubsystem/PresetOneDegrees"))
+              //TODO, shooter and hood command
+            )
+            //TODO, new TransferCommand
+          )
+      );
+    } else {
+      return new RepeatCommand(
+          new SequentialCommandGroup(
+            new ParallelCommandGroup(
+              new ManualTurretCommand(subsystemManager.getTurretSubsystem(), LiveTuningHandler.getInstance().getValue("TurretSubsystem/PresetOneDegrees"))
+              //TODO, shooter and hood command
+            )
+            //TODO, new TransferCommand
+          )
+      );
+    }
   }
 
   private Command getSubsystemTestMessageCommand(String message) {

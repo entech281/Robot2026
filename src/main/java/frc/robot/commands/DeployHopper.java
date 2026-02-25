@@ -1,23 +1,39 @@
 package frc.robot.commands;
 
 import frc.entech.commands.EntechCommand;
+import frc.robot.RobotConstants;
 import frc.robot.subsystems.hopper.HopperInput;
 import frc.robot.subsystems.hopper.HopperSubsystem;
 
 public class DeployHopper extends EntechCommand {
-    private static final double DEPLOY_SPEED = -0.3; // Negative = downward, tune as needed
+    boolean direction;
 
     private final HopperSubsystem hopperSubsystem;
 
     public DeployHopper(HopperSubsystem hopperSubsystem) {
+        this(hopperSubsystem, true);
+    }
+
+    /**
+     * 
+     * @param hopperSubsystem
+     * @param direction true for deploy, false for collapse
+     */
+    public DeployHopper(HopperSubsystem hopperSubsystem, boolean direction) {
+        super(hopperSubsystem);
         this.hopperSubsystem = hopperSubsystem;
-        addRequirements(hopperSubsystem);
+        this.direction = direction;
     }
 
     @Override
     public void initialize() {
         HopperInput input = new HopperInput();
-        input.setSpeed(DEPLOY_SPEED);
+
+        if (direction) {
+            input.setSpeed(RobotConstants.HOPPER.DEPLOY_SPEED);
+        } else {
+            input.setSpeed(-RobotConstants.HOPPER.DEPLOY_SPEED);
+        }
         hopperSubsystem.updateInputs(input);
     }
 
@@ -29,7 +45,7 @@ public class DeployHopper extends EntechCommand {
 
     @Override
     public boolean isFinished() {
-        return hopperSubsystem.getOutputs().isAtLowerLimit();
+        return hopperSubsystem.getOutputs().isAtLowerLimit() || hopperSubsystem.getOutputs().isStalled();
     }
 
     @Override

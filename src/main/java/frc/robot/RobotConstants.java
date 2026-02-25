@@ -1,10 +1,11 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.RPM;
 
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
@@ -21,6 +22,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import frc.robot.livetuning.LiveTuningHandler;
+import frc.robot.util.ShooterCalculator;
+import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
 
 public final class RobotConstants {
   public static final double TIME_PER_PERIODICAL_LOOP_SECONDS = 0.02;
@@ -146,7 +150,13 @@ public final class RobotConstants {
         Map.entry("TurretSubsystem/LowerLimitDegrees", -120.0),
         Map.entry("TurretSubsystem/UpperLimitDegrees", 120.0),
         Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -110.0),
-        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 110.0)
+        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 110.0),
+        Map.entry("TurretSubsystem/PresetOneDegrees", 0.0),
+        Map.entry("TurretSubsystem/PresetTwoDegrees", 0.0),
+        Map.entry("HoodSubsystem/PresetOneDegrees", 35.0),
+        Map.entry("HoodSubsystem/PresetTwoDegrees", 35.0),
+        Map.entry("ShooterSubsystem/PresetOneRPM", RobotConstants.SHOOTER.MAX_RPM),
+        Map.entry("ShooterSubsystem/PresetTwoRPM", RobotConstants.SHOOTER.MAX_RPM)
     );
   }
 
@@ -384,6 +394,12 @@ public final class RobotConstants {
     public static final Transform3d SHOT_TRANSFORM = new Transform3d(0, 0, 0, new Rotation3d());
     public static final double WHEEL_RADIUS_METERS = 0.048229115; // TODO: Idk my ai made this number
     public static final double MAX_RPM = 6000.0;
+    public static final ShotData SHOT_PRESET_ONE = new ShooterCalculator().new ShotDataRange().new ShotData(Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")), RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetOneRPM")), Meters.of(WHEEL_RADIUS_METERS));
+    public static final ShotData SHOT_PRESET_TWO = new ShooterCalculator().new ShotDataRange().new ShotData(Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")), RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")), Meters.of(WHEEL_RADIUS_METERS));
+  }
+
+  public static interface HOPPER {
+    public static final double DEPLOY_SPEED = -0.3; // Negative = downward, tune as needed
   }
 
   private RobotConstants() {

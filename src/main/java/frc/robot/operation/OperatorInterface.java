@@ -16,6 +16,7 @@ import frc.robot.CommandFactory;
 import frc.robot.RobotConstants;
 import frc.robot.HardwareManager;
 import frc.robot.Robot;
+import frc.robot.commands.DeployHopper;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.GyroReset;
@@ -140,6 +141,14 @@ public class OperatorInterface
 
   public void scoreOperatorBindings() {
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.FIRE).whileTrue(commandFactory.getFullShootCommand());
+    
+    //TODO: makes RobotConstants
+    scoreOperatorPanel.button(0).whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), true));
+    scoreOperatorPanel.button(1).whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false));
+
+    scoreOperatorPanel.button(2).onTrue(new DeployHopper(subsystemManager.getHopperSubsystem(), true)).onFalse(new DeployHopper(subsystemManager.getHopperSubsystem(), false));
+    scoreOperatorPanel.button(3).whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_ONE));
+    scoreOperatorPanel.button(4).whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_TWO));
   }
 
   public void alignOperatorBindings() {
