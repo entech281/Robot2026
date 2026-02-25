@@ -13,18 +13,18 @@ import edu.wpi.first.units.measure.Temperature;
 import frc.entech.sensors.SensorOutput;
 
 public class GyroOutput extends SensorOutput {
-  private Angle yaw = Angle.ofBaseUnits(0, Degrees);
-  private Angle pitch = Angle.ofBaseUnits(0, Degrees);
-  private Angle roll = Angle.ofBaseUnits(0, Degrees);
-  private AngularVelocity yawRate = AngularVelocity.ofBaseUnits(0.0, DegreesPerSecond);
-  private Temperature temperature = Temperature.ofBaseUnits(0, Kelvin);
-  private Angle angleAdjustment = Angle.ofBaseUnits(0, Degrees);
+  private Angle yaw = Angle.ofRelativeUnits(0, Degrees);
+  private Angle pitch = Angle.ofRelativeUnits(0, Degrees);
+  private Angle roll = Angle.ofRelativeUnits(0, Degrees);
+  private AngularVelocity yawRate = AngularVelocity.ofRelativeUnits(0.0, DegreesPerSecond);
+  private Temperature temperature = Temperature.ofRelativeUnits(0, Kelvin);
+  private Angle angleAdjustment = Angle.ofRelativeUnits(0, Degrees);
 
   private ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
 
   @Override
   public void toLog() {
-    Logger.recordOutput("GyroOutput/yaw", yaw);
+    Logger.recordOutput("GyroOutput/yaw", yaw.in(Degrees));
     Logger.recordOutput("GyroOutput/pitch", pitch);
     Logger.recordOutput("GyroOutput/roll", roll);
     Logger.recordOutput("GyroOutput/yawRate", yawRate);

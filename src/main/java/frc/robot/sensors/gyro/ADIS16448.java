@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ADIS16448 implements GyroI {
     private ADIS16448_IMU gyro;
-    private Angle angleOffset = Angle.ofBaseUnits(0, Degrees);
+    private Angle angleOffset = Angle.ofRelativeUnits(0, Degrees);
 
     @Override
     public void initialize() {
@@ -28,12 +28,12 @@ public class ADIS16448 implements GyroI {
         GyroOutput out = new GyroOutput();
 
         out.setAngleAdjustment(angleOffset);
-        out.setYaw(Angle.ofBaseUnits(gyro.getAngle(), Degrees).minus(angleOffset));
-        out.setYawRate(AngularVelocity.ofBaseUnits(gyro.getRate(), DegreesPerSecond));
-        out.setTemperature(Temperature.ofBaseUnits(gyro.getTemperature(), Celsius));
+        out.setYaw(Angle.ofRelativeUnits(gyro.getGyroAngleZ(), Degrees));
+        out.setYawRate(AngularVelocity.ofRelativeUnits(gyro.getRate(), DegreesPerSecond));
+        out.setTemperature(Temperature.ofRelativeUnits(gyro.getTemperature(), Celsius));
         out.setChassisSpeeds(getChassisSpeeds());
-        out.setRoll(Angle.ofBaseUnits(gyro.getGyroAngleY(), Degrees));
-        out.setPitch(Angle.ofBaseUnits(gyro.getGyroAngleX(), Degrees));
+        out.setRoll(Angle.ofRelativeUnits(gyro.getGyroAngleY(), Degrees));
+        out.setPitch(Angle.ofRelativeUnits(gyro.getGyroAngleX(), Degrees));
 
         return out;
     }
@@ -52,8 +52,8 @@ public class ADIS16448 implements GyroI {
         Logger.recordOutput("ADIS16448Output/magX", gyro.getMagneticFieldX());
         Logger.recordOutput("ADIS16448Output/magY", gyro.getMagneticFieldY());
         Logger.recordOutput("ADIS16448Output/magZ", gyro.getMagneticFieldZ());
-        Logger.recordOutput("ADIS16448Output/", gyro.getBarometricPressure());
-        Logger.recordOutput("ADIS16448Output/", gyro.isConnected());
+        Logger.recordOutput("ADIS16448Output/pressure", gyro.getBarometricPressure());
+        Logger.recordOutput("ADIS16448Output/connected", gyro.isConnected());
         SmartDashboard.putData(gyro);
     }
 
@@ -64,7 +64,7 @@ public class ADIS16448 implements GyroI {
 
     @Override
     public void zeroYaw() {
-        angleOffset = Angle.ofBaseUnits(gyro.getAngle(), Degrees);
+        angleOffset = Angle.ofRelativeUnits(gyro.getAngle(), Degrees);
     }
 
     private ChassisSpeeds getChassisSpeeds() {

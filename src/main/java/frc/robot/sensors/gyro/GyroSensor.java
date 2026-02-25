@@ -23,6 +23,7 @@ public class GyroSensor extends EntechSensor<GyroOutput> {
     GyroOutput output;
 
     if (ENABLED) {
+      gyro.logUniqueData();
       output = gyro.getOutput();
     } else {
       output = new GyroOutput();
@@ -58,7 +59,6 @@ public class GyroSensor extends EntechSensor<GyroOutput> {
 
   public void zeroYaw() {
     if (ENABLED) {
-      gyro.reset();
       gyro.zeroYaw();
     }
   }

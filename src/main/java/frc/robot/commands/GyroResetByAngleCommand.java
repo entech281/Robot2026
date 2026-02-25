@@ -45,16 +45,17 @@ public class GyroResetByAngleCommand extends EntechCommand {
       if (teamOpt.get() == Alliance.Blue) {
         set = () -> gyro
             .setAngleAdjustment(
-                RobotIO.getInstance().getGyroOutput().getAngleAdjustment().plus(Angle.ofBaseUnits(angle, Degrees)));
+                RobotIO.getInstance().getGyroOutput().getAngleAdjustment().plus(Angle.ofRelativeUnits(angle, Degrees)));
       } else {
         set = () -> gyro
             .setAngleAdjustment(
-                RobotIO.getInstance().getGyroOutput().getAngleAdjustment().minus(Angle.ofBaseUnits(angle, Degrees)));
+                RobotIO.getInstance().getGyroOutput().getAngleAdjustment()
+                    .minus(Angle.ofRelativeUnits(angle, Degrees)));
       }
     } else {
       set = () -> gyro
           .setAngleAdjustment(
-              RobotIO.getInstance().getGyroOutput().getAngleAdjustment().plus(Angle.ofBaseUnits(angle, Degrees)));
+              RobotIO.getInstance().getGyroOutput().getAngleAdjustment().plus(Angle.ofRelativeUnits(angle, Degrees)));
     }
     correctOdometry = () -> {
       Pose2d pose = new Pose2d(odometry.getEstimatedPose().getTranslation(), Rotation2d.fromDegrees(angle));

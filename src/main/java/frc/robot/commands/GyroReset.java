@@ -15,7 +15,7 @@ public class GyroReset extends EntechCommand {
 
   public GyroReset(GyroSensor gyro, OdometryProcessor odometry) {
     reset = () -> {
-      gyro.setAngleAdjustment(Angle.ofBaseUnits(0.0, Degrees));
+      gyro.setAngleAdjustment(Angle.ofRelativeUnits(0.0, Degrees));
       gyro.zeroYaw();
     };
     correctOdomtry = () -> odometry.resetOdometry(
