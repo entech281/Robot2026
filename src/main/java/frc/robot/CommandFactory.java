@@ -202,7 +202,7 @@ public class CommandFactory {
       
       double angle = RobotIO.getInstance().getNavXOutput().getYaw();
 
-      angle = Math.abs(angle % 360);
+      angle = angle % 360;
 
       if (angle >= 180.0) {
         angle -= 360.0;
@@ -214,7 +214,7 @@ public class CommandFactory {
         return 45;
       } else if (angle >= 90 && angle < 180) {
         return 135;
-      } else if (angle >= 270 && angle <= 360) {
+      } else if (angle < 0 && angle >= -90) {
         return -45;
       } else {
         return -135;
