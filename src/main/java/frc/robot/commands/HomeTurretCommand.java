@@ -30,7 +30,7 @@ public class HomeTurretCommand extends EntechCommand{
 
     @Override
     public boolean isFinished() {
-        return RobotIO.getInstance().getTurretOutput().isAtReverseLimit();
+        return RobotIO.getInstance().getTurretOutput().isAtReverseLimitStall();
     }
 
     
