@@ -36,7 +36,13 @@ public class NavX3 implements GyroI {
 
     @Override
     public void logUniqueData() {
-        Logger.recordMetadata("NavX3Output/", null);
+        Logger.recordOutput("NavX3Output/accelX", gyro.getLinearAccel()[0]);
+        Logger.recordOutput("NavX3Output/accelY", gyro.getLinearAccel()[1]);
+        Logger.recordOutput("NavX3Output/accelZ", gyro.getLinearAccel()[2]);
+        Logger.recordOutput("NavX3Output/quaternion", gyro.getQuat9D());
+        Logger.recordOutput("NavX3Output/angularVelX", gyro.getAngularVel()[1]);
+        Logger.recordOutput("NavX3Output/angularVelY", gyro.getAngularVel()[1]);
+        Logger.recordOutput("NavX3Output/angularVelZ", gyro.getAngularVel()[2]);
     }
 
     @Override
