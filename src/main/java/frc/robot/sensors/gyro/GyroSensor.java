@@ -12,10 +12,7 @@ public class GyroSensor extends EntechSensor<GyroOutput> {
 
   public enum GyroHardware {
     ADIS16448,
-    NAVX3,
-    NAVX_USB1,
-    NAVX_USB2,
-    NAVX_MXP
+    NAVX3
   }
 
   @Override
@@ -43,6 +40,9 @@ public class GyroSensor extends EntechSensor<GyroOutput> {
       switch (RobotConstants.GYRO_HARDWARE) {
         case ADIS16448:
           gyro = new ADIS16448();
+          break;
+        case NAVX3:
+          gyro = new NavX3(0);
           break;
         default:
           gyro = new ADIS16448();
