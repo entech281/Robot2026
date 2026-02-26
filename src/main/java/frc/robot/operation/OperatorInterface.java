@@ -1,5 +1,7 @@
 package frc.robot.operation;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -96,7 +98,7 @@ public class OperatorInterface
     joystickController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_JOYSTICK.TWIST)
         .whileTrue(new TwistCommand());
     joystickController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_JOYSTICK.GYRO_RESET)
-        .onTrue(new GyroReset(subsystemManager.getNavXSubsystem(), odometry));
+        .onTrue(new GyroReset(subsystemManager.getGyroSubsystem(), odometry));
 
     subsystemManager.getDriveSubsystem()
         .setDefaultCommand(new DriveCommand(subsystemManager.getDriveSubsystem(), this));
@@ -107,7 +109,7 @@ public class OperatorInterface
 
   public void enableXboxBindings() {
     xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.GYRO_RESET)
-        .onTrue(new GyroReset(subsystemManager.getNavXSubsystem(), odometry));
+        .onTrue(new GyroReset(subsystemManager.getGyroSubsystem(), odometry));
 
     subsystemManager.getDriveSubsystem()
         .setDefaultCommand(new DriveCommand(subsystemManager.getDriveSubsystem(), this));
@@ -176,7 +178,7 @@ public class OperatorInterface
   public DriveInput getDriveInput() {
     DriveInput di = new DriveInput();
 
-    di.setGyroAngle(Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()));
+    di.setGyroAngle(Rotation2d.fromDegrees(RobotIO.getInstance().getGyroOutput().getYaw().in(Degrees)));
     di.setLatestOdometryPose(odometry.getEstimatedPose());
     di.setKey("initialRaw");
 

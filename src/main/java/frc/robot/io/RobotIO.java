@@ -1,5 +1,7 @@
 package frc.robot.io;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
@@ -14,7 +16,7 @@ import frc.robot.subsystems.hood.HoodOutput;
 import frc.robot.subsystems.hopper.HopperOutput;
 import frc.robot.subsystems.intake.IntakeOutput;
 import frc.robot.sensors.HallEffectSensor.HallEffectOutput;
-import frc.robot.sensors.navx.NavXOutput;
+import frc.robot.sensors.gyro.GyroOutput;
 import frc.robot.sensors.vision.VisionOutput;
 import frc.robot.subsystems.shooter.ShooterOutput;
 import frc.robot.subsystems.transfer.TransferOutput;
@@ -36,7 +38,7 @@ public class RobotIO implements DriveInputSupplier {
   @Override
   public DriveInput getDriveInput() {
     DriveInput di = new DriveInput();
-    di.setGyroAngle(Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()));
+    di.setGyroAngle(Rotation2d.fromDegrees(RobotIO.getInstance().getGyroOutput().getYaw().in(Degrees)));
     di.setLatestOdometryPose(latestOdometryPose);
     di.setKey("initialRaw");
     di.setRotation(0.0);
@@ -50,8 +52,8 @@ public class RobotIO implements DriveInputSupplier {
     return latestDriveOutput;
   }
 
-  public NavXOutput getNavXOutput() {
-    return latestNavXOutput;
+  public GyroOutput getGyroOutput() {
+    return latestGyroOutput;
   }
 
   public Pose2d getOdometryPose() {
@@ -94,8 +96,8 @@ public class RobotIO implements DriveInputSupplier {
     return latestHallEffectOutput;
   }
 
-  public void updateNavx(NavXOutput no) {
-    latestNavXOutput = no;
+  public void updateGyro(GyroOutput no) {
+    latestGyroOutput = no;
     no.log();
   }
 
@@ -154,7 +156,7 @@ public class RobotIO implements DriveInputSupplier {
     heo.log();
   }
 
-  private NavXOutput latestNavXOutput;
+  private GyroOutput latestGyroOutput;
   private DriveOutput latestDriveOutput;
   private VisionOutput latestVisionOutput;
   private ShooterOutput latestShooterOutput;

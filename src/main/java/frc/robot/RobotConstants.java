@@ -21,9 +21,11 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import frc.robot.sensors.gyro.GyroSensor.GyroHardware;
 
 public final class RobotConstants {
-  public static final double TIME_PER_PERIODICAL_LOOP_SECONDS = 0.02;
+  public static final GyroHardware GYRO_HARDWARE = GyroHardware.ADIS16448;
+  public static final double TIME_PER_PERIODICAL_LOOP_SECONDS = 0.00;
 
   public static interface AccelerationFilter {
     public static final double DIRECTION_SLEW_RATE = 0.95; // radians per second
@@ -146,8 +148,7 @@ public final class RobotConstants {
         Map.entry("TurretSubsystem/LowerLimitDegrees", -120.0),
         Map.entry("TurretSubsystem/UpperLimitDegrees", 120.0),
         Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -110.0),
-        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 110.0)
-    );
+        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 110.0));
   }
 
   public static interface PORTS {
@@ -212,7 +213,7 @@ public final class RobotConstants {
 
   public interface SCORE_OPERATOR_PANEL {
     public static interface BUTTONS {
-      //TODO: make real
+      // TODO: make real
       public static final int FIRE = 0;
     }
 
