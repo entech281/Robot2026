@@ -224,6 +224,9 @@ public final class RobotConstants {
     public static interface BUTTONS {
       //TODO: make real
       public static final int FIRE = 0;
+      public static final int INTAKE = 1;
+      public static final int OUTTAKE = 2;
+      public static final int DEPLOY_HOPPER = 3;
     }
 
     public static interface SWITCHES {

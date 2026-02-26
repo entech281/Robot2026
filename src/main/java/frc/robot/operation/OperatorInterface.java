@@ -143,10 +143,10 @@ public class OperatorInterface
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.FIRE).whileTrue(commandFactory.getFullShootCommand());
     
     //TODO: makes RobotConstants
-    scoreOperatorPanel.button(0).whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), true));
-    scoreOperatorPanel.button(1).whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false));
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INTAKE).whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), true));
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.OUTTAKE).whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false));
 
-    scoreOperatorPanel.button(2).onTrue(new DeployHopper(subsystemManager.getHopperSubsystem(), true)).onFalse(new DeployHopper(subsystemManager.getHopperSubsystem(), false));
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DEPLOY_HOPPER).onTrue(new DeployHopper(subsystemManager.getHopperSubsystem(), true)).onFalse(new DeployHopper(subsystemManager.getHopperSubsystem(), false));
     scoreOperatorPanel.button(3).whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_ONE));
     scoreOperatorPanel.button(4).whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_TWO));
   }

@@ -1,5 +1,8 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RPM;
+
 import java.io.IOException;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
@@ -34,6 +37,7 @@ import frc.entech.commands.AutonomousException;
 import frc.entech.commands.InstantAnytimeCommand;
 import frc.robot.commands.GyroResetByAngleCommand;
 import frc.robot.commands.HomeTurretCommand;
+import frc.robot.commands.ManualShootCommand;
 import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.RunShooterAtLiveSpeedCommand;
 import frc.robot.commands.RunTestCommand;
@@ -190,28 +194,10 @@ public class CommandFactory {
   }
 
   public Command getPresetShootCommand (ShotData preset) {
-    //TODO, just make a manual shoot command that consumes
-    //positions for everything and handles it
     if (preset == RobotConstants.SHOOTER.SHOT_PRESET_ONE) {
-      return new RepeatCommand(
-          new SequentialCommandGroup(
-            new ParallelCommandGroup(
-              new ManualTurretCommand(subsystemManager.getTurretSubsystem(), LiveTuningHandler.getInstance().getValue("TurretSubsystem/PresetOneDegrees"))
-              //TODO, shooter and hood command
-            )
-            //TODO, new TransferCommand
-          )
-      );
+      return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), Degrees.of(LiveTuningHandler.getInstance().getValue("TurretSubsystem/PresetOneDegrees")), RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetOneRPM")), Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")));
     } else {
-      return new RepeatCommand(
-          new SequentialCommandGroup(
-            new ParallelCommandGroup(
-              new ManualTurretCommand(subsystemManager.getTurretSubsystem(), LiveTuningHandler.getInstance().getValue("TurretSubsystem/PresetOneDegrees"))
-              //TODO, shooter and hood command
-            )
-            //TODO, new TransferCommand
-          )
-      );
+      return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), Degrees.of(LiveTuningHandler.getInstance().getValue("TurretSubsystem/PresetTwoDegrees")), RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")), Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")));
     }
   }
 
