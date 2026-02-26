@@ -191,7 +191,7 @@ public class CommandFactory {
         .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
 
     Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(
-        RobotIO.getInstance().getNavXOutput().getChassisSpeeds(), shooterCurrentPose, target);
+        RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target);
     Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(target.toPose2d(),
         RobotIO.getInstance().getOdometryPose());
 
