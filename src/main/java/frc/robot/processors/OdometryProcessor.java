@@ -10,6 +10,8 @@ import frc.robot.RobotConstants;
 import frc.robot.io.RobotIO;
 import frc.robot.sensors.vision.VisionPose;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import java.util.List;
 
 public class OdometryProcessor {
@@ -23,7 +25,7 @@ public class OdometryProcessor {
 
   public void createEstimator() {
     estimator = new SwerveDrivePoseEstimator(RobotConstants.DrivetrainConstants.DRIVE_KINEMATICS,
-        Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()),
+        Rotation2d.fromDegrees(RobotIO.getInstance().getGyroOutput().getYaw().in(Degrees)),
         RobotIO.getInstance().getDriveOutput().getModulePositions(),
         RobotConstants.ODOMETRY.INITIAL_POSE);
 
@@ -45,18 +47,19 @@ public class OdometryProcessor {
             new Rotation2d(turningPositions.get(j)[i])));
       }
 
-      estimator.updateWithTime(timestamps[i], Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()),
+      estimator.updateWithTime(timestamps[i],
+          Rotation2d.fromDegrees(RobotIO.getInstance().getGyroOutput().getYaw().in(Degrees)),
           positionsAtTime);
     }
 
     if (integrateVision) {
       for (VisionPose vp : RobotIO.getInstance().getVisionOutput().getVisionPoses()) {
         addVisionEstimatedPose(vp.getPose(), vp.getTimeStamp(),
-            Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()));
+            Rotation2d.fromDegrees(RobotIO.getInstance().getGyroOutput().getYaw().in(Degrees)));
       }
     }
 
-    estimator.update(Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()),
+    estimator.update(Rotation2d.fromDegrees(RobotIO.getInstance().getGyroOutput().getYaw().in(Degrees)),
         RobotIO.getInstance().getDriveOutput().getModulePositions());
 
     RobotIO.getInstance().updateOdometryPose(getEstimatedPose());
@@ -81,7 +84,7 @@ public class OdometryProcessor {
    * @param pose The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose) {
-    estimator.resetPosition(Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()),
+    estimator.resetPosition(Rotation2d.fromDegrees(RobotIO.getInstance().getGyroOutput().getYaw().in(Degrees)),
         RobotIO.getInstance().getDriveOutput().getModulePositions(), pose);
   }
 

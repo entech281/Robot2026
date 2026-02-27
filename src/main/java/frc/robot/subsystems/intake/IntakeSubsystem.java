@@ -14,7 +14,7 @@ import frc.entech.subsystems.SparkOutput;
 import frc.robot.RobotConstants;
 
 public class IntakeSubsystem extends EntechSubsystem<IntakeInput, IntakeOutput> {
-    private static final boolean ENABLED = true;
+    private static final boolean ENABLED = false;
     private static final boolean BRAKING = true;
     private SparkFlex intakeMotor;
     private double setSpeed = 0.0;

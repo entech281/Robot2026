@@ -20,9 +20,11 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import frc.robot.sensors.gyro.GyroSensor.GyroHardware;
 
 public final class RobotConstants {
-  public static final double TIME_PER_PERIODICAL_LOOP_SECONDS = 0.02;
+  public static final GyroHardware GYRO_HARDWARE = GyroHardware.ADIS16448;
+  public static final double TIME_PER_PERIODICAL_LOOP_SECONDS = 0.00;
 
   public static interface AccelerationFilter {
     public static final double DIRECTION_SLEW_RATE = 0.95; // radians per second
@@ -131,10 +133,10 @@ public final class RobotConstants {
     public static final int DRIVING_MOTOR_CURRENT_LIMIT_AMPS = 40; // 50; // amps
     public static final int TURNING_MOTOR_CURRENT_LIMIT_AMPS = 20; // amps
 
-    public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 1.482033;
-    public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = -2.289053;
-    public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = 0.727504;
-    public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = 1.66872;
+    public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 2.285;
+    public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = 0.91;
+    public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = 2.71;
+    public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = -2.9;
   }
 
   public static interface LiveTuning {
@@ -214,7 +216,7 @@ public final class RobotConstants {
 
   public interface SCORE_OPERATOR_PANEL {
     public static interface BUTTONS {
-      //TODO: make real
+      // TODO: make real
       public static final int FIRE = 0;
       // TODO: set correct button number for the won-auto latching toggle switch
       public static final int WON_AUTO_SWITCH = 1;
