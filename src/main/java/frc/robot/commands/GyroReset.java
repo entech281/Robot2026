@@ -1,19 +1,22 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.measure.Angle;
 import frc.entech.commands.EntechCommand;
 import frc.robot.processors.OdometryProcessor;
-import frc.robot.sensors.navx.NavXSensor;
+import frc.robot.sensors.gyro.GyroSensor;
 
 public class GyroReset extends EntechCommand {
   private final Runnable reset;
   private final Runnable correctOdomtry;
 
-  public GyroReset(NavXSensor navx, OdometryProcessor odometry) {
+  public GyroReset(GyroSensor gyro, OdometryProcessor odometry) {
     reset = () -> {
-      navx.setAngleAdjustment(0.0);
-      navx.zeroYaw();
+      gyro.setAngleAdjustment(Angle.ofRelativeUnits(0.0, Degrees));
+      gyro.zeroYaw();
     };
     correctOdomtry = () -> odometry.resetOdometry(
         new Pose2d(odometry.getEstimatedPose().getTranslation(), Rotation2d.fromDegrees(0)));

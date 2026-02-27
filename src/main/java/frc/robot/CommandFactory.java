@@ -46,7 +46,7 @@ import frc.robot.io.RobotIO;
 import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.livetuning.WheelDiameterCharacterizer;
 import frc.robot.processors.OdometryProcessor;
-import frc.robot.sensors.navx.NavXSensor;
+import frc.robot.sensors.gyro.GyroSensor;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.util.ShooterCalculator;
 import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
@@ -55,7 +55,7 @@ import frc.robot.util.TurretCalculator;
 @SuppressWarnings("unused")
 public class CommandFactory {
   private final DriveSubsystem driveSubsystem;
-  private final NavXSensor navXSubsystem;
+  private final GyroSensor gyroSubsystem;
   private final OdometryProcessor odometry;
   private final HardwareManager subsystemManager;
   private final SendableChooser<Command> autoChooser;
@@ -63,7 +63,7 @@ public class CommandFactory {
 
   public CommandFactory(HardwareManager subsystemManager, OdometryProcessor odometry) {
     this.driveSubsystem = subsystemManager.getDriveSubsystem();
-    this.navXSubsystem = subsystemManager.getNavXSubsystem();
+    this.gyroSubsystem = subsystemManager.getGyroSubsystem();
     this.odometry = odometry;
     this.subsystemManager = subsystemManager;
     subsystemManager.getShooterSubsystem()
@@ -113,7 +113,7 @@ public class CommandFactory {
 
   public Command getAutoCommand() {
     SequentialCommandGroup auto = new SequentialCommandGroup();
-    auto.addCommands(new GyroResetByAngleCommand(navXSubsystem, odometry, autoChooser.getSelected().getName()));
+    auto.addCommands(new GyroResetByAngleCommand(gyroSubsystem, odometry, autoChooser.getSelected().getName()));
     auto.addCommands(new WaitCommand(0.5));
     auto.addCommands(autoChooser.getSelected());
     return auto;
@@ -174,7 +174,7 @@ public class CommandFactory {
 
   public Command getFullShootCommand() {
     Pose3d target;
-    
+
     if (DriverStation.getAlliance().get() == Alliance.Red) {
       target = RobotConstants.TURRET.RED_HUB_LOCATION;
     } else if (DriverStation.getAlliance().get() == Alliance.Blue) {
@@ -183,13 +183,17 @@ public class CommandFactory {
       return Commands.none();
     }
 
-    Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose()).transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
+    Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
+        .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
 
-    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(RobotIO.getInstance().getNavXOutput().getChassisSpeeds(), shooterCurrentPose, target);
-    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(target.toPose2d(), RobotIO.getInstance().getOdometryPose());
+    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(
+        RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target);
+    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(target.toPose2d(),
+        RobotIO.getInstance().getOdometryPose());
 
-    return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier, shooterCalculatorSupplier);
-    
+    return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
+        subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
+        shooterCalculatorSupplier);
 
   }
 

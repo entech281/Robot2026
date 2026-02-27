@@ -1,10 +1,11 @@
 package frc.robot.operation;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -12,11 +13,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.entech.operatorpanel.OutputJoystick;
+import frc.entech.operatorpanel.OutputJoystick.BlinkRate;
+import frc.entech.operatorpanel.OutputJoystick.Color;
+import frc.entech.operatorpanel.OutputJoystick.LedNumber;
 import frc.robot.CommandFactory;
-import frc.robot.RobotConstants;
 import frc.robot.HardwareManager;
-import frc.robot.Robot;
 import frc.robot.commands.DeployHopper;
+import frc.robot.RobotConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.GyroReset;
@@ -33,6 +37,8 @@ import frc.robot.io.OperatorInputSupplier;
 import frc.robot.io.RobotIO;
 import frc.robot.processors.OdometryProcessor;
 import frc.robot.subsystems.drive.DriveInput;
+import frc.robot.util.ShiftStateTracker;
+import frc.robot.util.ShiftStateTracker.ShiftState;
 
 public class OperatorInterface
     implements DriveInputSupplier, DebugInputSupplier, OperatorInputSupplier {
@@ -43,6 +49,8 @@ public class OperatorInterface
 
   private CommandJoystick scoreOperatorPanel;
   private CommandJoystick alignOperatorPanel;
+
+  private OutputJoystick shiftLightOutput;
 
   private final CommandFactory commandFactory;
   private final HardwareManager subsystemManager;
@@ -76,6 +84,8 @@ public class OperatorInterface
 
     alignOperatorPanel = new CommandJoystick(RobotConstants.PORTS.CONTROLLER.ALIGN_PANEL);
     alignOperatorBindings();
+
+    shiftLightOutput = new OutputJoystick(RobotConstants.PORTS.CONTROLLER.SHIFT_LIGHT_OUTPUT);
   }
 
   public void enableTuningControllerBindings() {
@@ -97,7 +107,7 @@ public class OperatorInterface
     joystickController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_JOYSTICK.TWIST)
         .whileTrue(new TwistCommand());
     joystickController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_JOYSTICK.GYRO_RESET)
-        .onTrue(new GyroReset(subsystemManager.getNavXSubsystem(), odometry));
+        .onTrue(new GyroReset(subsystemManager.getGyroSubsystem(), odometry));
 
     subsystemManager.getDriveSubsystem()
         .setDefaultCommand(new DriveCommand(subsystemManager.getDriveSubsystem(), this));
@@ -108,7 +118,7 @@ public class OperatorInterface
 
   public void enableXboxBindings() {
     xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.GYRO_RESET)
-        .onTrue(new GyroReset(subsystemManager.getNavXSubsystem(), odometry));
+        .onTrue(new GyroReset(subsystemManager.getGyroSubsystem(), odometry));
 
     subsystemManager.getDriveSubsystem()
         .setDefaultCommand(new DriveCommand(subsystemManager.getDriveSubsystem(), this));
@@ -137,6 +147,31 @@ public class OperatorInterface
     new Trigger(() -> RobotIO.getInstance().getTurretOutput().isPastSofterUpperLimit())
       .onTrue( new InstantCommand(() -> DriverStation.reportWarning("Turret past softer upper limit!", false)))
       .onTrue( new InstantCommand( () -> xboxController.setRumble(RumbleType.kRightRumble, 0.5)));
+
+    // Shift light LED triggers — reads wonAuto live from UserPolicy each cycle
+    // No yellow on OutputJoystick so warning states use FAST blink instead
+    new Trigger(() -> getShiftState() == ShiftState.YOUR_SHIFT)
+        .onTrue(new InstantCommand(() ->
+            shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, BlinkRate.SOLID)));
+
+    new Trigger(() -> getShiftState() == ShiftState.SHIFT_ENDING)
+        .onTrue(new InstantCommand(() ->
+            shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, BlinkRate.FAST)));
+
+    new Trigger(() -> getShiftState() == ShiftState.THEIR_SHIFT)
+        .onTrue(new InstantCommand(() ->
+            shiftLightOutput.setLED(LedNumber.k0, Color.RED, BlinkRate.SOLID)));
+
+    new Trigger(() -> getShiftState() == ShiftState.SHIFT_STARTING)
+        .onTrue(new InstantCommand(() ->
+            shiftLightOutput.setLED(LedNumber.k0, Color.RED, BlinkRate.FAST)));
+  }
+
+  private ShiftState getShiftState() {
+    ShiftStateTracker liveTracker = new ShiftStateTracker(
+        UserPolicy.getInstance().isAutoWon(),
+        RobotConstants.LiveTuning.VALUES.get("ShiftStateTracker/WarningSeconds"));
+    return liveTracker.getState(DriverStation.getMatchTime());
   }
 
   public void scoreOperatorBindings() {
@@ -155,11 +190,21 @@ public class OperatorInterface
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.PRESET_1_FIRE).whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_ONE));
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.PRESET_2_FIRE).whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_TWO));
+
+    // Latching toggle switch — pressed down = won auto, released = did not win auto
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.WON_AUTO_SWITCH)
+        .onTrue(new InstantCommand(() -> UserPolicy.getInstance().setIsAutoWon(true)))
+        .onFalse(new InstantCommand(() -> UserPolicy.getInstance().setIsAutoWon(false)));
+  }
+
+  //adding more later
+  public void driverShiftWarning(){
+    //TODO
+    //will be fixed later, just a placeholder for now
   }
 
   public void alignOperatorBindings() {
 
-    // TODO: Move to CommandFactory
     Optional<Alliance> alliance = DriverStation.getAlliance();
     if (alliance.isPresent()) {
       if (alliance.get() == DriverStation.Alliance.Blue) {
@@ -191,7 +236,7 @@ public class OperatorInterface
   public DriveInput getDriveInput() {
     DriveInput di = new DriveInput();
 
-    di.setGyroAngle(Rotation2d.fromDegrees(RobotIO.getInstance().getNavXOutput().getYaw()));
+    di.setGyroAngle(Rotation2d.fromDegrees(RobotIO.getInstance().getGyroOutput().getYaw().in(Degrees)));
     di.setLatestOdometryPose(odometry.getEstimatedPose());
     di.setKey("initialRaw");
 

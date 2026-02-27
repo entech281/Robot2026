@@ -23,11 +23,13 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import frc.robot.livetuning.LiveTuningHandler;
+import frc.robot.sensors.gyro.GyroSensor.GyroHardware;
 import frc.robot.util.ShooterCalculator;
 import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
 
 public final class RobotConstants {
-  public static final double TIME_PER_PERIODICAL_LOOP_SECONDS = 0.02;
+  public static final GyroHardware GYRO_HARDWARE = GyroHardware.ADIS16448;
+  public static final double TIME_PER_PERIODICAL_LOOP_SECONDS = 0.00;
 
   public static interface AccelerationFilter {
     public static final double DIRECTION_SLEW_RATE = 0.95; // radians per second
@@ -136,10 +138,10 @@ public final class RobotConstants {
     public static final int DRIVING_MOTOR_CURRENT_LIMIT_AMPS = 40; // 50; // amps
     public static final int TURNING_MOTOR_CURRENT_LIMIT_AMPS = 20; // amps
 
-    public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 1.482033;
-    public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = -2.289053;
-    public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = 0.727504;
-    public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = 1.66872;
+    public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 2.285;
+    public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = 0.91;
+    public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = 2.71;
+    public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = -2.9;
   }
 
   public static interface LiveTuning {
@@ -156,7 +158,8 @@ public final class RobotConstants {
         Map.entry("HoodSubsystem/PresetOneDegrees", 35.0),
         Map.entry("HoodSubsystem/PresetTwoDegrees", 35.0),
         Map.entry("ShooterSubsystem/PresetOneRPM", RobotConstants.SHOOTER.MAX_RPM),
-        Map.entry("ShooterSubsystem/PresetTwoRPM", RobotConstants.SHOOTER.MAX_RPM)
+        Map.entry("ShooterSubsystem/PresetTwoRPM", RobotConstants.SHOOTER.MAX_RPM),
+        Map.entry("ShiftStateTracker/WarningSeconds", 5.0)
     );
   }
 
@@ -198,6 +201,7 @@ public final class RobotConstants {
       public static final int ALIGN_PANEL = 4;
       public static final int TEST_JOYSTICK = 2;
       public static final int TUNING_CONTROLLER = 3;
+      public static final int SHIFT_LIGHT_OUTPUT = 5;
 
       public static interface BUTTONS_JOYSTICK {
         public static final int TWIST = 1;
@@ -229,11 +233,14 @@ public final class RobotConstants {
       public static final int DEPLOY_HOPPER = 3;
       public static final int PRESET_1_FIRE = 4;
       public static final int PRESET_2_FIRE = 5;
+      public static final int WON_AUTO_SWITCH = 1;
     }
 
     public static interface SWITCHES {
     }
   }
+
+
 
   public static interface Vision {
     public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(5, 5, 1000000);
