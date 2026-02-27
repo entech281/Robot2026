@@ -2,15 +2,18 @@ package frc.robot.operation;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -132,8 +135,11 @@ public class OperatorInterface
         RobotConstants.TURRET.TURRET_POSITION_PRESET_Y_DEGREES));
 
     xboxController.x().whileTrue(new TransfreFoo(subsystemManager.getTransferSubsystem())).whileTrue(new RunShooterAtLiveSpeedCommand(subsystemManager.getShooterSubsystem()));
-  }
 
+    xboxController.leftBumper().whileTrue(new RepeatCommand( commandFactory.getRotateForBumpCommand() ));
+    xboxController.rightBumper().whileTrue(new RepeatCommand( commandFactory.getRotateForBumpCommand() ));
+  }
+ 
   public void enableTriggers() {
     new Trigger(() -> RobotIO.getInstance().getTurretOutput().isPastSofterLowerLimit())
       .onTrue( new InstantCommand(() -> DriverStation.reportWarning("Turret past softer lower limit!", false)))

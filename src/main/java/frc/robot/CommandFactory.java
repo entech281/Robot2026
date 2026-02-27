@@ -35,6 +35,7 @@ import frc.entech.commands.InstantAnytimeCommand;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.robot.commands.GyroResetByAngleCommand;
 import frc.robot.commands.HomeTurretCommand;
+import frc.robot.commands.RotateToAngleCommand;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.ShootAtTargetCommand;
 import frc.robot.commands.RunShooterAtLiveSpeedCommand;
@@ -199,6 +200,31 @@ public class CommandFactory {
         subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
         shooterCalculatorSupplier);
 
+  }
+
+  public Command getRotateForBumpCommand() {
+    return new RotateToAngleCommand(() -> {
+      
+      double angle = RobotIO.getInstance().getNavXOutput().getYaw();
+
+      angle = angle % 360;
+
+      if (angle >= 180.0) {
+        angle -= 360.0;
+      } else if (angle < -180.0) {
+        angle += 360.0;
+      }
+      
+      if (angle >= 0 && angle < 90) {
+        return 45;
+      } else if (angle >= 90 && angle < 180) {
+        return 135;
+      } else if (angle < 0 && angle >= -90) {
+        return -45;
+      } else {
+        return -135;
+      }
+    });
   }
 
   private Command getSubsystemTestMessageCommand(String message) {

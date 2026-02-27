@@ -16,7 +16,7 @@ import frc.entech.subsystems.SparkOutput;
 import frc.robot.RobotConstants;
 
 public class HopperSubsystem extends EntechSubsystem<HopperInput, HopperOutput> {
-    private static final boolean ENABLED = true;
+    private static final boolean ENABLED = false;
     private static final boolean BRAKING = false; // Set to false for compliance (coast mode) to allow movement if hit
 
     private SparkFlex hopperMotor;
