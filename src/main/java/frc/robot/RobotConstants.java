@@ -4,7 +4,6 @@ import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
@@ -189,6 +188,8 @@ public final class RobotConstants {
       public static final int ALIGN_PANEL = 4;
       public static final int TEST_JOYSTICK = 2;
       public static final int TUNING_CONTROLLER = 3;
+      // TODO: set correct port number for the shift light output device
+      public static final int SHIFT_LIGHT_OUTPUT = 5;
 
       public static interface BUTTONS_JOYSTICK {
         public static final int TWIST = 1;
@@ -215,10 +216,18 @@ public final class RobotConstants {
     public static interface BUTTONS {
       //TODO: make real
       public static final int FIRE = 0;
+      // TODO: set correct button number for the won-auto latching toggle switch
+      public static final int WON_AUTO_SWITCH = 1;
     }
 
     public static interface SWITCHES {
     }
+  }
+
+  public static interface SHIFT {
+    // How many seconds before a shift starts or ends to show fast-blink warning
+    // Also tunable live via LiveTuning "ShiftStateTracker/WarningSeconds"
+    public static final double WARNING_SECONDS = 5.0; // TODO: tune
   }
 
   public static interface Vision {

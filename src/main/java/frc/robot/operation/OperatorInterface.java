@@ -12,6 +12,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.entech.operatorpanel.OutputJoystick;
+import frc.entech.operatorpanel.OutputJoystick.BlinkRate;
+import frc.entech.operatorpanel.OutputJoystick.Color;
+import frc.entech.operatorpanel.OutputJoystick.LedNumber;
 import frc.robot.CommandFactory;
 import frc.robot.RobotConstants;
 import frc.robot.HardwareManager;
@@ -32,6 +36,8 @@ import frc.robot.io.OperatorInputSupplier;
 import frc.robot.io.RobotIO;
 import frc.robot.processors.OdometryProcessor;
 import frc.robot.subsystems.drive.DriveInput;
+import frc.robot.util.ShiftStateTracker;
+import frc.robot.util.ShiftStateTracker.ShiftState;
 
 public class OperatorInterface
     implements DriveInputSupplier, DebugInputSupplier, OperatorInputSupplier {
@@ -42,6 +48,9 @@ public class OperatorInterface
 
   private CommandJoystick scoreOperatorPanel;
   private CommandJoystick alignOperatorPanel;
+
+  // TODO: set correct port for the shift light output device in RobotConstants.PORTS.CONTROLLER.SHIFT_LIGHT_OUTPUT
+  private OutputJoystick shiftLightOutput;
 
   private final CommandFactory commandFactory;
   private final HardwareManager subsystemManager;
@@ -75,6 +84,9 @@ public class OperatorInterface
 
     alignOperatorPanel = new CommandJoystick(RobotConstants.PORTS.CONTROLLER.ALIGN_PANEL);
     alignOperatorBindings();
+
+    // TODO: set correct port in RobotConstants.PORTS.CONTROLLER.SHIFT_LIGHT_OUTPUT
+    shiftLightOutput = new OutputJoystick(RobotConstants.PORTS.CONTROLLER.SHIFT_LIGHT_OUTPUT);
   }
 
   public void enableTuningControllerBindings() {
@@ -136,15 +148,47 @@ public class OperatorInterface
     new Trigger(() -> RobotIO.getInstance().getTurretOutput().isPastSofterUpperLimit())
       .onTrue( new InstantCommand(() -> DriverStation.reportWarning("Turret past softer upper limit!", false)))
       .onTrue( new InstantCommand( () -> xboxController.setRumble(RumbleType.kRightRumble, 0.5)));
+
+    // Shift light LED triggers — reads wonAuto live from UserPolicy each cycle
+    // No yellow on OutputJoystick so warning states use FAST blink instead
+    new Trigger(() -> getShiftState() == ShiftState.YOUR_SHIFT)
+        .onTrue(new InstantCommand(() ->
+            shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, BlinkRate.SOLID)));
+
+    new Trigger(() -> getShiftState() == ShiftState.SHIFT_ENDING)
+        .onTrue(new InstantCommand(() ->
+            shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, BlinkRate.FAST)));
+
+    new Trigger(() -> getShiftState() == ShiftState.THEIR_SHIFT)
+        .onTrue(new InstantCommand(() ->
+            shiftLightOutput.setLED(LedNumber.k0, Color.RED, BlinkRate.SOLID)));
+
+    new Trigger(() -> getShiftState() == ShiftState.SHIFT_STARTING)
+        .onTrue(new InstantCommand(() ->
+            shiftLightOutput.setLED(LedNumber.k0, Color.RED, BlinkRate.FAST)));
+  }
+
+  private ShiftState getShiftState() {
+    ShiftStateTracker liveTracker = new ShiftStateTracker(
+        UserPolicy.getInstance().isAutoWon(),
+        RobotConstants.SHIFT.WARNING_SECONDS);
+    return liveTracker.getState(DriverStation.getMatchTime());
   }
 
   public void scoreOperatorBindings() {
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.FIRE).whileTrue(commandFactory.getFullShootCommand());
+
+    // Latching toggle switch — pressed down = won auto, released = did not win auto
+    // TODO: set correct button number in RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.WON_AUTO_SWITCH
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.WON_AUTO_SWITCH)
+        .onTrue(new InstantCommand(() -> UserPolicy.getInstance().setIsAutoWon(true)))
+        .onFalse(new InstantCommand(() -> UserPolicy.getInstance().setIsAutoWon(false)));
   }
 
   public void driverShiftWarning(){
     
   }
+
   public void alignOperatorBindings() {
 
     // TODO: Move to CommandFactory
