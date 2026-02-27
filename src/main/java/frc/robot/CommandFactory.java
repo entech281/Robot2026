@@ -1,5 +1,7 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import java.io.IOException;
 
 import org.json.simple.parser.ParseException;
@@ -205,7 +207,7 @@ public class CommandFactory {
   public Command getRotateForBumpCommand() {
     return new RotateToAngleCommand(() -> {
       
-      double angle = RobotIO.getInstance().getNavXOutput().getYaw();
+      double angle = RobotIO.getInstance().getGyroOutput().getYaw().in(Degrees);
 
       angle = angle % 360;
 
