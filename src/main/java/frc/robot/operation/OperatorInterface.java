@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -19,15 +18,13 @@ import frc.entech.operatorpanel.OutputJoystick.BlinkRate;
 import frc.entech.operatorpanel.OutputJoystick.Color;
 import frc.entech.operatorpanel.OutputJoystick.LedNumber;
 import frc.robot.CommandFactory;
-import frc.robot.RobotConstants;
 import frc.robot.HardwareManager;
-import frc.robot.Robot;
+import frc.robot.RobotConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.GyroReset;
 import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.ResetOdometryCommand;
-import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.TwistCommand;
 import frc.robot.commands.XDriveCommand;
 import frc.robot.io.DebugInput;
@@ -51,7 +48,6 @@ public class OperatorInterface
   private CommandJoystick scoreOperatorPanel;
   private CommandJoystick alignOperatorPanel;
 
-  // TODO: set correct port for the shift light output device in RobotConstants.PORTS.CONTROLLER.SHIFT_LIGHT_OUTPUT
   private OutputJoystick shiftLightOutput;
 
   private final CommandFactory commandFactory;
@@ -87,7 +83,6 @@ public class OperatorInterface
     alignOperatorPanel = new CommandJoystick(RobotConstants.PORTS.CONTROLLER.ALIGN_PANEL);
     alignOperatorBindings();
 
-    // TODO: set correct port in RobotConstants.PORTS.CONTROLLER.SHIFT_LIGHT_OUTPUT
     shiftLightOutput = new OutputJoystick(RobotConstants.PORTS.CONTROLLER.SHIFT_LIGHT_OUTPUT);
   }
 
@@ -173,7 +168,7 @@ public class OperatorInterface
   private ShiftState getShiftState() {
     ShiftStateTracker liveTracker = new ShiftStateTracker(
         UserPolicy.getInstance().isAutoWon(),
-        RobotConstants.SHIFT.WARNING_SECONDS);
+        RobotConstants.LiveTuning.VALUES.get("ShiftStateTracker/WarningSeconds"));
     return liveTracker.getState(DriverStation.getMatchTime());
   }
 
@@ -181,19 +176,18 @@ public class OperatorInterface
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.FIRE).whileTrue(commandFactory.getFullShootCommand());
 
     // Latching toggle switch — pressed down = won auto, released = did not win auto
-    // TODO: set correct button number in RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.WON_AUTO_SWITCH
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.WON_AUTO_SWITCH)
         .onTrue(new InstantCommand(() -> UserPolicy.getInstance().setIsAutoWon(true)))
         .onFalse(new InstantCommand(() -> UserPolicy.getInstance().setIsAutoWon(false)));
   }
 
+  //adding more later
   public void driverShiftWarning(){
-    
+    //will be fixed later, just a placeholder for now
   }
 
   public void alignOperatorBindings() {
 
-    // TODO: Move to CommandFactory
     Optional<Alliance> alliance = DriverStation.getAlliance();
     if (alliance.isPresent()) {
       if (alliance.get() == DriverStation.Alliance.Blue) {
