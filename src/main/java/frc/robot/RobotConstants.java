@@ -227,13 +227,13 @@ public final class RobotConstants {
   public interface SCORE_OPERATOR_PANEL {
     public static interface BUTTONS {
       //TODO: make real
-      public static final int AUTO_FIRE = 0;
-      public static final int INTAKE = 1;
-      public static final int OUTTAKE = 2;
-      public static final int DEPLOY_HOPPER = 3;
-      public static final int PRESET_1_FIRE = 4;
-      public static final int PRESET_2_FIRE = 5;
-      public static final int WON_AUTO_SWITCH = 1;
+      public static final int AUTO_FIRE = -1;
+      public static final int INTAKE = -1;
+      public static final int OUTTAKE = -1;
+      public static final int DEPLOY_HOPPER = -1;
+      public static final int PRESET_1_FIRE = -1;
+      public static final int PRESET_2_FIRE = -1;
+      public static final int WON_AUTO_SWITCH = -1;
     }
 
     public static interface SWITCHES {
