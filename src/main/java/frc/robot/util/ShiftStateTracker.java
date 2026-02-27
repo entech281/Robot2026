@@ -74,7 +74,7 @@ public class ShiftStateTracker {
         }
 
         double[][] myShifts    = wonAuto ? WINNER_SHIFTS : LOSER_SHIFTS;
-        double[][] theirShifts = wonAuto ? LOSER_SHIFTS  : WINNER_SHIFTS;
+        //double[][] theirShifts = wonAuto ? LOSER_SHIFTS  : WINNER_SHIFTS;
 
         // Are we currently in one of our shifts?
         for (double[] shift : myShifts) {
