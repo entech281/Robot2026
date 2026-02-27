@@ -18,6 +18,7 @@ public class NavX3 implements GyroI {
 
     @Override
     public void initialize() {
+        gyro.resetYaw();
     }
 
     @Override

@@ -70,8 +70,8 @@ public class CommandFactory {
     this.gyroSubsystem = subsystemManager.getGyroSubsystem();
     this.odometry = odometry;
     this.subsystemManager = subsystemManager;
-    subsystemManager.getShooterSubsystem()
-        .setDefaultCommand(new RunShooterAtLiveSpeedCommand(subsystemManager.getShooterSubsystem()));
+    // subsystemManager.getShooterSubsystem()
+        // .setDefaultCommand(new RunShooterAtLiveSpeedCommand(subsystemManager.getShooterSubsystem()));
     RobotConfig config;
     try {
       config = RobotConfig.fromGUISettings();
@@ -168,7 +168,7 @@ public class CommandFactory {
           characterizer.getInitialMeasurements();
         }),
         getSubsystemTestMessageCommand("Generating deltas."),
-        new WaitCommand(120),
+        new WaitCommand(20),
         getSubsystemTestMessageCommand("Calculating Results."),
         getSubsystemTestMessageCommand(() -> characterizer.updateAndCalculate()),
         new InstantCommand(() -> {

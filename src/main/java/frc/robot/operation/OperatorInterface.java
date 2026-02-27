@@ -24,6 +24,8 @@ import frc.robot.commands.GyroReset;
 import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.RunIntakeCommand;
+import frc.robot.commands.RunShooterAtLiveSpeedCommand;
+import frc.robot.commands.TransfreFoo;
 import frc.robot.commands.TwistCommand;
 import frc.robot.commands.XDriveCommand;
 import frc.robot.io.DebugInput;
@@ -114,20 +116,22 @@ public class OperatorInterface
     subsystemManager.getDriveSubsystem()
         .setDefaultCommand(new DriveCommand(subsystemManager.getDriveSubsystem(), this));
 
-    xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.DRIVE_X)
-        .whileTrue(new XDriveCommand(subsystemManager.getDriveSubsystem()));
+    // xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.DRIVE_X)
+        // .whileTrue(new XDriveCommand(subsystemManager.getDriveSubsystem()));
 
     xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.RESET_ODOMETRY)
         .onTrue(new ResetOdometryCommand(odometry));
 
-    xboxController.a().onTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
+    xboxController.a().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
         RobotConstants.TURRET.TURRET_POSITION_PRESET_A_DEGREES));
 
-    xboxController.b().onTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
+    xboxController.b().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
         RobotConstants.TURRET.TURRET_POSITION_PRESET_B_DEGREES));
 
-    xboxController.y().onTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
+    xboxController.y().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
         RobotConstants.TURRET.TURRET_POSITION_PRESET_Y_DEGREES));
+
+    xboxController.x().whileTrue(new TransfreFoo(subsystemManager.getTransferSubsystem())).whileTrue(new RunShooterAtLiveSpeedCommand(subsystemManager.getShooterSubsystem()));
   }
 
   public void enableTriggers() {

@@ -26,8 +26,10 @@ public class TurretOutput extends SubsystemOutput {
           Logger.recordOutput("TurretOutput/isAtForwardLimitStall", isAtForwardLimitStall);
           Logger.recordOutput("TurretOutput/isAtReverseLimitStall", isAtReverseLimitStall);
           Logger.recordOutput("TurretOutput/isAtRequestedPosition", isAtRequestedPosition);
-      
-          turretMotor.log("TurretOutput/turretMotor");
+          
+          if (turretMotor != null) {
+            turretMotor.log("TurretOutput/turretMotor");
+          }
         }
       
         public boolean isMoving() {

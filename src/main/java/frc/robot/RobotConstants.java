@@ -24,7 +24,7 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.sensors.gyro.GyroSensor.GyroHardware;
 
 public final class RobotConstants {
-  public static final GyroHardware GYRO_HARDWARE = GyroHardware.ADIS16448;
+  public static final GyroHardware GYRO_HARDWARE = GyroHardware.NAVX3;
   public static final double TIME_PER_PERIODICAL_LOOP_SECONDS = 0.00;
 
   public static interface AccelerationFilter {
@@ -145,10 +145,10 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/SetSpeed", 0.0),
         Map.entry("IntakeSubsystem/SetSpeed", 0.0),
         Map.entry("TransferSubsystem/SetSpeed", 0.0),
-        Map.entry("TurretSubsystem/LowerLimitDegrees", -120.0),
-        Map.entry("TurretSubsystem/UpperLimitDegrees", 120.0),
-        Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -110.0),
-        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 110.0));
+        Map.entry("TurretSubsystem/LowerLimitDegrees", -90.0),
+        Map.entry("TurretSubsystem/UpperLimitDegrees", 15.0),
+        Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -85.0),
+        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 10.0));
   }
 
   public static interface PORTS {
@@ -171,15 +171,17 @@ public final class RobotConstants {
       public static final int REAR_LEFT_TURNING = 31;
       public static final int REAR_RIGHT_TURNING = 41;
 
-      public static final int SHOOTER_MOTOR_A = 51;
-      public static final int SHOOTER_MOTOR_B = 52;
+      public static final int SHOOTER_MOTOR_A = 55;
+      public static final int SHOOTER_MOTOR_B = 56;
 
-      public static final int INTAKE_MOTOR = 55;
+      public static final int INTAKE_MOTOR = 54;
 
       public static final int POWER_DISTRIBUTION_HUB = 1;
-      public static final int TURRET_MOTOR = 60;
-      public static final int HOOD_MOTOR = 53;
-      public static final int HOPPER_MOTOR = 54;
+      public static final int TURRET_MOTOR = 57;
+      public static final int HOOD_MOTOR = 52;
+      public static final int HOPPER_MOTOR = 60;
+      public static final int TRANSFER_MOTOR = 58;
+      public static final int CLIMB_MOTOR = 59;
     }
 
     public static interface CONTROLLER {
@@ -349,8 +351,8 @@ public final class RobotConstants {
     public static final double HOME_POSITION_DEGREES = 0.0; // position to reset to
     // preset manual positions (buttons will command these)
     public static final double TURRET_POSITION_PRESET_A_DEGREES = 0.0;
-    public static final double TURRET_POSITION_PRESET_B_DEGREES = -90.0;
-    public static final double TURRET_POSITION_PRESET_Y_DEGREES = 90;
+    public static final double TURRET_POSITION_PRESET_B_DEGREES = -5;
+    public static final double TURRET_POSITION_PRESET_Y_DEGREES = 5;
     // small adjustment step used by any incremental commands
     public static final double TURRET_ADJUST_STEP_DEGREES = 5.0;
 
