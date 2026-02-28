@@ -65,9 +65,7 @@ public final class RobotConstants {
         new Translation2d(-WHEEL_BASE_METERS / 2, -TRACK_WIDTH_METERS / 2));
 
     public static final boolean GYRO_REVERSED = false;
-    public static final boolean RATE_LIMITING = true;
-
-    public static final double SPEED_LIMIT = 0.2;
+    public static final boolean RATE_LIMITING = false;
   }
 
   public static interface SwerveModuleConstants {
@@ -120,7 +118,7 @@ public final class RobotConstants {
     public static final double DRIVING_MIN_OUTPUT_NORMALIZED = -1;
     public static final double DRIVING_MAX_OUTPUT_NORMALIZED = 1;
 
-    public static final double TURNING_P = 2.0;
+    public static final double TURNING_P = 1.5;
     // 1.0; // 1.0 might be a bit too much - reduce a bit if needed
     public static final double TURNING_I = 0;
     public static final double TURNING_D = 0;
@@ -131,7 +129,7 @@ public final class RobotConstants {
     public static final IdleMode DRIVING_MOTOR_IDLE_MODE = IdleMode.kBrake;
     public static final IdleMode TURNING_MOTOR_IDLE_MODE = IdleMode.kBrake;
 
-    public static final int DRIVING_MOTOR_CURRENT_LIMIT_AMPS = 80; // 50; // amps
+    public static final int DRIVING_MOTOR_CURRENT_LIMIT_AMPS = 160; // 50; // amps
     public static final int TURNING_MOTOR_CURRENT_LIMIT_AMPS = 40; // amps
 
     public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 2.285;

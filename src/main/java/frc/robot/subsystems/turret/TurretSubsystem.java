@@ -14,6 +14,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -30,7 +31,7 @@ import frc.robot.livetuning.LiveTuningHandler;
  */
 public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> {
 
-    private static final boolean ENABLED = false;
+    private static final boolean ENABLED = true;
 
     private SparkMax turretMotor;
     private SparkClosedLoopController turretPIDController;
@@ -45,6 +46,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         turretMotor = new SparkMax(RobotConstants.PORTS.CAN.TURRET_MOTOR, MotorType.kBrushless);
 
         turretConfig = new SparkMaxConfig();
+        turretConfig.idleMode(IdleMode.kBrake);
         // Make encoder report degrees directly (adjust if your encoder reports
         // rotations)
         turretConfig.encoder.positionConversionFactor(RobotConstants.TURRET.POSITION_CONVERSION_FACTOR_DEGREES);
@@ -57,8 +59,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
 
         // Apply conservative signals update rates similar to other subsystems
         turretConfig.signals
-                .primaryEncoderPositionAlwaysOn(true)
-                .primaryEncoderPositionPeriodMs((int) (1000.0 / 50.0));
+                .primaryEncoderPositionAlwaysOn(true);
 
         // Configure the motor with these settings
         turretMotor.configure(turretConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -96,7 +97,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         latestInput.setRequestedPosition(clamped);
 
         if (turretPIDController != null) {
-            turretPIDController.setSetpoint(clamped, ControlType.kPosition);
+            turretPIDController.setSetpoint(0.0, ControlType.kPosition);
         } else {
             // if closed-loop is not ready, seed encoder
             turretEncoder.setPosition(clamped);
