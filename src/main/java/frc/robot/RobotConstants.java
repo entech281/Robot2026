@@ -149,10 +149,6 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/SetSpeed", 0.0),
         Map.entry("IntakeSubsystem/SetSpeed", 0.0),
         Map.entry("TransferSubsystem/SetSpeed", 0.0),
-        Map.entry("TurretSubsystem/LowerLimitDegrees", -90.0),
-        Map.entry("TurretSubsystem/UpperLimitDegrees", 15.0),
-        Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -85.0),
-        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 10.0));
         Map.entry("TurretSubsystem/LowerLimitDegrees", -120.0),
         Map.entry("TurretSubsystem/UpperLimitDegrees", 120.0),
         Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -110.0),
