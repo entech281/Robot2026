@@ -28,7 +28,7 @@ import frc.robot.util.ShooterCalculator;
 import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
 
 public final class RobotConstants {
-  public static final GyroHardware GYRO_HARDWARE = GyroHardware.NAVX3;
+  public static final GyroHardware GYRO_HARDWARE = GyroHardware.ADIS16448;
   public static final double TIME_PER_PERIODICAL_LOOP_SECONDS = 0.00;
 
   public static interface AccelerationFilter {
@@ -226,18 +226,17 @@ public final class RobotConstants {
 
   public interface SCORE_OPERATOR_PANEL {
     public static interface BUTTONS {
-      <<<<<<<HEAD
       // TODO: make real
-      public static final int FIRE = 2;=======
+      public static final int FIRE = 2;
       // TODO: make real
-      public static final int AUTO_FIRE = -1;
-      public static final int INTAKE = -1;
-      public static final int OUTTAKE = -1;
-      public static final int DEPLOY_HOPPER = -1;
-      public static final int PRESET_1_FIRE = -1;
-      public static final int PRESET_2_FIRE = -1;
-      public static final int WON_AUTO_SWITCH = -1;
-      public static final int SNOWBLOW_FIRE = -1;>>>>>>>origin/main
+      public static final int AUTO_FIRE = 10;
+      public static final int INTAKE = 10;
+      public static final int OUTTAKE = 10;
+      public static final int DEPLOY_HOPPER = 10;
+      public static final int PRESET_1_FIRE = -10;
+      public static final int PRESET_2_FIRE = 10;
+      public static final int WON_AUTO_SWITCH = 10;
+      public static final int SNOWBLOW_FIRE = 10;
     }
 
     public static interface SWITCHES {

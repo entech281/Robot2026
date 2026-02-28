@@ -22,14 +22,14 @@ public class RunTransferCommand extends EntechCommand {
     @Override
     public void execute() {
         TransferInput in = new TransferInput();
-        in.setSpeed(-1.0);
+        in.setSpeed(-0.8);
         transfer.updateInputs(in);
     }
 
     @Override
     public void initialize() {
         TransferInput in = new TransferInput();
-        in.setSpeed(-1.0);
+        in.setSpeed(-0.8);
         transfer.updateInputs(in);
     }
 

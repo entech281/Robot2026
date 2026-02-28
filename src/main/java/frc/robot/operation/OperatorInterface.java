@@ -182,6 +182,9 @@ public class OperatorInterface
   }
 
   public void scoreOperatorBindings() {
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.FIRE)
+        .whileTrue(new ParallelCommandGroup(new RunTransferCommand(subsystemManager.getTransferSubsystem()),
+            new RunShooterAtLiveSpeedCommand(subsystemManager.getShooterSubsystem())));
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.AUTO_FIRE)
         .whileTrue(commandFactory.getFullShootCommand());
 

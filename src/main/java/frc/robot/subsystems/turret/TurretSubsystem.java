@@ -73,7 +73,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         stallDetector = MotorStallDetector.Builder.defaults();
 
         // seed desired position to current
-        turretPIDController.setSetpoint(turretEncoder.getPosition(), ControlType.kPosition);
+        turretPIDController.setSetpoint(0.0, ControlType.kPosition);
 
         reset();
     }
@@ -109,7 +109,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
                 clamped = turretEncoder.getPosition();
             }
         }
-        
+
         latestInput.setRequestedPosition(clamped);
 
         if (turretPIDController != null) {

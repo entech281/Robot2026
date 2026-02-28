@@ -112,6 +112,9 @@ public class CommandFactory {
     NamedCommands.registerCommand("example", Commands.deferredProxy(Commands::none));
 
     autoChooser = AutoBuilder.buildAutoChooser();
+
+    autoChooser.addOption("Something", Commands.none());
+
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
@@ -168,7 +171,7 @@ public class CommandFactory {
           characterizer.getInitialMeasurements();
         }),
         getSubsystemTestMessageCommand("Generating deltas."),
-        new WaitCommand(20),
+        new WaitCommand(120),
         getSubsystemTestMessageCommand("Calculating Results."),
         getSubsystemTestMessageCommand(() -> characterizer.updateAndCalculate()),
         new InstantCommand(() -> {
