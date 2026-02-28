@@ -179,7 +179,6 @@ public class OperatorInterface
 
   private ShiftState getShiftState() {
     ShiftStateTracker liveTracker = new ShiftStateTracker(
-        UserPolicy.getInstance().isAutoWon(),
         RobotConstants.LiveTuning.VALUES.get("ShiftStateTracker/WarningSeconds"));
     return liveTracker.getState(DriverStation.getMatchTime());
   }

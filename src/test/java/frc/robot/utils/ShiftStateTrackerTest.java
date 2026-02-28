@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import frc.robot.util.ShiftStateTracker;
+import frc.robot.util.ShiftStateTracker.ShiftState;
 
 class ShiftStateTrackerTest {
 
@@ -17,6 +18,13 @@ class ShiftStateTrackerTest {
             tracker.getState(134)
 
         );
+    }
+
+    @Test
+    void testIfWinner(){
+        ShiftStateTracker shift = new ShiftStateTracker(5);
+
+        assertEquals(ShiftStateTracker.ShiftState.YOUR_, shift);
     }
 
     @Test
