@@ -38,6 +38,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     private RelativeEncoder turretEncoder;
     private TurretInput latestInput = new TurretInput();
     private SparkMaxConfig turretConfig;
+    private MotorStallDetector stallDetector;
 
     @Override
     public void initialize() {
@@ -68,6 +69,8 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         turretEncoder.setPosition(RobotConstants.TURRET.INITIAL_POSITION_DEGREES);
 
         turretPIDController = turretMotor.getClosedLoopController();
+        // create a persistent stall detector once
+        stallDetector = MotorStallDetector.Builder.defaults();
 
         // seed desired position to current
         turretPIDController.setSetpoint(turretEncoder.getPosition(), ControlType.kPosition);
@@ -91,9 +94,22 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     private void setTurretPosition(double desiredAngle) {
         if (!ENABLED)
             return;
+
         // clamp to allowed range
         double clamped = Math.max(LiveTuningHandler.getInstance().getValue("TurretSubsystem/LowerLimitDegrees"),
                 Math.min(LiveTuningHandler.getInstance().getValue("TurretSubsystem/UpperLimitDegrees"), desiredAngle));
+
+        boolean isStalled = (stallDetector != null && stallDetector.isStalled(turretMotor));
+        if (isStalled && turretEncoder.getPosition() < 0) {
+            if (clamped < turretEncoder.getPosition()) {
+                clamped = turretEncoder.getPosition();
+            }
+        } else if (isStalled && turretEncoder.getPosition() > 0) {
+            if (clamped > turretEncoder.getPosition()) {
+                clamped = turretEncoder.getPosition();
+            }
+        }
+        
         latestInput.setRequestedPosition(clamped);
 
         if (turretPIDController != null) {
@@ -139,9 +155,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         double currentPos = turretEncoder.getPosition();
         double reqPos = latestInput.getRequestedPosition();
 
-        MotorStallDetector stallDetector = MotorStallDetector.Builder.defaults();
-
-        boolean isStalled = stallDetector.isStalled(turretMotor);
+        boolean isStalled = (stallDetector != null && stallDetector.isStalled(turretMotor));
 
         out.setIsStalled(isStalled);
 
@@ -191,6 +205,11 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     public void setSpeed(double speed) {
         if (!ENABLED)
             return;
+        // prevent driving if motor is stalled
+        if (stallDetector != null && stallDetector.isStalled(turretMotor)) {
+            turretMotor.set(0);
+            return;
+        }
 
         turretMotor.set(speed);
     }

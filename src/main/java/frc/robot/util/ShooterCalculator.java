@@ -148,6 +148,10 @@ public class ShooterCalculator {
                 this.shotVelocity = MetersPerSecond.of(0.0);
             }
 
+            public ShotData(Angle hoodAngle, AngularVelocity shotVelocity, Distance wheelRadius) {
+                this(hoodAngle, angularVelocityToLinearVelocity(shotVelocity, wheelRadius));
+            }
+
             public Angle getHoodAngle() {
                 return hoodAngle;
             }

@@ -8,6 +8,15 @@ import frc.entech.subsystems.SubsystemOutput;
 public class HopperOutput extends SubsystemOutput {
     private SparkOutput hopperMotorOutput;
     private boolean atLowerLimit = false;
+    private boolean isStalled = false;
+
+    public boolean isStalled() {
+        return isStalled;
+    }
+
+    public void setStalled(boolean isStalled) {
+        this.isStalled = isStalled;
+    }
 
     @Override
     protected void toLog() {
@@ -15,6 +24,7 @@ public class HopperOutput extends SubsystemOutput {
             hopperMotorOutput.log("HopperOutput/hopperMotor");
         }
         Logger.recordOutput("HopperOutput/atLowerLimit", atLowerLimit);
+        Logger.recordOutput("HopperOutput/isStalled", isStalled);
     }
 
     public SparkOutput getHopperMotorOutput() {

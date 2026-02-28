@@ -1,8 +1,12 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RPM;
 
 import java.io.IOException;
+import java.util.Optional;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import org.json.simple.parser.ParseException;
 import org.littletonrobotics.junction.Logger;
@@ -13,51 +17,43 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.entech.TestableHardwareI;
 import frc.entech.commands.AutonomousException;
 import frc.entech.commands.InstantAnytimeCommand;
-import frc.entech.subsystems.EntechSubsystem;
 import frc.robot.commands.GyroResetByAngleCommand;
 import frc.robot.commands.HomeTurretCommand;
 import frc.robot.commands.RotateToAngleCommand;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.ShootAtTargetCommand;
+import frc.robot.commands.ManualShootCommand;
+import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.RunShooterAtLiveSpeedCommand;
 import frc.robot.commands.RunTestCommand;
+import frc.robot.commands.ShootAtTargetCommand;
 import frc.robot.io.RobotIO;
 import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.livetuning.WheelDiameterCharacterizer;
-import frc.robot.operation.UserPolicy;
 import frc.robot.processors.OdometryProcessor;
 import frc.robot.sensors.gyro.GyroSensor;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.util.ShooterCalculator;
-
+import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
 import frc.robot.util.TurretCalculator;
-import java.util.Optional;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj2.command.Commands;
 
 @SuppressWarnings("unused")
 public class CommandFactory {
@@ -73,6 +69,9 @@ public class CommandFactory {
     this.gyroSubsystem = subsystemManager.getGyroSubsystem();
     this.odometry = odometry;
     this.subsystemManager = subsystemManager;
+    // subsystemManager.getShooterSubsystem()
+    // .setDefaultCommand(new
+    // RunShooterAtLiveSpeedCommand(subsystemManager.getShooterSubsystem()));
     RobotConfig config;
     try {
       config = RobotConfig.fromGUISettings();
@@ -169,7 +168,7 @@ public class CommandFactory {
           characterizer.getInitialMeasurements();
         }),
         getSubsystemTestMessageCommand("Generating deltas."),
-        new WaitCommand(120),
+        new WaitCommand(20),
         getSubsystemTestMessageCommand("Calculating Results."),
         getSubsystemTestMessageCommand(() -> characterizer.updateAndCalculate()),
         new InstantCommand(() -> {
@@ -202,6 +201,72 @@ public class CommandFactory {
 
   }
 
+  public Command getRotateForBumpCommand() {
+    return new RotateToAngleCommand(() -> {
+
+      double angle = RobotIO.getInstance().getGyroOutput().getYaw().in(Degrees);
+
+      angle = angle % 360;
+
+      if (angle >= 180.0) {
+        angle -= 360.0;
+      } else if (angle < -180.0) {
+        angle += 360.0;
+      }
+
+      if (angle >= 0 && angle < 90) {
+        return 45;
+      } else if (angle >= 90 && angle < 180) {
+        return 135;
+      } else if (angle < 0 && angle >= -90) {
+        return -45;
+      } else {
+        return -135;
+      }
+    });
+  }
+
+  public Command getSnowblowCommand() {
+    Pose3d target;
+
+    if (DriverStation.getAlliance().get() == Alliance.Red) {
+      target = RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
+    } else if (DriverStation.getAlliance().get() == Alliance.Blue) {
+      target = RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;
+    } else {
+      return Commands.none();
+    }
+
+    Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
+        .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
+
+    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(
+        RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target);
+    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(target.toPose2d(),
+        RobotIO.getInstance().getOdometryPose());
+
+    return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
+        subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
+        shooterCalculatorSupplier);
+
+  }
+
+  public Command getPresetShootCommand(ShotData preset) {
+    if (preset == RobotConstants.SHOOTER.SHOT_PRESET_ONE) {
+      return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
+          subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(),
+          Degrees.of(LiveTuningHandler.getInstance().getValue("TurretSubsystem/PresetOneDegrees")),
+          RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetOneRPM")),
+          Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")));
+    } else {
+      return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
+          subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(),
+          Degrees.of(LiveTuningHandler.getInstance().getValue("TurretSubsystem/PresetTwoDegrees")),
+          RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
+          Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")));
+    }
+  }
+
   private Command getSubsystemTestMessageCommand(String message) {
     return new InstantCommand(() -> {
       Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST, message);
@@ -211,25 +276,6 @@ public class CommandFactory {
   private Command getSubsystemTestMessageCommand(DoubleSupplier message) {
     return new InstantCommand(() -> {
       Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST, "" + (message.getAsDouble() * 2));
-    });
-  }
-
-  public Command getRotateForBumpCommand() {
-    return new RotateToAngleCommand(() -> {
-
-      double angle = RobotIO.getInstance().getGyroOutput().getYaw().in(Degrees);
-
-      angle = Math.abs(angle % 360);
-
-      if (angle >= 0 && angle < 90) {
-        return 45;
-      } else if (angle >= 90 && angle < 180) {
-        return 135;
-      } else if (angle >= 270 && angle <= 360) {
-        return -45;
-      } else {
-        return -135;
-      }
     });
   }
 }

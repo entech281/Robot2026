@@ -1,10 +1,11 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.RPM;
 
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
@@ -21,7 +22,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.sensors.gyro.GyroSensor.GyroHardware;
+import frc.robot.util.ShooterCalculator;
+import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
 
 public final class RobotConstants {
   public static final GyroHardware GYRO_HARDWARE = GyroHardware.NAVX3;
@@ -143,10 +147,17 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/SetSpeed", 0.0),
         Map.entry("IntakeSubsystem/SetSpeed", 0.0),
         Map.entry("TransferSubsystem/SetSpeed", 0.0),
-        Map.entry("TurretSubsystem/LowerLimitDegrees", -120.0),
-        Map.entry("TurretSubsystem/UpperLimitDegrees", 120.0),
-        Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -110.0),
-        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 110.0),
+        Map.entry("TurretSubsystem/LowerLimitDegrees", -45.0),
+        Map.entry("TurretSubsystem/UpperLimitDegrees", 45.0),
+        Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -40.0),
+        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 45.0),
+        Map.entry("TurretSubsystem/PresetOneDegrees", 0.0),
+        Map.entry("TurretSubsystem/PresetTwoDegrees", 0.0),
+        Map.entry("HoodSubsystem/PresetOneDegrees", 35.0),
+        Map.entry("HoodSubsystem/PresetTwoDegrees", 35.0),
+        Map.entry("ShooterSubsystem/PresetOneRPM", RobotConstants.SHOOTER.MAX_RPM),
+        Map.entry("ShooterSubsystem/PresetTwoRPM", RobotConstants.SHOOTER.MAX_RPM),
+        Map.entry("ShiftStateTracker/WarningSeconds", 5.0),
         Map.entry("TurretSubsystem/LiveAngle", 0.0));
   }
 
@@ -190,6 +201,7 @@ public final class RobotConstants {
       public static final int ALIGN_PANEL = 4;
       public static final int TEST_JOYSTICK = 2;
       public static final int TUNING_CONTROLLER = 3;
+      public static final int SHIFT_LIGHT_OUTPUT = 5;
 
       public static interface BUTTONS_JOYSTICK {
         public static final int TWIST = 1;
@@ -214,8 +226,18 @@ public final class RobotConstants {
 
   public interface SCORE_OPERATOR_PANEL {
     public static interface BUTTONS {
+      <<<<<<<HEAD
       // TODO: make real
-      public static final int FIRE = 2;
+      public static final int FIRE = 2;=======
+      // TODO: make real
+      public static final int AUTO_FIRE = -1;
+      public static final int INTAKE = -1;
+      public static final int OUTTAKE = -1;
+      public static final int DEPLOY_HOPPER = -1;
+      public static final int PRESET_1_FIRE = -1;
+      public static final int PRESET_2_FIRE = -1;
+      public static final int WON_AUTO_SWITCH = -1;
+      public static final int SNOWBLOW_FIRE = -1;>>>>>>>origin/main
     }
 
     public static interface SWITCHES {
@@ -350,14 +372,20 @@ public final class RobotConstants {
     public static final double HOME_POSITION_DEGREES = 0.0; // position to reset to
     // preset manual positions (buttons will command these)
     public static final double TURRET_POSITION_PRESET_A_DEGREES = 0.0;
-    public static final double TURRET_POSITION_PRESET_B_DEGREES = -90.0;
-    public static final double TURRET_POSITION_PRESET_Y_DEGREES = 90;
+    public static final double TURRET_POSITION_PRESET_B_DEGREES = -5;
+    public static final double TURRET_POSITION_PRESET_Y_DEGREES = 5;
     // small adjustment step used by any incremental commands
     public static final double TURRET_ADJUST_STEP_DEGREES = 5.0;
 
     public static final Pose3d BLUE_HUB_LOCATION = new Pose3d(Inches.of(182.11).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
     public static final Pose3d RED_HUB_LOCATION = new Pose3d(Inches.of(469.11).in(Meters),
+        Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
+
+    public static final Pose3d BLUE_SNOWBLOW_TARGET = new Pose3d(0.0,
+        Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
+
+    public static final Pose3d RED_SNOWBLOW_TARGET = new Pose3d(Inches.of(651).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
 
     public static final Translation2d TURRET_OFFSET = new Translation2d(-DrivetrainConstants.WHEEL_BASE_METERS / 2.0,
@@ -386,6 +414,18 @@ public final class RobotConstants {
     public static final Transform3d SHOT_TRANSFORM = new Transform3d(0, 0, 0, new Rotation3d());
     public static final double WHEEL_RADIUS_METERS = 0.048229115; // TODO: Idk my ai made this number
     public static final double MAX_RPM = 6000.0;
+    public static final ShotData SHOT_PRESET_ONE = new ShooterCalculator().new ShotDataRange().new ShotData(
+        Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")),
+        RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetOneRPM")),
+        Meters.of(WHEEL_RADIUS_METERS));
+    public static final ShotData SHOT_PRESET_TWO = new ShooterCalculator().new ShotDataRange().new ShotData(
+        Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")),
+        RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
+        Meters.of(WHEEL_RADIUS_METERS));
+  }
+
+  public static interface HOPPER {
+    public static final double DEPLOY_SPEED = -0.3; // Negative = downward, tune as needed
   }
 
   private RobotConstants() {
