@@ -197,6 +197,32 @@ public class CommandFactory {
 
   }
 
+
+    public Command getSnowblowCommand() {
+    Pose3d target;
+
+    if (DriverStation.getAlliance().get() == Alliance.Red) {
+      target = RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
+    } else if (DriverStation.getAlliance().get() == Alliance.Blue) {
+      target = RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;
+    } else {
+      return Commands.none();
+    }
+
+    Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
+        .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
+
+    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(
+        RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target);
+    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(target.toPose2d(),
+        RobotIO.getInstance().getOdometryPose());
+
+    return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
+        subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
+        shooterCalculatorSupplier);
+
+  }
+
   public Command getPresetShootCommand (ShotData preset) {
     if (preset == RobotConstants.SHOOTER.SHOT_PRESET_ONE) {
       return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), Degrees.of(LiveTuningHandler.getInstance().getValue("TurretSubsystem/PresetOneDegrees")), RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetOneRPM")), Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")));

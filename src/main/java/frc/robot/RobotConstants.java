@@ -234,6 +234,7 @@ public final class RobotConstants {
       public static final int PRESET_1_FIRE = -1;
       public static final int PRESET_2_FIRE = -1;
       public static final int WON_AUTO_SWITCH = -1;
+      public static final int SNOWBLOW_FIRE = -1;
     }
 
     public static interface SWITCHES {
@@ -378,6 +379,12 @@ public final class RobotConstants {
     public static final Pose3d BLUE_HUB_LOCATION = new Pose3d(Inches.of(182.11).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
     public static final Pose3d RED_HUB_LOCATION = new Pose3d(Inches.of(469.11).in(Meters),
+        Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
+
+    public static final Pose3d BLUE_SNOWBLOW_TARGET = new Pose3d(0.0,
+        Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
+
+    public static final Pose3d RED_SNOWBLOW_TARGET = new Pose3d(Inches.of(651).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
 
     public static final Translation2d TURRET_OFFSET = new Translation2d(-DrivetrainConstants.WHEEL_BASE_METERS / 2.0,

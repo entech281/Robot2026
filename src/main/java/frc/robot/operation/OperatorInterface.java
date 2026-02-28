@@ -177,6 +177,9 @@ public class OperatorInterface
   public void scoreOperatorBindings() {
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.AUTO_FIRE)
     .whileTrue(commandFactory.getFullShootCommand());
+
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.SNOWBLOW_FIRE)
+    .whileTrue(commandFactory.getSnowblowCommand());
     
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INTAKE)
     .whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), true));
