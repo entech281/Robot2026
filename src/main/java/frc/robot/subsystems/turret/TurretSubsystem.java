@@ -155,15 +155,17 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
             out.setAtForwardLimitStall(false);
         }
 
-        //TODO: soft limit utility class
+        // TODO: soft limit utility class
 
-        if (turretEncoder.getPosition() < LiveTuningHandler.getInstance().getValue("TurretSubsystem/SofterLowerLimitDegrees")) {
+        if (turretEncoder.getPosition() < LiveTuningHandler.getInstance()
+                .getValue("TurretSubsystem/SofterLowerLimitDegrees")) {
             out.setPastSofterLowerLimit(true);
         } else {
             out.setPastSofterLowerLimit(false);
         }
 
-        if (turretEncoder.getPosition() > LiveTuningHandler.getInstance().getValue("TurretSubsystem/SofterUpperLimitDegrees")) {
+        if (turretEncoder.getPosition() > LiveTuningHandler.getInstance()
+                .getValue("TurretSubsystem/SofterUpperLimitDegrees")) {
             out.setPastSofterUpperLimit(true);
         } else {
             out.setPastSofterUpperLimit(false);
@@ -179,7 +181,8 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         out.setAtRequestedPosition(
                 Math.abs(currentPos - reqPos) <= RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES);
 
-        out.setTurretMotor(SparkOutput.createOutput(turretMotor));
+        if (turretMotor != null)
+            out.setTurretMotor(SparkOutput.createOutput(turretMotor));
 
         return out;
     }

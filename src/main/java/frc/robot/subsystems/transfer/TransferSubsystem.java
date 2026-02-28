@@ -11,9 +11,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.subsystems.SparkOutput;
+import frc.robot.RobotConstants;
 
 public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOutput> {
-    private static final boolean ENABLED = false;
+    private static final boolean ENABLED = true;
     private static final boolean BRAKING = true;
 
     private double setSpeed = 0.0;
@@ -23,7 +24,7 @@ public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOu
     @Override
     public void initialize() {
         if (ENABLED) {
-            transferMotor = new SparkMax(9, MotorType.kBrushless);
+            transferMotor = new SparkMax(RobotConstants.PORTS.CAN.TRANSFER_MOTOR, MotorType.kBrushless);
 
             SparkMaxConfig config = new SparkMaxConfig();
 

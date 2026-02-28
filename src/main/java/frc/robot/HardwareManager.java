@@ -41,14 +41,14 @@ public class HardwareManager {
   public HardwareManager() {
     gyroSensor.initialize();
     driveSubsystem.initialize();
-    // shooterSubsystem.initialize();
+    shooterSubsystem.initialize();
     visionSensor.initialize();
-    // hoodSubsystem.initialize();
-    // turretSubsystem.initialize();
-    // hopperSubsystem.initialize();
-    // intakeSubsystem.initialize();
+    hoodSubsystem.initialize();
+    turretSubsystem.initialize();
+    hopperSubsystem.initialize();
+    intakeSubsystem.initialize();
     // climbSubsystem.initialize();
-    // transferSubsystem.initialize();
+    transferSubsystem.initialize();
     hallEffectSensor.initialize();
 
     periodic();
@@ -122,21 +122,21 @@ public class HardwareManager {
 
     outputs.updateGyro(gyroSensor.getOutputs());
 
-    // outputs.updateShooter(shooterSubsystem.getOutputs());
+    outputs.updateShooter(shooterSubsystem.getOutputs());
 
     outputs.updateVision(visionSensor.getOutputs());
 
     // outputs.updateClimb(climbSubsystem.getOutputs());
 
-    // outputs.updateHopper(hopperSubsystem.getOutputs());
+    outputs.updateHopper(hopperSubsystem.getOutputs());
 
-    // outputs.updateHood(hoodSubsystem.getOutputs());
+    outputs.updateHood(hoodSubsystem.getOutputs());
 
-    // outputs.updateIntake(intakeSubsystem.getOutputs());
+    outputs.updateIntake(intakeSubsystem.getOutputs());
 
-    // outputs.updateTransfer(transferSubsystem.getOutputs());
+    outputs.updateTransfer(transferSubsystem.getOutputs());
 
-    // outputs.updateTurret(turretSubsystem.getOutputs());
+    outputs.updateTurret(turretSubsystem.getOutputs());
 
     outputs.updateHallEffect(hallEffectSensor.getOutputs());
   }

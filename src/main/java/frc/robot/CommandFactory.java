@@ -70,8 +70,6 @@ public class CommandFactory {
     this.gyroSubsystem = subsystemManager.getGyroSubsystem();
     this.odometry = odometry;
     this.subsystemManager = subsystemManager;
-    subsystemManager.getShooterSubsystem()
-        .setDefaultCommand(new RunShooterAtLiveSpeedCommand(subsystemManager.getShooterSubsystem()));
     RobotConfig config;
     try {
       config = RobotConfig.fromGUISettings();
