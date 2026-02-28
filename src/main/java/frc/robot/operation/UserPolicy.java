@@ -8,11 +8,13 @@ public class UserPolicy {
   private boolean twistable = false;
   private boolean aligningToAngle = false;
   private double targetAngle = 0.0;
+  private boolean isAutoWon = false;
 
   private UserPolicy() {
     Logger.recordOutput("UserPolicy/twistable", twistable);
     Logger.recordOutput("UserPolicy/aligningToAngle", aligningToAngle);
     Logger.recordOutput("UserPolicy/targetAngle", targetAngle);
+    Logger.recordOutput("UserPolicy/isAutoWon", isAutoWon);
   }
 
   public static UserPolicy getInstance() {
@@ -44,5 +46,14 @@ public class UserPolicy {
   public void setTargetAngle(double targetAngle) {
     this.targetAngle = targetAngle;
     Logger.recordOutput("UserPolicy/targetAngle", targetAngle);
+  }
+
+public boolean isAutoWon() {
+    return this.isAutoWon;
+  }
+
+  public void setIsAutoWon(boolean isAutoWon) {
+    this.isAutoWon = isAutoWon;
+    Logger.recordOutput("UserPolicy/isAutoWon", isAutoWon);
   }
 }

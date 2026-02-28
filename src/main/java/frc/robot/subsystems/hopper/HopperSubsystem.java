@@ -1,5 +1,7 @@
 package frc.robot.subsystems.hopper;
 
+import java.lang.module.ModuleReader;
+
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkFlex;
@@ -13,7 +15,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.subsystems.SparkOutput;
+import frc.entech.util.stall.MotorStallDetector;
 import frc.robot.RobotConstants;
+import frc.robot.commands.DeployHopper;
 
 public class HopperSubsystem extends EntechSubsystem<HopperInput, HopperOutput> {
     private static final boolean ENABLED = false;
@@ -22,6 +26,7 @@ public class HopperSubsystem extends EntechSubsystem<HopperInput, HopperOutput> 
     private SparkFlex hopperMotor;
     private SparkLimitSwitch lowerLimitSwitch;
     private double setSpeed = 0.0;
+    private MotorStallDetector stallDetector;
 
     @Override
     public void initialize() {
@@ -38,6 +43,8 @@ public class HopperSubsystem extends EntechSubsystem<HopperInput, HopperOutput> 
             hopperMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
             lowerLimitSwitch = hopperMotor.getForwardLimitSwitch();
+
+            stallDetector = MotorStallDetector.Builder.defaults();
         }
     }
 
@@ -50,15 +57,22 @@ public class HopperSubsystem extends EntechSubsystem<HopperInput, HopperOutput> 
     public void updateInputs(HopperInput input) {
         if (ENABLED) {
             if (setSpeed != input.getSpeed()) {
-                hopperMotor.set(input.getSpeed());
-                setSpeed = input.getSpeed();
+                boolean isStalled = stallDetector != null && stallDetector.isStalled(hopperMotor);
+                
+                if (isStalled && input.getSpeed() > 0) {
+                    hopperMotor.set(0.0);
+                    setSpeed = 0.0;
+                } else {
+                    hopperMotor.set(input.getSpeed());
+                    setSpeed = input.getSpeed();
+                }
             }
         }
     }
 
     @Override
     public Command getTestCommand() {
-        return Commands.none();
+        return new DeployHopper(this);
     }
 
     @Override
@@ -68,6 +82,7 @@ public class HopperSubsystem extends EntechSubsystem<HopperInput, HopperOutput> 
         if (ENABLED) {
             output.setHopperMotorOutput(SparkOutput.createOutput(hopperMotor));
             output.setAtLowerLimit(lowerLimitSwitch.isPressed());
+            output.setStalled(stallDetector != null && stallDetector.isStalled(hopperMotor));
         }
 
         return output;
