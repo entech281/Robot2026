@@ -28,7 +28,7 @@ import frc.robot.util.ShooterCalculator;
 import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
 
 public final class RobotConstants {
-  public static final GyroHardware GYRO_HARDWARE = GyroHardware.ADIS16448;
+  public static final GyroHardware GYRO_HARDWARE = GyroHardware.NAVX3;
   public static final double TIME_PER_PERIODICAL_LOOP_SECONDS = 0.00;
 
   public static interface AccelerationFilter {
