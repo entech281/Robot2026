@@ -1,5 +1,7 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import java.io.IOException;
 
 import org.json.simple.parser.ParseException;
@@ -35,6 +37,7 @@ import frc.entech.commands.InstantAnytimeCommand;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.robot.commands.GyroResetByAngleCommand;
 import frc.robot.commands.HomeTurretCommand;
+import frc.robot.commands.RotateToAngleCommand;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.ShootAtTargetCommand;
 import frc.robot.commands.RunShooterAtLiveSpeedCommand;
@@ -208,6 +211,25 @@ public class CommandFactory {
   private Command getSubsystemTestMessageCommand(DoubleSupplier message) {
     return new InstantCommand(() -> {
       Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST, "" + (message.getAsDouble() * 2));
+    });
+  }
+
+  public Command getRotateForBumpCommand() {
+    return new RotateToAngleCommand(() -> {
+
+      double angle = RobotIO.getInstance().getGyroOutput().getYaw().in(Degrees);
+
+      angle = Math.abs(angle % 360);
+
+      if (angle >= 0 && angle < 90) {
+        return 45;
+      } else if (angle >= 90 && angle < 180) {
+        return 135;
+      } else if (angle >= 270 && angle <= 360) {
+        return -45;
+      } else {
+        return -135;
+      }
     });
   }
 }

@@ -146,7 +146,8 @@ public final class RobotConstants {
         Map.entry("TurretSubsystem/LowerLimitDegrees", -120.0),
         Map.entry("TurretSubsystem/UpperLimitDegrees", 120.0),
         Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -110.0),
-        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 110.0));
+        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 110.0),
+        Map.entry("TurretSubsystem/LiveAngle", 0.0));
   }
 
   public static interface PORTS {

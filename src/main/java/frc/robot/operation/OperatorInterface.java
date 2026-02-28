@@ -19,6 +19,7 @@ import frc.robot.CommandFactory;
 import frc.robot.RobotConstants;
 import frc.robot.HardwareManager;
 import frc.robot.Robot;
+import frc.robot.commands.AimTurretLiveCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.GyroReset;
@@ -131,6 +132,9 @@ public class OperatorInterface
 
     xboxController.y().onTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
         RobotConstants.TURRET.TURRET_POSITION_PRESET_Y_DEGREES));
+
+    xboxController.leftBumper().whileTrue(commandFactory.getRotateForBumpCommand());
+    xboxController.rightBumper().whileTrue(commandFactory.getRotateForBumpCommand());
   }
 
   public void enableTriggers() {
@@ -152,18 +156,25 @@ public class OperatorInterface
   public void alignOperatorBindings() {
 
     // TODO: Move to CommandFactory
-    Optional<Alliance> alliance = DriverStation.getAlliance();
-    if (alliance.isPresent()) {
-      if (alliance.get() == DriverStation.Alliance.Blue) {
-        subsystemManager.getTurretSubsystem().setDefaultCommand(new FaceTargetLocationTurretCommand(
-            subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.BLUE_HUB_LOCATION.toPose2d()));
-      } else if (alliance.get() == DriverStation.Alliance.Red) {
-        subsystemManager.getTurretSubsystem().setDefaultCommand(new FaceTargetLocationTurretCommand(
-            subsystemManager.getTurretSubsystem(), RobotConstants.TURRET.RED_HUB_LOCATION.toPose2d()));
-      }
-    } else {
-      DriverStation.reportWarning("Could not get alliance, TurretSubsystem not set to track by default", false);
-    }
+    // Optional<Alliance> alliance = DriverStation.getAlliance();
+    // if (alliance.isPresent()) {
+    // if (alliance.get() == DriverStation.Alliance.Blue) {
+    // subsystemManager.getTurretSubsystem().setDefaultCommand(new
+    // FaceTargetLocationTurretCommand(
+    // subsystemManager.getTurretSubsystem(),
+    // RobotConstants.TURRET.BLUE_HUB_LOCATION.toPose2d()));
+    // } else if (alliance.get() == DriverStation.Alliance.Red) {
+    // subsystemManager.getTurretSubsystem().setDefaultCommand(new
+    // FaceTargetLocationTurretCommand(
+    // subsystemManager.getTurretSubsystem(),
+    // RobotConstants.TURRET.RED_HUB_LOCATION.toPose2d()));
+    // }
+    // } else {
+    // DriverStation.reportWarning("Could not get alliance, TurretSubsystem not set
+    // to track by default", false);
+    // }
+    subsystemManager.getTurretSubsystem()
+        .setDefaultCommand(new AimTurretLiveCommand(subsystemManager.getTurretSubsystem()));
 
   }
 
