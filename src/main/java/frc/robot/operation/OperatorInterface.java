@@ -2,15 +2,12 @@ package frc.robot.operation;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -22,18 +19,20 @@ import frc.entech.operatorpanel.OutputJoystick.Color;
 import frc.entech.operatorpanel.OutputJoystick.LedNumber;
 import frc.robot.CommandFactory;
 import frc.robot.HardwareManager;
-import frc.robot.commands.DeployHopper;
 import frc.robot.RobotConstants;
+import frc.robot.commands.DeployHopper;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.DropHopper;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.GyroReset;
 import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.RunShooterAtLiveSpeedCommand;
+import frc.robot.commands.RunShooterCommand;
+import frc.robot.commands.RunTransferCommand;
 import frc.robot.commands.TransfreFoo;
 import frc.robot.commands.TwistCommand;
-import frc.robot.commands.XDriveCommand;
 import frc.robot.io.DebugInput;
 import frc.robot.io.DebugInputSupplier;
 import frc.robot.io.DriveInputSupplier;
@@ -94,8 +93,12 @@ public class OperatorInterface
   }
 
   public void enableTuningControllerBindings() {
-    tuningController.a().whileTrue(Commands.none());
-    tuningController.y().whileTrue(Commands.none());
+    tuningController.a().onTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
+    tuningController.b().onTrue(new RunTransferCommand(subsystemManager.getTransferSubsystem()));
+    tuningController.x().onTrue(new RunShooterCommand(subsystemManager.getShooterSubsystem()));
+    tuningController.y().onTrue(new DropHopper(subsystemManager.getHopperSubsystem()));
+
+    
   }
 
   public void configureBindings() {

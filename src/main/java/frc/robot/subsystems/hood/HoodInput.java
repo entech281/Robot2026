@@ -4,7 +4,6 @@ import org.littletonrobotics.junction.LogTable;
 
 import frc.entech.subsystems.SubsystemInput;
 import frc.robot.RobotConstants;
-
 public class HoodInput implements SubsystemInput {
   private boolean activate = true;
   private double requestedPosition = RobotConstants.HOOD.INITIAL_POSITION_DEGREES;
