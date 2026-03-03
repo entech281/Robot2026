@@ -233,7 +233,7 @@ public final class RobotConstants {
       public static final int INTAKE = 10;
       public static final int OUTTAKE = 10;
       public static final int DEPLOY_HOPPER = 10;
-      public static final int PRESET_1_FIRE = -10;
+      public static final int PRESET_1_FIRE = 10;
       public static final int PRESET_2_FIRE = 10;
       public static final int WON_AUTO_SWITCH = 10;
       public static final int SNOWBLOW_FIRE = 10;
@@ -371,8 +371,8 @@ public final class RobotConstants {
     public static final double HOME_POSITION_DEGREES = 0.0; // position to reset to
     // preset manual positions (buttons will command these)
     public static final double TURRET_POSITION_PRESET_A_DEGREES = 0.0;
-    public static final double TURRET_POSITION_PRESET_B_DEGREES = -5;
-    public static final double TURRET_POSITION_PRESET_Y_DEGREES = 5;
+    public static final double TURRET_POSITION_PRESET_B_DEGREES = -20;
+    public static final double TURRET_POSITION_PRESET_Y_DEGREES = 20;
     // small adjustment step used by any incremental commands
     public static final double TURRET_ADJUST_STEP_DEGREES = 5.0;
 

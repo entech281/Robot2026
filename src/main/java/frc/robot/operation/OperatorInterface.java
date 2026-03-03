@@ -238,8 +238,8 @@ public class OperatorInterface
     // DriverStation.reportWarning("Could not get alliance, TurretSubsystem not set
     // to track by default", false);
     // }
-    subsystemManager.getTurretSubsystem()
-        .setDefaultCommand(new AimTurretLiveCommand(subsystemManager.getTurretSubsystem()));
+    // subsystemManager.getTurretSubsystem()
+    //     .setDefaultCommand(new AimTurretLiveCommand(subsystemManager.getTurretSubsystem()));
 
   }
 
