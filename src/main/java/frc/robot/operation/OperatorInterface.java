@@ -29,6 +29,7 @@ import frc.robot.RobotConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.GyroReset;
+import frc.robot.commands.ManualHoodCommand;
 import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.RunIntakeCommand;
@@ -138,7 +139,8 @@ public class OperatorInterface
         .onTrue(new ResetOdometryCommand(odometry));
 
     xboxController.a().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
-        RobotConstants.TURRET.TURRET_POSITION_PRESET_A_DEGREES));
+        RobotConstants.TURRET.TURRET_POSITION_PRESET_A_DEGREES))
+        .whileTrue(new ManualHoodCommand(subsystemManager.getHoodSubsystem(), 1));
 
     xboxController.b().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
         RobotConstants.TURRET.TURRET_POSITION_PRESET_B_DEGREES));

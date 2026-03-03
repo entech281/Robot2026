@@ -16,7 +16,7 @@ import frc.entech.subsystems.SparkOutput;
 import frc.robot.RobotConstants;
 
 public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
-    private static final boolean ENABLED = false;
+    private static final boolean ENABLED = true;
 
     private SparkMax hoodMotor;
     private SparkClosedLoopController hoodPIDController;
