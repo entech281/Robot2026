@@ -34,7 +34,7 @@ public class ShiftStateTracker {
     private final double warningSeconds;
 
     public ShiftStateTracker(double warningSeconds) {
-        this.wonAuto = getFirstActiveAlliance();
+        this.wonAuto = areWeFirstAlliance();
         this.warningSeconds = warningSeconds;
     }
 
@@ -46,9 +46,8 @@ public class ShiftStateTracker {
 
 
   public static boolean areWeFirstAlliance() {
-    var alliance = getAlliance();
             // Return FMS value
-        boolean first = getFirstActiveAlliance();
+        boolean first = areWeFirst();
         String message = getGameSpecificMessage();
         if (message.length() > 0) {
             if (first) {
@@ -114,14 +113,14 @@ public class ShiftStateTracker {
         }
     }
 
-    private static boolean getFirstActiveAlliance() {
+    private static boolean areWeFirst() {
         String message = DriverStation.getGameSpecificMessage();
         if (message.length() > 0) {
             char character = message.charAt(0);
-            if (character == 'R') {
+            if ((character == 'R' && getAlliance().equals("Red")) || character == 'B' && getAlliance().equals("Blue")) {
                 return true;
             }
-            else if (character == 'B') {
+            else if ((character == 'R' && getAlliance().equals("Blue"))|| (character == 'B' && getAlliance().equals("Red"))) {
                 return false;
             }
         }
