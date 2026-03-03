@@ -113,7 +113,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         latestInput.setRequestedPosition(clamped);
 
         if (turretPIDController != null) {
-            turretPIDController.setSetpoint(0.0, ControlType.kPosition);
+            turretPIDController.setSetpoint(clamped, ControlType.kPosition);
         } else {
             // if closed-loop is not ready, seed encoder
             turretEncoder.setPosition(clamped);
