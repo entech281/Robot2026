@@ -10,6 +10,8 @@ import edu.wpi.first.units.measure.Angle;
 
 public class NavX3 implements GyroI {
     private Angle angleOffset = Angle.ofRelativeUnits(0.0, Degrees);
+    private Angle previousAngle = Angle.ofRelativeUnits(0.0, Degrees);
+    private Angle accumulativeAngle = Angle.ofRelativeUnits(0.0, Degrees);
     private final Navx gyro;
 
     public NavX3(int port) {
@@ -27,7 +29,7 @@ public class NavX3 implements GyroI {
 
         out.setPitch(gyro.getPitch());
         out.setRoll(gyro.getRoll());
-        out.setYaw(gyro.getYaw().minus(angleOffset));
+        out.setYaw(getAngle().minus(angleOffset));
         out.setYawRate(gyro.getAngularVel()[2]);
         out.setTemperature(gyro.getTemperature());
         out.setAngleAdjustment(angleOffset);
@@ -59,6 +61,24 @@ public class NavX3 implements GyroI {
     @Override
     public void reset() {
         gyro.resetYaw();
+    }
+
+    private Angle getAngle() {
+        Angle currentAngle = gyro.getYaw();
+
+        Angle deltaAngle = currentAngle.minus(previousAngle);
+
+        if (deltaAngle.in(Degrees) < -180.0) {
+            deltaAngle = deltaAngle.plus(Angle.ofRelativeUnits(360.0, Degrees));
+        } else if (deltaAngle.in(Degrees) > 180.0) {
+            deltaAngle = deltaAngle.minus(Angle.ofRelativeUnits(360.0, Degrees));
+        }
+
+        accumulativeAngle = accumulativeAngle.plus(deltaAngle);
+
+        previousAngle = currentAngle;
+
+        return accumulativeAngle;
     }
 
 }
