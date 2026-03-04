@@ -66,7 +66,6 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         turretMotor.configure(turretConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         turretEncoder = turretMotor.getEncoder();
-        turretEncoder.setPosition(RobotConstants.TURRET.INITIAL_POSITION_DEGREES);
 
         turretPIDController = turretMotor.getClosedLoopController();
         // create a persistent stall detector once
@@ -84,10 +83,10 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         // stop motor and reset desired speed and requests
         turretMotor.set(0);
         turretEncoder.setPosition(RobotConstants.TURRET.HOME_POSITION_DEGREES);
-        latestInput.setRequestedPosition(turretEncoder.getPosition());
+        latestInput.setRequestedPosition(0.0);
         // set closed-loop setpoint to current position
         if (turretPIDController != null) {
-            turretPIDController.setSetpoint(turretEncoder.getPosition(), ControlType.kPosition);
+            turretPIDController.setSetpoint(0.0, ControlType.kPosition);
         }
     }
 
@@ -112,12 +111,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
 
         latestInput.setRequestedPosition(clamped);
 
-        if (turretPIDController != null) {
-            turretPIDController.setSetpoint(clamped, ControlType.kPosition);
-        } else {
-            // if closed-loop is not ready, seed encoder
-            turretEncoder.setPosition(clamped);
-        }
+        turretPIDController.setSetpoint(clamped, ControlType.kPosition);
     }
 
     @Override

@@ -138,11 +138,14 @@ public class OperatorInterface
     xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.RESET_ODOMETRY)
         .onTrue(new ResetOdometryCommand(odometry));
 
-    xboxController.a().whileTrue(new ManualHoodCommand(subsystemManager.getHoodSubsystem(), 0));
+    xboxController.a().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
+        0));
 
-    xboxController.b().whileTrue(new ManualHoodCommand(subsystemManager.getHoodSubsystem(), 5));
+    xboxController.b().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
+        30));
 
-    xboxController.y().whileTrue(new ManualHoodCommand(subsystemManager.getHoodSubsystem(), 10));
+    xboxController.y().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
+        -30));
 
     xboxController.leftBumper().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
     xboxController.rightBumper().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
