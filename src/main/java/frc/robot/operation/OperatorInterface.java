@@ -139,14 +139,13 @@ public class OperatorInterface
         .onTrue(new ResetOdometryCommand(odometry));
 
     xboxController.a().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
-        RobotConstants.TURRET.TURRET_POSITION_PRESET_A_DEGREES))
-        .whileTrue(new ManualHoodCommand(subsystemManager.getHoodSubsystem(), 1));
+        0));
 
     xboxController.b().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
-        RobotConstants.TURRET.TURRET_POSITION_PRESET_B_DEGREES));
+        30));
 
     xboxController.y().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
-        RobotConstants.TURRET.TURRET_POSITION_PRESET_Y_DEGREES));
+        -30));
 
     xboxController.leftBumper().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
     xboxController.rightBumper().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
@@ -241,7 +240,8 @@ public class OperatorInterface
     // to track by default", false);
     // }
     // subsystemManager.getTurretSubsystem()
-    //     .setDefaultCommand(new AimTurretLiveCommand(subsystemManager.getTurretSubsystem()));
+    // .setDefaultCommand(new
+    // AimTurretLiveCommand(subsystemManager.getTurretSubsystem()));
 
   }
 
