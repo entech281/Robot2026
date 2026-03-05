@@ -86,9 +86,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         turretEncoder.setPosition(RobotConstants.TURRET.HOME_POSITION_DEGREES);
         latestInput.setRequestedPosition(turretEncoder.getPosition());
         // set closed-loop setpoint to current position
-        if (turretPIDController != null) {
-            turretPIDController.setSetpoint(turretEncoder.getPosition(), ControlType.kPosition);
-        }
+        turretPIDController.setSetpoint(turretEncoder.getPosition(), ControlType.kPosition);
     }
 
     private void setTurretPosition(double desiredAngle) {
@@ -110,14 +108,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
             }
         }
 
-        latestInput.setRequestedPosition(clamped);
-
-        if (turretPIDController != null) {
-            turretPIDController.setSetpoint(clamped, ControlType.kPosition);
-        } else {
-            // if closed-loop is not ready, seed encoder
-            turretEncoder.setPosition(clamped);
-        }
+        turretPIDController.setSetpoint(clamped, ControlType.kPosition);
     }
 
     @Override
@@ -125,9 +116,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         if (!ENABLED)
             return;
         double desiredPos = latestInput.getRequestedPosition();
-        if (turretPIDController != null) {
-            setTurretPosition(desiredPos);
-        }
+        setTurretPosition(desiredPos);
     }
 
     @Override
@@ -191,27 +180,11 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         out.setMoving(Math.abs(turretEncoder.getVelocity()) > 1e-3);
         out.setRequestedPosition(reqPos);
         out.setCurrentPosition(currentPos);
-        out.setAtForwardLimitStall(turretMotor.getForwardLimitSwitch().isPressed());
-        out.setAtReverseLimitStall(turretMotor.getReverseLimitSwitch().isPressed());
         out.setAtRequestedPosition(
                 Math.abs(currentPos - reqPos) <= RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES);
-
-        if (turretMotor != null)
             out.setTurretMotor(SparkOutput.createOutput(turretMotor));
 
         return out;
-    }
-
-    public void setSpeed(double speed) {
-        if (!ENABLED)
-            return;
-        // prevent driving if motor is stalled
-        if (stallDetector != null && stallDetector.isStalled(turretMotor)) {
-            turretMotor.set(0);
-            return;
-        }
-
-        turretMotor.set(speed);
     }
 
 }
