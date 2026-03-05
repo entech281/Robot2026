@@ -53,10 +53,10 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         turretConfig.encoder.positionConversionFactor(RobotConstants.TURRET.POSITION_CONVERSION_FACTOR_DEGREES);
 
         // Closed-loop PIDF
-        turretConfig.closedLoop
-                .pid(RobotConstants.TURRET.TURRET_POSITION_P, RobotConstants.TURRET.TURRET_POSITION_I,
-                        RobotConstants.TURRET.TURRET_POSITION_D, ClosedLoopSlot.kSlot0).feedForward
-                .kV(RobotConstants.TURRET.TURRET_POSITION_FF, ClosedLoopSlot.kSlot0);
+        // turretConfig.closedLoop
+        //         .pid(RobotConstants.TURRET.TURRET_POSITION_P, RobotConstants.TURRET.TURRET_POSITION_I,
+        //                 RobotConstants.TURRET.TURRET_POSITION_D, ClosedLoopSlot.kSlot0).feedForward
+        //         .kV(RobotConstants.TURRET.TURRET_POSITION_FF, ClosedLoopSlot.kSlot0);
 
         turretConfig.closedLoop
             .maxMotion
