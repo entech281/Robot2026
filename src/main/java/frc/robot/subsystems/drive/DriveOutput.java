@@ -58,14 +58,14 @@ public class DriveOutput extends SubsystemOutput {
 
     Logger.recordOutput("DriveOutput/timeStamps", timestamps);
 
-    frontLeftDrive.log("DriveOutput/frontLeft");
-    frontRightDrive.log("DriveOutput/frontRight");
-    rearLeftDrive.log("DriveOutput/rearLeft");
-    rearRightDrive.log("DriveOutput/rearRight");
-    frontRightTurn.log("DriveOutput/frontRightTurn");
-    rearLeftTurn.log("DriveOutput/rearLeftTurn");
-    rearRightTurn.log("DriveOutput/rearRightTurn");
-    frontLeftTurn.log("DriveOutput/frontLeftTurn");
+    // frontLeftDrive.log("DriveOutput/frontLeft");
+    // frontRightDrive.log("DriveOutput/frontRight");
+    // rearLeftDrive.log("DriveOutput/rearLeft");
+    // rearRightDrive.log("DriveOutput/rearRight");
+    // frontRightTurn.log("DriveOutput/frontRightTurn");
+    // rearLeftTurn.log("DriveOutput/rearLeftTurn");
+    // rearRightTurn.log("DriveOutput/rearRightTurn");
+    // frontLeftTurn.log("DriveOutput/frontLeftTurn");
   }
 
   public SwerveModulePosition[] getModulePositions() {

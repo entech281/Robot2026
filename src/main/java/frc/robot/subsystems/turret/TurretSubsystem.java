@@ -58,6 +58,12 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
                         RobotConstants.TURRET.TURRET_POSITION_D, ClosedLoopSlot.kSlot0).feedForward
                 .kV(RobotConstants.TURRET.TURRET_POSITION_FF, ClosedLoopSlot.kSlot0);
 
+        turretConfig.closedLoop
+            .maxMotion
+            .cruiseVelocity(RobotConstants.TURRET.TURRET_CRUISE_VELOCITY_RPM)
+            .maxAcceleration(RobotConstants.TURRET.TURRET_MAX_ACCELERATION_RPM_PER_SECOND)
+            .allowedProfileError(RobotConstants.TURRET.TURRET_ALLOWED_PROFILE_ERROR_ROTATIONS);
+
         // Apply conservative signals update rates similar to other subsystems
         turretConfig.signals
                 .primaryEncoderPositionAlwaysOn(true);
@@ -72,7 +78,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         stallDetector = MotorStallDetector.Builder.defaults();
 
         // seed desired position to current
-        turretPIDController.setSetpoint(0.0, ControlType.kPosition);
+        turretPIDController.setSetpoint(turretEncoder.getPosition(), ControlType.kMAXMotionPositionControl);
 
         reset();
     }
@@ -85,7 +91,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         turretEncoder.setPosition(RobotConstants.TURRET.HOME_POSITION_DEGREES);
         latestInput.setRequestedPosition(0.0);
         // set closed-loop setpoint to current position
-        turretPIDController.setSetpoint(turretEncoder.getPosition(), ControlType.kPosition);
+        turretPIDController.setSetpoint(turretEncoder.getPosition(), ControlType.kMAXMotionPositionControl);
     }
 
     private void setTurretPosition(double desiredAngle) {
@@ -107,7 +113,9 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
             }
         }
 
-        turretPIDController.setSetpoint(clamped, ControlType.kPosition);
+        if (turretPIDController != null) {
+            turretPIDController.setSetpoint(clamped, ControlType.kMAXMotionPositionControl);
+        }
     }
 
     @Override
