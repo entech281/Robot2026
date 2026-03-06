@@ -20,12 +20,6 @@ class ShiftStateTrackerTest {
         );
     }
 
-    @Test
-    void testIfWinner(){
-        ShiftStateTracker shift = new ShiftStateTracker(5);
-
-        assertEquals(ShiftStateTracker.ShiftState.YOUR_, shift);
-    }
 
     @Test
     void testWinnerShiftActive() {

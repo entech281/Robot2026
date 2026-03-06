@@ -162,19 +162,23 @@ public class OperatorInterface
     // No yellow on OutputJoystick so warning states use FAST blink instead
     new Trigger(() -> getShiftState() == ShiftState.YOUR_SHIFT)
         .onTrue(new InstantCommand(() ->
-            shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, BlinkRate.SOLID)));
+          DriverStation.reportWarning("Green Solid", false)));
+            // shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, BlinkRate.SOLID)));
 
     new Trigger(() -> getShiftState() == ShiftState.SHIFT_ENDING)
         .onTrue(new InstantCommand(() ->
-            shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, BlinkRate.FAST)));
+          DriverStation.reportWarning("Green Blinking", false)));
+            // shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, BlinkRate.FAST)));
 
     new Trigger(() -> getShiftState() == ShiftState.THEIR_SHIFT)
         .onTrue(new InstantCommand(() ->
-            shiftLightOutput.setLED(LedNumber.k0, Color.RED, BlinkRate.SOLID)));
+          DriverStation.reportWarning("Red Solid", false)));
+            // shiftLightOutput.setLED(LedNumber.k0, Color.RED, BlinkRate.SOLID)));
 
     new Trigger(() -> getShiftState() == ShiftState.SHIFT_STARTING)
         .onTrue(new InstantCommand(() ->
-            shiftLightOutput.setLED(LedNumber.k0, Color.RED, BlinkRate.FAST)));
+          DriverStation.reportWarning("Red Blinking", false)));
+            // shiftLightOutput.setLED(LedNumber.k0, Color.RED, BlinkRate.FAST)));
   }
 
   private ShiftState getShiftState() {
