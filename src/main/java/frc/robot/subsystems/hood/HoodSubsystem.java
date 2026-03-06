@@ -117,7 +117,7 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
 
         if (Math.abs(hoodEncoder.getPosition()
                 - latestInput.getRequestedPosition()) > RobotConstants.HOOD.HOOD_POSITION_TOLERANCE_DEGREES) {
-            hoodPIDController.setSetpoint(clamped, ControlType.kMAXMotionPositionControl);
+            hoodPIDController.setSetpoint(desiredAngle, ControlType.kMAXMotionPositionControl);
         } else {
             hoodMotor.set(0.0);
         }

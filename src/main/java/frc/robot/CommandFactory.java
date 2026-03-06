@@ -1,5 +1,6 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RPM;
 
@@ -229,24 +230,22 @@ public class CommandFactory {
     });
   }
 
-  public Command getSnowblowCommand() {
-    Pose3d target;
-
+  private Pose3d getSnowblowTarget() {
     if (DriverStation.getAlliance().get() == Alliance.Red) {
-      target = RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
-    } else if (DriverStation.getAlliance().get() == Alliance.Blue) {
-      target = RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;
+      return RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
     } else {
-      return Commands.none();
+      return RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;
     }
+  }
+
+  public Command getSnowblowCommand() {
 
     Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
         .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
 
-    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(
-        RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target);
-    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(target.toPose2d(),
-        RobotIO.getInstance().getOdometryPose());
+    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, getSnowblowTarget());
+    
+    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(getSnowblowTarget().toPose2d(), RobotIO.getInstance().getOdometryPose());
 
     return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
         subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
@@ -268,6 +267,10 @@ public class CommandFactory {
           RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
           Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")));
     }
+  }
+
+  public Command getStopShootingCommand() {
+    return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), Degrees.of(0.0), RPM.of(0.0), Degree.of(0.0));
   }
 
   private Command getSubsystemTestMessageCommand(String message) {

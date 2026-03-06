@@ -30,6 +30,7 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.GyroReset;
 import frc.robot.commands.ManualHoodCommand;
+import frc.robot.commands.ManualShootCommand;
 import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.RunIntakeCommand;
@@ -203,9 +204,11 @@ public class OperatorInterface
         .onFalse(new DeployHopper(subsystemManager.getHopperSubsystem(), false));
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.PRESET_1_FIRE)
-        .whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_ONE));
+        .whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_ONE))
+        .onFalse(commandFactory.getStopShootingCommand());
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.PRESET_2_FIRE)
-        .whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_TWO));
+        .whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_TWO))
+        .onFalse(commandFactory.getStopShootingCommand());
 
     // Latching toggle switch — pressed down = won auto, released = did not win auto
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.WON_AUTO_SWITCH)
