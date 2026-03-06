@@ -1,5 +1,6 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RPM;
 
@@ -268,6 +269,10 @@ public class CommandFactory {
           RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
           Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")));
     }
+  }
+
+  public Command getStopShootingCommand() {
+    return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), Degrees.of(0.0), RPM.of(0.0), Degree.of(0.0));
   }
 
   private Command getSubsystemTestMessageCommand(String message) {
