@@ -11,6 +11,7 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.REVLibError;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -54,18 +55,22 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         // Make encoder report degrees directly (adjust if your encoder reports
         // rotations)
         turretConfig.encoder.positionConversionFactor(RobotConstants.TURRET.POSITION_CONVERSION_FACTOR_DEGREES);
-
-        // turretConfig.closedLoop
-        //     .maxMotion
-        //     .cruiseVelocity(RobotConstants.TURRET.TURRET_CRUISE_VELOCITY_RPM, ClosedLoopSlot.kSlot0)
-        //     .maxAcceleration(RobotConstants.TURRET.TURRET_MAX_ACCELERATION_RPM_PER_SECOND, ClosedLoopSlot.kSlot0)
-        //     .allowedProfileError(RobotConstants.TURRET.TURRET_ALLOWED_PROFILE_ERROR_ROTATIONS, ClosedLoopSlot.kSlot0);
-
-                // Closed-loop PIDF
+        
+        // Closed-loop PIDF
         turretConfig.closedLoop
                 .pid(RobotConstants.TURRET.TURRET_POSITION_P, RobotConstants.TURRET.TURRET_POSITION_I,
-                        RobotConstants.TURRET.TURRET_POSITION_D, ClosedLoopSlot.kSlot0).feedForward
+                        RobotConstants.TURRET.TURRET_POSITION_D, ClosedLoopSlot.kSlot0)
+                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                .feedForward
                 .kV(RobotConstants.TURRET.TURRET_POSITION_FF, ClosedLoopSlot.kSlot0);
+        
+        turretConfig.closedLoop
+            .maxMotion
+            .cruiseVelocity(RobotConstants.TURRET.TURRET_CRUISE_VELOCITY_RPM, ClosedLoopSlot.kSlot0)
+            .maxAcceleration(RobotConstants.TURRET.TURRET_MAX_ACCELERATION_RPM_PER_SECOND, ClosedLoopSlot.kSlot0)
+            .allowedProfileError(RobotConstants.TURRET.TURRET_ALLOWED_PROFILE_ERROR_ROTATIONS, ClosedLoopSlot.kSlot0);
+
+
 
         // Apply conservative signals update rates similar to other subsystems
         turretConfig.signals
@@ -81,7 +86,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         stallDetector = MotorStallDetector.Builder.defaults();
 
         // seed desired position to current
-        turretPIDController.setSetpoint(0.0, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+        turretPIDController.setSetpoint(0.0, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0);
 
         reset();
     }
@@ -94,7 +99,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         turretEncoder.setPosition(RobotConstants.TURRET.HOME_POSITION_DEGREES);
         latestInput.setRequestedPosition(0.0);
         // set closed-loop setpoint to current position
-        turretPIDController.setSetpoint(0.0, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+        turretPIDController.setSetpoint(0.0, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0);
     }
 
     private void setTurretPosition(double desiredAngle) {
@@ -116,7 +121,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
             }
         }
 
-        turretPIDController.setSetpoint(desiredAngle, ControlType.kPosition, ClosedLoopSlot.kSlot0);        
+        turretPIDController.setSetpoint(desiredAngle, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0);        
     }
 
     @Override

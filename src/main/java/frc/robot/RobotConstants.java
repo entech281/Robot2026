@@ -366,7 +366,7 @@ public final class RobotConstants {
     public static final double TURRET_POSITION_FF = 0.0;
     public static final double TURRET_CRUISE_VELOCITY_RPM = 100.0; // max velocity for motion magic
     public static final double TURRET_MAX_ACCELERATION_RPM_PER_SECOND = 100.0; // max acceleration for motion magic
-    public static final double TURRET_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.1; // allowable error for motion magic
+    public static final double TURRET_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5; // allowable error for motion magic
     public static final double TURRET_POSITION_TOLERANCE_DEGREES = 1.0; // considered at setpoint within this
     public static final double HOME_POSITION_DEGREES = 0.0; // position to reset to
     // preset manual positions (buttons will command these)
