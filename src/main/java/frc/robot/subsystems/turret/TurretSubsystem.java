@@ -92,7 +92,6 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         // stop motor and reset desired speed and requests
         turretMotor.set(0);
         turretEncoder.setPosition(RobotConstants.TURRET.HOME_POSITION_DEGREES);
-        latestInput.setRequestedPosition(0.0);
         // set closed-loop setpoint to current position
         turretPIDController.setSetpoint(0.0, ControlType.kPosition, ClosedLoopSlot.kSlot0);
     }

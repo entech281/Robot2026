@@ -221,6 +221,8 @@ public final class RobotConstants {
 
     public static interface DIO {
       public static final int HALL_EFFECT_SENSOR = 0;
+      //TODO: make real
+      public static final int TURRET_HOME_SWITCH = 1;
     }
   }
 
