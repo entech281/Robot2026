@@ -5,7 +5,10 @@
  */
 package frc.robot.subsystems.turret;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.PersistMode;
+import com.revrobotics.REVLibError;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -52,17 +55,17 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         // rotations)
         turretConfig.encoder.positionConversionFactor(RobotConstants.TURRET.POSITION_CONVERSION_FACTOR_DEGREES);
 
-        // Closed-loop PIDF
-        // turretConfig.closedLoop
-        //         .pid(RobotConstants.TURRET.TURRET_POSITION_P, RobotConstants.TURRET.TURRET_POSITION_I,
-        //                 RobotConstants.TURRET.TURRET_POSITION_D, ClosedLoopSlot.kSlot0).feedForward
-        //         .kV(RobotConstants.TURRET.TURRET_POSITION_FF, ClosedLoopSlot.kSlot0);
-
         turretConfig.closedLoop
             .maxMotion
-            .cruiseVelocity(RobotConstants.TURRET.TURRET_CRUISE_VELOCITY_RPM)
-            .maxAcceleration(RobotConstants.TURRET.TURRET_MAX_ACCELERATION_RPM_PER_SECOND)
-            .allowedProfileError(RobotConstants.TURRET.TURRET_ALLOWED_PROFILE_ERROR_ROTATIONS);
+            .cruiseVelocity(RobotConstants.TURRET.TURRET_CRUISE_VELOCITY_RPM, ClosedLoopSlot.kSlot0)
+            .maxAcceleration(RobotConstants.TURRET.TURRET_MAX_ACCELERATION_RPM_PER_SECOND, ClosedLoopSlot.kSlot0)
+            .allowedProfileError(RobotConstants.TURRET.TURRET_ALLOWED_PROFILE_ERROR_ROTATIONS, ClosedLoopSlot.kSlot0);
+
+                // Closed-loop PIDF
+        turretConfig.closedLoop
+                .pid(RobotConstants.TURRET.TURRET_POSITION_P, RobotConstants.TURRET.TURRET_POSITION_I,
+                        RobotConstants.TURRET.TURRET_POSITION_D, ClosedLoopSlot.kSlot0).feedForward
+                .kV(RobotConstants.TURRET.TURRET_POSITION_FF, ClosedLoopSlot.kSlot0);
 
         // Apply conservative signals update rates similar to other subsystems
         turretConfig.signals
@@ -78,7 +81,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         stallDetector = MotorStallDetector.Builder.defaults();
 
         // seed desired position to current
-        turretPIDController.setSetpoint(turretEncoder.getPosition(), ControlType.kMAXMotionPositionControl);
+        turretPIDController.setSetpoint(0.0, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0);
 
         reset();
     }
@@ -91,7 +94,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         turretEncoder.setPosition(RobotConstants.TURRET.HOME_POSITION_DEGREES);
         latestInput.setRequestedPosition(0.0);
         // set closed-loop setpoint to current position
-        turretPIDController.setSetpoint(turretEncoder.getPosition(), ControlType.kMAXMotionPositionControl);
+        turretPIDController.setSetpoint(0.0, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0);
     }
 
     private void setTurretPosition(double desiredAngle) {
@@ -99,23 +102,21 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
             return;
 
         // clamp to allowed range
-        double clamped = Math.max(LiveTuningHandler.getInstance().getValue("TurretSubsystem/LowerLimitDegrees"),
-                Math.min(LiveTuningHandler.getInstance().getValue("TurretSubsystem/UpperLimitDegrees"), desiredAngle));
+        // double clamped = Math.max(LiveTuningHandler.getInstance().getValue("TurretSubsystem/LowerLimitDegrees"),
+        //         Math.min(LiveTuningHandler.getInstance().getValue("TurretSubsystem/UpperLimitDegrees"), desiredAngle));
 
-        boolean isStalled = (stallDetector != null && stallDetector.isStalled(turretMotor));
-        if (isStalled && turretEncoder.getPosition() < 0) {
-            if (clamped < turretEncoder.getPosition()) {
-                clamped = turretEncoder.getPosition();
-            }
-        } else if (isStalled && turretEncoder.getPosition() > 0) {
-            if (clamped > turretEncoder.getPosition()) {
-                clamped = turretEncoder.getPosition();
-            }
-        }
+        // boolean isStalled = (stallDetector != null && stallDetector.isStalled(turretMotor));
+        // if (isStalled && turretEncoder.getPosition() < 0) {
+        //     if (clamped < turretEncoder.getPosition()) {
+        //         clamped = turretEncoder.getPosition();
+        //     }
+        // } else if (isStalled && turretEncoder.getPosition() > 0) {
+        //     if (clamped > turretEncoder.getPosition()) {
+        //         clamped = turretEncoder.getPosition();
+        //     }
+        // }
 
-        if (turretPIDController != null) {
-            turretPIDController.setSetpoint(clamped, ControlType.kMAXMotionPositionControl);
-        }
+        turretPIDController.setSetpoint(desiredAngle, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0);        
     }
 
     @Override
