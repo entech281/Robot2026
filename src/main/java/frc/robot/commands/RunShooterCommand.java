@@ -10,6 +10,7 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 public class RunShooterCommand extends EntechCommand {
     private final ShooterSubsystem shooter;
     private boolean direction;
+    private final String KEY = "ShooterSubsystem/SetSpeed";
 
     public RunShooterCommand(ShooterSubsystem shooter) {
         this(shooter, true);
@@ -35,8 +36,8 @@ public class RunShooterCommand extends EntechCommand {
     public void execute() {
         ShooterInput input = new ShooterInput();
         
-        double postiveSpeed = LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed");
-        double negativeSpeed = -LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed");  
+        double postiveSpeed = LiveTuningHandler.getInstance().getValue(KEY);
+        double negativeSpeed = -LiveTuningHandler.getInstance().getValue(KEY);  
         if (direction) {
             input.setSpeed(postiveSpeed);
         } else {
@@ -54,8 +55,8 @@ public class RunShooterCommand extends EntechCommand {
     @Override
     public void initialize() {
         ShooterInput input = new ShooterInput();
-        double postiveSpeed = LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed");
-        double negativeSpeed = -LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed");  
+        double postiveSpeed = LiveTuningHandler.getInstance().getValue(KEY);
+        double negativeSpeed = -LiveTuningHandler.getInstance().getValue(KEY);  
         if (direction) {
 
             input.setSpeed(postiveSpeed);
