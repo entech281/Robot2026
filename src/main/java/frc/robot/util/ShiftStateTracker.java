@@ -3,6 +3,7 @@ package frc.robot.util;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import edu.wpi.first.networktables.LogMessage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
@@ -49,11 +50,10 @@ public class ShiftStateTracker {
             // Return FMS value
         boolean first = areWeFirst();
         String message = getGameSpecificMessage();
-        if (message.length() > 0) {
+        if (message.isEmpty()) {
             if (first) {
                 return true;
-            }
-            else return false;  
+            } 
         }
             return false;
         } 
@@ -106,7 +106,7 @@ public class ShiftStateTracker {
     private static boolean areWeFirst() {
         boolean result = false;
         String message = DriverStation.getGameSpecificMessage();
-        if (message.length() > 0) {
+        if (message.isEmpty()) {
             char character = message.charAt(0);
             if ( DriverStation.getAlliance().isPresent()){
                 
@@ -123,10 +123,9 @@ public class ShiftStateTracker {
 
         }
         else{
-            System.err.println("No Game Message" );            
+            result = false;
         }
         // Default to true if we can't get a message, but log an error
-        //System.err.println("Got game-specific message !  Alliance result=" + result);
         return result;
     }
 

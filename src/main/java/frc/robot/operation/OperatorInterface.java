@@ -87,11 +87,11 @@ public class OperatorInterface
       enableTuningControllerBindings();
     }
 
-   //if (DriverControllerUtils
-   //     .controllerIsPresent(RobotConstants.PORTS.CONTROLLER.SHIFT_LIGHT_OUTPUT)) {
+   if (DriverControllerUtils
+       .controllerIsPresent(RobotConstants.PORTS.CONTROLLER.SHIFT_LIGHT_OUTPUT)) {
       shiftLightOutput = new OutputJoystick(RobotConstants.PORTS.CONTROLLER.SHIFT_LIGHT_OUTPUT);
       enableOperatorOutputBindings();
-   // }
+   }
 
      
     enableTriggers();
