@@ -92,7 +92,7 @@ public class CommandFactory {
     Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST, "No Current Test");
     SmartDashboard.putData("Test Chooser", testChooser);
     Shuffleboard.getTab("stuffs").add("Run Test", new RunTestCommand(testChooser));
-    Shuffleboard.getTab("stuffs").add("Home Turret", new HomeTurretCommand(subsystemManager.getTurretSubsystem()));
+    Shuffleboard.getTab("stuffs").add("Home Turret", new HomeTurretCommand(subsystemManager.getTurretSubsystem(), subsystemManager.getTurretHomeSwitch()));
 
     AutoBuilder.configure(odometry::getEstimatedPose,
         odometry::resetOdometry,

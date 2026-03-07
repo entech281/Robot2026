@@ -1,15 +1,18 @@
 package frc.robot.commands;
 
 import frc.entech.commands.EntechCommand;
+import frc.robot.sensors.TurretHomeSwitch.TurretHomeSwitch;
 import frc.robot.subsystems.turret.TurretSubsystem;
 
 public class HomeTurretCommand extends EntechCommand{
 
     TurretSubsystem turretSS;
-    //TODO: implement this entire command with manual home switch
-    public HomeTurretCommand (TurretSubsystem turretSubsystem) {
+    TurretHomeSwitch homeSwitch;
+    
+    public HomeTurretCommand (TurretSubsystem turretSubsystem, TurretHomeSwitch homeSwitch) {
         super(turretSubsystem);
         this.turretSS = turretSubsystem;
+        this.homeSwitch = homeSwitch;
     }
 
     @Override
@@ -18,17 +21,9 @@ public class HomeTurretCommand extends EntechCommand{
     }
 
     @Override
-    public void execute() {
-
+    public boolean isFinished() {
+        return homeSwitch.getOutputs().isPressed();
     }
-
-    @Override
-    public void initialize() {
-        
-    }
-
-    @Override
-    public boolean isFinished() {return false;}
 
     
 
