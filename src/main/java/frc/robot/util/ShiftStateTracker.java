@@ -58,8 +58,7 @@ public class ShiftStateTracker {
             return false;
         } 
     
-        public ShiftState getState(double matchTime) {
-            System.out.println("matchTime=" + matchTime);            
+        public ShiftState getState(double matchTime) {  
             if (matchTime > TELEOP_START || matchTime < 0.0) {
                 return ShiftState.YOUR_SHIFT;
             }
@@ -103,19 +102,6 @@ public class ShiftStateTracker {
                 ? ShiftState.SHIFT_STARTING
                 : ShiftState.THEIR_SHIFT;
         }
-    
-    // public static String getAlliance(){
-    //     if ( DriverStation.getAlliance().isPresent()){
-
-    //     }
-    //     if (DriverStation.getAlliance().equals(Alliance.Red)) {
-    //         return "Red";
-    //     } else if (DriverStation.getAlliance().equals(Alliance.Blue)) {
-    //         return "Blue";
-    //     } else {
-    //         return "Invalid Alliance";
-    //     }
-    // }
 
     private static boolean areWeFirst() {
         boolean result = false;
@@ -140,7 +126,7 @@ public class ShiftStateTracker {
             System.err.println("No Game Message" );            
         }
         // Default to true if we can't get a message, but log an error
-        System.err.println("Got game-specific message !  Alliance result=" + result);
+        //System.err.println("Got game-specific message !  Alliance result=" + result);
         return result;
     }
 
