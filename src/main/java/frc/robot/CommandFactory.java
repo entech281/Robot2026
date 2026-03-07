@@ -183,9 +183,11 @@ public class CommandFactory {
   public Command getFullShootCommand() {
     Pose3d target;
 
-    if (DriverStation.getAlliance().get() == Alliance.Red) {
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+
+    if (alliance.isPresent() && alliance.get() == Alliance.Red) {
       target = RobotConstants.TURRET.RED_HUB_LOCATION;
-    } else if (DriverStation.getAlliance().get() == Alliance.Blue) {
+    } else if (alliance.isPresent() && alliance.get() == Alliance.Blue) {
       target = RobotConstants.TURRET.BLUE_HUB_LOCATION;
     } else {
       return Commands.none();
@@ -231,7 +233,8 @@ public class CommandFactory {
   }
 
   private Pose3d getSnowblowTarget() {
-    if (DriverStation.getAlliance().get() == Alliance.Red) {
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+    if (alliance.isPresent() && alliance.get() == Alliance.Red) {
       return RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
     } else {
       return RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;

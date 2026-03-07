@@ -5,10 +5,7 @@
  */
 package frc.robot.subsystems.turret;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.revrobotics.PersistMode;
-import com.revrobotics.REVLibError;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
@@ -121,7 +118,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
             }
         }
 
-        turretPIDController.setSetpoint(desiredAngle, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0);        
+        turretPIDController.setSetpoint(clamped, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0);        
     }
 
     @Override
