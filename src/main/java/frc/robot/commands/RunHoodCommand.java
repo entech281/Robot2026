@@ -8,7 +8,7 @@ import frc.robot.subsystems.hood.HoodSubsystem;
 public class RunHoodCommand extends EntechCommand {
     private final HoodSubsystem hood;
     private boolean direction;
-    private final String KEY = "HoodSubsystem/SetRequestedPosition";
+    private static final String KEY_STRING = "HoodSubsystem/SetRequestedPosition";
 
     public RunHoodCommand(HoodSubsystem hood) {
         this(hood, true);
@@ -33,8 +33,8 @@ public class RunHoodCommand extends EntechCommand {
     @Override
     public void execute() {
         HoodInput input = new HoodInput();
-        double requestedPosition = LiveTuningHandler.getInstance().getValue(KEY);
-        double otherRequestedPosition = -LiveTuningHandler.getInstance().getValue(KEY);
+        double requestedPosition = LiveTuningHandler.getInstance().getValue(KEY_STRING);
+        double otherRequestedPosition = -LiveTuningHandler.getInstance().getValue(KEY_STRING);
         if (direction) {
             input.setRequestedPosition(requestedPosition);
         } else {
@@ -51,8 +51,8 @@ public class RunHoodCommand extends EntechCommand {
     @Override
     public void initialize() {
         HoodInput input = new HoodInput();
-        double requestedPosition = LiveTuningHandler.getInstance().getValue(KEY);
-        double otherRequestedPosition = -LiveTuningHandler.getInstance().getValue(KEY);
+        double requestedPosition = LiveTuningHandler.getInstance().getValue(KEY_STRING);
+        double otherRequestedPosition = -LiveTuningHandler.getInstance().getValue(KEY_STRING);
         if (direction) {
             input.setRequestedPosition(requestedPosition);
         } else {
