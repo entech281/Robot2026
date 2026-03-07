@@ -3,19 +3,23 @@ package frc.robot.subsystems.hood;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.LimitSwitchConfig.Behavior;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.subsystems.SparkOutput;
+import frc.entech.util.StoppingCounter;
 import frc.robot.RobotConstants;
 
 public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
-    private static final boolean ENABLED = false;
+    private static final boolean ENABLED = true;
 
     private SparkMax hoodMotor;
     private SparkClosedLoopController hoodPIDController;
@@ -33,12 +37,15 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
         hoodConfig = new SparkMaxConfig();
         // Make encoder report degrees directly (adjust if your encoder reports
         // rotations)
+        hoodConfig.idleMode(IdleMode.kBrake);
+        hoodConfig.inverted(false);
         hoodConfig.encoder.positionConversionFactor(RobotConstants.HOOD.POSITION_CONVERSION_FACTOR_DEGREES);
 
         // Closed-loop PIDF
         hoodConfig.closedLoop
                 .pid(RobotConstants.HOOD.HOOD_P, RobotConstants.HOOD.HOOD_I, RobotConstants.HOOD.HOOD_D,
-                        ClosedLoopSlot.kSlot0);
+                        ClosedLoopSlot.kSlot0)
+                .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
         hoodConfig.closedLoop.maxMotion
                 .cruiseVelocity(RobotConstants.HOOD.HOOD_CRUISE_VELOCITY_RPM)
@@ -47,8 +54,10 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
 
         // Apply conservative signals update rates similar to other subsystems
         hoodConfig.signals
-                .primaryEncoderPositionAlwaysOn(true)
-                .primaryEncoderPositionPeriodMs((int) (1000.0 / 50.0));
+                .primaryEncoderPositionAlwaysOn(true);
+
+        hoodConfig.limitSwitch.reverseLimitSwitchPosition(0.0)
+                .reverseLimitSwitchTriggerBehavior(Behavior.kStopMovingMotor);
 
         // Configure the motor with these settings
         hoodMotor.configure(hoodConfig, ResetMode.kResetSafeParameters, com.revrobotics.PersistMode.kPersistParameters);
@@ -86,12 +95,14 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
 
         // moving = whether position controller is actively trying to move (approx via
         // velocity)
-        out.setMoving(Math.abs(spark.getCurrentSpeed()) > RobotConstants.HOOD.HOOD_POSITION_TOLERANCE_DEGREES);
+        out.setMoving(Math.abs(spark.getCurrentSpeed()) > 0.0001);
         out.setRequestedPosition(reqPos);
         out.setAtRequestedPosition(
                 Math.abs(spark.getCurrentPosition() - reqPos) <= RobotConstants.HOOD.HOOD_POSITION_TOLERANCE_DEGREES);
 
         out.setHoodMotor(spark);
+
+        out.setCurrentPosition(spark.getCurrentPosition());
 
         return out;
     }
@@ -104,11 +115,11 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
                 Math.min(RobotConstants.HOOD.HOOD_UPPER_LIMIT_DEGREES, desiredAngle));
         latestInput.setRequestedPosition(clamped);
 
-        if (hoodPIDController != null) {
-            hoodPIDController.setSetpoint(clamped, ControlType.kMAXMotionPositionControl);
+        if (Math.abs(hoodEncoder.getPosition()
+                - latestInput.getRequestedPosition()) > RobotConstants.HOOD.HOOD_POSITION_TOLERANCE_DEGREES) {
+            hoodPIDController.setSetpoint(desiredAngle, ControlType.kMAXMotionPositionControl);
         } else {
-            // if closed-loop is not ready, seed encoder
-            hoodEncoder.setPosition(clamped);
+            hoodMotor.set(0.0);
         }
     }
 
@@ -118,6 +129,9 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
         if (!ENABLED)
             return;
 
+        if (hoodMotor.getReverseLimitSwitch().isPressed() && latestInput.getRequestedPosition() == 0.0) {
+            hoodEncoder.setPosition(0);
+        }
         double desiredPos = latestInput.getRequestedPosition();
         if (hoodPIDController != null) {
             setHoodPosition(desiredPos);

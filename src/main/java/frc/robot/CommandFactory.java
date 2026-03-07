@@ -1,5 +1,6 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RPM;
 
@@ -70,7 +71,8 @@ public class CommandFactory {
     this.odometry = odometry;
     this.subsystemManager = subsystemManager;
     // subsystemManager.getShooterSubsystem()
-        // .setDefaultCommand(new RunShooterAtLiveSpeedCommand(subsystemManager.getShooterSubsystem()));
+    // .setDefaultCommand(new
+    // RunShooterAtLiveSpeedCommand(subsystemManager.getShooterSubsystem()));
     RobotConfig config;
     try {
       config = RobotConfig.fromGUISettings();
@@ -111,6 +113,9 @@ public class CommandFactory {
     NamedCommands.registerCommand("example", Commands.deferredProxy(Commands::none));
 
     autoChooser = AutoBuilder.buildAutoChooser();
+
+    autoChooser.addOption("Something", Commands.none());
+
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
@@ -167,7 +172,7 @@ public class CommandFactory {
           characterizer.getInitialMeasurements();
         }),
         getSubsystemTestMessageCommand("Generating deltas."),
-        new WaitCommand(20),
+        new WaitCommand(120),
         getSubsystemTestMessageCommand("Calculating Results."),
         getSubsystemTestMessageCommand(() -> characterizer.updateAndCalculate()),
         new InstantCommand(() -> {
@@ -202,7 +207,7 @@ public class CommandFactory {
 
   public Command getRotateForBumpCommand() {
     return new RotateToAngleCommand(() -> {
-      
+
       double angle = RobotIO.getInstance().getGyroOutput().getYaw().in(Degrees);
 
       angle = angle % 360;
@@ -212,7 +217,7 @@ public class CommandFactory {
       } else if (angle < -180.0) {
         angle += 360.0;
       }
-      
+
       if (angle >= 0 && angle < 90) {
         return 45;
       } else if (angle >= 90 && angle < 180) {
@@ -225,24 +230,22 @@ public class CommandFactory {
     });
   }
 
-    public Command getSnowblowCommand() {
-    Pose3d target;
-
+  private Pose3d getSnowblowTarget() {
     if (DriverStation.getAlliance().get() == Alliance.Red) {
-      target = RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
-    } else if (DriverStation.getAlliance().get() == Alliance.Blue) {
-      target = RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;
+      return RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
     } else {
-      return Commands.none();
+      return RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;
     }
+  }
+
+  public Command getSnowblowCommand() {
 
     Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
         .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
 
-    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(
-        RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target);
-    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(target.toPose2d(),
-        RobotIO.getInstance().getOdometryPose());
+    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, getSnowblowTarget());
+    
+    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(getSnowblowTarget().toPose2d(), RobotIO.getInstance().getOdometryPose());
 
     return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
         subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
@@ -250,12 +253,24 @@ public class CommandFactory {
 
   }
 
-  public Command getPresetShootCommand (ShotData preset) {
+  public Command getPresetShootCommand(ShotData preset) {
     if (preset == RobotConstants.SHOOTER.SHOT_PRESET_ONE) {
-      return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), Degrees.of(LiveTuningHandler.getInstance().getValue("TurretSubsystem/PresetOneDegrees")), RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetOneRPM")), Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")));
+      return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
+          subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(),
+          Degrees.of(LiveTuningHandler.getInstance().getValue("TurretSubsystem/PresetOneDegrees")),
+          RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetOneRPM")),
+          Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")));
     } else {
-      return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), Degrees.of(LiveTuningHandler.getInstance().getValue("TurretSubsystem/PresetTwoDegrees")), RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")), Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")));
+      return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
+          subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(),
+          Degrees.of(LiveTuningHandler.getInstance().getValue("TurretSubsystem/PresetTwoDegrees")),
+          RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
+          Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")));
     }
+  }
+
+  public Command getStopShootingCommand() {
+    return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), Degrees.of(0.0), RPM.of(0.0), Degree.of(0.0));
   }
 
   private Command getSubsystemTestMessageCommand(String message) {

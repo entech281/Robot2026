@@ -45,10 +45,10 @@ public final class RobotConstants {
     public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 4 * Math.PI;
     // radians per second
 
-    public static final double DIRECTION_SLEW_RATE = 1.2; // radians per second
-    public static final double MAGNITUDE_SLEW_RATE = 4.75;
+    public static final double DIRECTION_SLEW_RATE = 3; // radians per second
+    public static final double MAGNITUDE_SLEW_RATE = 10;
     // 2.0; //1.8; // percent per second (1 = 100%)
-    public static final double ROTATIONAL_SLEW_RATE = 3.5;
+    public static final double ROTATIONAL_SLEW_RATE = 6;
     // 20.0; //2.0; // percent per second (1 = 100%)
 
     // Chassis configuration
@@ -69,9 +69,7 @@ public final class RobotConstants {
         new Translation2d(-WHEEL_BASE_METERS / 2, -TRACK_WIDTH_METERS / 2));
 
     public static final boolean GYRO_REVERSED = false;
-    public static final boolean RATE_LIMITING = true;
-
-    public static final double SPEED_LIMIT = 0.2;
+    public static final boolean RATE_LIMITING = false;
   }
 
   public static interface SwerveModuleConstants {
@@ -91,7 +89,7 @@ public final class RobotConstants {
 
     // Calculations required for driving motor conversion factors and feed forward
     public static final double DRIVING_MOTOR_FREE_SPEED_RPS = FREE_SPEED_RPM / 60;
-    public static final double WHEEL_DIAMETER_METERS = 0.09645823151376486;
+    public static final double WHEEL_DIAMETER_METERS = 0.09802701871182373;
     public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
     public static final double DRIVING_MOTOR_REDUCTION = (45.0 * 17 * 50) / (DRIVING_MOTOR_PINION_TEETH * 15 * 27);
     public static final double DRIVE_WHEEL_FREE_SPEED_RPS = (DRIVING_MOTOR_FREE_SPEED_RPS * WHEEL_CIRCUMFERENCE_METERS)
@@ -117,14 +115,14 @@ public final class RobotConstants {
     public static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT_RADIANS = (2 * Math.PI);
     // radians
 
-    public static final double DRIVING_P = 0.2; // Origional P = 0.07
+    public static final double DRIVING_P = 0.5; // Origional P = 0.07
     public static final double DRIVING_I = 0;
     public static final double DRIVING_D = 0;
     public static final double DRIVING_FF = 1 / DRIVE_WHEEL_FREE_SPEED_RPS;
     public static final double DRIVING_MIN_OUTPUT_NORMALIZED = -1;
     public static final double DRIVING_MAX_OUTPUT_NORMALIZED = 1;
 
-    public static final double TURNING_P = 1.0;
+    public static final double TURNING_P = 1.5;
     // 1.0; // 1.0 might be a bit too much - reduce a bit if needed
     public static final double TURNING_I = 0;
     public static final double TURNING_D = 0;
@@ -135,8 +133,8 @@ public final class RobotConstants {
     public static final IdleMode DRIVING_MOTOR_IDLE_MODE = IdleMode.kBrake;
     public static final IdleMode TURNING_MOTOR_IDLE_MODE = IdleMode.kBrake;
 
-    public static final int DRIVING_MOTOR_CURRENT_LIMIT_AMPS = 40; // 50; // amps
-    public static final int TURNING_MOTOR_CURRENT_LIMIT_AMPS = 20; // amps
+    public static final int DRIVING_MOTOR_CURRENT_LIMIT_AMPS = 160; // 50; // amps
+    public static final int TURNING_MOTOR_CURRENT_LIMIT_AMPS = 40; // amps
 
     public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 2.285;
     public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = 0.91;
@@ -159,8 +157,8 @@ public final class RobotConstants {
         Map.entry("HoodSubsystem/PresetTwoDegrees", 35.0),
         Map.entry("ShooterSubsystem/PresetOneRPM", RobotConstants.SHOOTER.MAX_RPM),
         Map.entry("ShooterSubsystem/PresetTwoRPM", RobotConstants.SHOOTER.MAX_RPM),
-        Map.entry("ShiftStateTracker/WarningSeconds", 5.0)
-    );
+        Map.entry("ShiftStateTracker/WarningSeconds", 5.0),
+        Map.entry("TurretSubsystem/LiveAngle", 0.0));
   }
 
   public static interface PORTS {
@@ -199,7 +197,7 @@ public final class RobotConstants {
     public static interface CONTROLLER {
       public static final double JOYSTICK_AXIS_THRESHOLD = 0.2;
       public static final int DRIVER_CONTROLLER = 0;
-      public static final int SCORE_PANEL = 1;
+      public static final int SCORE_PANEL = 2;
       public static final int ALIGN_PANEL = 4;
       public static final int TEST_JOYSTICK = 2;
       public static final int TUNING_CONTROLLER = 3;
@@ -228,22 +226,22 @@ public final class RobotConstants {
 
   public interface SCORE_OPERATOR_PANEL {
     public static interface BUTTONS {
-      //TODO: make real
-      public static final int AUTO_FIRE = -1;
-      public static final int INTAKE = -1;
-      public static final int OUTTAKE = -1;
-      public static final int DEPLOY_HOPPER = -1;
-      public static final int PRESET_1_FIRE = -1;
-      public static final int PRESET_2_FIRE = -1;
-      public static final int WON_AUTO_SWITCH = -1;
-      public static final int SNOWBLOW_FIRE = -1;
+      // TODO: make real
+      public static final int FIRE = 2;
+      // TODO: make real
+      public static final int AUTO_FIRE = 14;
+      public static final int INTAKE = 6;
+      public static final int OUTTAKE = 7;
+      public static final int DEPLOY_HOPPER = 5;
+      public static final int PRESET_1_FIRE = 2;
+      public static final int PRESET_2_FIRE = 3;
+      public static final int WON_AUTO_SWITCH = 11;
+      public static final int SNOWBLOW_FIRE = 13;
     }
 
     public static interface SWITCHES {
     }
   }
-
-
 
   public static interface Vision {
     public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(5, 5, 1000000);
@@ -275,50 +273,50 @@ public final class RobotConstants {
       // down 25 degrees
       Transform3d robotToCameraA = new Transform3d(
           new Translation3d(
-              0.3, // X: meters forward from robot center (positive = forward)
-              0.0, // Y: meters left from robot center (positive = left)
-              0.4 // Z: meters up from ground (camera height)
+              Units.inchesToMeters(-11.125), // X: meters forward from robot center (positive = forward)
+              Units.inchesToMeters(11.875), // Y: meters left from robot center (positive = left)
+              Units.inchesToMeters(8.25) // Z: meters up from ground (camera height)
           ),
           new Rotation3d(
-              0, // Roll (rotation around X axis)
-              Math.toRadians(-25), // Pitch (rotation around Y axis, negative = tilted down)
-              0 // Yaw (rotation around Z axis)
+              Math.toRadians(0), // Roll (rotation around X axis)
+              Math.toRadians(0), // Pitch (rotation around Y axis, negative = tilted down)
+              Math.toRadians(135) // Yaw (rotation around Z axis)
           ));
 
       Transform3d robotToCameraB = new Transform3d(
           new Translation3d(
-              0.3, // X: meters forward from robot center (positive = forward)
-              0.0, // Y: meters left from robot center (positive = left)
-              0.4 // Z: meters up from ground (camera height)
+              Units.inchesToMeters(-11.125), // X: meters forward from robot center (positive = forward)
+              Units.inchesToMeters(-11.875), // Y: meters left from robot center (positive = left)
+              Units.inchesToMeters(8.25) // Z: meters up from ground (camera height)
           ),
           new Rotation3d(
-              0, // Roll (rotation around X axis)
-              Math.toRadians(-25), // Pitch (rotation around Y axis, negative = tilted down)
-              0 // Yaw (rotation around Z axis)
+              Math.toRadians(0), // Roll (rotation around X axis)
+              Math.toRadians(0), // Pitch (rotation around Y axis, negative = tilted down)
+              Math.toRadians(-135) // Yaw (rotation around Z axis)
           ));
 
       Transform3d robotToCameraC = new Transform3d(
           new Translation3d(
-              0.3, // X: meters forward from robot center (positive = forward)
-              0.0, // Y: meters left from robot center (positive = left)
-              0.4 // Z: meters up from ground (camera height)
+              Units.inchesToMeters(-1.375), // X: meters forward from robot center (positive = forward)
+              Units.inchesToMeters(10.375), // Y: meters left from robot center (positive = left)
+              Units.inchesToMeters(16.25) // Z: meters up from ground (camera height)
           ),
           new Rotation3d(
-              0, // Roll (rotation around X axis)
-              Math.toRadians(-25), // Pitch (rotation around Y axis, negative = tilted down)
-              0 // Yaw (rotation around Z axis)
+              Math.toRadians(0), // Roll (rotation around X axis)
+              Math.toRadians(0), // Pitch (rotation around Y axis, negative = tilted down)
+              Math.toRadians(45) // Yaw (rotation around Z axis)
           ));
 
       Transform3d robotToCameraD = new Transform3d(
           new Translation3d(
-              0.3, // X: meters forward from robot center (positive = forward)
-              0.0, // Y: meters left from robot center (positive = left)
-              0.4 // Z: meters up from ground (camera height)
+              Units.inchesToMeters(-1.375), // X: meters forward from robot center (positive = forward)
+              Units.inchesToMeters(-10.375), // Y: meters left from robot center (positive = left)
+              Units.inchesToMeters(16.25) // Z: meters up from ground (camera height)
           ),
           new Rotation3d(
-              0, // Roll (rotation around X axis)
-              Math.toRadians(-25), // Pitch (rotation around Y axis, negative = tilted down)
-              0 // Yaw (rotation around Z axis)
+              Math.toRadians(0), // Roll (rotation around X axis)
+              Math.toRadians(0), // Pitch (rotation around Y axis, negative = tilted down)
+              Math.toRadians(-45) // Yaw (rotation around Z axis)
           ));
     }
   }
@@ -360,21 +358,21 @@ public final class RobotConstants {
     // TODO: Make these real
     public static final double INITIAL_POSITION_DEGREES = 0.0;
     // Turret closed-loop settings
-    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 0.625;// ;//207360 // encoder units -> degrees (set
-                                                                          // appropriately)
-    public static final double TURRET_POSITION_P = 0.2;
+    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 3.2;// ;//207360 // encoder units -> degrees (set
+                                                                        // appropriately)
+    public static final double TURRET_POSITION_P = 0.02;
     public static final double TURRET_POSITION_I = 0.0;
     public static final double TURRET_POSITION_D = 0.0;
     public static final double TURRET_POSITION_FF = 0.0;
     public static final double TURRET_CRUISE_VELOCITY_RPM = 100.0; // max velocity for motion magic
     public static final double TURRET_MAX_ACCELERATION_RPM_PER_SECOND = 100.0; // max acceleration for motion magic
-    public static final double TURRET_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.1; // allowable error for motion magic
+    public static final double TURRET_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5; // allowable error for motion magic
     public static final double TURRET_POSITION_TOLERANCE_DEGREES = 1.0; // considered at setpoint within this
     public static final double HOME_POSITION_DEGREES = 0.0; // position to reset to
     // preset manual positions (buttons will command these)
     public static final double TURRET_POSITION_PRESET_A_DEGREES = 0.0;
-    public static final double TURRET_POSITION_PRESET_B_DEGREES = -5;
-    public static final double TURRET_POSITION_PRESET_Y_DEGREES = 5;
+    public static final double TURRET_POSITION_PRESET_B_DEGREES = -20;
+    public static final double TURRET_POSITION_PRESET_Y_DEGREES = 20;
     // small adjustment step used by any incremental commands
     public static final double TURRET_ADJUST_STEP_DEGREES = 5.0;
 
@@ -391,23 +389,20 @@ public final class RobotConstants {
 
     public static final Translation2d TURRET_OFFSET = new Translation2d(-DrivetrainConstants.WHEEL_BASE_METERS / 2.0,
         0.0);
-
-    public static final double TURRET_LOWER_LIMIT_DEGREES = -120.0;
-    public static final double TURRET_UPPER_LIMIT_DEGREES = 120.0;
   }
 
   public static interface HOOD {
     // TODO: make these real
-    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 1.0;
-    public static final double HOOD_P = 0.2;
+    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 1.65441176471;
+    public static final double HOOD_P = 3;
     public static final double HOOD_I = 0.0;
     public static final double HOOD_D = 0.0;
     public static final double INITIAL_POSITION_DEGREES = 0.0;
     public static final double HOOD_LOWER_LIMIT_DEGREES = 0.0;
-    public static final double HOOD_UPPER_LIMIT_DEGREES = 180.0;
-    public static final double HOOD_POSITION_TOLERANCE_DEGREES = 1.0;
-    public static final double HOOD_CRUISE_VELOCITY_RPM = 100.0;
-    public static final double HOOD_MAX_ACCELERATION_RPM_PER_SECOND = 100.0;
+    public static final double HOOD_UPPER_LIMIT_DEGREES = 25.0;
+    public static final double HOOD_POSITION_TOLERANCE_DEGREES = 0.1;
+    public static final double HOOD_CRUISE_VELOCITY_RPM = 2000.0;
+    public static final double HOOD_MAX_ACCELERATION_RPM_PER_SECOND = 10000.0;
     public static final double HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5;
   }
 
@@ -415,8 +410,14 @@ public final class RobotConstants {
     public static final Transform3d SHOT_TRANSFORM = new Transform3d(0, 0, 0, new Rotation3d());
     public static final double WHEEL_RADIUS_METERS = 0.048229115; // TODO: Idk my ai made this number
     public static final double MAX_RPM = 6000.0;
-    public static final ShotData SHOT_PRESET_ONE = new ShooterCalculator().new ShotDataRange().new ShotData(Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")), RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetOneRPM")), Meters.of(WHEEL_RADIUS_METERS));
-    public static final ShotData SHOT_PRESET_TWO = new ShooterCalculator().new ShotDataRange().new ShotData(Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")), RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")), Meters.of(WHEEL_RADIUS_METERS));
+    public static final ShotData SHOT_PRESET_ONE = new ShooterCalculator().new ShotDataRange().new ShotData(
+        Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")),
+        RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetOneRPM")),
+        Meters.of(WHEEL_RADIUS_METERS));
+    public static final ShotData SHOT_PRESET_TWO = new ShooterCalculator().new ShotDataRange().new ShotData(
+        Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")),
+        RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
+        Meters.of(WHEEL_RADIUS_METERS));
   }
 
   public static interface HOPPER {

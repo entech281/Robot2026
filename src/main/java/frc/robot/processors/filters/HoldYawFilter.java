@@ -7,8 +7,8 @@ import frc.robot.operation.UserPolicy;
 import frc.robot.subsystems.drive.DriveInput;
 
 public class HoldYawFilter implements DriveFilterI {
-  private static final double RESET_MARGIN = 3.0;
-  private final PIDController controller = new PIDController(0.0035, 0, 0.0);
+  private static final double RESET_MARGIN = 25.0;
+  private final PIDController controller = new PIDController(0.0085, 0, 0.0);
   private final StoppingCounter stopCounter = new StoppingCounter(0.25);
   private Rotation2d holdAngle = new Rotation2d(0);
 
@@ -20,7 +20,8 @@ public class HoldYawFilter implements DriveFilterI {
   public DriveInput process(DriveInput input) {
     DriveInput filteredInput = new DriveInput(input);
 
-    if (!stopCounter.isFinished(input.getRotation() == 0.0) || (Math.abs(input.getLatestOdometryPose().getRotation().getDegrees() - holdAngle.getDegrees()) > RESET_MARGIN)) {
+    if (!stopCounter.isFinished(input.getRotation() == 0.0) || (Math
+        .abs(input.getLatestOdometryPose().getRotation().getDegrees() - holdAngle.getDegrees()) > RESET_MARGIN)) {
       holdAngle = input.getLatestOdometryPose().getRotation();
     } else if (!UserPolicy.getInstance().isTwistable()) {
       filteredInput.setRotation(controller.calculate(

@@ -58,7 +58,7 @@ public class HopperSubsystem extends EntechSubsystem<HopperInput, HopperOutput> 
         if (ENABLED) {
             if (setSpeed != input.getSpeed()) {
                 boolean isStalled = stallDetector != null && stallDetector.isStalled(hopperMotor);
-                
+
                 if (isStalled && input.getSpeed() > 0) {
                     hopperMotor.set(0.0);
                     setSpeed = 0.0;
