@@ -7,7 +7,6 @@ import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Milliseconds;
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.Second;
 
 import java.util.Map;
 
@@ -26,7 +25,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.UnitBuilder.UnitConstructorFunction;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -38,7 +36,6 @@ import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
 
 public final class RobotConstants {
   public static final GyroHardware GYRO_HARDWARE = GyroHardware.NAVX3;
-  public static final double TIME_PER_PERIODICAL_LOOP_SECONDS = 0.00;
 
   public static interface AccelerationFilter {
     public static final double DIRECTION_SLEW_RATE = 0.95; // radians per second
@@ -395,6 +392,7 @@ public final class RobotConstants {
   public static interface HOOD {
     // TODO: make these real
     public static final double POSITION_CONVERSION_FACTOR_DEGREES = 1.65441176471;
+    public static final double VELOCITY_CONVERSION_FACTOR_DEGREES_PER_SECOND_PER_RPM = 1.65441176471 / 60.0;
     public static final double HOOD_P = 3;
     public static final double HOOD_I = 0.0;
     public static final double HOOD_D = 0.0;
@@ -402,8 +400,8 @@ public final class RobotConstants {
     public static final double HOOD_LOWER_LIMIT_DEGREES = 0.0;
     public static final double HOOD_UPPER_LIMIT_DEGREES = 25.0;
     public static final double HOOD_POSITION_TOLERANCE_DEGREES = 0.1;
-    public static final double HOOD_CRUISE_VELOCITY_RPM = 2000.0;
-    public static final double HOOD_MAX_ACCELERATION_RPM_PER_SECOND = 10000.0;
+    public static final AngularVelocity HOOD_CRUISE_VELOCITY = DegreesPerSecond.of(55.14705882366667);
+    public static final AngularAcceleration HOOD_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(275.73529411833334);
     public static final double HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5;
   }
 
