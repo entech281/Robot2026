@@ -11,8 +11,10 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -24,9 +26,11 @@ import frc.entech.operatorpanel.OutputJoystick.LedNumber;
 import frc.robot.CommandFactory;
 import frc.robot.HardwareManager;
 import frc.robot.RobotConstants;
+import frc.robot.RobotConstants.LiveTuning;
 import frc.robot.commands.DeployHopper;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.GyroReset;
+import frc.robot.commands.ManualHoodCommand;
 import frc.robot.commands.ManualShootCommand;
 import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.NudgeTurretCommand;
@@ -39,6 +43,7 @@ import frc.robot.io.DriveInputSupplier;
 import frc.robot.io.OperatorInput;
 import frc.robot.io.OperatorInputSupplier;
 import frc.robot.io.RobotIO;
+import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.processors.OdometryProcessor;
 import frc.robot.subsystems.drive.DriveInput;
 import frc.robot.util.ShiftStateTracker;
@@ -197,7 +202,7 @@ public class OperatorInterface
                       new Rotation3d()));
 
               return new ShooterCalculator(subsystemManager.getDriveSubsystem().getChassisSpeeds(), currentPose,
-                  targetPose);
+                  targetPose, Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.maxShotSpeed, RobotConstants.SHOOTER.minShotSpeed, RobotConstants.SHOOTER.maxShotDistance, RobotConstants.SHOOTER.maxShotDistance);
             }))
         .onFalse(commandFactory.getStopShootingCommand());
 
@@ -234,8 +239,45 @@ public class OperatorInterface
         .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), true))
         .onFalse(commandFactory.getStopShootingCommand());
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DECREASE_DISTANCE_OFFSET)
-        .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), false))
-        .onFalse(commandFactory.getStopShootingCommand());
+      .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), false))
+      .onFalse(commandFactory.getStopShootingCommand());
+
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INCREASE_DISTANCE_OFFSET)
+    .onTrue(
+      new ParallelCommandGroup(
+        new InstantCommand( () -> UserPolicy.getInstance().setHubOffset(UserPolicy.getInstance().getHubOffset().plus(Meters.of(LiveTuningHandler.getInstance().getValue("UserPolicy/DistanceNudgeAmountMeters"))))),
+        new InstantCommand( () -> {
+            Angle angle = subsystemManager.getGyroSubsystem().getOutputs().getYaw();
+
+            angle = Degrees.of(angle.in(Degrees) % 360);
+
+            Pose3d currentPose = new Pose3d(RobotIO.getInstance().getOdometryPose()).plus(RobotConstants.SHOOTER.SHOT_TRANSFORM);
+            Pose3d targetPose = currentPose.plus( new Transform3d(UserPolicy.getInstance().getHubOffset().in(Meters) * Math.sin(angle.in(Radians)), UserPolicy.getInstance().getHubOffset().in(Meters) * Math.cos(angle.in(Radians)), 0.0, new Rotation3d()) );
+
+            ShooterCalculator shooterCalculator = new ShooterCalculator(subsystemManager.getDriveSubsystem().getChassisSpeeds(), currentPose, targetPose, Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.maxShotSpeed, RobotConstants.SHOOTER.minShotSpeed, RobotConstants.SHOOTER.maxShotDistance, RobotConstants.SHOOTER.maxShotDistance);
+
+            CommandScheduler.getInstance().schedule(new ManualHoodCommand(subsystemManager.getHoodSubsystem(), shooterCalculator.calculateShot().getIdealShot().getHoodAngle().in(Degrees)));
+        })
+      ));
+
+
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INCREASE_DISTANCE_OFFSET)
+    .onTrue(
+      new ParallelCommandGroup(
+        new InstantCommand( () -> UserPolicy.getInstance().setHubOffset(UserPolicy.getInstance().getHubOffset().minus(Meters.of(LiveTuningHandler.getInstance().getValue("UserPolicy/DistanceNudgeAmountMeters"))))),
+        new InstantCommand( () -> {
+            Angle angle = subsystemManager.getGyroSubsystem().getOutputs().getYaw();
+
+            angle = Degrees.of(angle.in(Degrees) % 360);
+
+            Pose3d currentPose = new Pose3d(RobotIO.getInstance().getOdometryPose()).plus(RobotConstants.SHOOTER.SHOT_TRANSFORM);
+            Pose3d targetPose = currentPose.plus( new Transform3d(UserPolicy.getInstance().getHubOffset().in(Meters) * Math.sin(angle.in(Radians)), UserPolicy.getInstance().getHubOffset().in(Meters) * Math.cos(angle.in(Radians)), 0.0, new Rotation3d()) );
+
+            ShooterCalculator shooterCalculator = new ShooterCalculator(subsystemManager.getDriveSubsystem().getChassisSpeeds(), currentPose, targetPose, Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.maxShotSpeed, RobotConstants.SHOOTER.minShotSpeed, RobotConstants.SHOOTER.maxShotDistance, RobotConstants.SHOOTER.maxShotDistance);
+
+            CommandScheduler.getInstance().schedule(new ManualHoodCommand(subsystemManager.getHoodSubsystem(), shooterCalculator.calculateShot().getIdealShot().getHoodAngle().in(Degrees)));
+        })
+      ));
   }
 
   // adding more later
