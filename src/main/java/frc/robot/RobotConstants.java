@@ -161,7 +161,7 @@ public final class RobotConstants {
         Map.entry("TurretSubsystem/LiveAngle", 0.0),
         Map.entry("VisionSensor/MaxCountPerWindowOfPosesForBad", 1.0),
         Map.entry("VisionSensor/MaxCountPerWindowOfPosesForMeh", 3.0),
-        Map.entry("VisionSensor/GoodnessBufferTime"));
+        Map.entry("VisionSensor/GoodnessBufferTime", 1.0));
   }
 
   public static interface PORTS {
