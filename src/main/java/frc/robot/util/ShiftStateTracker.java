@@ -50,9 +50,8 @@ public class ShiftStateTracker {
             // Return FMS value
         boolean first = areWeFirst();
         String message = getGameSpecificMessage();
-        if (message.isEmpty() && first) {
-            return true;
-        }
+        if (message.isEmpty() && first) return true;
+    
             return false;
         } 
     
