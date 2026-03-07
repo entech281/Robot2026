@@ -34,10 +34,13 @@ public class RunShooterCommand extends EntechCommand {
     @Override
     public void execute() {
         ShooterInput input = new ShooterInput();
+        
+        double postiveSpeed = LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed");
+        double negativeSpeed = -LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed");  
         if (direction) {
-            input.setSpeed(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed"));
+            input.setSpeed(postiveSpeed);
         } else {
-            input.setSpeed(-LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed"));
+            input.setSpeed(negativeSpeed);
         }
         shooter.updateInputs(input);
     }
@@ -47,13 +50,17 @@ public class RunShooterCommand extends EntechCommand {
         input.setSpeed(0.5);
     }
 
+    //same as execute for good reasons bc we need execute and initialize
     @Override
     public void initialize() {
         ShooterInput input = new ShooterInput();
+        double postiveSpeed = LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed");
+        double negativeSpeed = -LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed");  
         if (direction) {
-            input.setSpeed(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed"));
+
+            input.setSpeed(postiveSpeed);
         } else {
-            input.setSpeed(-LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed"));
+            input.setSpeed(negativeSpeed);
         }
         shooter.updateInputs(input);
     }

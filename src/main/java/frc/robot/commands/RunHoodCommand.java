@@ -4,8 +4,6 @@ import frc.entech.commands.EntechCommand;
 import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.subsystems.hood.HoodInput;
 import frc.robot.subsystems.hood.HoodSubsystem;
-import frc.robot.subsystems.intake.IntakeInput;
-import frc.robot.subsystems.intake.IntakeSubsystem;
 
 public class RunHoodCommand extends EntechCommand {
     private final HoodSubsystem hood;
@@ -34,10 +32,12 @@ public class RunHoodCommand extends EntechCommand {
     @Override
     public void execute() {
         HoodInput input = new HoodInput();
+        double requestedPosition = LiveTuningHandler.getInstance().getValue("HoodSubsystem/SetRequestedPosition");
+        double otherRequestedPosition = -LiveTuningHandler.getInstance().getValue("HoodSubsystem/SetRequestedPosition");
         if (direction) {
-            input.setRequestedPosition(LiveTuningHandler.getInstance().getValue("HoodSubsystem/SetRequestedPosition"));
+            input.setRequestedPosition(requestedPosition);
         } else {
-            input.setRequestedPosition(-LiveTuningHandler.getInstance().getValue("HoodSubsystem/SetRequestedPosition"));
+            input.setRequestedPosition(otherRequestedPosition);
         }
         hood.updateInputs(input);
     }
@@ -50,10 +50,12 @@ public class RunHoodCommand extends EntechCommand {
     @Override
     public void initialize() {
         HoodInput input = new HoodInput();
+        double requestedPosition = LiveTuningHandler.getInstance().getValue("HoodSubsystem/SetRequestedPosition");
+        double otherRequestedPosition = -LiveTuningHandler.getInstance().getValue("HoodSubsystem/SetRequestedPosition");
         if (direction) {
-            input.setRequestedPosition(LiveTuningHandler.getInstance().getValue("HoodSubsystem/SetRequestedPosition"));
+            input.setRequestedPosition(requestedPosition);
         } else {
-            input.setRequestedPosition(-LiveTuningHandler.getInstance().getValue("HoodSubsystem/SetRequestedPosition"));
+            input.setRequestedPosition(otherRequestedPosition);
         }
         hood.updateInputs(input);
     }
