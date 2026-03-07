@@ -8,6 +8,7 @@ import frc.robot.RobotConstants;
 public class TurretInput implements SubsystemInput{
   private boolean activate = true;
   private double requestedPosition = RobotConstants.TURRET.INITIAL_POSITION_DEGREES;
+  private double currentPoition;
     @Override
     public void toLog(LogTable table) {
       table.put("Activate", activate);
