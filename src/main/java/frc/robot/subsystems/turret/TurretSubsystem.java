@@ -5,10 +5,7 @@
  */
 package frc.robot.subsystems.turret;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.revrobotics.PersistMode;
-import com.revrobotics.REVLibError;
 import com.revrobotics.ResetMode;
 import com.revrobotics.encoder.DetachedEncoder.Model;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -142,6 +139,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         m_goal = new TrapezoidProfile.State(clamped, 0);
         m_setpoint = m_profile.calculate(1.0/50.0, m_setpoint, m_goal);
         turretMotor.set(Math.max(Math.min(control.calculate(turretEncoder.getPosition(), m_setpoint.position), PID_MAX), PID_MIN));
+
     }
 
     @Override

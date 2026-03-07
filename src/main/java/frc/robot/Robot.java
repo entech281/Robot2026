@@ -33,7 +33,7 @@ import frc.robot.processors.OdometryProcessor;
 // branch test comment
 public class Robot extends LoggedRobot {
 
-  public static final double SIMULATION_TIME_MILLIS = 5000;
+  public static final double SIMULATION_TIME_MILLIS = 50000;
   private Command autonomousCommand;
   private HardwareManager subsystemManager;
   private CommandFactory commandFactory;
