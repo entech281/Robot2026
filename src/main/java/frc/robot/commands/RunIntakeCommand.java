@@ -52,6 +52,11 @@ public class RunIntakeCommand extends EntechCommand {
         intakeSS.updateInputs(input);
     }
 
+    public void runIntake(){
+        IntakeInput input = new IntakeInput();
+        input.setSpeed(0.5);
+    }
+
     @Override
     public void end(boolean interrupted) {
         intakeSS.updateInputs(new IntakeInput());

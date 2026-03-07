@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import frc.entech.commands.EntechCommand;
+
 import frc.robot.subsystems.turret.TurretInput;
 import frc.robot.subsystems.turret.TurretSubsystem;
 
@@ -44,4 +45,4 @@ public class TurretJogCommand extends EntechCommand {
     public boolean isFinished() {
         return false; // Run while held
     }
-}
+  }
