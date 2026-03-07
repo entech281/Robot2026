@@ -35,10 +35,10 @@ public class DecreaseDistanceCommand extends EntechCommand {
     public void execute() {
         // Continue holding at the new position
         double currentHoodPos = hood.getOutputs().getCurrentPosition();
-        double newHoodPos = Math.max(MIN_HOOD_ANGLE, currentHoodPos - INCREMENT);
+        double newHoodPos = Math.max(MIN_HOOD_ANGLE, currentHoodPos - INCREMENT-1);
         
         HoodInput input = new HoodInput();
-        input.setRequestedPosition(newHoodPos);
+        input.setRequestedPosition(newHoodPos+1);
         hood.updateInputs(input);
     }
 

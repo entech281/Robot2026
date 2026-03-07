@@ -1,13 +1,17 @@
 package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RPM;
+
+import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.entech.commands.EntechCommand;
+import frc.robot.RobotConstants;
 import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.subsystems.hood.HoodInput;
 import frc.robot.subsystems.hood.HoodSubsystem;
@@ -17,8 +21,9 @@ import frc.robot.subsystems.transfer.TransferInput;
 import frc.robot.subsystems.transfer.TransferSubsystem;
 import frc.robot.subsystems.turret.TurretInput;
 import frc.robot.subsystems.turret.TurretSubsystem;
+import frc.robot.util.ShooterCalculator;
 
-public class ManualShootCommand extends EntechCommand{
+public class ManualShootCommand extends EntechCommand {
     private final HoodSubsystem hoodSS;
     private final ShooterSubsystem shooterSS;
     private final TransferSubsystem transferSS;
@@ -31,7 +36,9 @@ public class ManualShootCommand extends EntechCommand{
     private AngularVelocity shooterSpeed;
     private Angle hoodAngle;
 
-    public ManualShootCommand(ShooterSubsystem shooterSubsystem, HoodSubsystem hoodSubsystem, TransferSubsystem transferSubsystem, TurretSubsystem turretSubsystem, Angle turretAngle, AngularVelocity shooterSpeed, Angle hoodAngle) {
+    public ManualShootCommand(ShooterSubsystem shooterSubsystem, HoodSubsystem hoodSubsystem,
+            TransferSubsystem transferSubsystem, TurretSubsystem turretSubsystem, Angle turretAngle,
+            AngularVelocity shooterSpeed, Angle hoodAngle) {
         super(hoodSubsystem, shooterSubsystem, transferSubsystem, turretSubsystem);
         this.hoodSS = hoodSubsystem;
         this.shooterSS = shooterSubsystem;
@@ -42,15 +49,22 @@ public class ManualShootCommand extends EntechCommand{
         this.hoodAngle = hoodAngle;
     }
 
+
+
+    public ManualShootCommand(ShooterSubsystem shooterSubsystem, HoodSubsystem hoodSubsystem, TransferSubsystem transferSubsystem, TurretSubsystem turretSubsystem, Angle turretAngle, Supplier<ShooterCalculator> shooterCalculator) {
+        this(shooterSubsystem,  hoodSubsystem, transferSubsystem, turretSubsystem, turretAngle, shooterCalculator.get().calculateShot().getIdealShot().getShotAngularVelocity(Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS)), shooterCalculator.get().calculateShot().getIdealShot().getHoodAngle());
+    }
+
     @Override
-    public void end(boolean interrupted) {}
+    public void end(boolean interrupted) {
+    }
 
     @Override
     public void execute() {
 
         shooterInput.setSpeed(shooterSpeed.in(RPM));
         hoodInput.setRequestedPosition(hoodAngle.in(Degrees));
-        turretInput.setRequestedPosition(turretAngle.in(Degrees));
+        turretInput.setRequestedPosition(turretAngle);
 
         shooterSS.updateInputs(shooterInput);
         hoodSS.updateInputs(hoodInput);
@@ -74,12 +88,12 @@ public class ManualShootCommand extends EntechCommand{
         Logger.recordOutput("HoodIsReadyToShoot", hoodIsReady + "");
         Logger.recordOutput("ShooterIsReadyToShoot", shooterIsReady + "");
         Logger.recordOutput("IsReadyToShoot", isReadyToShoot + "");
-        
+
     }
 
     @Override
     public void initialize() {
-        
+
     }
 
     @Override

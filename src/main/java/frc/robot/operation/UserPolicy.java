@@ -1,6 +1,10 @@
 package frc.robot.operation;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.units.measure.Distance;
 
 public class UserPolicy {
   private static final UserPolicy instance = new UserPolicy();
@@ -9,12 +13,14 @@ public class UserPolicy {
   private boolean aligningToAngle = false;
   private double targetAngle = 0.0;
   private boolean isAutoWon = false;
+  private Distance manualShotDistance = Meters.of(4);
 
   private UserPolicy() {
     Logger.recordOutput("UserPolicy/twistable", twistable);
     Logger.recordOutput("UserPolicy/aligningToAngle", aligningToAngle);
     Logger.recordOutput("UserPolicy/targetAngle", targetAngle);
     Logger.recordOutput("UserPolicy/isAutoWon", isAutoWon);
+    Logger.recordOutput("UserPolicy/hubOffset", manualShotDistance.in(Meters));
   }
 
   public static UserPolicy getInstance() {
@@ -55,5 +61,13 @@ public boolean isAutoWon() {
   public void setIsAutoWon(boolean isAutoWon) {
     this.isAutoWon = isAutoWon;
     Logger.recordOutput("UserPolicy/isAutoWon", isAutoWon);
+  }
+
+  public Distance getHubOffset() {
+    return manualShotDistance;
+  }
+
+  public void setHubOffset(Distance manualShotDistance) {
+    this.manualShotDistance = manualShotDistance;
   }
 }

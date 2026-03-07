@@ -25,11 +25,11 @@ public class DecreaseShooterSpeedCommand extends EntechCommand {
     @Override
     public void initialize() {
         double currentSpeed = LiveTuningHandler.getInstance().getValue(SPEED_KEY);
-        double newSpeed = Math.max(0, currentSpeed - INCREMENT); // Don't go below 0
+        double newSpeed = Math.max(0, currentSpeed - INCREMENT-1); // Don't go below 0
         
         // Run shooter at new speed
         ShooterInput input = new ShooterInput();
-        input.setSpeed(newSpeed);
+        input.setSpeed(newSpeed+1);
         shooter.updateInputs(input);
         
         // Note: The new speed will be used for subsequent runs

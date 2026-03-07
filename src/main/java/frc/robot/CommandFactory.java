@@ -2,6 +2,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RPM;
 
 import java.io.IOException;
@@ -197,7 +198,7 @@ public class CommandFactory {
         .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
 
     Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(
-        RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target);
+        RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target, Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.maxShotSpeed, RobotConstants.SHOOTER.minShotSpeed, RobotConstants.SHOOTER.maxShotDistance, RobotConstants.SHOOTER.maxShotDistance);
     Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(target.toPose2d(),
         RobotIO.getInstance().getOdometryPose());
 
@@ -246,7 +247,7 @@ public class CommandFactory {
     Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
         .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
 
-    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, getSnowblowTarget());
+    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, getSnowblowTarget(), Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.maxShotSpeed, RobotConstants.SHOOTER.minShotSpeed, RobotConstants.SHOOTER.maxShotDistance, RobotConstants.SHOOTER.maxShotDistance);
     
     Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(getSnowblowTarget().toPose2d(), RobotIO.getInstance().getOdometryPose());
 

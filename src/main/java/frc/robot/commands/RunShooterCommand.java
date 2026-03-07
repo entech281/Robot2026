@@ -33,10 +33,10 @@ public class RunShooterCommand extends EntechCommand {
     public void initialize() {
         ShooterInput input = new ShooterInput();
         double speed = LiveTuningHandler.getInstance().getValue(KEY_STRING);
-        if (direction) {
-            input.setSpeed(speed);
-        } else {
+        if (!direction) {
             input.setSpeed(-speed);
+        } else {
+            input.setSpeed(speed);
         }
         shooter.updateInputs(input);
     }

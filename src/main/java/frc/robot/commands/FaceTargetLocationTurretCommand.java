@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.entech.commands.EntechCommand;
 import frc.robot.io.RobotIO;
@@ -14,7 +16,6 @@ public class FaceTargetLocationTurretCommand extends EntechCommand {
     private final Pose2d target;
     private TurretCalculator calculator;
 
-
     public FaceTargetLocationTurretCommand(TurretSubsystem turretSubsystem, Pose2d target) {
         super(turretSubsystem);
         this.turretSubsystem = turretSubsystem;
@@ -23,7 +24,8 @@ public class FaceTargetLocationTurretCommand extends EntechCommand {
     }
 
     @Override
-    public void initialize() {}
+    public void initialize() {
+    }
 
     @Override
     public void execute() {
@@ -32,17 +34,18 @@ public class FaceTargetLocationTurretCommand extends EntechCommand {
         calculator.refresh(target, robotPose);
 
         double targetAngle = calculator.calculateTargetTurretAngle();
-        
-        turretInput.setRequestedPosition(targetAngle);
+
+        turretInput.setRequestedPosition(Degrees.of(targetAngle));
         turretSubsystem.updateInputs(turretInput);
     }
 
     @Override
-    public void end(boolean interrupted) {}
+    public void end(boolean interrupted) {
+    }
 
     @Override
     public boolean isFinished() {
-        //never ends, continously tracks target
+        // never ends, continously tracks target
         return turretSubsystem.getOutputs().isAtRequestedPosition();
     }
 }

@@ -32,10 +32,10 @@ public class RunIntakeCommand extends EntechCommand {
     public void initialize() {
         IntakeInput input = new IntakeInput();
         double speed = LiveTuningHandler.getInstance().getValue(KEY_STRING);
-        if (direction) {
-            input.setSpeed(speed);
-        } else {
+        if (!direction) {
             input.setSpeed(-speed);
+        } else {
+            input.setSpeed(speed);
         }
         intakeSS.updateInputs(input);
     }

@@ -1,7 +1,10 @@
 package frc.robot.util;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Angle;
 import frc.robot.RobotConstants;
 
 public class TurretCalculator {
@@ -18,15 +21,20 @@ public class TurretCalculator {
         this.target = target;
         this.robotPose = robotPose;
     }
-    
+
     public double calculateTargetTurretAngle() {
-        Translation2d targetTranslation = target.getTranslation().minus(robotPose.getTranslation().plus(RobotConstants.TURRET.TURRET_OFFSET.rotateBy(robotPose.getRotation())));
+        Translation2d targetTranslation = target.getTranslation().minus(
+                robotPose.getTranslation().plus(RobotConstants.TURRET.TURRET_OFFSET.rotateBy(robotPose.getRotation())));
         return targetTranslation.getAngle().getDegrees() + robotPose.getRotation().getDegrees();
     }
 
     public boolean isValidTurretAngle(double angle, double toleranceDegrees) {
         double calculatedAngle = calculateTargetTurretAngle();
         return angle >= calculatedAngle - toleranceDegrees && angle <= calculatedAngle + toleranceDegrees;
+    }
+
+    public boolean isValidTurretAngle(Angle angle, Angle toleranceDegrees) {
+        return isValidTurretAngle(angle.in(Degrees), toleranceDegrees.in(Degrees));
     }
 
     public void refresh(Pose2d target, Pose2d robotPose) {

@@ -23,10 +23,10 @@ public class IncreaseDistanceCommand extends EntechCommand {
     public void initialize() {
         // Get current hood position and increase it
         double currentHoodPos = hood.getOutputs().getCurrentPosition();
-        double newHoodPos = currentHoodPos + INCREMENT;
+        double newHoodPos = currentHoodPos + INCREMENT-1;
         
         HoodInput input = new HoodInput();
-        input.setRequestedPosition(newHoodPos);
+        input.setRequestedPosition(newHoodPos+1);
         hood.updateInputs(input);
     }
 

@@ -44,10 +44,10 @@ public class RunTransferCommand extends EntechCommand {
     public void execute() {
         TransferInput input = new TransferInput();
         double speed = LiveTuningHandler.getInstance().getValue(KEY_STRING);
-        if (direction) {
-            input.setSpeed(speed);
-        } else {
+        if (!direction) {
             input.setSpeed(-speed);
+        } else {
+            input.setSpeed(speed);
         }
         transfer.updateInputs(input);
     }
