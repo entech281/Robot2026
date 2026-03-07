@@ -358,7 +358,7 @@ public final class RobotConstants {
     // TODO: Make these real
     public static final double INITIAL_POSITION_DEGREES = 0.0;
     // Turret closed-loop settings
-    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 3.2;// ;//207360 // encoder units -> degrees (set
+    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 360.0 * (40.0/150.0);// ;3.2 ;//207360 // encoder units -> degrees (set
                                                                         // appropriately)
     public static final double TURRET_POSITION_P = 0.02;
     public static final double TURRET_POSITION_I = 0.0;

@@ -34,6 +34,7 @@ public class ShooterCalculator {
     }
 
     public ShotDataRange calculateShot() {
+        //TODO interpolate velocity from 3500 - 5000 (5500)
         LinearVelocity shooterLaunchVelocity = angularVelocityToLinearVelocity(RPM.of(RobotConstants.SHOOTER.MAX_RPM), Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS));
         double g = 9.80665;
         double TOLERANCE_DEGREES = 1;

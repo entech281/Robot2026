@@ -10,6 +10,7 @@ import org.littletonrobotics.junction.Logger;
 import com.revrobotics.PersistMode;
 import com.revrobotics.REVLibError;
 import com.revrobotics.ResetMode;
+import com.revrobotics.encoder.DetachedEncoder.Model;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -54,8 +55,9 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         turretConfig.idleMode(IdleMode.kBrake);
         // Make encoder report degrees directly (adjust if your encoder reports
         // rotations)
-        turretConfig.encoder.positionConversionFactor(RobotConstants.TURRET.POSITION_CONVERSION_FACTOR_DEGREES);
+        turretConfig.encoder.positionConversionFactor(360 / 112.5);
         
+        TurretEncoder encoder = new TurretEncoder(0, Model.Unknown, turretMotor.getAbsoluteEncoder());
         // Closed-loop PIDF
         turretConfig.closedLoop
                 .pid(RobotConstants.TURRET.TURRET_POSITION_P, RobotConstants.TURRET.TURRET_POSITION_I,
@@ -70,16 +72,13 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
             .maxAcceleration(RobotConstants.TURRET.TURRET_MAX_ACCELERATION_RPM_PER_SECOND, ClosedLoopSlot.kSlot0)
             .allowedProfileError(RobotConstants.TURRET.TURRET_ALLOWED_PROFILE_ERROR_ROTATIONS, ClosedLoopSlot.kSlot0);
 
+        encoder.setPositionConversionFactor(RobotConstants.TURRET.POSITION_CONVERSION_FACTOR_DEGREES);
 
-
-        // Apply conservative signals update rates similar to other subsystems
-        turretConfig.signals
-                .primaryEncoderPositionAlwaysOn(true);
 
         // Configure the motor with these settings
         turretMotor.configure(turretConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        turretEncoder = turretMotor.getEncoder();
+        turretEncoder = encoder;
 
         turretPIDController = turretMotor.getClosedLoopController();
         // create a persistent stall detector once
@@ -154,7 +153,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         if (!ENABLED)
             return out;
 
-        double currentPos = turretEncoder.getPosition();
+        double currentPos = turretMotor.getAbsoluteEncoder().getPosition();
         double reqPos = latestInput.getRequestedPosition();
 
         boolean isStalled = (stallDetector != null && stallDetector.isStalled(turretMotor));
