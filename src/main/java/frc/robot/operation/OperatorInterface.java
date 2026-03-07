@@ -180,21 +180,27 @@ public class OperatorInterface
 
   public void scoreOperatorBindings() {
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.FIRE)
-        .whileTrue(new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), Degrees.of(subsystemManager.getTurretSubsystem().getOutputs().getCurrentPosition()), 
-          () -> {
+        .whileTrue(new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
+            subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(),
+            subsystemManager.getTurretSubsystem().getOutputs().getCurrentPosition(),
+            () -> {
 
-            Angle angle = subsystemManager.getGyroSubsystem().getOutputs().getYaw();
+              Angle angle = subsystemManager.getGyroSubsystem().getOutputs().getYaw();
 
-            angle = Degrees.of(angle.in(Degrees) % 360);
+              angle = Degrees.of(angle.in(Degrees) % 360);
 
-            Pose3d currentPose = new Pose3d(RobotIO.getInstance().getOdometryPose()).plus(RobotConstants.SHOOTER.SHOT_TRANSFORM);
-            Pose3d targetPose = currentPose.plus( new Transform3d(UserPolicy.getInstance().getHubOffset().in(Meters) * Math.sin(angle.in(Radians)), UserPolicy.getInstance().getHubOffset().in(Meters) * Math.cos(angle.in(Radians)), 0.0, new Rotation3d()) );
+              Pose3d currentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
+                  .plus(RobotConstants.SHOOTER.SHOT_TRANSFORM);
+              Pose3d targetPose = currentPose.plus(
+                  new Transform3d(UserPolicy.getInstance().getHubOffset().in(Meters) * Math.sin(angle.in(Radians)),
+                      UserPolicy.getInstance().getHubOffset().in(Meters) * Math.cos(angle.in(Radians)), 0.0,
+                      new Rotation3d()));
 
-            return new ShooterCalculator(subsystemManager.getDriveSubsystem().getChassisSpeeds(), currentPose, targetPose);
-          }
-        ))
+              return new ShooterCalculator(subsystemManager.getDriveSubsystem().getChassisSpeeds(), currentPose,
+                  targetPose);
+            }))
         .onFalse(commandFactory.getStopShootingCommand());
-      
+
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.AUTO_FIRE)
         .whileTrue(commandFactory.getFullShootCommand());
 
@@ -228,8 +234,8 @@ public class OperatorInterface
         .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), true))
         .onFalse(commandFactory.getStopShootingCommand());
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DECREASE_DISTANCE_OFFSET)
-      .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), false))
-      .onFalse(commandFactory.getStopShootingCommand());
+        .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), false))
+        .onFalse(commandFactory.getStopShootingCommand());
   }
 
   // adding more later
