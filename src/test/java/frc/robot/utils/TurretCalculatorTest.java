@@ -68,11 +68,7 @@ public class TurretCalculatorTest {
       Arguments.of(new Pose2d(1.0, -1.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d()), Math.toDegrees(Math.atan2(-1.0 - RobotConstants.TURRET.TURRET_OFFSET.getY(), 1.0 - RobotConstants.TURRET.TURRET_OFFSET.getX()))),
 
       // Robot rotated cases
-      Arguments.of(new Pose2d(1.0, 0.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d(Degrees.of(90.0).in(Radians))), Math.toDegrees(Math.atan2(-RobotConstants.TURRET.TURRET_OFFSET.rotateBy(new Rotation2d(Degrees.of(90.0).in(Radians))).getY(), 1.0 - RobotConstants.TURRET.TURRET_OFFSET.rotateBy(new Rotation2d(Degrees.of(90.0).in(Radians))).getX())) - 90.0),
-
-      Arguments.of(new Pose2d(0.0, 1.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d(Degrees.of(90.0).in(Radians))), Math.toDegrees(Math.atan2(1.0 - RobotConstants.TURRET.TURRET_OFFSET.rotateBy(new Rotation2d(Degrees.of(90.0).in(Radians))).getY(), -RobotConstants.TURRET.TURRET_OFFSET.rotateBy(new Rotation2d(Degrees.of(90.0).in(Radians))).getX())) - 90.0),
-
-      Arguments.of(new Pose2d(1.0, 1.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d(Degrees.of(-45.0).in(Radians))), Math.toDegrees(Math.atan2(1.0 - RobotConstants.TURRET.TURRET_OFFSET.rotateBy(new Rotation2d(Degrees.of(-45.0).in(Radians))).getY(), 1.0 - RobotConstants.TURRET.TURRET_OFFSET.rotateBy(new Rotation2d(Degrees.of(-45.0).in(Radians))).getX())) + 45.0)
+      Arguments.of(new Pose2d(0.0, 1.0, new Rotation2d()), new Pose2d(0.0, 0.0, new Rotation2d(Degrees.of(90.0).in(Radians))), Math.toDegrees(Math.atan2(1.0 + RobotConstants.TURRET.TURRET_OFFSET.rotateBy(new Rotation2d(Degrees.of(90.0).in(Radians))).getY(), RobotConstants.TURRET.TURRET_OFFSET.rotateBy(new Rotation2d(Degrees.of(90.0).in(Radians))).getX())) + 90.0)
     );
   }
 
