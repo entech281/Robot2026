@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.entech.operatorpanel.OutputJoystick;
-import frc.entech.operatorpanel.OutputJoystick.BlinkRate;
 import frc.entech.operatorpanel.OutputJoystick.Color;
 import frc.entech.operatorpanel.OutputJoystick.LedNumber;
 import frc.robot.CommandFactory;
@@ -74,6 +73,7 @@ public class OperatorInterface
   }
 
   public void create() {
+    
     xboxController = new CommandXboxController(RobotConstants.PORTS.CONTROLLER.DRIVER_CONTROLLER);
     enableXboxBindings();
     if (DriverControllerUtils.controllerIsPresent(RobotConstants.PORTS.CONTROLLER.TEST_JOYSTICK)) {
@@ -87,6 +87,13 @@ public class OperatorInterface
       enableTuningControllerBindings();
     }
 
+   //if (DriverControllerUtils
+   //     .controllerIsPresent(RobotConstants.PORTS.CONTROLLER.SHIFT_LIGHT_OUTPUT)) {
+      shiftLightOutput = new OutputJoystick(RobotConstants.PORTS.CONTROLLER.SHIFT_LIGHT_OUTPUT);
+      enableOperatorOutputBindings();
+   // }
+
+     
     enableTriggers();
 
     scoreOperatorPanel = new CommandJoystick(RobotConstants.PORTS.CONTROLLER.SCORE_PANEL);
@@ -95,7 +102,7 @@ public class OperatorInterface
     alignOperatorPanel = new CommandJoystick(RobotConstants.PORTS.CONTROLLER.ALIGN_PANEL);
     alignOperatorBindings();
 
-    shiftLightOutput = new OutputJoystick(RobotConstants.PORTS.CONTROLLER.SHIFT_LIGHT_OUTPUT);
+   
   }
 
   public void enableTuningControllerBindings() {
@@ -152,6 +159,38 @@ public class OperatorInterface
     xboxController.rightBumper().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
   }
 
+  public void enableOperatorOutputBindings(){
+    // Shift light LED triggers — reads wonAuto live from UserPolicy each cycle
+    // No yellow on OutputJoystick so warning states use FAST blink instead
+    shiftLightOutput.setLED(LedNumber.k1, Color.GREEN, true);     
+    
+
+    new Trigger(() -> getShiftState() == ShiftState.YOUR_SHIFT)
+        .onTrue(new InstantCommand(() -> {
+            DriverStation.reportWarning("Green Solid", false);   
+            shiftLightOutput.setLED(LedNumber.k0, Color.GREEN,true);   
+        }));
+
+    new Trigger(() -> getShiftState() == ShiftState.SHIFT_ENDING )
+        .onTrue(new InstantCommand(() -> {
+            DriverStation.reportWarning("Green Blinking", false);   
+            shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, false);   
+        }));
+
+    new Trigger(() -> getShiftState() == ShiftState.THEIR_SHIFT)
+        .onTrue(new InstantCommand(() -> {
+            DriverStation.reportWarning("Red Solid", false);   
+            shiftLightOutput.setLED(LedNumber.k0, Color.RED, true);   
+        }));
+  
+
+    new Trigger(() -> getShiftState() == ShiftState.SHIFT_STARTING)
+       .onTrue(new InstantCommand(() -> {
+            DriverStation.reportWarning("Red Blinking", false);   
+            shiftLightOutput.setLED(LedNumber.k0, Color.RED, false);   
+        }));
+  }
+
   public void enableTriggers() {
     new Trigger(() -> RobotIO.getInstance().getTurretOutput().isPastSofterLowerLimit())
         .onTrue(new InstantCommand(() -> DriverStation.reportWarning("Turret past softer lower limit!", false)))
@@ -161,27 +200,7 @@ public class OperatorInterface
         .onTrue(new InstantCommand(() -> DriverStation.reportWarning("Turret past softer upper limit!", false)))
         .onTrue(new InstantCommand(() -> xboxController.setRumble(RumbleType.kRightRumble, 0.5)));
 
-    // Shift light LED triggers — reads wonAuto live from UserPolicy each cycle
-    // No yellow on OutputJoystick so warning states use FAST blink instead
-    new Trigger(() -> getShiftState() == ShiftState.YOUR_SHIFT)
-        .onTrue(new InstantCommand(() ->
-          DriverStation.reportWarning("Green Solid", false)));
-            // shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, BlinkRate.SOLID)));
 
-    new Trigger(() -> getShiftState() == ShiftState.SHIFT_ENDING)
-        .onTrue(new InstantCommand(() ->
-          DriverStation.reportWarning("Green Blinking", false)));
-            // shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, BlinkRate.FAST)));
-
-    new Trigger(() -> getShiftState() == ShiftState.THEIR_SHIFT)
-        .onTrue(new InstantCommand(() ->
-          DriverStation.reportWarning("Red Solid", false)));
-            // shiftLightOutput.setLED(LedNumber.k0, Color.RED, BlinkRate.SOLID)));
-
-    new Trigger(() -> getShiftState() == ShiftState.SHIFT_STARTING)
-        .onTrue(new InstantCommand(() ->
-          DriverStation.reportWarning("Red Blinking", false)));
-            // shiftLightOutput.setLED(LedNumber.k0, Color.RED, BlinkRate.FAST)));
 
   }
 
