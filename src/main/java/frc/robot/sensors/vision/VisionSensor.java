@@ -14,7 +14,7 @@ import frc.robot.RobotConstants;
  * PhotonVision subsystem for AprilTag-based pose estimation
  */
 public class VisionSensor extends EntechSensor<VisionOutput> {
-    private final static boolean ENABLED = false;
+    private final static boolean ENABLED = true;
     private CameraContainerI cameraContainerA;
     private CameraContainerI cameraContainerB;
     private CameraContainerI cameraContainerC;

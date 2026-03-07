@@ -19,10 +19,9 @@ public class HoodOutput extends SubsystemOutput {
         Logger.recordOutput("HoodOutput/requestedPosition", requestedPosition);
         Logger.recordOutput("HoodOutput/currentPosition", currentPosition);
         Logger.recordOutput("HoodOutput/isAtRequestedPosition", isAtRequestedPosition);
-        
-        if (hoodMotor != null) {
+
+        if (hoodMotor != null)
             hoodMotor.log("HoodOutput/hoodMotor");
-        }
     }
 
     public boolean isMoving() {
@@ -64,5 +63,5 @@ public class HoodOutput extends SubsystemOutput {
     public void setCurrentPosition(double currentPosition) {
         this.currentPosition = currentPosition;
     }
-    
+
 }

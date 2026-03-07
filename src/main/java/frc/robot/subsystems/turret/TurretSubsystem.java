@@ -5,15 +5,20 @@
  */
 package frc.robot.subsystems.turret;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.PersistMode;
+import com.revrobotics.REVLibError;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -30,7 +35,7 @@ import frc.robot.livetuning.LiveTuningHandler;
  */
 public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> {
 
-    private static final boolean ENABLED = false;
+    private static final boolean ENABLED = true;
 
     private SparkMax turretMotor;
     private SparkClosedLoopController turretPIDController;
@@ -46,33 +51,42 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         turretMotor = new SparkMax(RobotConstants.PORTS.CAN.TURRET_MOTOR, MotorType.kBrushless);
 
         turretConfig = new SparkMaxConfig();
+        turretConfig.idleMode(IdleMode.kBrake);
         // Make encoder report degrees directly (adjust if your encoder reports
         // rotations)
         turretConfig.encoder.positionConversionFactor(RobotConstants.TURRET.POSITION_CONVERSION_FACTOR_DEGREES);
-
+        
         // Closed-loop PIDF
         turretConfig.closedLoop
                 .pid(RobotConstants.TURRET.TURRET_POSITION_P, RobotConstants.TURRET.TURRET_POSITION_I,
-                        RobotConstants.TURRET.TURRET_POSITION_D, ClosedLoopSlot.kSlot0).feedForward
+                        RobotConstants.TURRET.TURRET_POSITION_D, ClosedLoopSlot.kSlot0)
+                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                .feedForward
                 .kV(RobotConstants.TURRET.TURRET_POSITION_FF, ClosedLoopSlot.kSlot0);
+        
+        turretConfig.closedLoop
+            .maxMotion
+            .cruiseVelocity(RobotConstants.TURRET.TURRET_CRUISE_VELOCITY_RPM, ClosedLoopSlot.kSlot0)
+            .maxAcceleration(RobotConstants.TURRET.TURRET_MAX_ACCELERATION_RPM_PER_SECOND, ClosedLoopSlot.kSlot0)
+            .allowedProfileError(RobotConstants.TURRET.TURRET_ALLOWED_PROFILE_ERROR_ROTATIONS, ClosedLoopSlot.kSlot0);
+
+
 
         // Apply conservative signals update rates similar to other subsystems
         turretConfig.signals
-                .primaryEncoderPositionAlwaysOn(true)
-                .primaryEncoderPositionPeriodMs((int) (1000.0 / 50.0));
+                .primaryEncoderPositionAlwaysOn(true);
 
         // Configure the motor with these settings
         turretMotor.configure(turretConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         turretEncoder = turretMotor.getEncoder();
-        turretEncoder.setPosition(RobotConstants.TURRET.INITIAL_POSITION_DEGREES);
 
         turretPIDController = turretMotor.getClosedLoopController();
         // create a persistent stall detector once
         stallDetector = MotorStallDetector.Builder.defaults();
 
         // seed desired position to current
-        turretPIDController.setSetpoint(turretEncoder.getPosition(), ControlType.kPosition);
+        turretPIDController.setSetpoint(0.0, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0);
 
         reset();
     }
@@ -83,11 +97,9 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         // stop motor and reset desired speed and requests
         turretMotor.set(0);
         turretEncoder.setPosition(RobotConstants.TURRET.HOME_POSITION_DEGREES);
-        latestInput.setRequestedPosition(turretEncoder.getPosition());
+        latestInput.setRequestedPosition(0.0);
         // set closed-loop setpoint to current position
-        if (turretPIDController != null) {
-            turretPIDController.setSetpoint(turretEncoder.getPosition(), ControlType.kPosition);
-        }
+        turretPIDController.setSetpoint(0.0, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0);
     }
 
     private void setTurretPosition(double desiredAngle) {
@@ -108,15 +120,8 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
                 clamped = turretEncoder.getPosition();
             }
         }
-        
-        latestInput.setRequestedPosition(clamped);
 
-        if (turretPIDController != null) {
-            turretPIDController.setSetpoint(clamped, ControlType.kPosition);
-        } else {
-            // if closed-loop is not ready, seed encoder
-            turretEncoder.setPosition(clamped);
-        }
+        turretPIDController.setSetpoint(desiredAngle, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0);        
     }
 
     @Override
@@ -124,9 +129,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         if (!ENABLED)
             return;
         double desiredPos = latestInput.getRequestedPosition();
-        if (turretPIDController != null) {
-            setTurretPosition(desiredPos);
-        }
+        setTurretPosition(desiredPos);
     }
 
     @Override
@@ -169,15 +172,17 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
             out.setAtForwardLimitStall(false);
         }
 
-        //TODO: soft limit utility class
+        // TODO: soft limit utility class
 
-        if (turretEncoder.getPosition() < LiveTuningHandler.getInstance().getValue("TurretSubsystem/SofterLowerLimitDegrees")) {
+        if (turretEncoder.getPosition() < LiveTuningHandler.getInstance()
+                .getValue("TurretSubsystem/SofterLowerLimitDegrees")) {
             out.setPastSofterLowerLimit(true);
         } else {
             out.setPastSofterLowerLimit(false);
         }
 
-        if (turretEncoder.getPosition() > LiveTuningHandler.getInstance().getValue("TurretSubsystem/SofterUpperLimitDegrees")) {
+        if (turretEncoder.getPosition() > LiveTuningHandler.getInstance()
+                .getValue("TurretSubsystem/SofterUpperLimitDegrees")) {
             out.setPastSofterUpperLimit(true);
         } else {
             out.setPastSofterUpperLimit(false);
@@ -188,26 +193,11 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         out.setMoving(Math.abs(turretEncoder.getVelocity()) > 1e-3);
         out.setRequestedPosition(reqPos);
         out.setCurrentPosition(currentPos);
-        out.setAtForwardLimitStall(turretMotor.getForwardLimitSwitch().isPressed());
-        out.setAtReverseLimitStall(turretMotor.getReverseLimitSwitch().isPressed());
         out.setAtRequestedPosition(
                 Math.abs(currentPos - reqPos) <= RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES);
-
-        out.setTurretMotor(SparkOutput.createOutput(turretMotor));
+            out.setTurretMotor(SparkOutput.createOutput(turretMotor));
 
         return out;
-    }
-
-    public void setSpeed(double speed) {
-        if (!ENABLED)
-            return;
-        // prevent driving if motor is stalled
-        if (stallDetector != null && stallDetector.isStalled(turretMotor)) {
-            turretMotor.set(0);
-            return;
-        }
-
-        turretMotor.set(speed);
     }
 
 }
