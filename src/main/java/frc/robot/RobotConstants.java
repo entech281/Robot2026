@@ -147,8 +147,8 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/SetSpeed", 0.0),
         Map.entry("IntakeSubsystem/SetSpeed", 0.0),
         Map.entry("TransferSubsystem/SetSpeed", 0.0),
-        Map.entry("TurretSubsystem/LowerLimitDegrees", -45.0),
-        Map.entry("TurretSubsystem/UpperLimitDegrees", 45.0),
+        Map.entry("TurretSubsystem/LowerLimitDegrees", -90.0),
+        Map.entry("TurretSubsystem/UpperLimitDegrees", 90.0),
         Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -40.0),
         Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 45.0),
         Map.entry("TurretSubsystem/PresetOneDegrees", 0.0),
@@ -360,7 +360,7 @@ public final class RobotConstants {
     // Turret closed-loop settings
     public static final double POSITION_CONVERSION_FACTOR_DEGREES = 360.0 * (40.0/150.0);// ;3.2 ;//207360 // encoder units -> degrees (set
                                                                         // appropriately)
-    public static final double TURRET_POSITION_P = 0.1;
+    public static final double TURRET_POSITION_P = 0.02;
     public static final double TURRET_POSITION_I = 0.0;
     public static final double TURRET_POSITION_D = 0.0;
     public static final double TURRET_POSITION_FF = 0.0;

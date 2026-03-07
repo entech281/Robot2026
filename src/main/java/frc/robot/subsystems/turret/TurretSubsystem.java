@@ -21,6 +21,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
@@ -44,13 +46,24 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     private TurretInput latestInput = new TurretInput();
     private SparkMaxConfig turretConfig;
     private MotorStallDetector stallDetector;
+    private double PID_MAX = 1;
+    private double PID_MIN = -1;
 
+    private PIDController control = new PIDController(RobotConstants.TURRET.TURRET_POSITION_P, RobotConstants.TURRET.TURRET_POSITION_I,
+                        RobotConstants.TURRET.TURRET_POSITION_D);
+
+    private final TrapezoidProfile m_profile =
+      new TrapezoidProfile(new TrapezoidProfile.Constraints(
+        400,
+        3200
+        ));
+    private TrapezoidProfile.State m_goal = new TrapezoidProfile.State();
+    private TrapezoidProfile.State m_setpoint = new TrapezoidProfile.State();
     @Override
     public void initialize() {
         if (!ENABLED)
             return;
         turretMotor = new SparkMax(RobotConstants.PORTS.CAN.TURRET_MOTOR, MotorType.kBrushless);
-
         turretConfig = new SparkMaxConfig();
         turretConfig.idleMode(IdleMode.kBrake);
         // Make encoder report degrees directly (adjust if your encoder reports
@@ -62,20 +75,19 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         turretConfig.closedLoop
                 .pid(RobotConstants.TURRET.TURRET_POSITION_P, RobotConstants.TURRET.TURRET_POSITION_I,
                         RobotConstants.TURRET.TURRET_POSITION_D, ClosedLoopSlot.kSlot0)
-                .feedbackSensor(FeedbackSensor.kDetachedRelativeEncoder, encoder)
+                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                 .feedForward
                 .kV(RobotConstants.TURRET.TURRET_POSITION_FF, ClosedLoopSlot.kSlot0);
         
-        // turretConfig.closedLoop
-        //     .maxMotion
-        //     .cruiseVelocity(RobotConstants.TURRET.TURRET_CRUISE_VELOCITY_RPM, ClosedLoopSlot.kSlot0)
-        //     .maxAcceleration(RobotConstants.TURRET.TURRET_MAX_ACCELERATION_RPM_PER_SECOND, ClosedLoopSlot.kSlot0)
-        //     .allowedProfileError(RobotConstants.TURRET.TURRET_ALLOWED_PROFILE_ERROR_ROTATIONS, ClosedLoopSlot.kSlot0);
+        turretConfig.closedLoop
+            .maxMotion
+            .cruiseVelocity(RobotConstants.TURRET.TURRET_CRUISE_VELOCITY_RPM, ClosedLoopSlot.kSlot0)
+            .maxAcceleration(RobotConstants.TURRET.TURRET_MAX_ACCELERATION_RPM_PER_SECOND, ClosedLoopSlot.kSlot0)
+            .allowedProfileError(RobotConstants.TURRET.TURRET_ALLOWED_PROFILE_ERROR_ROTATIONS, ClosedLoopSlot.kSlot0);
         
         turretConfig.inverted(true);
 
         encoder.setPositionConversionFactor(RobotConstants.TURRET.POSITION_CONVERSION_FACTOR_DEGREES);
-
 
         // Configure the motor with these settings
         turretMotor.configure(turretConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -87,7 +99,9 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         stallDetector = MotorStallDetector.Builder.defaults();
 
         // seed desired position to current
-        turretPIDController.setSetpoint(0.0, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+        // turretPIDController.setSetpoint(0.0, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0);
+        turretMotor.set(Math.max(Math.min(control.calculate(turretEncoder.getPosition(), PID_MAX), 0.0), PID_MIN));
+
 
         reset();
     }
@@ -100,7 +114,9 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         turretEncoder.setPosition(RobotConstants.TURRET.HOME_POSITION_DEGREES);
         latestInput.setRequestedPosition(0.0);
         // set closed-loop setpoint to current position
-        turretPIDController.setSetpoint(0.0, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+        // turretPIDController.setSetpoint(0.0, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0);
+        turretMotor.set(Math.max(Math.min(control.calculate(turretEncoder.getPosition(), 0.0), PID_MAX), PID_MIN));
+
     }
 
     private void setTurretPosition(double desiredAngle) {
@@ -122,7 +138,10 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
             }
         }
 
-        turretPIDController.setSetpoint(desiredAngle, ControlType.kPosition, ClosedLoopSlot.kSlot0);        
+        // turretPIDController.setSetpoint(desiredAngle, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0); 
+        m_goal = new TrapezoidProfile.State(clamped, 0);
+        m_setpoint = m_profile.calculate(1.0/50.0, m_setpoint, m_goal);
+        turretMotor.set(Math.max(Math.min(control.calculate(turretEncoder.getPosition(), m_setpoint.position), PID_MAX), PID_MIN));
     }
 
     @Override

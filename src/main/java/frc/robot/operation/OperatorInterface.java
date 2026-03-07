@@ -143,10 +143,10 @@ public class OperatorInterface
         0));
 
     xboxController.b().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
-        30));
+        90));
 
     xboxController.y().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
-        -30));
+        -90));
 
     xboxController.leftBumper().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
     xboxController.rightBumper().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
