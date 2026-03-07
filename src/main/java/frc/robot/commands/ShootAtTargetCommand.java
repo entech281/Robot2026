@@ -51,8 +51,10 @@ public class ShootAtTargetCommand extends EntechCommand {
         this.turretCalculatorSupplier = turretCalculatorSupplier;
     }
 
+    //nothing to end
     @Override
     public void end(boolean interrupted) {
+        //no need to end
     }
 
     @Override

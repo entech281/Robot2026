@@ -19,6 +19,7 @@ class ShiftStateTrackerTest {
         );
     }
 
+
     @Test
     void testWinnerShiftActive() {
         ShiftStateTracker tracker = new ShiftStateTracker(true, 5);

@@ -80,16 +80,16 @@ public class RobotIO implements DriveInputSupplier {
     return latestHoodOutput;
   }
 
-  public HopperOutput getHopperSubsystem() {
-    return latestHopperOutput;
-  }
-
   public TransferOutput getTransferOutput() {
     return latestTransferOutput;
   }
 
   public IntakeOutput getIntakeOutput() {
     return latestIntakeOutput;
+  }
+
+  public HopperOutput getHopperOutput(){
+    return latestHopperOutput;
   }
 
   public HallEffectOutput getHallEffectOutput() {
@@ -150,6 +150,7 @@ public class RobotIO implements DriveInputSupplier {
     latestTurretOutput = to;
     to.log();
   }
+
 
   public void updateHallEffect(HallEffectOutput heo) {
     latestHallEffectOutput = heo;
