@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.entech.TestableHardwareI;
 import frc.entech.commands.AutonomousException;
 import frc.entech.commands.InstantAnytimeCommand;
+import frc.entech.util.Triboolean;
 import frc.robot.commands.GyroResetByAngleCommand;
 import frc.robot.commands.HomeTurretCommand;
 import frc.robot.commands.RotateToAngleCommand;

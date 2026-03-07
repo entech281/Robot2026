@@ -7,6 +7,7 @@ import org.littletonrobotics.junction.Logger;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 import frc.entech.sensors.SensorOutput;
+import frc.entech.util.Triboolean;
 
 public class VisionOutput extends SensorOutput {
     private boolean connected = false;
@@ -19,6 +20,8 @@ public class VisionOutput extends SensorOutput {
     private List<VisionPose> visionPoses = new ArrayList<>();
 
     private double averagePoseAmbiguity = 0.0;
+
+    private Triboolean goodness;
 
     @Override
     public void toLog() {
@@ -144,6 +147,14 @@ public class VisionOutput extends SensorOutput {
      */
     public void setVisionPoses(List<VisionPose> visionPoses) {
         this.visionPoses = visionPoses;
+    }
+
+        public Triboolean getGoodness() {
+        return goodness;
+    }
+
+    public void setGoodness(Triboolean goodness) {
+        this.goodness = goodness;
     }
 
 }

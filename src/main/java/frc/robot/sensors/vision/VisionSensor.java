@@ -8,6 +8,7 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.sensors.EntechSensor;
+import frc.entech.util.Triboolean;
 import frc.robot.RobotConstants;
 
 /**
@@ -83,6 +84,14 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
                 output.setVisionPoses(poses.get());
             } else {
                 output.setVisionPoses(new java.util.ArrayList<>());
+            }
+
+            if (!cameraNet.isConnected() || poses.isEmpty() || poses.get().size() <= 1) {
+                output.setGoodness(Triboolean.FALSE);
+            } else if (poses.get().size() <= 3) {
+                output.setGoodness(Triboolean.YESNT);
+            } else {
+                output.setGoodness(Triboolean.TRUE);
             }
         }
 
