@@ -103,30 +103,44 @@ public class ShiftStateTracker {
                 : ShiftState.THEIR_SHIFT;
         }
     
-    public static String getAlliance(){
-        if (DriverStation.getAlliance().equals(Alliance.Red)) {
-            return "Red";
-        } else if (DriverStation.getAlliance().equals(Alliance.Blue)) {
-            return "Blue";
-        } else {
-            return "Invalid Alliance";
-        }
-    }
+    // public static String getAlliance(){
+    //     if ( DriverStation.getAlliance().isPresent()){
+
+    //     }
+    //     if (DriverStation.getAlliance().equals(Alliance.Red)) {
+    //         return "Red";
+    //     } else if (DriverStation.getAlliance().equals(Alliance.Blue)) {
+    //         return "Blue";
+    //     } else {
+    //         return "Invalid Alliance";
+    //     }
+    // }
 
     private static boolean areWeFirst() {
+        boolean result = false;
         String message = DriverStation.getGameSpecificMessage();
         if (message.length() > 0) {
             char character = message.charAt(0);
-            if ((character == 'R' && getAlliance().equals("Red")) || character == 'B' && getAlliance().equals("Blue")) {
-                return true;
+            if ( DriverStation.getAlliance().isPresent()){
+                
+                Alliance whoWeAre = DriverStation.getAlliance().get();
+                
+                if (character == 'R' && whoWeAre == Alliance.Red ){
+                    result=true;
+                }
+                if (character == 'B' && whoWeAre == Alliance.Blue ) {
+                    result=true;
+                }
+                //
             }
-            else if ((character == 'R' && getAlliance().equals("Blue"))|| (character == 'B' && getAlliance().equals("Red"))) {
-                return false;
-            }
+
+        }
+        else{
+            System.err.println("No Game Message" );            
         }
         // Default to true if we can't get a message, but log an error
-        System.err.println("Could not get game-specific message to determine alliance! Defaulting to Red.");
-        return true;
+        System.err.println("Got game-specific message !  Alliance result=" + result);
+        return result;
     }
 
     public static String getGameSpecificMessage(){
