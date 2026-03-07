@@ -80,10 +80,6 @@ public class RobotIO implements DriveInputSupplier {
     return latestHoodOutput;
   }
 
-  public HopperOutput getHopperSubsystem() {
-    return latestHopperOutput;
-  }
-
   public TransferOutput getTransferOutput() {
     return latestTransferOutput;
   }

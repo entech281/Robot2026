@@ -53,10 +53,10 @@ public class RunHoodCommand extends EntechCommand {
         HoodInput input = new HoodInput();
         double requestedPosition = LiveTuningHandler.getInstance().getValue(KEY_STRING);
         double otherRequestedPosition = -LiveTuningHandler.getInstance().getValue(KEY_STRING);
-        if (direction) {
-            input.setRequestedPosition(requestedPosition);
-        } else {
+        if (!direction) {
             input.setRequestedPosition(otherRequestedPosition);
+        } else {
+            input.setRequestedPosition(requestedPosition);
         }
         hood.updateInputs(input);
     }

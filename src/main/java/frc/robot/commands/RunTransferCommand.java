@@ -8,6 +8,7 @@ import frc.robot.subsystems.transfer.TransferSubsystem;
 public class RunTransferCommand extends EntechCommand {
     private final TransferSubsystem transfer;
     private boolean direction;
+    private static final String KEY_STRING = "TransferSubsystem/SetSpeed";
 
     public RunTransferCommand(TransferSubsystem transfer) {
         this(transfer, true);
@@ -33,9 +34,9 @@ public class RunTransferCommand extends EntechCommand {
     public void execute() {
         TransferInput input = new TransferInput();
         if (direction) {
-            input.setSpeed(LiveTuningHandler.getInstance().getValue("TransferSubsystem/SetSpeed"));
+            input.setSpeed(LiveTuningHandler.getInstance().getValue(KEY_STRING));
         } else {
-            input.setSpeed(-LiveTuningHandler.getInstance().getValue("TransferSubsystem/SetSpeed"));
+            input.setSpeed(-LiveTuningHandler.getInstance().getValue(KEY_STRING));
         }
         transfer.updateInputs(input);
     }
@@ -46,12 +47,13 @@ public class RunTransferCommand extends EntechCommand {
     }
 
     @Override
+    //dont commet on this
     public void initialize() {
         TransferInput input = new TransferInput();
-        if (direction) {
-            input.setSpeed(LiveTuningHandler.getInstance().getValue("TransferSubsystem/SetSpeed"));
+        if (!direction) {
+            input.setSpeed(-LiveTuningHandler.getInstance().getValue(KEY_STRING));
         } else {
-            input.setSpeed(-LiveTuningHandler.getInstance().getValue("TransferSubsystem/SetSpeed"));
+            input.setSpeed(LiveTuningHandler.getInstance().getValue(KEY_STRING));
         }
         transfer.updateInputs(input);
     }
