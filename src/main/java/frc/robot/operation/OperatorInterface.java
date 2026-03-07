@@ -191,7 +191,8 @@ public class OperatorInterface
         .whileTrue(commandFactory.getFullShootCommand());
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.SNOWBLOW_FIRE)
-        .whileTrue(commandFactory.getSnowblowCommand());
+        .whileTrue(commandFactory.getSnowblowCommand())
+        .onFalse(commandFactory.getStopShootingCommand());
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INTAKE)
         .whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), true));
