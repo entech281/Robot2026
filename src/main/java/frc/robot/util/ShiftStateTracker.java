@@ -59,6 +59,7 @@ public class ShiftStateTracker {
         } 
     
         public ShiftState getState(double matchTime) {
+            System.out.println("matchTime=" + matchTime);            
             if (matchTime > TELEOP_START || matchTime < 0.0) {
                 return ShiftState.YOUR_SHIFT;
             }
@@ -69,7 +70,7 @@ public class ShiftStateTracker {
             if (activeShiftState != null) {
                 return activeShiftState;
             }
-    
+
             return getInactiveShiftState(matchTime, myShifts);
         }
     
