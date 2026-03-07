@@ -55,8 +55,10 @@ public class ManualShootCommand extends EntechCommand {
         this(shooterSubsystem,  hoodSubsystem, transferSubsystem, turretSubsystem, turretAngle, shooterCalculator.get().calculateShot().getIdealShot().getShotAngularVelocity(Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS)), shooterCalculator.get().calculateShot().getIdealShot().getHoodAngle());
     }
 
+    //no sudden ends
     @Override
     public void end(boolean interrupted) {
+        //no need to end
     }
 
     @Override
