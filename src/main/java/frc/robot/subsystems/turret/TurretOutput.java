@@ -1,18 +1,21 @@
 package frc.robot.subsystems.turret;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.units.measure.Angle;
 import frc.entech.subsystems.SparkOutput;
 import frc.entech.subsystems.SubsystemOutput;
 
 public class TurretOutput extends SubsystemOutput {
   private boolean moving = false;
   private boolean isAtRequestedPosition = false;
-  private double requestedPosition = 0.0;
+  private Angle requestedPosition = Degrees.of(0.0);
   // TODO: match with physical appearance
   private boolean isAtForwardLimitStall = false;
   private boolean isAtReverseLimitStall = false;
-  private double currentPosition = 0.0;
+  private Angle currentPosition = Degrees.of(0.0);
   private boolean isStalled = false;
   private boolean isPastSofterLowerLimit = false;
   private boolean isPastSofterUpperLimit = false;
@@ -48,11 +51,11 @@ public class TurretOutput extends SubsystemOutput {
     this.isAtRequestedPosition = isAtRequestedPosition;
   }
 
-  public double getCurrentPosition() {
+  public Angle getCurrentPosition() {
     return this.currentPosition;
   }
 
-  public void setCurrentPosition(double currentPosition) {
+  public void setCurrentPosition(Angle currentPosition) {
     this.currentPosition = currentPosition;
   }
 
@@ -72,11 +75,11 @@ public class TurretOutput extends SubsystemOutput {
     this.isAtReverseLimitStall = isAtReverseLimitStall;
   }
 
-  public double getRequestedPosition() {
+  public Angle getRequestedPosition() {
     return this.requestedPosition;
   }
 
-  public void setRequestedPosition(double requestedPosition) {
+  public void setRequestedPosition(Angle requestedPosition) {
     this.requestedPosition = requestedPosition;
   }
 

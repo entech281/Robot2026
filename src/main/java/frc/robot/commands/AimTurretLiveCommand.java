@@ -4,6 +4,7 @@ import frc.entech.commands.EntechCommand;
 import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.subsystems.turret.TurretInput;
 import frc.robot.subsystems.turret.TurretSubsystem;
+import static edu.wpi.first.units.Units.Degrees;
 
 public class AimTurretLiveCommand extends EntechCommand {
     private final TurretSubsystem turret;
@@ -17,7 +18,7 @@ public class AimTurretLiveCommand extends EntechCommand {
     public void end(boolean interrupted) {
         TurretInput in = new TurretInput();
         in.setActivate(false);
-        in.setRequestedPosition(0.0);
+        in.setRequestedPosition(Degrees.of(0.0));
         turret.updateInputs(in);
     }
 
@@ -25,7 +26,7 @@ public class AimTurretLiveCommand extends EntechCommand {
     public void execute() {
         TurretInput in = new TurretInput();
         in.setActivate(false);
-        in.setRequestedPosition(LiveTuningHandler.getInstance().getValue("TurretSubsystem/LiveAngle"));
+        in.setRequestedPosition(Degrees.of(LiveTuningHandler.getInstance().getValue("TurretSubsystem/LiveAngle")));
         turret.updateInputs(in);
     }
 
