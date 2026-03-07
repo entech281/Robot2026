@@ -1,17 +1,18 @@
 package frc.robot.operation;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Radians;
 
-import java.util.Optional;
-
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.ADIS16448_IMU;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -22,24 +23,16 @@ import frc.entech.operatorpanel.OutputJoystick.Color;
 import frc.entech.operatorpanel.OutputJoystick.LedNumber;
 import frc.robot.CommandFactory;
 import frc.robot.HardwareManager;
-import frc.robot.Robot;
-import frc.robot.commands.AimTurretLiveCommand;
-import frc.robot.commands.DeployHopper;
 import frc.robot.RobotConstants;
+import frc.robot.commands.DeployHopper;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.GyroReset;
-import frc.robot.commands.ManualHoodCommand;
 import frc.robot.commands.ManualShootCommand;
 import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.NudgeTurretCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.RunIntakeCommand;
-import frc.robot.commands.RunShooterAtLiveSpeedCommand;
-import frc.robot.commands.RunTransferCommand;
-import frc.robot.commands.TransfreFoo;
 import frc.robot.commands.TwistCommand;
-import frc.robot.commands.XDriveCommand;
 import frc.robot.io.DebugInput;
 import frc.robot.io.DebugInputSupplier;
 import frc.robot.io.DriveInputSupplier;
@@ -50,6 +43,7 @@ import frc.robot.processors.OdometryProcessor;
 import frc.robot.subsystems.drive.DriveInput;
 import frc.robot.util.ShiftStateTracker;
 import frc.robot.util.ShiftStateTracker.ShiftState;
+import frc.robot.util.ShooterCalculator;
 
 public class OperatorInterface
     implements DriveInputSupplier, DebugInputSupplier, OperatorInputSupplier {
@@ -186,8 +180,21 @@ public class OperatorInterface
 
   public void scoreOperatorBindings() {
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.FIRE)
-        .whileTrue(new ParallelCommandGroup(new RunTransferCommand(subsystemManager.getTransferSubsystem()),
-            new RunShooterAtLiveSpeedCommand(subsystemManager.getShooterSubsystem())));
+        .whileTrue(new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), Degrees.of(subsystemManager.getTurretSubsystem().getOutputs().getCurrentPosition()), 
+          () -> {
+
+            Angle angle = subsystemManager.getGyroSubsystem().getOutputs().getYaw();
+
+            angle = Degrees.of(angle.in(Degrees) % 360);
+
+            Pose3d currentPose = new Pose3d(RobotIO.getInstance().getOdometryPose()).plus(RobotConstants.SHOOTER.SHOT_TRANSFORM);
+            Pose3d targetPose = currentPose.plus( new Transform3d(UserPolicy.getInstance().getHubOffset().in(Meters) * Math.sin(angle.in(Radians)), UserPolicy.getInstance().getHubOffset().in(Meters) * Math.cos(angle.in(Radians)), 0.0, new Rotation3d()) );
+
+            return new ShooterCalculator(subsystemManager.getDriveSubsystem().getChassisSpeeds(), currentPose, targetPose);
+          }
+        ))
+        .onFalse(commandFactory.getStopShootingCommand());
+      
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.AUTO_FIRE)
         .whileTrue(commandFactory.getFullShootCommand());
 
@@ -217,10 +224,10 @@ public class OperatorInterface
         .onTrue(new InstantCommand(() -> UserPolicy.getInstance().setIsAutoWon(true)))
         .onFalse(new InstantCommand(() -> UserPolicy.getInstance().setIsAutoWon(false)));
 
-    scoreOperatorPanel.button(9456789)
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.POSITIVE_TURRET_NUDGE)
         .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), true))
         .onFalse(commandFactory.getStopShootingCommand());
-    scoreOperatorPanel.button(987654321)
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DECREASE_DISTANCE_OFFSET)
       .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), false))
       .onFalse(commandFactory.getStopShootingCommand());
   }

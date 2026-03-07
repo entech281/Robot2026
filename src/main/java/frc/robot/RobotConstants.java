@@ -244,6 +244,10 @@ public final class RobotConstants {
       public static final int PRESET_2_FIRE = 3;
       public static final int WON_AUTO_SWITCH = 11;
       public static final int SNOWBLOW_FIRE = 13;
+      public static final int INCREASE_DISTANCE_OFFSET = 98;
+      public static final int DECREASE_DISTANCE_OFFSET = 99;
+      public static final int POSITIVE_TURRET_NUDGE = 100;
+      public static final int NEGATIVE_TURRET_NUDGE = 101;
     }
 
     public static interface SWITCHES {
