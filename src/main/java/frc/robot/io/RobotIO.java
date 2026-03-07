@@ -92,6 +92,10 @@ public class RobotIO implements DriveInputSupplier {
     return latestIntakeOutput;
   }
 
+  public HopperOutput getHopperOutput(){
+    return latestHopperOutput;
+  }
+
   public HallEffectOutput getHallEffectOutput() {
     return latestHallEffectOutput;
   }
@@ -150,6 +154,7 @@ public class RobotIO implements DriveInputSupplier {
     latestTurretOutput = to;
     to.log();
   }
+
 
   public void updateHallEffect(HallEffectOutput heo) {
     latestHallEffectOutput = heo;

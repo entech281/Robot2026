@@ -26,8 +26,10 @@ import frc.robot.commands.AimTurretLiveCommand;
 import frc.robot.commands.DeployHopper;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.DropHopper;
+import frc.robot.commands.DropThenRaiseHopper;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.GyroReset;
+import frc.robot.commands.HoodJogCommand;
 import frc.robot.commands.ManualHoodCommand;
 import frc.robot.commands.ManualShootCommand;
 import frc.robot.commands.ManualTurretCommand;
@@ -37,6 +39,7 @@ import frc.robot.commands.RunShooterAtLiveSpeedCommand;
 import frc.robot.commands.RunShooterCommand;
 import frc.robot.commands.RunTransferCommand;
 import frc.robot.commands.TransfreFoo;
+import frc.robot.commands.TurretJogCommand;
 import frc.robot.commands.TwistCommand;
 import frc.robot.io.DebugInput;
 import frc.robot.io.DebugInputSupplier;
@@ -98,12 +101,24 @@ public class OperatorInterface
   }
 
   public void enableTuningControllerBindings() {
-    tuningController.a().onTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
-    tuningController.b().onTrue(new RunTransferCommand(subsystemManager.getTransferSubsystem()));
-    tuningController.x().onTrue(new RunShooterCommand(subsystemManager.getShooterSubsystem()));
-    tuningController.y().onTrue(new DropHopper(subsystemManager.getHopperSubsystem()));
+  // Basic motor toggles for quick tuning
+  tuningController.a().whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
+  tuningController.b().whileTrue(new RunTransferCommand(subsystemManager.getTransferSubsystem()));
+  tuningController.x().whileTrue(new RunShooterCommand(subsystemManager.getShooterSubsystem()));
+  // Momentary drop-then-raise hopper cycle for tuning
+  tuningController.y().onTrue(new DropThenRaiseHopper(subsystemManager.getHopperSubsystem()));
 
-    
+  // Turret tuning: bumpers jog left/right alrwhile held (small steps)
+  tuningController.povLeft()
+    .whileTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), -5.0));
+  tuningController.povRight()
+    .whileTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), 5.0));
+
+  // Hood tuning: use POV (d-pad) up/down to jog hood +/-5 degrees while held
+  tuningController.povDown().whileTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), 5.0));
+
+  tuningController.povUp().whileTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), -5.0));
+
   }
 
   public void configureBindings() {
