@@ -1,8 +1,11 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Milliseconds;
 import static edu.wpi.first.units.Units.RPM;
 
 import java.util.Map;
@@ -22,6 +25,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularAcceleration;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Time;
 import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.sensors.gyro.GyroSensor.GyroHardware;
 import frc.robot.util.ShooterCalculator;
@@ -29,7 +36,6 @@ import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
 
 public final class RobotConstants {
   public static final GyroHardware GYRO_HARDWARE = GyroHardware.NAVX3;
-  public static final double TIME_PER_PERIODICAL_LOOP_SECONDS = 0.00;
 
   public static interface AccelerationFilter {
     public static final double DIRECTION_SLEW_RATE = 0.95; // radians per second
@@ -356,26 +362,17 @@ public final class RobotConstants {
   }
 
   public static interface TURRET {
-    // TODO: Make these real
-    public static final double INITIAL_POSITION_DEGREES = 0.0;
     // Turret closed-loop settings
-    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 360.0 * (40.0/150.0);// ;3.2 ;//207360 // encoder units -> degrees (set
-                                                                        // appropriately)
+    public static final double POSITION_CONVERSION_FACTOR_ABSOLUTE_ENCODER = 360.0 * (40.0 / 150.0);
+    public static final double POSITION_CONVERSION_FACTOR_INTERNAL_ENCODER = 360.0 * (1.0 / 112.5);
+    public static final Time TRAPEZOIDAL_DELTA_TIME = Milliseconds.of(20);
     public static final double TURRET_POSITION_P = 0.02;
     public static final double TURRET_POSITION_I = 0.0;
     public static final double TURRET_POSITION_D = 0.0;
-    public static final double TURRET_POSITION_FF = 0.0;
-    public static final double TURRET_CRUISE_VELOCITY_RPM = 150.0; // max velocity for motion magic
-    public static final double TURRET_MAX_ACCELERATION_RPM_PER_SECOND = 100.0; // max acceleration for motion magic
-    public static final double TURRET_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5; // allowable error for motion magic
-    public static final double TURRET_POSITION_TOLERANCE_DEGREES = 1.0; // considered at setpoint within this
-    public static final double HOME_POSITION_DEGREES = 0.0; // position to reset to
-    // preset manual positions (buttons will command these)
-    public static final double TURRET_POSITION_PRESET_A_DEGREES = 0.0;
-    public static final double TURRET_POSITION_PRESET_B_DEGREES = -20;
-    public static final double TURRET_POSITION_PRESET_Y_DEGREES = 20;
-    // small adjustment step used by any incremental commands
-    public static final double TURRET_ADJUST_STEP_DEGREES = 5.0;
+    public static final AngularVelocity TURRET_CRUISE_VELOCITY = DegreesPerSecond.of(400);
+    public static final AngularAcceleration TURRET_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(3200);
+    public static final Angle TURRET_POSITION_TOLERANCE_DEGREES = Degrees.of(1.0); // considered at setpoint within this
+    public static final Angle HOME_POSITION_DEGREES = Degrees.of(0.0); // position to reset to
 
     public static final Pose3d BLUE_HUB_LOCATION = new Pose3d(Inches.of(182.11).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
@@ -395,6 +392,7 @@ public final class RobotConstants {
   public static interface HOOD {
     // TODO: make these real
     public static final double POSITION_CONVERSION_FACTOR_DEGREES = 1.65441176471;
+    public static final double VELOCITY_CONVERSION_FACTOR_DEGREES_PER_SECOND_PER_RPM = 1.65441176471 / 60.0;
     public static final double HOOD_P = 3;
     public static final double HOOD_I = 0.0;
     public static final double HOOD_D = 0.0;
@@ -402,8 +400,8 @@ public final class RobotConstants {
     public static final double HOOD_LOWER_LIMIT_DEGREES = 0.0;
     public static final double HOOD_UPPER_LIMIT_DEGREES = 25.0;
     public static final double HOOD_POSITION_TOLERANCE_DEGREES = 0.1;
-    public static final double HOOD_CRUISE_VELOCITY_RPM = 2000.0;
-    public static final double HOOD_MAX_ACCELERATION_RPM_PER_SECOND = 10000.0;
+    public static final AngularVelocity HOOD_CRUISE_VELOCITY = DegreesPerSecond.of(55.14705882366667);
+    public static final AngularAcceleration HOOD_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(275.73529411833334);
     public static final double HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5;
   }
 

@@ -1,19 +1,16 @@
 package frc.robot.subsystems.turret;
 
 import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.REVLibError;
-import com.revrobotics.encoder.DetachedEncoder;
 
-public class TurretEncoder extends DetachedEncoder {
+public class TurretEncoder {
     private final AbsoluteEncoder absoluteEncoder;
     private double velocityConversionFactor = 1.0;
     private double positionConversionFactor = 1.0;
-    private double lastPostion = 0.0;
+    private double lastPosition = 0.0;
     private double relativePosition = 0.0;
     private double positionOffset = 0.0;
-    public TurretEncoder(int id, Model model, AbsoluteEncoder absEncoder) {
-        super(id, model);
 
+    public TurretEncoder(AbsoluteEncoder absEncoder) {
         absoluteEncoder = absEncoder;
     }
 
@@ -28,46 +25,32 @@ public class TurretEncoder extends DetachedEncoder {
     private double getContinuousPosition() {
         double currentPosition = absoluteEncoder.getPosition() - positionOffset;
 
-        double deltaPositon = currentPosition - lastPostion;
+        double deltaPosition = currentPosition - lastPosition;
 
-        if (deltaPositon <= -0.5) {
-            deltaPositon = deltaPositon + 1;
-        } else if (deltaPositon > 0.5) {
-            deltaPositon = deltaPositon - 1;
+        if (deltaPosition <= -0.5) {
+            deltaPosition = deltaPosition + 1;
+        } else if (deltaPosition > 0.5) {
+            deltaPosition = deltaPosition - 1;
         }
 
-        relativePosition = relativePosition + deltaPositon;
+        relativePosition = relativePosition + deltaPosition;
 
-        lastPostion = currentPosition;
+        lastPosition = currentPosition;
 
         return relativePosition;
     }
 
-    @Override
-    public double getAngle() {
-        return getContinuousPosition() * positionConversionFactor;
-    }
-
-    @Override
     public double getPosition() {
         return getContinuousPosition() * positionConversionFactor;
     }
 
-    @Override
-    public double getRawAngle() {
-        return absoluteEncoder.getPosition();
-    }
-
-    @Override
     public double getVelocity() {
         return absoluteEncoder.getVelocity() * velocityConversionFactor;
     }
 
-    @Override
-    public REVLibError setPosition(double position) {
-        lastPostion = (position / positionConversionFactor) % 1;
-        positionOffset = absoluteEncoder.getPosition() - lastPostion;
+    public void setPosition(double position) {
+        lastPosition = (position / positionConversionFactor) % 1;
+        positionOffset = absoluteEncoder.getPosition() - lastPosition;
         relativePosition = position / positionConversionFactor;
-        return REVLibError.kOk;
     }
 }

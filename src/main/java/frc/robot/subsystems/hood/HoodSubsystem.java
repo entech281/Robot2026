@@ -1,5 +1,9 @@
 package frc.robot.subsystems.hood;
 
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
+
+import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -15,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.subsystems.SparkOutput;
-import frc.entech.util.StoppingCounter;
 import frc.robot.RobotConstants;
 
 public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
@@ -40,6 +43,8 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
         hoodConfig.idleMode(IdleMode.kBrake);
         hoodConfig.inverted(false);
         hoodConfig.encoder.positionConversionFactor(RobotConstants.HOOD.POSITION_CONVERSION_FACTOR_DEGREES);
+        hoodConfig.encoder
+                .velocityConversionFactor(RobotConstants.HOOD.VELOCITY_CONVERSION_FACTOR_DEGREES_PER_SECOND_PER_RPM);
 
         // Closed-loop PIDF
         hoodConfig.closedLoop
@@ -48,8 +53,8 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
         hoodConfig.closedLoop.maxMotion
-                .cruiseVelocity(RobotConstants.HOOD.HOOD_CRUISE_VELOCITY_RPM)
-                .maxAcceleration(RobotConstants.HOOD.HOOD_MAX_ACCELERATION_RPM_PER_SECOND)
+                .cruiseVelocity(RobotConstants.HOOD.HOOD_CRUISE_VELOCITY.in(DegreesPerSecond))
+                .maxAcceleration(RobotConstants.HOOD.HOOD_MAX_ACCELERATION.in(DegreesPerSecondPerSecond))
                 .allowedProfileError(RobotConstants.HOOD.HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS);
 
         // Apply conservative signals update rates similar to other subsystems
@@ -60,7 +65,7 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
                 .reverseLimitSwitchTriggerBehavior(Behavior.kStopMovingMotor);
 
         // Configure the motor with these settings
-        hoodMotor.configure(hoodConfig, ResetMode.kResetSafeParameters, com.revrobotics.PersistMode.kPersistParameters);
+        hoodMotor.configure(hoodConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         hoodEncoder = hoodMotor.getEncoder();
 
