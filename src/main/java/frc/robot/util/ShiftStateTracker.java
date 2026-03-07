@@ -52,7 +52,7 @@ public class ShiftStateTracker {
         String message = getGameSpecificMessage();
         if (message.isEmpty() && first) return true;
     
-            return false;
+        else return false;
         } 
     
         public ShiftState getState(double matchTime) {  
