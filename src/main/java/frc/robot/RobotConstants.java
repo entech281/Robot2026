@@ -3,6 +3,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
+import static edu.wpi.first.units.Units.Feet;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Milliseconds;
@@ -28,6 +29,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Time;
 import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.sensors.gyro.GyroSensor.GyroHardware;
@@ -153,19 +155,20 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/SetSpeed", 0.0),
         Map.entry("IntakeSubsystem/SetSpeed", 0.0),
         Map.entry("TransferSubsystem/SetSpeed", 0.0),
-        Map.entry("TurretSubsystem/LowerLimitDegrees", -90.0),
-        Map.entry("TurretSubsystem/UpperLimitDegrees", 90.0),
+        Map.entry("TurretSubsystem/LowerLimitDegrees", 45.0),
+        Map.entry("TurretSubsystem/UpperLimitDegrees", 45.0),
         Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -40.0),
         Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 45.0),
         Map.entry("TurretSubsystem/PresetOneDegrees", 0.0),
         Map.entry("TurretSubsystem/PresetTwoDegrees", 0.0),
-        Map.entry("HoodSubsystem/PresetOneDegrees", 35.0),
-        Map.entry("HoodSubsystem/PresetTwoDegrees", 35.0),
+        Map.entry("HoodSubsystem/PresetOneDegrees", 0.0),
+        Map.entry("HoodSubsystem/PresetTwoDegrees", 0.0),
         Map.entry("ShooterSubsystem/PresetOneRPM", RobotConstants.SHOOTER.MAX_RPM),
         Map.entry("ShooterSubsystem/PresetTwoRPM", RobotConstants.SHOOTER.MAX_RPM),
         Map.entry("ShiftStateTracker/WarningSeconds", 5.0),
         Map.entry("TurretSubsystem/LiveAngle", 0.0),
-        Map.entry("TurretSubsystem/NudgeAmount", 1.0));
+        Map.entry("TurretSubsystem/NudgeAmount", 1.0),
+        Map.entry("UserPolicy/DistanceNudgeAmountMeters", 0.5));
   }
 
   public static interface PORTS {
@@ -421,6 +424,10 @@ public final class RobotConstants {
         Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")),
         RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
         Meters.of(WHEEL_RADIUS_METERS));
+    public static final Distance minShotDistance = Meters.of(8);
+    public static final Distance maxShotDistance = Feet.of(14);
+    public static final AngularVelocity minShotSpeed = RPM.of(3500);
+    public static final AngularVelocity maxShotSpeed = RPM.of(5000);
   }
 
   public static interface HOPPER {
