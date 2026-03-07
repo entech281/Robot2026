@@ -10,7 +10,13 @@ public class NudgeTurretCommand extends EntechCommand{
     private final TurretInput turretInput = new TurretInput();
     private final TurretSubsystem turretSS;
     private boolean direction;
+    private double position;
 
+    /**
+     * 
+     * @param turretSubsystem
+     * @param direction true for positive
+     */
     public NudgeTurretCommand(TurretSubsystem turretSubsystem, boolean direction) {
         super(turretSubsystem);
         this.turretSS = turretSubsystem;
@@ -19,7 +25,6 @@ public class NudgeTurretCommand extends EntechCommand{
 
     @Override
     public void initialize() {
-        double position;
         if (direction) {
             position = turretSS.getOutputs().getCurrentPosition() + LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount");
         } else {
@@ -31,7 +36,8 @@ public class NudgeTurretCommand extends EntechCommand{
 
     @Override
     public void execute() {
-        turretSS.updateInputs(turretInput);
+      turretInput.setRequestedPosition(position);
+      turretSS.updateInputs(turretInput);
     }
 
     @Override

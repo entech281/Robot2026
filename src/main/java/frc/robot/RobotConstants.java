@@ -158,7 +158,8 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/PresetOneRPM", RobotConstants.SHOOTER.MAX_RPM),
         Map.entry("ShooterSubsystem/PresetTwoRPM", RobotConstants.SHOOTER.MAX_RPM),
         Map.entry("ShiftStateTracker/WarningSeconds", 5.0),
-        Map.entry("TurretSubsystem/LiveAngle", 0.0));
+        Map.entry("TurretSubsystem/LiveAngle", 0.0),
+        Map.entry("TurretSubsystem/NudgeAmount", 1.0));
   }
 
   public static interface PORTS {

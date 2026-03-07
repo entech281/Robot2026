@@ -32,6 +32,7 @@ import frc.robot.commands.GyroReset;
 import frc.robot.commands.ManualHoodCommand;
 import frc.robot.commands.ManualShootCommand;
 import frc.robot.commands.ManualTurretCommand;
+import frc.robot.commands.NudgeTurretCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.RunShooterAtLiveSpeedCommand;
@@ -215,6 +216,13 @@ public class OperatorInterface
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.WON_AUTO_SWITCH)
         .onTrue(new InstantCommand(() -> UserPolicy.getInstance().setIsAutoWon(true)))
         .onFalse(new InstantCommand(() -> UserPolicy.getInstance().setIsAutoWon(false)));
+
+    scoreOperatorPanel.button(9456789)
+        .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), true))
+        .onFalse(commandFactory.getStopShootingCommand());
+    scoreOperatorPanel.button(987654321)
+      .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), false))
+      .onFalse(commandFactory.getStopShootingCommand());
   }
 
   // adding more later
