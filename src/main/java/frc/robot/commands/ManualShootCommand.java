@@ -23,7 +23,7 @@ import frc.robot.subsystems.turret.TurretInput;
 import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.util.ShooterCalculator;
 
-public class ManualShootCommand extends EntechCommand{
+public class ManualShootCommand extends EntechCommand {
     private final HoodSubsystem hoodSS;
     private final ShooterSubsystem shooterSS;
     private final TransferSubsystem transferSS;
@@ -36,7 +36,9 @@ public class ManualShootCommand extends EntechCommand{
     private AngularVelocity shooterSpeed;
     private Angle hoodAngle;
 
-    public ManualShootCommand(ShooterSubsystem shooterSubsystem, HoodSubsystem hoodSubsystem, TransferSubsystem transferSubsystem, TurretSubsystem turretSubsystem, Angle turretAngle, AngularVelocity shooterSpeed, Angle hoodAngle) {
+    public ManualShootCommand(ShooterSubsystem shooterSubsystem, HoodSubsystem hoodSubsystem,
+            TransferSubsystem transferSubsystem, TurretSubsystem turretSubsystem, Angle turretAngle,
+            AngularVelocity shooterSpeed, Angle hoodAngle) {
         super(hoodSubsystem, shooterSubsystem, transferSubsystem, turretSubsystem);
         this.hoodSS = hoodSubsystem;
         this.shooterSS = shooterSubsystem;
@@ -54,14 +56,15 @@ public class ManualShootCommand extends EntechCommand{
     }
 
     @Override
-    public void end(boolean interrupted) {}
+    public void end(boolean interrupted) {
+    }
 
     @Override
     public void execute() {
 
         shooterInput.setSpeed(shooterSpeed.in(RPM));
         hoodInput.setRequestedPosition(hoodAngle.in(Degrees));
-        turretInput.setRequestedPosition(turretAngle.in(Degrees));
+        turretInput.setRequestedPosition(turretAngle);
 
         shooterSS.updateInputs(shooterInput);
         hoodSS.updateInputs(hoodInput);
@@ -85,12 +88,12 @@ public class ManualShootCommand extends EntechCommand{
         Logger.recordOutput("HoodIsReadyToShoot", hoodIsReady + "");
         Logger.recordOutput("ShooterIsReadyToShoot", shooterIsReady + "");
         Logger.recordOutput("IsReadyToShoot", isReadyToShoot + "");
-        
+
     }
 
     @Override
     public void initialize() {
-        
+
     }
 
     @Override
