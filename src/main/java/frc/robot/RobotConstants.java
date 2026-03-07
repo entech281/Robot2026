@@ -228,6 +228,7 @@ public final class RobotConstants {
 
     public static interface DIO {
       public static final int HALL_EFFECT_SENSOR = 0;
+      public static final int TURRET_FORWARD_LIMIT_SWITCH = 1;
     }
   }
 
@@ -377,6 +378,7 @@ public final class RobotConstants {
     public static final AngularAcceleration TURRET_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(3200);
     public static final Angle TURRET_POSITION_TOLERANCE_DEGREES = Degrees.of(1.0); // considered at setpoint within this
     public static final Angle HOME_POSITION_DEGREES = Degrees.of(0.0); // position to reset to
+    public static final Angle UPPER_LIMIT = Degrees.of(45.0); // TODO: measure and update
 
     public static final Pose3d BLUE_HUB_LOCATION = new Pose3d(Inches.of(182.11).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
