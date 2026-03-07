@@ -63,6 +63,8 @@ public class VisionOutput extends SensorOutput {
         Logger.recordOutput("VisionOutput/averagePoseAmbiguity", averagePoseAmbiguity);
 
         Logger.recordOutput("VisionOutput/connected", connected);
+
+        Logger.recordOutput("VisionOutput/Goodness", goodness.toString());
     }
 
     /**
