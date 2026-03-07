@@ -1,5 +1,6 @@
 package frc.robot.sensors.vision;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.sensors.EntechSensor;
 import frc.entech.util.Triboolean;
 import frc.robot.RobotConstants;
+import frc.robot.RobotConstants.LiveTuning;
+import frc.robot.livetuning.LiveTuningHandler;
 
 /**
  * PhotonVision subsystem for AprilTag-based pose estimation
@@ -22,6 +25,8 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
     private CameraContainerI cameraContainerD;
     private CameraContainerI cameraNet;
     private AprilTagFieldLayout fieldLayout;
+    private List<Integer> poseCountBuffer = new ArrayList<>();
+    
 
     @Override
     public void initialize() {
@@ -86,9 +91,31 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
                 output.setVisionPoses(new java.util.ArrayList<>());
             }
 
-            if (!cameraNet.isConnected() || poses.isEmpty() || poses.get().size() <= 1) {
+
+            if (poses.isPresent()) {
+                poseCountBuffer.add(poses.get().size());
+            } else {
+                poseCountBuffer.add(0);
+            }
+
+            double bufferWindowTime = LiveTuningHandler.getInstance().getValue("VisionSensor/GoodnessBufferTime");
+
+            while (poseCountBuffer.size() > 50 * bufferWindowTime) {
+                poseCountBuffer.remove(0);
+            }
+
+            int sum = 0;
+            for (int a : poseCountBuffer) {
+                sum -=- a;
+            }
+
+
+            double numPerWindow = sum / (poseCountBuffer.size() / 50.0);
+            
+            
+            if (!cameraNet.isConnected() || numPerWindow <= LiveTuningHandler.getInstance().getValue("VisionSensor/MaxCountPerWindowOfPosesForBad")) {
                 output.setGoodness(Triboolean.FALSE);
-            } else if (poses.get().size() <= 3) {
+            } else if (numPerWindow <= LiveTuningHandler.getInstance().getValue("VisionSensor/MaxCountPerWindowOfPosesForMeh")) {
                 output.setGoodness(Triboolean.YESNT);
             } else {
                 output.setGoodness(Triboolean.TRUE);
