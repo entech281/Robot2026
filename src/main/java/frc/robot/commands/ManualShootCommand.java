@@ -1,13 +1,17 @@
 package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RPM;
+
+import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.entech.commands.EntechCommand;
+import frc.robot.RobotConstants;
 import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.subsystems.hood.HoodInput;
 import frc.robot.subsystems.hood.HoodSubsystem;
@@ -17,6 +21,7 @@ import frc.robot.subsystems.transfer.TransferInput;
 import frc.robot.subsystems.transfer.TransferSubsystem;
 import frc.robot.subsystems.turret.TurretInput;
 import frc.robot.subsystems.turret.TurretSubsystem;
+import frc.robot.util.ShooterCalculator;
 
 public class ManualShootCommand extends EntechCommand{
     private final HoodSubsystem hoodSS;
@@ -40,6 +45,12 @@ public class ManualShootCommand extends EntechCommand{
         this.turretAngle = turretAngle;
         this.shooterSpeed = shooterSpeed;
         this.hoodAngle = hoodAngle;
+    }
+
+
+
+    public ManualShootCommand(ShooterSubsystem shooterSubsystem, HoodSubsystem hoodSubsystem, TransferSubsystem transferSubsystem, TurretSubsystem turretSubsystem, Angle turretAngle, Supplier<ShooterCalculator> shooterCalculator) {
+        this(shooterSubsystem,  hoodSubsystem, transferSubsystem, turretSubsystem, turretAngle, shooterCalculator.get().calculateShot().getIdealShot().getShotAngularVelocity(Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS)), shooterCalculator.get().calculateShot().getIdealShot().getHoodAngle());
     }
 
     @Override
