@@ -155,7 +155,7 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/SetSpeed", 0.0),
         Map.entry("IntakeSubsystem/SetSpeed", 0.0),
         Map.entry("TransferSubsystem/SetSpeed", 0.0),
-        Map.entry("TurretSubsystem/LowerLimitDegrees", 45.0),
+        Map.entry("TurretSubsystem/LowerLimitDegrees", -45.0),
         Map.entry("TurretSubsystem/UpperLimitDegrees", 45.0),
         Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -40.0),
         Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 45.0),
@@ -377,11 +377,11 @@ public final class RobotConstants {
     public static final double TURRET_POSITION_P = 0.02;
     public static final double TURRET_POSITION_I = 0.0;
     public static final double TURRET_POSITION_D = 0.0;
-    public static final AngularVelocity TURRET_CRUISE_VELOCITY = DegreesPerSecond.of(400);
-    public static final AngularAcceleration TURRET_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(3200);
+    public static final AngularVelocity TURRET_CRUISE_VELOCITY = DegreesPerSecond.of(150);
+    public static final AngularAcceleration TURRET_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(600);
     public static final Angle TURRET_POSITION_TOLERANCE_DEGREES = Degrees.of(1.0); // considered at setpoint within this
     public static final Angle HOME_POSITION_DEGREES = Degrees.of(0.0); // position to reset to
-    public static final Angle UPPER_LIMIT = Degrees.of(45.0); // TODO: measure and update
+    public static final Angle UPPER_LIMIT = Degrees.of(-45.0);
 
     public static final Pose3d BLUE_HUB_LOCATION = new Pose3d(Inches.of(182.11).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());

@@ -5,11 +5,12 @@
  */
 package frc.robot.subsystems.turret;
 
-
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
+
+import org.littletonrobotics.junction.Logger;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
@@ -119,7 +120,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         }
 
         m_goal = new TrapezoidProfile.State(clamped, 0);
-
+        Logger.recordOutput("TURRETSETPOINT", desiredAngle);
         m_setpoint = m_profile.calculate(RobotConstants.TURRET.TRAPEZOIDAL_DELTA_TIME.in(Seconds), m_setpoint, m_goal);
         turretMotor.set(EntechUtils.capDoubleValue(control.calculate(turretEncoder.getPosition(), m_setpoint.position),
                 PID_MIN, PID_MAX));
@@ -134,6 +135,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
             turretEncoder.setPosition(RobotConstants.TURRET.UPPER_LIMIT.in(Degrees));
             turretMotor.getEncoder().setPosition(RobotConstants.TURRET.UPPER_LIMIT.in(Degrees));
         }
+        Logger.recordOutput("TurretOutput/switch", getForwardLimitSwitch());
         lastLimitSwitchState = getForwardLimitSwitch();
         if (latestInput.getActivate()) {
             setTurretPosition(desiredPos);
@@ -212,6 +214,6 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     }
 
     private boolean getForwardLimitSwitch() {
-        return forwardLimitSwitch.get();
+        return !forwardLimitSwitch.get();
     }
 }
