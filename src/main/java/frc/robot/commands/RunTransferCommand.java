@@ -19,7 +19,7 @@ public class RunTransferCommand extends EntechCommand {
     }
 
     /**
-     * @param transfer the transfer subsystem
+     * @param transfer  the transfer subsystem
      * @param direction true for forward, false for reverse
      */
     public RunTransferCommand(TransferSubsystem transfer, boolean direction) {

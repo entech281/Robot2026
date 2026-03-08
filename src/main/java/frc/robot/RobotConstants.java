@@ -162,9 +162,9 @@ public final class RobotConstants {
         Map.entry("TurretSubsystem/PresetOneDegrees", 0.0),
         Map.entry("TurretSubsystem/PresetTwoDegrees", 0.0),
         Map.entry("HoodSubsystem/PresetOneDegrees", 0.0),
-        Map.entry("HoodSubsystem/PresetTwoDegrees", 0.0),
-        Map.entry("ShooterSubsystem/PresetOneRPM", RobotConstants.SHOOTER.MAX_RPM),
-        Map.entry("ShooterSubsystem/PresetTwoRPM", RobotConstants.SHOOTER.MAX_RPM),
+        Map.entry("HoodSubsystem/PresetTwoDegrees", 13.0),
+        Map.entry("ShooterSubsystem/PresetOneRPM", 3500.0),
+        Map.entry("ShooterSubsystem/PresetTwoRPM", 4500.0),
         Map.entry("ShiftStateTracker/WarningSeconds", 5.0),
         Map.entry("TurretSubsystem/LiveAngle", 0.0),
         Map.entry("TurretSubsystem/NudgeAmount", 1.0),
@@ -377,8 +377,8 @@ public final class RobotConstants {
     public static final double TURRET_POSITION_P = 0.02;
     public static final double TURRET_POSITION_I = 0.0;
     public static final double TURRET_POSITION_D = 0.0;
-    public static final AngularVelocity TURRET_CRUISE_VELOCITY = DegreesPerSecond.of(150);
-    public static final AngularAcceleration TURRET_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(600);
+    public static final AngularVelocity TURRET_CRUISE_VELOCITY = DegreesPerSecond.of(300);
+    public static final AngularAcceleration TURRET_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(1200);
     public static final Angle TURRET_POSITION_TOLERANCE_DEGREES = Degrees.of(1.0); // considered at setpoint within this
     public static final Angle HOME_POSITION_DEGREES = Degrees.of(0.0); // position to reset to
     public static final Angle UPPER_LIMIT = Degrees.of(-45.0);
@@ -407,7 +407,7 @@ public final class RobotConstants {
     public static final double HOOD_D = 0.0;
     public static final double INITIAL_POSITION_DEGREES = 0.0;
     public static final double HOOD_LOWER_LIMIT_DEGREES = 0.0;
-    public static final double HOOD_UPPER_LIMIT_DEGREES = 25.0;
+    public static final double HOOD_UPPER_LIMIT_DEGREES = 30.0;
     public static final double HOOD_POSITION_TOLERANCE_DEGREES = 0.1;
     public static final AngularVelocity HOOD_CRUISE_VELOCITY = DegreesPerSecond.of(55.14705882366667);
     public static final AngularAcceleration HOOD_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(275.73529411833334);

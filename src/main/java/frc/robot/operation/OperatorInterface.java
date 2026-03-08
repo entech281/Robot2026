@@ -184,6 +184,10 @@ public class OperatorInterface
     xboxController.y().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
         -30));
 
+    xboxController.x()
+        .whileTrue(new ParallelCommandGroup(
+            new RunTransferCommand(subsystemManager.getTransferSubsystem(), false)));
+
     xboxController.leftBumper().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
     xboxController.rightBumper().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
   }

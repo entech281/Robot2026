@@ -49,22 +49,25 @@ public class ManualShootCommand extends EntechCommand {
         this.hoodAngle = hoodAngle;
     }
 
-
-
-    public ManualShootCommand(ShooterSubsystem shooterSubsystem, HoodSubsystem hoodSubsystem, TransferSubsystem transferSubsystem, TurretSubsystem turretSubsystem, Angle turretAngle, Supplier<ShooterCalculator> shooterCalculator) {
-        this(shooterSubsystem,  hoodSubsystem, transferSubsystem, turretSubsystem, turretAngle, shooterCalculator.get().calculateShot().getIdealShot().getShotAngularVelocity(Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS)), shooterCalculator.get().calculateShot().getIdealShot().getHoodAngle());
+    public ManualShootCommand(ShooterSubsystem shooterSubsystem, HoodSubsystem hoodSubsystem,
+            TransferSubsystem transferSubsystem, TurretSubsystem turretSubsystem, Angle turretAngle,
+            Supplier<ShooterCalculator> shooterCalculator) {
+        this(shooterSubsystem, hoodSubsystem, transferSubsystem, turretSubsystem, turretAngle,
+                shooterCalculator.get().calculateShot().getIdealShot()
+                        .getShotAngularVelocity(Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS)),
+                shooterCalculator.get().calculateShot().getIdealShot().getHoodAngle());
     }
 
-    //no sudden ends
+    // no sudden ends
     @Override
     public void end(boolean interrupted) {
-        //no need to end
+        // no need to end
     }
 
     @Override
     public void execute() {
 
-        shooterInput.setSpeed(shooterSpeed.in(RPM));
+        shooterInput.setSpeed(-shooterSpeed.in(RPM));
         hoodInput.setRequestedPosition(hoodAngle.in(Degrees));
         turretInput.setRequestedPosition(turretAngle);
 
