@@ -93,7 +93,7 @@ public class CommandFactory {
     Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST, "No Current Test");
     SmartDashboard.putData("Test Chooser", testChooser);
     Shuffleboard.getTab("stuffs").add("Run Test", new RunTestCommand(testChooser));
-    Shuffleboard.getTab("stuffs").add("Home Turret", new HomeTurretCommand(subsystemManager.getTurretSubsystem()));
+    Shuffleboard.getTab("stuffs").add("Home Turret", new HomeTurretCommand(subsystemManager.getTurretSubsystem(), subsystemManager.getHomeTurretSwitch()));
 
     AutoBuilder.configure(odometry::getEstimatedPose,
         odometry::resetOdometry,
@@ -198,7 +198,7 @@ public class CommandFactory {
         .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
 
     Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(
-        RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target, Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.maxShotSpeed, RobotConstants.SHOOTER.minShotSpeed, RobotConstants.SHOOTER.maxShotDistance, RobotConstants.SHOOTER.maxShotDistance);
+        RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target, Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED, RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE, RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
     Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(target.toPose2d(),
         RobotIO.getInstance().getOdometryPose());
 
@@ -247,7 +247,7 @@ public class CommandFactory {
     Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
         .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
 
-    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, getSnowblowTarget(), Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.maxShotSpeed, RobotConstants.SHOOTER.minShotSpeed, RobotConstants.SHOOTER.maxShotDistance, RobotConstants.SHOOTER.maxShotDistance);
+    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, getSnowblowTarget(), Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED, RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE, RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
     
     Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(getSnowblowTarget().toPose2d(), RobotIO.getInstance().getOdometryPose());
 

@@ -10,6 +10,7 @@ import java.util.List;
 import frc.entech.TestableHardwareI;
 import frc.robot.io.RobotIO;
 import frc.robot.sensors.HallEffectSensor.HallEffectSensor;
+import frc.robot.sensors.HomeTurretSwitch.HomeTurretSwitch;
 import frc.robot.sensors.gyro.GyroSensor;
 import frc.robot.sensors.vision.VisionSensor;
 import frc.robot.subsystems.climb.ClimbSubsystem;
@@ -27,6 +28,7 @@ import frc.robot.subsystems.turret.TurretSubsystem;
 public class HardwareManager {
   private final VisionSensor visionSensor = new VisionSensor();
   private final GyroSensor gyroSensor = new GyroSensor();
+  private final HomeTurretSwitch homeTurretSwitch = new HomeTurretSwitch();
 
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
@@ -50,6 +52,7 @@ public class HardwareManager {
     // climbSubsystem.initialize();
     transferSubsystem.initialize();
     hallEffectSensor.initialize();
+    homeTurretSwitch.initialize();
 
     periodic();
   }
@@ -98,6 +101,10 @@ public class HardwareManager {
     return hallEffectSensor;
   }
 
+  public HomeTurretSwitch getHomeTurretSwitch() {
+    return homeTurretSwitch;
+  }
+
   public List<TestableHardwareI> getSubsystemList() {
     ArrayList<TestableHardwareI> r = new ArrayList<>();
     r.add(driveSubsystem);
@@ -111,6 +118,7 @@ public class HardwareManager {
     r.add(gyroSensor);
     r.add(visionSensor);
     r.add(hallEffectSensor);
+    r.add(homeTurretSwitch);
 
     return r;
   }
@@ -139,5 +147,7 @@ public class HardwareManager {
     outputs.updateTurret(turretSubsystem.getOutputs());
 
     outputs.updateHallEffect(hallEffectSensor.getOutputs());
+
+    outputs.updateHomeTurret(homeTurretSwitch.getOutputs());
   }
 }

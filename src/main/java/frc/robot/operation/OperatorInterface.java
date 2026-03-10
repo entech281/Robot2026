@@ -266,7 +266,7 @@ HoodJogCommand(subsystemManager.getHoodSubsystem(), -1));
                       new Rotation3d()));
 
               return new ShooterCalculator(subsystemManager.getDriveSubsystem().getChassisSpeeds(), currentPose,
-                  targetPose, Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.maxShotSpeed, RobotConstants.SHOOTER.minShotSpeed, RobotConstants.SHOOTER.maxShotDistance, RobotConstants.SHOOTER.maxShotDistance);
+                  targetPose, Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED, RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE, RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
             }))
         .onFalse(commandFactory.getStopShootingCommand());
 
@@ -318,7 +318,7 @@ HoodJogCommand(subsystemManager.getHoodSubsystem(), -1));
             Pose3d currentPose = new Pose3d(RobotIO.getInstance().getOdometryPose()).plus(RobotConstants.SHOOTER.SHOT_TRANSFORM);
             Pose3d targetPose = currentPose.plus( new Transform3d(UserPolicy.getInstance().getHubOffset().in(Meters) * Math.sin(angle.in(Radians)), UserPolicy.getInstance().getHubOffset().in(Meters) * Math.cos(angle.in(Radians)), 0.0, new Rotation3d()) );
 
-            ShooterCalculator shooterCalculator = new ShooterCalculator(subsystemManager.getDriveSubsystem().getChassisSpeeds(), currentPose, targetPose, Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.maxShotSpeed, RobotConstants.SHOOTER.minShotSpeed, RobotConstants.SHOOTER.maxShotDistance, RobotConstants.SHOOTER.maxShotDistance);
+            ShooterCalculator shooterCalculator = new ShooterCalculator(subsystemManager.getDriveSubsystem().getChassisSpeeds(), currentPose, targetPose, Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED, RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE, RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
 
             CommandScheduler.getInstance().schedule(new ManualHoodCommand(subsystemManager.getHoodSubsystem(), shooterCalculator.calculateShot().getIdealShot().getHoodAngle().in(Degrees)));
         })
@@ -337,7 +337,7 @@ HoodJogCommand(subsystemManager.getHoodSubsystem(), -1));
             Pose3d currentPose = new Pose3d(RobotIO.getInstance().getOdometryPose()).plus(RobotConstants.SHOOTER.SHOT_TRANSFORM);
             Pose3d targetPose = currentPose.plus( new Transform3d(UserPolicy.getInstance().getHubOffset().in(Meters) * Math.sin(angle.in(Radians)), UserPolicy.getInstance().getHubOffset().in(Meters) * Math.cos(angle.in(Radians)), 0.0, new Rotation3d()) );
 
-            ShooterCalculator shooterCalculator = new ShooterCalculator(subsystemManager.getDriveSubsystem().getChassisSpeeds(), currentPose, targetPose, Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.maxShotSpeed, RobotConstants.SHOOTER.minShotSpeed, RobotConstants.SHOOTER.maxShotDistance, RobotConstants.SHOOTER.maxShotDistance);
+            ShooterCalculator shooterCalculator = new ShooterCalculator(subsystemManager.getDriveSubsystem().getChassisSpeeds(), currentPose, targetPose, Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED, RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE, RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
 
             CommandScheduler.getInstance().schedule(new ManualHoodCommand(subsystemManager.getHoodSubsystem(), shooterCalculator.calculateShot().getIdealShot().getHoodAngle().in(Degrees)));
         })

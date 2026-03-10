@@ -265,6 +265,7 @@ public final class RobotConstants {
 
     public static interface DIO {
       public static final int HALL_EFFECT_SENSOR = 0;
+      public static final int HOME_TURRET_SWITCH = 1;
     }
   }
 
@@ -464,10 +465,10 @@ public final class RobotConstants {
         Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")),
         RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
         Meters.of(WHEEL_RADIUS_METERS));
-    public static final Distance minShotDistance = Meters.of(8);
-    public static final Distance maxShotDistance = Feet.of(14);
-    public static final AngularVelocity minShotSpeed = RPM.of(3500);
-    public static final AngularVelocity maxShotSpeed = RPM.of(5000);
+    public static final Distance MIN_SHOT_DISTANCE = Meters.of(8);
+    public static final Distance MAX_SHOT_DISTANCE = Feet.of(14);
+    public static final AngularVelocity MIN_SHOT_SPEED = RPM.of(3500);
+    public static final AngularVelocity MAX_SHOT_SPEED = RPM.of(5000);
   }
 
   public static interface HOPPER {
