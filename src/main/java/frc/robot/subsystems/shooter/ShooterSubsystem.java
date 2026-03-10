@@ -80,7 +80,7 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
     @Override
     public void periodic() {
         double[] live = grabLiveTuning();
-        if (lastLiveTuning != live) {
+        if (lastLiveTuning.equals(live)) {
             configure(live);
             lastLiveTuning = live;
         }

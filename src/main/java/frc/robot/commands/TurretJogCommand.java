@@ -3,6 +3,8 @@ package frc.robot.commands;
 import edu.wpi.first.units.measure.Angle;
 import frc.entech.commands.EntechCommand;
 import frc.robot.RobotConstants;
+import frc.robot.io.RobotIO;
+
 import static edu.wpi.first.units.Units.Degrees;
 import frc.robot.subsystems.turret.TurretInput;
 import frc.robot.subsystems.turret.TurretSubsystem;
@@ -28,25 +30,15 @@ public class TurretJogCommand extends EntechCommand {
 
     @Override
     public void initialize() {
-        // no-op on init
-    }
-
-    @Override
-    public void execute() {
         TurretInput in = new TurretInput();
-        Angle current = turret.getOutputs().getCurrentPosition();
+        Angle current = RobotIO.getInstance().getTurretOutput().getCurrentPosition();
         Angle adding = Degrees.of(stepDegrees);
         in.setRequestedPosition(current.plus(adding));
         turret.updateInputs(in);
     }
 
     @Override
-    public void end(boolean interrupted) {
-        turret.updateInputs(new TurretInput());
-    }
-
-    @Override
     public boolean isFinished() {
-        return false; // Run while held
+        return true;
     }
 }

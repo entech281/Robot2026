@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
 import frc.entech.commands.EntechCommand;
-import frc.robot.RobotConstants;
+import frc.robot.io.RobotIO;
 import frc.robot.subsystems.hood.HoodInput;
 import frc.robot.subsystems.hood.HoodSubsystem;
 
@@ -13,6 +13,7 @@ import frc.robot.subsystems.hood.HoodSubsystem;
 public class HoodJogCommand extends EntechCommand {
     private final HoodSubsystem hood;
     private final double stepDegrees;
+    private double current;
 
     /**
      * @param hood        the hood subsystem
@@ -26,24 +27,14 @@ public class HoodJogCommand extends EntechCommand {
 
     @Override
     public void initialize() {
-        // no-op on init
-    }
-
-    @Override
-    public void execute() {
+        current = RobotIO.getInstance().getHoodOutput().getCurrentPosition();
         HoodInput in = new HoodInput();
-        double current = hood.getOutputs().getCurrentPosition();
         in.setRequestedPosition(current + stepDegrees);
         hood.updateInputs(in);
     }
 
     @Override
-    public void end(boolean interrupted) {
-        hood.updateInputs(new HoodInput());
-    }
-
-    @Override
     public boolean isFinished() {
-        return false; // Run while held
+        return true;
     }
 }

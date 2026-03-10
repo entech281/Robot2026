@@ -173,7 +173,6 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/kA", 0.0006),
         Map.entry("ShooterSubsystem/kS", 0.08),
         Map.entry("TurretSubsystem/LiveAngle", 0.0),
-        Map.entry("TurretSubsystem/LiveAngle", 0.0),
         Map.entry("TurretSubsystem/NudgeAmount", 1.0),
         Map.entry("UserPolicy/DistanceNudgeAmountMeters", 0.5));
   }

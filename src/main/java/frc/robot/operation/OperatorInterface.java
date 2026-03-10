@@ -128,21 +128,14 @@ public class OperatorInterface
 
     // Turret tuning: bumpers jog left/right alrwhile held (small steps)
     tuningController.povLeft()
-        .whileTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), -5.0));
+        .whileTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), -1.0));
     tuningController.povRight()
-        .whileTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), 5.0));
+        .whileTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), 1.0));
 
-    // Hood tuning: use POV (d-pad) up/down to jog hood +/-5 degrees while held
-    tuningController.povDown().whileTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), 5.0));
+    // Hood tuning: use POV (d-pad) up/down to jog hood +/-1 degrees while held
+    tuningController.povDown().whileTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), -1.0));
 
-    tuningController.povUp().whileTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), -5.0));
-
-    // Hood tuning: POV up/down with CORRECTED directions
-    // Step size defined in RobotConstants.HOOD.HOOD_JOG_STEP_DEGREES
-    // POV UP should increase hood angle (move up)
-    tuningController.povUp().whileTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), 1));
-    // POV DOWN should decrease hood angle (move down)
-    tuningController.povDown().whileTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), -1));
+    tuningController.povUp().whileTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), 1.0));
   }
 
   public void configureBindings() {
