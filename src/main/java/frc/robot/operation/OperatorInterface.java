@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.entech.operatorpanel.OutputJoystick;
-import frc.entech.operatorpanel.OutputJoystick.BlinkRate;
 import frc.entech.operatorpanel.OutputJoystick.Color;
 import frc.entech.operatorpanel.OutputJoystick.LedNumber;
 import frc.robot.CommandFactory;
@@ -29,13 +28,26 @@ import frc.robot.RobotConstants;
 import frc.robot.RobotConstants.LiveTuning;
 import frc.robot.commands.DeployHopper;
 import frc.robot.commands.DriveCommand;
+import frc.robot.Robot;
+import frc.robot.commands.AimTurretLiveCommand;
+import frc.robot.commands.DeployHopper;
+import frc.robot.commands.DriveCommand;
+import frc.robot.commands.DropHopper;
+import frc.robot.commands.DropThenRaiseHopper;
+import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.GyroReset;
+import frc.robot.commands.HoodJogCommand;
 import frc.robot.commands.ManualHoodCommand;
 import frc.robot.commands.ManualShootCommand;
 import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.NudgeTurretCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.RunIntakeCommand;
+import frc.robot.commands.RunShooterAtLiveSpeedCommand;
+import frc.robot.commands.RunShooterCommand;
+import frc.robot.commands.RunTransferCommand;
+import frc.robot.commands.TransfreFoo;
+import frc.robot.commands.TurretJogCommand;
 import frc.robot.commands.TwistCommand;
 import frc.robot.io.DebugInput;
 import frc.robot.io.DebugInputSupplier;
@@ -74,6 +86,7 @@ public class OperatorInterface
   }
 
   public void create() {
+    
     xboxController = new CommandXboxController(RobotConstants.PORTS.CONTROLLER.DRIVER_CONTROLLER);
     enableXboxBindings();
     if (DriverControllerUtils.controllerIsPresent(RobotConstants.PORTS.CONTROLLER.TEST_JOYSTICK)) {
@@ -87,6 +100,13 @@ public class OperatorInterface
       enableTuningControllerBindings();
     }
 
+   if (DriverControllerUtils
+       .controllerIsPresent(RobotConstants.PORTS.CONTROLLER.SHIFT_LIGHT_OUTPUT)) {
+      shiftLightOutput = new OutputJoystick(RobotConstants.PORTS.CONTROLLER.SHIFT_LIGHT_OUTPUT);
+      enableOperatorOutputBindings();
+   }
+
+     
     enableTriggers();
 
     scoreOperatorPanel = new CommandJoystick(RobotConstants.PORTS.CONTROLLER.SCORE_PANEL);
@@ -95,12 +115,28 @@ public class OperatorInterface
     alignOperatorPanel = new CommandJoystick(RobotConstants.PORTS.CONTROLLER.ALIGN_PANEL);
     alignOperatorBindings();
 
-    shiftLightOutput = new OutputJoystick(RobotConstants.PORTS.CONTROLLER.SHIFT_LIGHT_OUTPUT);
+   
   }
 
   public void enableTuningControllerBindings() {
-    tuningController.a().whileTrue(Commands.none());
-    tuningController.y().whileTrue(Commands.none());
+  // Basic motor toggles for quick tuning
+  tuningController.a().whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
+  tuningController.b().whileTrue(new RunTransferCommand(subsystemManager.getTransferSubsystem()));
+  tuningController.x().whileTrue(new RunShooterCommand(subsystemManager.getShooterSubsystem()));
+  // Momentary drop-then-raise hopper cycle for tuning
+  tuningController.y().onTrue(new DropThenRaiseHopper(subsystemManager.getHopperSubsystem()));
+
+  // Turret tuning: bumpers jog left/right alrwhile held (small steps)
+  tuningController.povLeft()
+    .whileTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), -5.0));
+  tuningController.povRight()
+    .whileTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), 5.0));
+
+  // Hood tuning: use POV (d-pad) up/down to jog hood +/-5 degrees while held
+  tuningController.povDown().whileTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), 5.0));
+
+  tuningController.povUp().whileTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), -5.0));
+
   }
 
   public void configureBindings() {
@@ -152,6 +188,38 @@ public class OperatorInterface
     xboxController.rightBumper().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
   }
 
+  public void enableOperatorOutputBindings(){
+    // Shift light LED triggers — reads wonAuto live from UserPolicy each cycle
+    // No yellow on OutputJoystick so warning states use FAST blink instead
+    shiftLightOutput.setLED(LedNumber.k1, Color.GREEN, true);     
+    
+
+    new Trigger(() -> getShiftState() == ShiftState.YOUR_SHIFT)
+        .onTrue(new InstantCommand(() -> {
+            DriverStation.reportWarning("Green Solid", false);   
+            shiftLightOutput.setLED(LedNumber.k0, Color.GREEN,true);   
+        }));
+
+    new Trigger(() -> getShiftState() == ShiftState.SHIFT_ENDING )
+        .onTrue(new InstantCommand(() -> {
+            DriverStation.reportWarning("Green Blinking", false);   
+            shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, false);   
+        }));
+
+    new Trigger(() -> getShiftState() == ShiftState.THEIR_SHIFT)
+        .onTrue(new InstantCommand(() -> {
+            DriverStation.reportWarning("Red Solid", false);   
+            shiftLightOutput.setLED(LedNumber.k0, Color.RED, true);   
+        }));
+  
+
+    new Trigger(() -> getShiftState() == ShiftState.SHIFT_STARTING)
+       .onTrue(new InstantCommand(() -> {
+            DriverStation.reportWarning("Red Blinking", false);   
+            shiftLightOutput.setLED(LedNumber.k0, Color.RED, false);   
+        }));
+  }
+
   public void enableTriggers() {
     new Trigger(() -> RobotIO.getInstance().getTurretOutput().isPastSofterLowerLimit())
         .onTrue(new InstantCommand(() -> DriverStation.reportWarning("Turret past softer lower limit!", false)))
@@ -161,24 +229,12 @@ public class OperatorInterface
         .onTrue(new InstantCommand(() -> DriverStation.reportWarning("Turret past softer upper limit!", false)))
         .onTrue(new InstantCommand(() -> xboxController.setRumble(RumbleType.kRightRumble, 0.5)));
 
-    // Shift light LED triggers — reads wonAuto live from UserPolicy each cycle
-    // No yellow on OutputJoystick so warning states use FAST blink instead
-    new Trigger(() -> getShiftState() == ShiftState.YOUR_SHIFT)
-        .onTrue(new InstantCommand(() -> shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, BlinkRate.SOLID)));
 
-    new Trigger(() -> getShiftState() == ShiftState.SHIFT_ENDING)
-        .onTrue(new InstantCommand(() -> shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, BlinkRate.FAST)));
 
-    new Trigger(() -> getShiftState() == ShiftState.THEIR_SHIFT)
-        .onTrue(new InstantCommand(() -> shiftLightOutput.setLED(LedNumber.k0, Color.RED, BlinkRate.SOLID)));
-
-    new Trigger(() -> getShiftState() == ShiftState.SHIFT_STARTING)
-        .onTrue(new InstantCommand(() -> shiftLightOutput.setLED(LedNumber.k0, Color.RED, BlinkRate.FAST)));
   }
 
   private ShiftState getShiftState() {
-    ShiftStateTracker liveTracker = new ShiftStateTracker(
-        UserPolicy.getInstance().isAutoWon(),
+    ShiftStateTracker liveTracker = new ShiftStateTracker(ShiftStateTracker.areWeFirstAlliance(),
         RobotConstants.LiveTuning.VALUES.get("ShiftStateTracker/WarningSeconds"));
     return liveTracker.getState(DriverStation.getMatchTime());
   }
