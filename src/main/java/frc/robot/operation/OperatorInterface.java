@@ -6,16 +6,13 @@ import static edu.wpi.first.units.Units.Radians;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
@@ -28,6 +25,9 @@ import frc.entech.operatorpanel.OutputJoystick.LedNumber;
 import frc.robot.CommandFactory;
 import frc.robot.HardwareManager;
 import frc.robot.RobotConstants;
+import frc.robot.RobotConstants.LiveTuning;
+import frc.robot.commands.DeployHopper;
+import frc.robot.commands.DriveCommand;
 import frc.robot.Robot;
 import frc.robot.commands.AimTurretLiveCommand;
 import frc.robot.commands.DeployHopper;
@@ -35,7 +35,6 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.DropHopper;
 import frc.robot.commands.DropThenRaiseHopper;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
-
 import frc.robot.commands.GyroReset;
 import frc.robot.commands.HoodJogCommand;
 import frc.robot.commands.ManualHoodCommand;
@@ -49,7 +48,6 @@ import frc.robot.commands.RunShooterCommand;
 import frc.robot.commands.RunTransferCommand;
 import frc.robot.commands.TransfreFoo;
 import frc.robot.commands.TurretJogCommand;
-
 import frc.robot.commands.TwistCommand;
 import frc.robot.io.DebugInput;
 import frc.robot.io.DebugInputSupplier;
@@ -128,9 +126,9 @@ public class OperatorInterface
 
     // Turret tuning: bumpers jog left/right alrwhile held (small steps)
     tuningController.povLeft()
-        .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), -1.0));
+        .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), -5.0));
     tuningController.povRight()
-        .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), 1.0));
+        .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), 5.0));
 
     // Hood tuning: use POV (d-pad) up/down to jog hood +/-1 degrees while held
     tuningController.povDown().onTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), -1.0));

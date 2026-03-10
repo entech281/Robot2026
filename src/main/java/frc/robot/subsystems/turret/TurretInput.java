@@ -10,7 +10,6 @@ import frc.robot.RobotConstants;
 
 public class TurretInput implements SubsystemInput {
   private boolean activate = true;
-
   private Angle requestedPosition = RobotConstants.TURRET.HOME_POSITION_DEGREES;
 
   @Override
