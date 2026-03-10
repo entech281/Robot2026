@@ -428,6 +428,9 @@ public final class RobotConstants {
 
     public static final Translation2d TURRET_OFFSET = new Translation2d(-DrivetrainConstants.WHEEL_BASE_METERS / 2.0,
         0.0);
+
+      public static final double TURRET_JOG_STEP_DEGREES = 5.0;  // Change this value
+
   }
 
   public static interface HOOD {
@@ -444,6 +447,9 @@ public final class RobotConstants {
     public static final AngularVelocity HOOD_CRUISE_VELOCITY = DegreesPerSecond.of(55.14705882366667);
     public static final AngularAcceleration HOOD_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(275.73529411833334);
     public static final double HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5;
+
+    public static final double HOOD_JOG_STEP_DEGREES = 5.0;    // Change this value
+
   }
 
   public static interface SHOOTER {
