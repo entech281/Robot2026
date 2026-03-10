@@ -312,7 +312,6 @@ HoodJogCommand(subsystemManager.getHoodSubsystem(), -1));
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INCREASE_DISTANCE_OFFSET)
     .onTrue(
       new SequentialCommandGroup(
-        new InstantCommand( () -> Logger.recordOutput("HI", "AAAAAAAAAAA" + System.currentTimeMillis())),
         new InstantCommand( () -> UserPolicy.getInstance().setHubOffset(UserPolicy.getInstance().getHubOffset().plus(Meters.of(LiveTuningHandler.getInstance().getValue("UserPolicy/DistanceNudgeAmountMeters"))))),
         new InstantCommand( () -> {
             Angle angle = subsystemManager.getGyroSubsystem().getOutputs().getYaw();
