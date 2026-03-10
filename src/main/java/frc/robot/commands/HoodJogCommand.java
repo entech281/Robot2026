@@ -12,43 +12,34 @@ import frc.robot.subsystems.hood.HoodSubsystem;
  */
 public class HoodJogCommand extends EntechCommand {
     private final HoodSubsystem hood;
-    private final int direction; // -1 or 1 to control direction
-    private double targetPosition = 0.0;
-    private static final double STEP_DEGREES = RobotConstants.HOOD.HOOD_JOG_STEP_DEGREES;
+    private final double stepDegrees;
 
     /**
-     * @param hood the hood subsystem
-     * @param direction -1 to move down, 1 to move up
+     * @param hood        the hood subsystem
+     * @param stepDegrees positive to move up, negative to move down
      */
-    public HoodJogCommand(HoodSubsystem hood, int direction) {
+    public HoodJogCommand(HoodSubsystem hood, double stepDegrees) {
         super(hood);
         this.hood = hood;
-        this.direction = direction;
+        this.stepDegrees = stepDegrees;
     }
 
     @Override
     public void initialize() {
-        // Start from current position
-        targetPosition = hood.getOutputs().getCurrentPosition();
+        // no-op on init
     }
 
     @Override
     public void execute() {
-        // Increment target position by step in the specified direction
-        targetPosition += (direction * STEP_DEGREES);
-        
-        // Apply the target position
         HoodInput in = new HoodInput();
-        in.setRequestedPosition(targetPosition);
+        double current = hood.getOutputs().getCurrentPosition();
+        in.setRequestedPosition(current + stepDegrees);
         hood.updateInputs(in);
     }
 
     @Override
     public void end(boolean interrupted) {
-        // Hold at current target - don't reset to zero
-        HoodInput in = new HoodInput();
-        in.setRequestedPosition(targetPosition);
-        hood.updateInputs(in);
+        hood.updateInputs(new HoodInput());
     }
 
     @Override

@@ -81,8 +81,8 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
     public void periodic() {
         double[] live = grabLiveTuning();
         if (lastLiveTuning != live) {
-                configure(live);
-                lastLiveTuning = live;
+            configure(live);
+            lastLiveTuning = live;
         }
     }
 
@@ -108,12 +108,12 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
 
     private double[] grabLiveTuning() {
         return new double[] {
-            LiveTuningHandler.getInstance().getValue("ShooterSubsystem/kP"),
-            LiveTuningHandler.getInstance().getValue("ShooterSubsystem/kI"),
-            LiveTuningHandler.getInstance().getValue("ShooterSubsystem/kD"),
-            LiveTuningHandler.getInstance().getValue("ShooterSubsystem/kV"),
-            LiveTuningHandler.getInstance().getValue("ShooterSubsystem/kA"),
-            LiveTuningHandler.getInstance().getValue("ShooterSubsystem/kS")
+                LiveTuningHandler.getInstance().getValue("ShooterSubsystem/kP"),
+                LiveTuningHandler.getInstance().getValue("ShooterSubsystem/kI"),
+                LiveTuningHandler.getInstance().getValue("ShooterSubsystem/kD"),
+                LiveTuningHandler.getInstance().getValue("ShooterSubsystem/kV"),
+                LiveTuningHandler.getInstance().getValue("ShooterSubsystem/kA"),
+                LiveTuningHandler.getInstance().getValue("ShooterSubsystem/kS")
         };
     }
 }

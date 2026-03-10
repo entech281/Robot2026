@@ -26,7 +26,7 @@ import frc.robot.util.TurretCalculator;
 import frc.robot.util.ShooterCalculator.ShotDataRange;
 import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
 
-public class ShootAtTargetCommand extends EntechCommand{
+public class ShootAtTargetCommand extends EntechCommand {
     private final HoodSubsystem hoodSS;
     private final ShooterSubsystem shooterSS;
     private final TransferSubsystem transferSS;
@@ -38,7 +38,10 @@ public class ShootAtTargetCommand extends EntechCommand{
     private TransferInput transferInput = new TransferInput();
     private TurretInput turretInput = new TurretInput();
 
-    public ShootAtTargetCommand(ShooterSubsystem shooterSubsystem, HoodSubsystem hoodSubsystem, TransferSubsystem transferSubsystem, TurretSubsystem turretSubsystem, Supplier<TurretCalculator> turretCalculatorSupplier, Supplier<ShooterCalculator> shooterCalculatorSupplier) {
+    public ShootAtTargetCommand(ShooterSubsystem shooterSubsystem, HoodSubsystem hoodSubsystem,
+            TransferSubsystem transferSubsystem, TurretSubsystem turretSubsystem,
+            Supplier<TurretCalculator> turretCalculatorSupplier,
+            Supplier<ShooterCalculator> shooterCalculatorSupplier) {
         super(hoodSubsystem, shooterSubsystem, transferSubsystem, turretSubsystem);
         this.hoodSS = hoodSubsystem;
         this.shooterSS = shooterSubsystem;
@@ -48,8 +51,11 @@ public class ShootAtTargetCommand extends EntechCommand{
         this.turretCalculatorSupplier = turretCalculatorSupplier;
     }
 
+    //nothing to end
     @Override
-    public void end(boolean interrupted) {}
+    public void end(boolean interrupted) {
+        //no need to end
+    }
 
     @Override
     public void execute() {
@@ -58,16 +64,22 @@ public class ShootAtTargetCommand extends EntechCommand{
 
         ShotData shot = shotRange.getIdealShot();
 
-        shooterInput.setSpeed(shot.getShotAngularVelocity(Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS)).in(RPM));
+        shooterInput
+                .setSpeed(shot.getShotAngularVelocity(Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS)).in(RPM));
         hoodInput.setRequestedPosition(shot.getHoodAngle().in(Degree));
-        turretInput.setRequestedPosition(targetTurretAngle);
+        turretInput.setRequestedPosition(Degrees.of(targetTurretAngle));
 
         shooterSS.updateInputs(shooterInput);
         hoodSS.updateInputs(hoodInput);
         turretSS.updateInputs(turretInput);
 
-        boolean turretIsReady = turretCalculatorSupplier.get().isValidTurretAngle(turretSS.getOutputs().getTurretMotor().getCurrentPosition(), RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES);
-        Triboolean shotIsReady = shooterCalculatorSupplier.get().isValidShot(Degrees.of(hoodSS.getOutputs().getHoodMotor().getCurrentPosition()), RPM.of(shooterSS.getOutputs().getShooterMotorA().getCurrentSpeed()), Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS));
+        boolean turretIsReady = turretCalculatorSupplier.get().isValidTurretAngle(
+                turretSS.getOutputs().getCurrentPosition(),
+                RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES);
+        Triboolean shotIsReady = shooterCalculatorSupplier.get().isValidShot(
+                Degrees.of(hoodSS.getOutputs().getHoodMotor().getCurrentPosition()),
+                RPM.of(shooterSS.getOutputs().getShooterMotorA().getCurrentSpeed()),
+                Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS));
         Triboolean isReadyToShoot = shotIsReady.fand(Triboolean.of(turretIsReady));
 
         if (isReadyToShoot.getProbability() > 0) {
@@ -82,17 +94,17 @@ public class ShootAtTargetCommand extends EntechCommand{
         Logger.recordOutput("ShotIsReady", shotIsReady + "");
         Logger.recordOutput("IsReadyToShoot", isReadyToShoot + "");
         Logger.recordOutput("ShotRange", shotRange + "");
-        
+
     }
 
     @Override
     public void initialize() {
-        
+
     }
 
     @Override
     public boolean isFinished() {
         return false;
     }
-    
+
 }

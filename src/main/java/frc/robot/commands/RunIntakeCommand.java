@@ -5,18 +5,22 @@ import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.subsystems.intake.IntakeInput;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 
+/**
+ * Runs the intake at a configured speed in the specified direction.
+ * Useful for tuning: press button to run intake/outtake.
+ */
 public class RunIntakeCommand extends EntechCommand {
     private final IntakeSubsystem intakeSS;
     private boolean direction;
+    private static final String KEY_STRING = "IntakeSubsystem/SetSpeed";
 
     public RunIntakeCommand(IntakeSubsystem intake) {
         this(intake, true);
     }
 
     /**
-     * 
-     * @param intake
-     * @param direction true for intake false for extake
+     * @param intake the intake subsystem
+     * @param direction true for intake, false for outtake
      */
     public RunIntakeCommand(IntakeSubsystem intake, boolean direction) {
         super(intake);
@@ -25,17 +29,25 @@ public class RunIntakeCommand extends EntechCommand {
     }
 
     @Override
-    public void end(boolean interrupted) {
-        intakeSS.updateInputs(new IntakeInput());
+    public void initialize() {
+        IntakeInput input = new IntakeInput();
+        double speed = LiveTuningHandler.getInstance().getValue(KEY_STRING);
+        if (!direction) {
+            input.setSpeed(-speed);
+        } else {
+            input.setSpeed(speed);
+        }
+        intakeSS.updateInputs(input);
     }
 
     @Override
     public void execute() {
         IntakeInput input = new IntakeInput();
+        double speed = LiveTuningHandler.getInstance().getValue(KEY_STRING);
         if (direction) {
-            input.setSpeed(LiveTuningHandler.getInstance().getValue("IntakeSubsystem/SetSpeed"));
+            input.setSpeed(speed);
         } else {
-            input.setSpeed(-LiveTuningHandler.getInstance().getValue("IntakeSubsystem/SetSpeed"));
+            input.setSpeed(-speed);
         }
         intakeSS.updateInputs(input);
     }
@@ -46,19 +58,12 @@ public class RunIntakeCommand extends EntechCommand {
     }
 
     @Override
-    public void initialize() {
-        IntakeInput input = new IntakeInput();
-        if (direction) {
-            input.setSpeed(LiveTuningHandler.getInstance().getValue("IntakeSubsystem/SetSpeed"));
-        } else {
-            input.setSpeed(-LiveTuningHandler.getInstance().getValue("IntakeSubsystem/SetSpeed"));
-        }
-        intakeSS.updateInputs(input);
+    public void end(boolean interrupted) {
+        intakeSS.updateInputs(new IntakeInput());
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return false; // Run while held
     }
-
 }
