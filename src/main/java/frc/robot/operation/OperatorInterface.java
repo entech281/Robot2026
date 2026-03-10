@@ -128,14 +128,14 @@ public class OperatorInterface
 
     // Turret tuning: bumpers jog left/right alrwhile held (small steps)
     tuningController.povLeft()
-        .whileTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), -1.0));
+        .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), -1.0));
     tuningController.povRight()
-        .whileTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), 1.0));
+        .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), 1.0));
 
     // Hood tuning: use POV (d-pad) up/down to jog hood +/-1 degrees while held
-    tuningController.povDown().whileTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), -1.0));
+    tuningController.povDown().onTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), -1.0));
 
-    tuningController.povUp().whileTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), 1.0));
+    tuningController.povUp().onTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), 1.0));
   }
 
   public void configureBindings() {

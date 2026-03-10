@@ -1,7 +1,8 @@
 package frc.robot.commands;
 
 import frc.entech.commands.EntechCommand;
-import frc.robot.livetuning.LiveTuningHandler;import frc.robot.subsystems.shooter.ShooterInput;
+import frc.robot.livetuning.LiveTuningHandler;
+import frc.robot.subsystems.shooter.ShooterInput;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 /**
@@ -13,15 +14,14 @@ public class RunShooterCommand extends EntechCommand {
     private boolean direction;
     private static final String KEY_STRING = "ShooterSubsystem/SetSpeed";
 
-
     public RunShooterCommand(ShooterSubsystem shooter) {
-        this(shooter, true);
+        this(shooter, false);
     }
 
     /**
-     * @param shooter the shooter subsystem
+     * @param shooter   the shooter subsystem
      * @param direction true for forward spin, false for reverse
-
+     * 
      */
     public RunShooterCommand(ShooterSubsystem shooter, boolean direction) {
         super(shooter);
@@ -64,4 +64,3 @@ public class RunShooterCommand extends EntechCommand {
         return false; // Run while held
     }
 }
-
