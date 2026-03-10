@@ -1,27 +1,29 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.Degrees;
 import frc.entech.commands.EntechCommand;
+import frc.robot.RobotConstants;
 import frc.robot.subsystems.turret.TurretInput;
 import frc.robot.subsystems.turret.TurretSubsystem;
 
 /**
  * Moves the turret by a small step while the command is active.
  * Useful for tuning: hold the button to nudge the turret left/right.
+ * Step size is defined in RobotConstants.TURRET.TURRET_JOG_STEP_DEGREES
  */
 public class TurretJogCommand extends EntechCommand {
     private final TurretSubsystem turret;
-    private final double stepDegrees;
+    private final int direction; // -1 or 1 to control direction
     private double targetPosition = 0.0;
+    private static final double STEP_DEGREES = RobotConstants.TURRET.TURRET_JOG_STEP_DEGREES;
 
     /**
      * @param turret the turret subsystem
-     * @param stepDegrees positive to move toward + degrees, negative for -
+     * @param direction -1 to move left, 1 to move right
      */
-    public TurretJogCommand(TurretSubsystem turret, double stepDegrees) {
+    public TurretJogCommand(TurretSubsystem turret, int direction) {
         super(turret);
         this.turret = turret;
-        this.stepDegrees = stepDegrees;
+        this.direction = direction;
     }
 
     @Override
@@ -32,8 +34,8 @@ public class TurretJogCommand extends EntechCommand {
 
     @Override
     public void execute() {
-        // Increment target position by step
-        targetPosition += stepDegrees;
+        // Increment target position by step in the specified direction
+        targetPosition += (direction * STEP_DEGREES);
         
         // Apply the target position
         TurretInput in = new TurretInput();
