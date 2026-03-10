@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import frc.entech.commands.EntechCommand;
 import frc.robot.RobotConstants;
 import frc.robot.subsystems.turret.TurretInput;
@@ -29,7 +31,7 @@ public class TurretJogCommand extends EntechCommand {
     @Override
     public void initialize() {
         // Start from current position
-        targetPosition = turret.getOutputs().getCurrentPosition();
+        targetPosition = turret.getOutputs().getCurrentPosition().in(Degrees);
     }
 
     @Override
@@ -39,7 +41,7 @@ public class TurretJogCommand extends EntechCommand {
         
         // Apply the target position
         TurretInput in = new TurretInput();
-        in.setRequestedPosition(targetPosition);
+        in.setRequestedPosition(Degrees.of(targetPosition));
         turret.updateInputs(in);
     }
 
@@ -47,7 +49,7 @@ public class TurretJogCommand extends EntechCommand {
     public void end(boolean interrupted) {
         // Hold at current target - don't reset to zero
         TurretInput in = new TurretInput();
-        in.setRequestedPosition(targetPosition);
+        in.setRequestedPosition(Degrees.of(targetPosition));
         turret.updateInputs(in);
     }
 
