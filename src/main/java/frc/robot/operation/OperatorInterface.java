@@ -108,24 +108,32 @@ public class OperatorInterface
   }
 
   public void enableTuningControllerBindings() {
-  // Basic motor toggles for quick tuning
-  tuningController.a().whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
-  tuningController.b().whileTrue(new RunTransferCommand(subsystemManager.getTransferSubsystem()));
-  tuningController.x().whileTrue(new RunShooterCommand(subsystemManager.getShooterSubsystem()));
-  // Momentary drop-then-raise hopper cycle for tuning
-  tuningController.y().onTrue(new DropThenRaiseHopper(subsystemManager.getHopperSubsystem()));
+      tuningController.a().whileTrue(new
+RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
+    tuningController.b().whileTrue(new
+RunTransferCommand(subsystemManager.getTransferSubsystem()));
+    tuningController.x().whileTrue(new
+RunShooterCommand(subsystemManager.getShooterSubsystem()));
+    
+    // Momentary drop-then-raise hopper cycle for tuning
+    tuningController.y().onTrue(new
+DropThenRaiseHopper(subsystemManager.getHopperSubsystem()));
 
-  // Turret tuning: bumpers jog left/right alrwhile held (small steps)
-  tuningController.povLeft()
-    .whileTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), -5.0));
-  tuningController.povRight()
-    .whileTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), 5.0));
+    // Turret tuning: POV left/right jog while held (small steps)
+    // Step size defined in RobotConstants.TURRET.TURRET_JOG_STEP_DEGREES
+    tuningController.povLeft()
+        .whileTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), -1));
+    tuningController.povRight()
+        .whileTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), 1));
 
-  // Hood tuning: use POV (d-pad) up/down to jog hood +/-5 degrees while held
-  tuningController.povDown().whileTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), 5.0));
-
-  tuningController.povUp().whileTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), -5.0));
-
+    // Hood tuning: POV up/down with CORRECTED directions
+    // Step size defined in RobotConstants.HOOD.HOOD_JOG_STEP_DEGREES
+    // POV UP should increase hood angle (move up)
+    tuningController.povUp().whileTrue(new
+HoodJogCommand(subsystemManager.getHoodSubsystem(), 1));
+    // POV DOWN should decrease hood angle (move down)
+    tuningController.povDown().whileTrue(new
+HoodJogCommand(subsystemManager.getHoodSubsystem(), -1));
   }
 
   public void configureBindings() {
