@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Radians;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -16,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -302,13 +305,14 @@ HoodJogCommand(subsystemManager.getHoodSubsystem(), -1));
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.POSITIVE_TURRET_NUDGE)
         .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), true))
         .onFalse(commandFactory.getStopShootingCommand());
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DECREASE_DISTANCE_OFFSET)
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.NEGATIVE_TURRET_NUDGE)
       .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), false))
       .onFalse(commandFactory.getStopShootingCommand());
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INCREASE_DISTANCE_OFFSET)
     .onTrue(
-      new ParallelCommandGroup(
+      new SequentialCommandGroup(
+        new InstantCommand( () -> Logger.recordOutput("HI", "AAAAAAAAAAA" + System.currentTimeMillis())),
         new InstantCommand( () -> UserPolicy.getInstance().setHubOffset(UserPolicy.getInstance().getHubOffset().plus(Meters.of(LiveTuningHandler.getInstance().getValue("UserPolicy/DistanceNudgeAmountMeters"))))),
         new InstantCommand( () -> {
             Angle angle = subsystemManager.getGyroSubsystem().getOutputs().getYaw();
@@ -325,9 +329,9 @@ HoodJogCommand(subsystemManager.getHoodSubsystem(), -1));
       ));
 
 
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INCREASE_DISTANCE_OFFSET)
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DECREASE_DISTANCE_OFFSET)
     .onTrue(
-      new ParallelCommandGroup(
+      new SequentialCommandGroup(
         new InstantCommand( () -> UserPolicy.getInstance().setHubOffset(UserPolicy.getInstance().getHubOffset().minus(Meters.of(LiveTuningHandler.getInstance().getValue("UserPolicy/DistanceNudgeAmountMeters"))))),
         new InstantCommand( () -> {
             Angle angle = subsystemManager.getGyroSubsystem().getOutputs().getYaw();

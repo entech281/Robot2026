@@ -4,7 +4,6 @@
       "enabled": false
     }
   },
-
   "keyboardJoysticks": [
     {
       "axisConfig": [
@@ -63,7 +62,6 @@
         44,
         46,
         47
-
       ],
       "povCount": 0
     },

@@ -5,6 +5,8 @@ import static edu.wpi.first.units.Units.Meters;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class UserPolicy {
   private static final UserPolicy instance = new UserPolicy();
@@ -68,6 +70,7 @@ public boolean isAutoWon() {
   }
 
   public void setHubOffset(Distance manualShotDistance) {
+    Logger.recordOutput("UserPolicy/hubOffset", manualShotDistance.in(Meters));
     this.manualShotDistance = manualShotDistance;
   }
 }
