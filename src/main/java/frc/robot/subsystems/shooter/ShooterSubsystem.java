@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.subsystems.SparkOutput;
 import frc.robot.RobotConstants;
+import frc.robot.livetuning.LiveTuningHandler;
 
 public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutput> {
     private boolean ENABLED = true;
@@ -21,31 +22,18 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
 
     private double setSpeed = 0.0;
 
+    private double[] lastLiveTuning = new double[6];
+
     private static final boolean BRAKING = false;
 
     @Override
     public void initialize() {
         if (ENABLED) {
+            lastLiveTuning = grabLiveTuning();
             shooterMotorA = new SparkFlex(RobotConstants.PORTS.CAN.SHOOTER_MOTOR_A, SparkFlex.MotorType.kBrushless);
             shooterMotorB = new SparkFlex(RobotConstants.PORTS.CAN.SHOOTER_MOTOR_B, SparkFlex.MotorType.kBrushless);
 
-            SparkFlexConfig shooterAConfig = new SparkFlexConfig();
-
-            shooterAConfig.idleMode(BRAKING ? IdleMode.kBrake : IdleMode.kCoast);
-            shooterAConfig.smartCurrentLimit(160);
-            shooterAConfig.closedLoop.feedForward.kV(0.00175);
-            shooterAConfig.closedLoop.feedForward.kA(0.0006);
-            shooterAConfig.closedLoop.feedForward.kS(0.08);
-            shooterAConfig.encoder.velocityConversionFactor(1.0);
-            shooterAConfig.closedLoop.pid(0.00030, 0.0, 0.0, ClosedLoopSlot.kSlot0);
-            shooterAConfig.voltageCompensation(12.5);
-
-            shooterMotorA.configure(shooterAConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-            SparkFlexConfig shooterBConfig = new SparkFlexConfig().apply(shooterAConfig);
-            shooterBConfig.follow(shooterMotorA, true);
-
-            shooterMotorB.configure(shooterBConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+            configure(lastLiveTuning);
         }
     }
 
@@ -87,5 +75,45 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
         }
 
         return so;
+    }
+
+    @Override
+    public void periodic() {
+        double[] live = grabLiveTuning();
+        if (lastLiveTuning != live) {
+                configure(live);
+                lastLiveTuning = live;
+        }
+    }
+
+    private void configure(double[] factors) {
+        SparkFlexConfig shooterAConfig = new SparkFlexConfig();
+
+        shooterAConfig.idleMode(BRAKING ? IdleMode.kBrake : IdleMode.kCoast);
+        shooterAConfig.smartCurrentLimit(160);
+        shooterAConfig.closedLoop.feedForward.kV(factors[3]);
+        shooterAConfig.closedLoop.feedForward.kA(factors[4]);
+        shooterAConfig.closedLoop.feedForward.kS(factors[5]);
+        shooterAConfig.encoder.velocityConversionFactor(1.0);
+        shooterAConfig.closedLoop.pid(factors[0], factors[1], factors[2], ClosedLoopSlot.kSlot0);
+        shooterAConfig.voltageCompensation(12.5);
+
+        shooterMotorA.configure(shooterAConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        SparkFlexConfig shooterBConfig = new SparkFlexConfig().apply(shooterAConfig);
+        shooterBConfig.follow(shooterMotorA, true);
+
+        shooterMotorB.configure(shooterBConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    }
+
+    private double[] grabLiveTuning() {
+        return new double[] {
+            LiveTuningHandler.getInstance().getValue("ShooterSubsystem/kP"),
+            LiveTuningHandler.getInstance().getValue("ShooterSubsystem/kI"),
+            LiveTuningHandler.getInstance().getValue("ShooterSubsystem/kD"),
+            LiveTuningHandler.getInstance().getValue("ShooterSubsystem/kV"),
+            LiveTuningHandler.getInstance().getValue("ShooterSubsystem/kA"),
+            LiveTuningHandler.getInstance().getValue("ShooterSubsystem/kS")
+        };
     }
 }

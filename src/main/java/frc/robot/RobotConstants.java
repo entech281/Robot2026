@@ -158,6 +158,12 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/PresetOneRPM", RobotConstants.SHOOTER.MAX_RPM),
         Map.entry("ShooterSubsystem/PresetTwoRPM", RobotConstants.SHOOTER.MAX_RPM),
         Map.entry("ShiftStateTracker/WarningSeconds", 5.0),
+        Map.entry("ShooterSubsystem/kP", 0.00030),
+        Map.entry("ShooterSubsystem/kI", 0.0),
+        Map.entry("ShooterSubsystem/kD", 0.0),
+        Map.entry("ShooterSubsystem/kV", 0.00175),
+        Map.entry("ShooterSubsystem/kA", 0.0006),
+        Map.entry("ShooterSubsystem/kS", 0.08),
         Map.entry("TurretSubsystem/LiveAngle", 0.0));
   }
 
