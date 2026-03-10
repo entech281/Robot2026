@@ -116,7 +116,6 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         m_setpoint = m_profile.calculate(RobotConstants.TURRET.TRAPEZOIDAL_DELTA_TIME.in(Seconds), m_setpoint, m_goal);
         turretMotor.set(EntechUtils.capDoubleValue(control.calculate(turretEncoder.getPosition(), m_setpoint.position),
                 PID_MIN, PID_MAX));
-        turretPIDController.setSetpoint(clamped, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0);        
     }
 
     @Override
