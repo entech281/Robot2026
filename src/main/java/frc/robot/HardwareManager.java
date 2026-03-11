@@ -15,7 +15,6 @@ import frc.robot.sensors.vision.VisionSensor;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.hood.HoodSubsystem;
-import frc.robot.subsystems.hopper.HopperSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.transfer.TransferSubsystem;
@@ -35,7 +34,6 @@ public class HardwareManager {
   private final TransferSubsystem transferSubsystem = new TransferSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
-  private final HopperSubsystem hopperSubsystem = new HopperSubsystem();
   private final HallEffectSensor hallEffectSensor = new HallEffectSensor();
 
   public HardwareManager() {
@@ -45,7 +43,6 @@ public class HardwareManager {
     visionSensor.initialize();
     hoodSubsystem.initialize();
     turretSubsystem.initialize();
-    hopperSubsystem.initialize();
     intakeSubsystem.initialize();
     // climbSubsystem.initialize();
     transferSubsystem.initialize();
@@ -78,10 +75,6 @@ public class HardwareManager {
     return intakeSubsystem;
   }
 
-  public HopperSubsystem getHopperSubsystem() {
-    return hopperSubsystem;
-  }
-
   public ClimbSubsystem getClimbSubsystem() {
     return climbSubsystem;
   }
@@ -106,7 +99,6 @@ public class HardwareManager {
     r.add(transferSubsystem);
     r.add(turretSubsystem);
     r.add(hoodSubsystem);
-    r.add(hopperSubsystem);
     r.add(climbSubsystem);
     r.add(gyroSensor);
     r.add(visionSensor);
@@ -127,8 +119,6 @@ public class HardwareManager {
     outputs.updateVision(visionSensor.getOutputs());
 
     // outputs.updateClimb(climbSubsystem.getOutputs());
-
-    outputs.updateHopper(hopperSubsystem.getOutputs());
 
     outputs.updateHood(hoodSubsystem.getOutputs());
 

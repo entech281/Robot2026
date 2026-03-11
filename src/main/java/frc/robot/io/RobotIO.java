@@ -13,7 +13,6 @@ import frc.robot.subsystems.drive.DriveInput;
 import frc.robot.subsystems.drive.DriveOutput;
 import frc.robot.subsystems.turret.TurretOutput;
 import frc.robot.subsystems.hood.HoodOutput;
-import frc.robot.subsystems.hopper.HopperOutput;
 import frc.robot.subsystems.intake.IntakeOutput;
 import frc.robot.sensors.HallEffectSensor.HallEffectOutput;
 import frc.robot.sensors.gyro.GyroOutput;
@@ -88,10 +87,6 @@ public class RobotIO implements DriveInputSupplier {
     return latestIntakeOutput;
   }
 
-  public HopperOutput getHopperOutput(){
-    return latestHopperOutput;
-  }
-
   public HallEffectOutput getHallEffectOutput() {
     return latestHallEffectOutput;
   }
@@ -131,11 +126,6 @@ public class RobotIO implements DriveInputSupplier {
     ho.log();
   }
 
-  public void updateHopper(HopperOutput hopo) {
-    latestHopperOutput = hopo;
-    hopo.log();
-  }
-
   public void updateTransfer(TransferOutput tro) {
     latestTransferOutput = tro;
     tro.log();
@@ -151,7 +141,6 @@ public class RobotIO implements DriveInputSupplier {
     to.log();
   }
 
-
   public void updateHallEffect(HallEffectOutput heo) {
     latestHallEffectOutput = heo;
     heo.log();
@@ -162,7 +151,6 @@ public class RobotIO implements DriveInputSupplier {
   private VisionOutput latestVisionOutput;
   private ShooterOutput latestShooterOutput;
   private HoodOutput latestHoodOutput;
-  private HopperOutput latestHopperOutput;
   private ClimbOutput latestClimbOutput;
   private TransferOutput latestTransferOutput;
   private IntakeOutput latestIntakeOutput;
