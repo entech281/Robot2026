@@ -286,18 +286,20 @@ public class OperatorInterface
         .onFalse(commandFactory.getStopShootingCommand());
 
     // Latching toggle switch — pressed down = won auto, released = did not win auto
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.WON_AUTO_SWITCH)
-        .onTrue(new InstantCommand(() -> UserPolicy.getInstance().setIsAutoWon(true)))
-        .onFalse(new InstantCommand(() -> UserPolicy.getInstance().setIsAutoWon(false)));
+    // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.WON_AUTO_SWITCH)
+    // .onTrue(new InstantCommand(() ->
+    // UserPolicy.getInstance().setIsAutoWon(true)))
+    // .onFalse(new InstantCommand(() ->
+    // UserPolicy.getInstance().setIsAutoWon(false)));
 
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.POSITIVE_TURRET_NUDGE)
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_UP)
         .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), true))
         .onFalse(commandFactory.getStopShootingCommand());
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DECREASE_DISTANCE_OFFSET)
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_DOWN)
         .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), false))
         .onFalse(commandFactory.getStopShootingCommand());
 
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INCREASE_DISTANCE_OFFSET)
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DISTANCE_DOWN)
         .onTrue(
             new ParallelCommandGroup(
                 new InstantCommand(() -> UserPolicy.getInstance()
@@ -325,7 +327,7 @@ public class OperatorInterface
                       shooterCalculator.calculateShot().getIdealShot().getHoodAngle().in(Degrees)));
                 })));
 
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INCREASE_DISTANCE_OFFSET)
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DISTANCE_UP)
         .onTrue(
             new ParallelCommandGroup(
                 new InstantCommand(() -> UserPolicy.getInstance()

@@ -277,21 +277,20 @@ public final class RobotConstants {
 
   public interface SCORE_OPERATOR_PANEL {
     public static interface BUTTONS {
-      // TODO: make real
-      public static final int FIRE = 2;
-      // TODO: make real
-      public static final int AUTO_FIRE = 14;
-      public static final int INTAKE = 6;
-      public static final int OUTTAKE = 7;
-      public static final int DEPLOY_HOPPER = 5;
-      public static final int PRESET_1_FIRE = 2;
-      public static final int PRESET_2_FIRE = 3;
-      public static final int WON_AUTO_SWITCH = 11;
+      public static final int FIRE = 1;
+      public static final int AUTO_FIRE = 7;
+      public static final int INTAKE = 5;
+      public static final int OUTTAKE = 2;
+      public static final int DEPLOY_HOPPER = 12;
+      public static final int UNDEPLOY_HOPPER = 6;
+      public static final int PRESET_1_FIRE = 3;
+      public static final int PRESET_2_FIRE = 4;
       public static final int SNOWBLOW_FIRE = 13;
-      public static final int INCREASE_DISTANCE_OFFSET = 98;
-      public static final int DECREASE_DISTANCE_OFFSET = 99;
-      public static final int POSITIVE_TURRET_NUDGE = 100;
-      public static final int NEGATIVE_TURRET_NUDGE = 101;
+      public static final int CLIMB = 12;
+      public static final int TURRET_NUDGE_UP = 8;
+      public static final int TURRET_NUDGE_DOWN = 9;
+      public static final int DISTANCE_UP = 11;
+      public static final int DISTANCE_DOWN = 10;
     }
 
     public static interface SWITCHES {
