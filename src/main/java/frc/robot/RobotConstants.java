@@ -155,10 +155,10 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/SetSpeed", 0.0),
         Map.entry("IntakeSubsystem/SetSpeed", 0.0),
         Map.entry("TransferSubsystem/SetSpeed", 0.0),
-        Map.entry("TurretSubsystem/LowerLimitDegrees", -45.0),
-        Map.entry("TurretSubsystem/UpperLimitDegrees", 45.0),
-        Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -40.0),
-        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 45.0),
+        Map.entry("TurretSubsystem/LowerLimitDegrees", -240.0),
+        Map.entry("TurretSubsystem/UpperLimitDegrees", 0.0),
+        Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -230.0),
+        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 5.0),
         Map.entry("TurretSubsystem/PresetOneDegrees", 0.0),
         Map.entry("TurretSubsystem/PresetTwoDegrees", 0.0),
         Map.entry("HoodSubsystem/PresetOneDegrees", 0.0),
@@ -420,7 +420,6 @@ public final class RobotConstants {
     public static final AngularAcceleration TURRET_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(1200);
     public static final Angle TURRET_POSITION_TOLERANCE_DEGREES = Degrees.of(1.0); // considered at setpoint within this
     public static final Angle HOME_POSITION_DEGREES = Degrees.of(0.0); // position to reset to
-    public static final Angle UPPER_LIMIT = Degrees.of(-45.0);
 
     public static final Pose3d BLUE_HUB_LOCATION = new Pose3d(Inches.of(182.11).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
@@ -456,6 +455,8 @@ public final class RobotConstants {
     public static final double HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5;
 
     public static final double HOOD_JOG_STEP_DEGREES = 5.0; // Change this value
+    public static final Angle HOOD_OFFSET = Degrees.of(0.0); //TODO, when switching from interpolation 
+                                                                      //strategy make this real and implement
 
   }
 

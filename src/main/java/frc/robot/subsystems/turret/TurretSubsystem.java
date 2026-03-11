@@ -120,7 +120,6 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         }
 
         m_goal = new TrapezoidProfile.State(clamped, 0);
-        Logger.recordOutput("TURRETSETPOINT", desiredAngle);
         m_setpoint = m_profile.calculate(RobotConstants.TURRET.TRAPEZOIDAL_DELTA_TIME.in(Seconds), m_setpoint, m_goal);
         turretMotor.set(EntechUtils.capDoubleValue(control.calculate(turretEncoder.getPosition(), m_setpoint.position),
                 PID_MIN, PID_MAX));
@@ -132,8 +131,8 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
             return;
         Angle desiredPos = latestInput.getRequestedPosition();
         if (getForwardLimitSwitch() && getForwardLimitSwitch() != lastLimitSwitchState) {
-            turretEncoder.setPosition(RobotConstants.TURRET.UPPER_LIMIT.in(Degrees));
-            turretMotor.getEncoder().setPosition(RobotConstants.TURRET.UPPER_LIMIT.in(Degrees));
+            turretEncoder.setPosition(LiveTuningHandler.getInstance().getValue("TurretSubsystem/UpperLimitDegrees"));
+            turretMotor.getEncoder().setPosition(LiveTuningHandler.getInstance().getValue("TurretSubsystem/LowerLimitDegrees"));
         }
         Logger.recordOutput("TurretOutput/switch", getForwardLimitSwitch());
         lastLimitSwitchState = getForwardLimitSwitch();
