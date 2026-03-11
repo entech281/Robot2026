@@ -5,6 +5,10 @@ import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.subsystems.transfer.TransferInput;
 import frc.robot.subsystems.transfer.TransferSubsystem;
 
+/**
+ * Runs the transfer/conveyor at a configured speed in the specified direction.
+ * Useful for tuning: press button to run transfer.
+ */
 public class RunTransferCommand extends EntechCommand {
     private final TransferSubsystem transfer;
     private boolean direction;
@@ -15,9 +19,8 @@ public class RunTransferCommand extends EntechCommand {
     }
 
     /**
-     * 
-     * @param transfer
-     * @param direction true for intake false for extake
+     * @param transfer  the transfer subsystem
+     * @param direction true for forward, false for reverse
      */
     public RunTransferCommand(TransferSubsystem transfer, boolean direction) {
         super(transfer);
@@ -26,41 +29,36 @@ public class RunTransferCommand extends EntechCommand {
     }
 
     @Override
-    public void end(boolean interrupted) {
-        transfer.updateInputs(new TransferInput());
+    public void initialize() {
+        TransferInput input = new TransferInput();
+        double speed = LiveTuningHandler.getInstance().getValue(KEY_STRING);
+        if (direction) {
+            input.setSpeed(speed);
+        } else {
+            input.setSpeed(-speed);
+        }
+        transfer.updateInputs(input);
     }
 
     @Override
     public void execute() {
         TransferInput input = new TransferInput();
-        if (direction) {
-            input.setSpeed(LiveTuningHandler.getInstance().getValue(KEY_STRING));
+        double speed = LiveTuningHandler.getInstance().getValue(KEY_STRING);
+        if (!direction) {
+            input.setSpeed(-speed);
         } else {
-            input.setSpeed(-LiveTuningHandler.getInstance().getValue(KEY_STRING));
+            input.setSpeed(speed);
         }
         transfer.updateInputs(input);
-    }
-
-    public void runIntake(){
-        TransferInput input = new TransferInput();
-        input.setSpeed(0.5);
     }
 
     @Override
-    //dont commet on this
-    public void initialize() {
-        TransferInput input = new TransferInput();
-        if (!direction) {
-            input.setSpeed(-LiveTuningHandler.getInstance().getValue(KEY_STRING));
-        } else {
-            input.setSpeed(LiveTuningHandler.getInstance().getValue(KEY_STRING));
-        }
-        transfer.updateInputs(input);
+    public void end(boolean interrupted) {
+        transfer.updateInputs(new TransferInput());
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return false; // Run while held
     }
-
 }

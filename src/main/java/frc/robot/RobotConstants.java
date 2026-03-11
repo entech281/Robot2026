@@ -1,8 +1,12 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
+import static edu.wpi.first.units.Units.Feet;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Milliseconds;
 import static edu.wpi.first.units.Units.RPM;
 
 import java.util.Map;
@@ -22,6 +26,11 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularAcceleration;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Time;
 import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.sensors.gyro.GyroSensor.GyroHardware;
 import frc.robot.util.ShooterCalculator;
@@ -29,7 +38,6 @@ import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
 
 public final class RobotConstants {
   public static final GyroHardware GYRO_HARDWARE = GyroHardware.NAVX3;
-  public static final double TIME_PER_PERIODICAL_LOOP_SECONDS = 0.00;
 
   public static interface AccelerationFilter {
     public static final double DIRECTION_SLEW_RATE = 0.95; // radians per second
@@ -115,7 +123,7 @@ public final class RobotConstants {
     public static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT_RADIANS = (2 * Math.PI);
     // radians
 
-    public static final double DRIVING_P = 0.5; // Origional P = 0.07
+    public static final double DRIVING_P = 0.4; // Origional P = 0.07
     public static final double DRIVING_I = 0;
     public static final double DRIVING_D = 0;
     public static final double DRIVING_FF = 1 / DRIVE_WHEEL_FREE_SPEED_RPS;
@@ -153,12 +161,54 @@ public final class RobotConstants {
         Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 45.0),
         Map.entry("TurretSubsystem/PresetOneDegrees", 0.0),
         Map.entry("TurretSubsystem/PresetTwoDegrees", 0.0),
-        Map.entry("HoodSubsystem/PresetOneDegrees", 35.0),
-        Map.entry("HoodSubsystem/PresetTwoDegrees", 35.0),
-        Map.entry("ShooterSubsystem/PresetOneRPM", RobotConstants.SHOOTER.MAX_RPM),
-        Map.entry("ShooterSubsystem/PresetTwoRPM", RobotConstants.SHOOTER.MAX_RPM),
+        Map.entry("HoodSubsystem/PresetOneDegrees", 0.0),
+        Map.entry("HoodSubsystem/PresetTwoDegrees", 13.0),
+        Map.entry("ShooterSubsystem/PresetOneRPM", 3500.0),
+        Map.entry("ShooterSubsystem/PresetTwoRPM", 4500.0),
         Map.entry("ShiftStateTracker/WarningSeconds", 5.0),
-        Map.entry("TurretSubsystem/LiveAngle", 0.0));
+        Map.entry("ShooterSubsystem/kP", 0.00030),
+        Map.entry("ShooterSubsystem/kI", 0.0),
+        Map.entry("ShooterSubsystem/kD", 0.0),
+        Map.entry("ShooterSubsystem/kV", 0.00175),
+        Map.entry("ShooterSubsystem/kA", 0.0006),
+        Map.entry("ShooterSubsystem/kS", 0.08),
+        Map.entry("TurretSubsystem/LiveAngle", 0.0),
+        Map.entry("TurretSubsystem/NudgeAmount", 1.0),
+        Map.entry("UserPolicy/DistanceNudgeAmountMeters", 0.5),
+        Map.entry("ShotTuningRPM/5ft", 0.0),
+        Map.entry("ShotTuningRPM/6ft", 0.0),
+        Map.entry("ShotTuningRPM/7ft", 0.0),
+        Map.entry("ShotTuningRPM/8ft", 0.0),
+        Map.entry("ShotTuningRPM/9ft", 0.0),
+        Map.entry("ShotTuningRPM/10ft", 0.0),
+        Map.entry("ShotTuningRPM/11ft", 0.0),
+        Map.entry("ShotTuningRPM/12ft", 0.0),
+        Map.entry("ShotTuningRPM/13ft", 0.0),
+        Map.entry("ShotTuningRPM/14ft", 0.0),
+        Map.entry("ShotTuningRPM/15ft", 0.0),
+        Map.entry("ShotTuningRPM/16ft", 0.0),
+        Map.entry("ShotTuningRPM/17ft", 0.0),
+        Map.entry("ShotTuningRPM/18ft", 0.0),
+        Map.entry("ShotTuningRPM/19ft", 0.0),
+        Map.entry("ShotTuningRPM/20ft", 0.0),
+        Map.entry("ShotTuningRPM/21ft", 0.0),
+        Map.entry("ShotTuningAngle/5ft", 0.0),
+        Map.entry("ShotTuningAngle/6ft", 0.0),
+        Map.entry("ShotTuningAngle/7ft", 0.0),
+        Map.entry("ShotTuningAngle/8ft", 0.0),
+        Map.entry("ShotTuningAngle/9ft", 0.0),
+        Map.entry("ShotTuningAngle/10ft", 0.0),
+        Map.entry("ShotTuningAngle/11ft", 0.0),
+        Map.entry("ShotTuningAngle/12ft", 0.0),
+        Map.entry("ShotTuningAngle/13ft", 0.0),
+        Map.entry("ShotTuningAngle/14ft", 0.0),
+        Map.entry("ShotTuningAngle/15ft", 0.0),
+        Map.entry("ShotTuningAngle/16ft", 0.0),
+        Map.entry("ShotTuningAngle/17ft", 0.0),
+        Map.entry("ShotTuningAngle/18ft", 0.0),
+        Map.entry("ShotTuningAngle/19ft", 0.0),
+        Map.entry("ShotTuningAngle/20ft", 0.0),
+        Map.entry("ShotTuningAngle/21ft", 0.0));
   }
 
   public static interface PORTS {
@@ -221,22 +271,26 @@ public final class RobotConstants {
 
     public static interface DIO {
       public static final int HALL_EFFECT_SENSOR = 0;
+      public static final int TURRET_FORWARD_LIMIT_SWITCH = 1;
     }
   }
 
   public interface SCORE_OPERATOR_PANEL {
     public static interface BUTTONS {
-      // TODO: make real
-      public static final int FIRE = 2;
-      // TODO: make real
-      public static final int AUTO_FIRE = 14;
-      public static final int INTAKE = 6;
-      public static final int OUTTAKE = 7;
-      public static final int DEPLOY_HOPPER = 5;
-      public static final int PRESET_1_FIRE = 2;
-      public static final int PRESET_2_FIRE = 3;
-      public static final int WON_AUTO_SWITCH = 11;
+      public static final int FIRE = 1;
+      public static final int AUTO_FIRE = 7;
+      public static final int INTAKE = 5;
+      public static final int OUTTAKE = 2;
+      public static final int DEPLOY_HOPPER = 12;
+      public static final int UNDEPLOY_HOPPER = 6;
+      public static final int PRESET_1_FIRE = 3;
+      public static final int PRESET_2_FIRE = 4;
       public static final int SNOWBLOW_FIRE = 13;
+      public static final int CLIMB = 12;
+      public static final int TURRET_NUDGE_UP = 8;
+      public static final int TURRET_NUDGE_DOWN = 9;
+      public static final int DISTANCE_UP = 11;
+      public static final int DISTANCE_DOWN = 10;
     }
 
     public static interface SWITCHES {
@@ -355,26 +409,18 @@ public final class RobotConstants {
   }
 
   public static interface TURRET {
-    // TODO: Make these real
-    public static final double INITIAL_POSITION_DEGREES = 0.0;
     // Turret closed-loop settings
-    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 3.2;// ;//207360 // encoder units -> degrees (set
-                                                                        // appropriately)
+    public static final double POSITION_CONVERSION_FACTOR_ABSOLUTE_ENCODER = 360.0 * (40.0 / 150.0);
+    public static final double POSITION_CONVERSION_FACTOR_INTERNAL_ENCODER = 360.0 * (1.0 / 112.5);
+    public static final Time TRAPEZOIDAL_DELTA_TIME = Milliseconds.of(20);
     public static final double TURRET_POSITION_P = 0.02;
     public static final double TURRET_POSITION_I = 0.0;
     public static final double TURRET_POSITION_D = 0.0;
-    public static final double TURRET_POSITION_FF = 0.0;
-    public static final double TURRET_CRUISE_VELOCITY_RPM = 100.0; // max velocity for motion magic
-    public static final double TURRET_MAX_ACCELERATION_RPM_PER_SECOND = 100.0; // max acceleration for motion magic
-    public static final double TURRET_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5; // allowable error for motion magic
-    public static final double TURRET_POSITION_TOLERANCE_DEGREES = 1.0; // considered at setpoint within this
-    public static final double HOME_POSITION_DEGREES = 0.0; // position to reset to
-    // preset manual positions (buttons will command these)
-    public static final double TURRET_POSITION_PRESET_A_DEGREES = 0.0;
-    public static final double TURRET_POSITION_PRESET_B_DEGREES = -20;
-    public static final double TURRET_POSITION_PRESET_Y_DEGREES = 20;
-    // small adjustment step used by any incremental commands
-    public static final double TURRET_ADJUST_STEP_DEGREES = 5.0;
+    public static final AngularVelocity TURRET_CRUISE_VELOCITY = DegreesPerSecond.of(300);
+    public static final AngularAcceleration TURRET_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(1200);
+    public static final Angle TURRET_POSITION_TOLERANCE_DEGREES = Degrees.of(1.0); // considered at setpoint within this
+    public static final Angle HOME_POSITION_DEGREES = Degrees.of(0.0); // position to reset to
+    public static final Angle UPPER_LIMIT = Degrees.of(-45.0);
 
     public static final Pose3d BLUE_HUB_LOCATION = new Pose3d(Inches.of(182.11).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
@@ -390,25 +436,26 @@ public final class RobotConstants {
     public static final Translation2d TURRET_OFFSET = new Translation2d(-DrivetrainConstants.WHEEL_BASE_METERS / 2.0,
         0.0);
 
-      public static final double TURRET_JOG_STEP_DEGREES = 5.0;  // Change this value
+    public static final double TURRET_JOG_STEP_DEGREES = 5.0; // Change this value
 
   }
 
   public static interface HOOD {
     // TODO: make these real
     public static final double POSITION_CONVERSION_FACTOR_DEGREES = 1.65441176471;
+    public static final double VELOCITY_CONVERSION_FACTOR_DEGREES_PER_SECOND_PER_RPM = 1.65441176471 / 60.0;
     public static final double HOOD_P = 3;
     public static final double HOOD_I = 0.0;
     public static final double HOOD_D = 0.0;
     public static final double INITIAL_POSITION_DEGREES = 0.0;
     public static final double HOOD_LOWER_LIMIT_DEGREES = 0.0;
-    public static final double HOOD_UPPER_LIMIT_DEGREES = 25.0;
+    public static final double HOOD_UPPER_LIMIT_DEGREES = 30.0;
     public static final double HOOD_POSITION_TOLERANCE_DEGREES = 0.1;
-    public static final double HOOD_CRUISE_VELOCITY_RPM = 2000.0;
-    public static final double HOOD_MAX_ACCELERATION_RPM_PER_SECOND = 10000.0;
+    public static final AngularVelocity HOOD_CRUISE_VELOCITY = DegreesPerSecond.of(55.14705882366667);
+    public static final AngularAcceleration HOOD_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(275.73529411833334);
     public static final double HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5;
 
-    public static final double HOOD_JOG_STEP_DEGREES = 5.0;    // Change this value
+    public static final double HOOD_JOG_STEP_DEGREES = 5.0; // Change this value
 
   }
 
@@ -424,6 +471,10 @@ public final class RobotConstants {
         Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")),
         RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
         Meters.of(WHEEL_RADIUS_METERS));
+    public static final Distance minShotDistance = Meters.of(8);
+    public static final Distance maxShotDistance = Feet.of(14);
+    public static final AngularVelocity minShotSpeed = RPM.of(3500);
+    public static final AngularVelocity maxShotSpeed = RPM.of(5000);
   }
 
   public static interface HOPPER {
