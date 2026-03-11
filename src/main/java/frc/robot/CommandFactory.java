@@ -40,6 +40,7 @@ import frc.entech.commands.InstantAnytimeCommand;
 import frc.robot.commands.GyroResetByAngleCommand;
 import frc.robot.commands.HomeTurretCommand;
 import frc.robot.commands.RotateToAngleCommand;
+import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.ShootAtTargetCommand;
 import frc.robot.commands.ManualShootCommand;
@@ -111,11 +112,10 @@ public class CommandFactory {
           return false;
         }, driveSubsystem);
 
-    NamedCommands.registerCommand("example", Commands.deferredProxy(Commands::none));
+    NamedCommands.registerCommand("AutoShoot", getFullShootCommand());
+    NamedCommands.registerCommand("Intake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
 
     autoChooser = AutoBuilder.buildAutoChooser();
-
-    autoChooser.addOption("Something", Commands.none());
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
