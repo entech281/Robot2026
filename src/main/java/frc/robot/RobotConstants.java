@@ -155,17 +155,24 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/SetSpeed", 0.0),
         Map.entry("IntakeSubsystem/SetSpeed", 0.0),
         Map.entry("TransferSubsystem/SetSpeed", 0.0),
-        Map.entry("TurretSubsystem/LowerLimitDegrees", 45.0),
-        Map.entry("TurretSubsystem/UpperLimitDegrees", 45.0),
-        Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -40.0),
-        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 45.0),
+        Map.entry("TurretSubsystem/LowerLimitDegrees", -240.0),
+        Map.entry("TurretSubsystem/UpperLimitDegrees", 0.0),
+        Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -230.0),
+        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 5.0),
         Map.entry("TurretSubsystem/PresetOneDegrees", 0.0),
         Map.entry("TurretSubsystem/PresetTwoDegrees", 0.0),
         Map.entry("HoodSubsystem/PresetOneDegrees", 0.0),
-        Map.entry("HoodSubsystem/PresetTwoDegrees", 0.0),
-        Map.entry("ShooterSubsystem/PresetOneRPM", RobotConstants.SHOOTER.MAX_RPM),
-        Map.entry("ShooterSubsystem/PresetTwoRPM", RobotConstants.SHOOTER.MAX_RPM),
+        Map.entry("HoodSubsystem/PresetTwoDegrees", 13.0),
+        Map.entry("ShooterSubsystem/PresetOneRPM", 3500.0),
+        Map.entry("ShooterSubsystem/PresetTwoRPM", 4500.0),
         Map.entry("ShiftStateTracker/WarningSeconds", 5.0),
+        Map.entry("TurretSubsystem/HomeSwitchPosition", -5.0),
+        Map.entry("ShooterSubsystem/kP", 0.00030),
+        Map.entry("ShooterSubsystem/kI", 0.0),
+        Map.entry("ShooterSubsystem/kD", 0.0),
+        Map.entry("ShooterSubsystem/kV", 0.00175),
+        Map.entry("ShooterSubsystem/kA", 0.0006),
+        Map.entry("ShooterSubsystem/kS", 0.08),
         Map.entry("TurretSubsystem/LiveAngle", 0.0),
         Map.entry("TurretSubsystem/NudgeAmount", 1.0),
         Map.entry("UserPolicy/DistanceNudgeAmountMeters", 0.5),
@@ -271,21 +278,27 @@ public final class RobotConstants {
 
   public interface SCORE_OPERATOR_PANEL {
     public static interface BUTTONS {
-      // TODO: make real
-      public static final int FIRE = 2;
-      // TODO: make real
-      public static final int AUTO_FIRE = 14;
-      public static final int INTAKE = 6;
-      public static final int OUTTAKE = 7;
-      public static final int DEPLOY_HOPPER = 5;
-      public static final int PRESET_1_FIRE = 2;
-      public static final int PRESET_2_FIRE = 3;
-      public static final int WON_AUTO_SWITCH = 11;
+      public static final int FIRE = 1;
+      public static final int AUTO_FIRE = 7;
+      public static final int INTAKE = 5;
+      public static final int OUTTAKE = 2;
+      public static final int DEPLOY_HOPPER = 12;
+      public static final int UNDEPLOY_HOPPER = 6;
+      public static final int PRESET_1_FIRE = 3;
+      public static final int PRESET_2_FIRE = 4;
       public static final int SNOWBLOW_FIRE = 13;
+<<<<<<< HEAD
       public static final int INCREASE_DISTANCE_OFFSET = 10;
       public static final int DECREASE_DISTANCE_OFFSET = 99;
       public static final int POSITIVE_TURRET_NUDGE = 100;
       public static final int NEGATIVE_TURRET_NUDGE = 101;
+=======
+      public static final int CLIMB = 12;
+      public static final int TURRET_NUDGE_UP = 8;
+      public static final int TURRET_NUDGE_DOWN = 9;
+      public static final int DISTANCE_UP = 11;
+      public static final int DISTANCE_DOWN = 10;
+>>>>>>> main
     }
 
     public static interface SWITCHES {
@@ -411,8 +424,8 @@ public final class RobotConstants {
     public static final double TURRET_POSITION_P = 0.02;
     public static final double TURRET_POSITION_I = 0.0;
     public static final double TURRET_POSITION_D = 0.0;
-    public static final AngularVelocity TURRET_CRUISE_VELOCITY = DegreesPerSecond.of(400);
-    public static final AngularAcceleration TURRET_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(3200);
+    public static final AngularVelocity TURRET_CRUISE_VELOCITY = DegreesPerSecond.of(300);
+    public static final AngularAcceleration TURRET_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(1200);
     public static final Angle TURRET_POSITION_TOLERANCE_DEGREES = Degrees.of(1.0); // considered at setpoint within this
     public static final Angle HOME_POSITION_DEGREES = Degrees.of(0.0); // position to reset to
 
@@ -430,7 +443,7 @@ public final class RobotConstants {
     public static final Translation2d TURRET_OFFSET = new Translation2d(-DrivetrainConstants.WHEEL_BASE_METERS / 2.0,
         0.0);
 
-      public static final double TURRET_JOG_STEP_DEGREES = 5.0;  // Change this value
+    public static final double TURRET_JOG_STEP_DEGREES = 5.0; // Change this value
 
   }
 
@@ -443,13 +456,15 @@ public final class RobotConstants {
     public static final double HOOD_D = 0.0;
     public static final double INITIAL_POSITION_DEGREES = 0.0;
     public static final double HOOD_LOWER_LIMIT_DEGREES = 0.0;
-    public static final double HOOD_UPPER_LIMIT_DEGREES = 25.0;
+    public static final double HOOD_UPPER_LIMIT_DEGREES = 30.0;
     public static final double HOOD_POSITION_TOLERANCE_DEGREES = 0.1;
     public static final AngularVelocity HOOD_CRUISE_VELOCITY = DegreesPerSecond.of(55.14705882366667);
     public static final AngularAcceleration HOOD_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(275.73529411833334);
     public static final double HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5;
 
-    public static final double HOOD_JOG_STEP_DEGREES = 5.0;    // Change this value
+    public static final double HOOD_JOG_STEP_DEGREES = 5.0; // Change this value
+    public static final Angle HOOD_OFFSET = Degrees.of(0.0); //TODO, when switching from interpolation 
+                                                                      //strategy make this real and implement
 
   }
 

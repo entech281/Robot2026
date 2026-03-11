@@ -1,9 +1,16 @@
 package frc.robot.commands;
 
+<<<<<<< HEAD
 import static edu.wpi.first.units.Units.Degrees;
 
+=======
+import edu.wpi.first.units.measure.Angle;
+>>>>>>> main
 import frc.entech.commands.EntechCommand;
 import frc.robot.RobotConstants;
+import frc.robot.io.RobotIO;
+
+import static edu.wpi.first.units.Units.Degrees;
 import frc.robot.subsystems.turret.TurretInput;
 import frc.robot.subsystems.turret.TurretSubsystem;
 
@@ -14,47 +21,29 @@ import frc.robot.subsystems.turret.TurretSubsystem;
  */
 public class TurretJogCommand extends EntechCommand {
     private final TurretSubsystem turret;
-    private final int direction; // -1 or 1 to control direction
-    private double targetPosition = 0.0;
-    private static final double STEP_DEGREES = RobotConstants.TURRET.TURRET_JOG_STEP_DEGREES;
+    private final double stepDegrees;
 
     /**
-     * @param turret the turret subsystem
-     * @param direction -1 to move left, 1 to move right
+     * @param turret      the turret subsystem
+     * @param stepDegrees positive to move toward + degrees, negative for -
      */
-    public TurretJogCommand(TurretSubsystem turret, int direction) {
+    public TurretJogCommand(TurretSubsystem turret, double stepDegrees) {
         super(turret);
         this.turret = turret;
-        this.direction = direction;
+        this.stepDegrees = stepDegrees;
     }
 
     @Override
     public void initialize() {
-        // Start from current position
-        targetPosition = turret.getOutputs().getCurrentPosition().in(Degrees);
-    }
-
-    @Override
-    public void execute() {
-        // Increment target position by step in the specified direction
-        targetPosition += (direction * STEP_DEGREES);
-        
-        // Apply the target position
         TurretInput in = new TurretInput();
-        in.setRequestedPosition(Degrees.of(targetPosition));
-        turret.updateInputs(in);
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        // Hold at current target - don't reset to zero
-        TurretInput in = new TurretInput();
-        in.setRequestedPosition(Degrees.of(targetPosition));
+        Angle current = RobotIO.getInstance().getTurretOutput().getCurrentPosition();
+        Angle adding = Degrees.of(stepDegrees);
+        in.setRequestedPosition(current.plus(adding));
         turret.updateInputs(in);
     }
 
     @Override
     public boolean isFinished() {
-        return false; // Run while held
+        return true;
     }
 }

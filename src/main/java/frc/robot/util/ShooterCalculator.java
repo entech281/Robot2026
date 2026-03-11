@@ -30,10 +30,12 @@ public class ShooterCalculator {
     private Distance distanceMax;
 
     public ShooterCalculator() {
-        this(new ChassisSpeeds(), new Pose3d(), new Pose3d(), Meters.of(1), RPM.of(0), RPM.of(0), Meters.of(0), Meters.of(0));
+        this(new ChassisSpeeds(), new Pose3d(), new Pose3d(), Meters.of(1), RPM.of(0), RPM.of(0), Meters.of(0),
+                Meters.of(0));
     }
 
-    public ShooterCalculator(ChassisSpeeds robotVelocity, Pose3d currentPose, Pose3d targetPose, Distance wheelRadius, AngularVelocity shooterMax, AngularVelocity shooterMin, Distance distanceMax, Distance distanceMin) {
+    public ShooterCalculator(ChassisSpeeds robotVelocity, Pose3d currentPose, Pose3d targetPose, Distance wheelRadius,
+            AngularVelocity shooterMax, AngularVelocity shooterMin, Distance distanceMax, Distance distanceMin) {
 
         if (wheelRadius.in(Meters) <= 0) {
             throw new IllegalArgumentException("wheelRadius cannot be zero or less than zero");
@@ -49,7 +51,6 @@ public class ShooterCalculator {
         this.distanceMin = distanceMin;
     }
 
-    
     /**
      * Performs linear interpolation between two known points.
      *
@@ -76,37 +77,62 @@ public class ShooterCalculator {
     }
 
     private double[][] fetchShotTuningData() {
-        return new double[][]{
-            {LiveTuningHandler.getInstance().getValue("ShotTuningRPM/5ft"), LiveTuningHandler.getInstance().getValue("ShotTuningAngle/5ft")},
-            {LiveTuningHandler.getInstance().getValue("ShotTuningRPM/6ft"), LiveTuningHandler.getInstance().getValue("ShotTuningAngle/6ft")},
-            {LiveTuningHandler.getInstance().getValue("ShotTuningRPM/7ft"), LiveTuningHandler.getInstance().getValue("ShotTuningAngle/7ft")},
-            {LiveTuningHandler.getInstance().getValue("ShotTuningRPM/8ft"), LiveTuningHandler.getInstance().getValue("ShotTuningAngle/8ft")},
-            {LiveTuningHandler.getInstance().getValue("ShotTuningRPM/9ft"), LiveTuningHandler.getInstance().getValue("ShotTuningAngle/9ft")},
-            {LiveTuningHandler.getInstance().getValue("ShotTuningRPM/10ft"), LiveTuningHandler.getInstance().getValue("ShotTuningAngle/10ft")},
-            {LiveTuningHandler.getInstance().getValue("ShotTuningRPM/11ft"), LiveTuningHandler.getInstance().getValue("ShotTuningAngle/11ft")},
-            {LiveTuningHandler.getInstance().getValue("ShotTuningRPM/12ft"), LiveTuningHandler.getInstance().getValue("ShotTuningAngle/12ft")},
-            {LiveTuningHandler.getInstance().getValue("ShotTuningRPM/13ft"), LiveTuningHandler.getInstance().getValue("ShotTuningAngle/13ft")},
-            {LiveTuningHandler.getInstance().getValue("ShotTuningRPM/14ft"), LiveTuningHandler.getInstance().getValue("ShotTuningAngle/14ft")},
-            {LiveTuningHandler.getInstance().getValue("ShotTuningRPM/15ft"), LiveTuningHandler.getInstance().getValue("ShotTuningAngle/15ft")},
-            {LiveTuningHandler.getInstance().getValue("ShotTuningRPM/16ft"), LiveTuningHandler.getInstance().getValue("ShotTuningAngle/16ft")},
-            {LiveTuningHandler.getInstance().getValue("ShotTuningRPM/17ft"), LiveTuningHandler.getInstance().getValue("ShotTuningAngle/17ft")},
-            {LiveTuningHandler.getInstance().getValue("ShotTuningRPM/18ft"), LiveTuningHandler.getInstance().getValue("ShotTuningAngle/18ft")},
-            {LiveTuningHandler.getInstance().getValue("ShotTuningRPM/19ft"), LiveTuningHandler.getInstance().getValue("ShotTuningAngle/19ft")},
-            {LiveTuningHandler.getInstance().getValue("ShotTuningRPM/20ft"), LiveTuningHandler.getInstance().getValue("ShotTuningAngle/20ft")},
-            {LiveTuningHandler.getInstance().getValue("ShotTuningRPM/21ft"), LiveTuningHandler.getInstance().getValue("ShotTuningAngle/21ft")}};
+        return new double[][] {
+                { LiveTuningHandler.getInstance().getValue("ShotTuningRPM/5ft"),
+                        LiveTuningHandler.getInstance().getValue("ShotTuningAngle/5ft") },
+                { LiveTuningHandler.getInstance().getValue("ShotTuningRPM/6ft"),
+                        LiveTuningHandler.getInstance().getValue("ShotTuningAngle/6ft") },
+                { LiveTuningHandler.getInstance().getValue("ShotTuningRPM/7ft"),
+                        LiveTuningHandler.getInstance().getValue("ShotTuningAngle/7ft") },
+                { LiveTuningHandler.getInstance().getValue("ShotTuningRPM/8ft"),
+                        LiveTuningHandler.getInstance().getValue("ShotTuningAngle/8ft") },
+                { LiveTuningHandler.getInstance().getValue("ShotTuningRPM/9ft"),
+                        LiveTuningHandler.getInstance().getValue("ShotTuningAngle/9ft") },
+                { LiveTuningHandler.getInstance().getValue("ShotTuningRPM/10ft"),
+                        LiveTuningHandler.getInstance().getValue("ShotTuningAngle/10ft") },
+                { LiveTuningHandler.getInstance().getValue("ShotTuningRPM/11ft"),
+                        LiveTuningHandler.getInstance().getValue("ShotTuningAngle/11ft") },
+                { LiveTuningHandler.getInstance().getValue("ShotTuningRPM/12ft"),
+                        LiveTuningHandler.getInstance().getValue("ShotTuningAngle/12ft") },
+                { LiveTuningHandler.getInstance().getValue("ShotTuningRPM/13ft"),
+                        LiveTuningHandler.getInstance().getValue("ShotTuningAngle/13ft") },
+                { LiveTuningHandler.getInstance().getValue("ShotTuningRPM/14ft"),
+                        LiveTuningHandler.getInstance().getValue("ShotTuningAngle/14ft") },
+                { LiveTuningHandler.getInstance().getValue("ShotTuningRPM/15ft"),
+                        LiveTuningHandler.getInstance().getValue("ShotTuningAngle/15ft") },
+                { LiveTuningHandler.getInstance().getValue("ShotTuningRPM/16ft"),
+                        LiveTuningHandler.getInstance().getValue("ShotTuningAngle/16ft") },
+                { LiveTuningHandler.getInstance().getValue("ShotTuningRPM/17ft"),
+                        LiveTuningHandler.getInstance().getValue("ShotTuningAngle/17ft") },
+                { LiveTuningHandler.getInstance().getValue("ShotTuningRPM/18ft"),
+                        LiveTuningHandler.getInstance().getValue("ShotTuningAngle/18ft") },
+                { LiveTuningHandler.getInstance().getValue("ShotTuningRPM/19ft"),
+                        LiveTuningHandler.getInstance().getValue("ShotTuningAngle/19ft") },
+                { LiveTuningHandler.getInstance().getValue("ShotTuningRPM/20ft"),
+                        LiveTuningHandler.getInstance().getValue("ShotTuningAngle/20ft") },
+                { LiveTuningHandler.getInstance().getValue("ShotTuningRPM/21ft"),
+                        LiveTuningHandler.getInstance().getValue("ShotTuningAngle/21ft") } };
     }
 
     private ShotData getLivetunedShot(double distance) {
         distance = Math.max(Math.min(distance, 21), 5);
-        return new ShotDataRange().new ShotData(Degrees.of(LiveTuningHandler.getInstance().getValue("ShotTuningAngle/" + (int) Math.round(distance) + "ft")),  angularVelocityToLinearVelocity(RPM.of(LiveTuningHandler.getInstance().getValue("ShotTuningRPM/" + (int) Math.round(distance) + "ft")), wheelRadius));
+        return new ShotDataRange().new ShotData(
+                Degrees.of(LiveTuningHandler.getInstance()
+                        .getValue("ShotTuningAngle/" + (int) Math.round(distance) + "ft")),
+                angularVelocityToLinearVelocity(RPM.of(
+                        LiveTuningHandler.getInstance().getValue("ShotTuningRPM/" + (int) Math.round(distance) + "ft")),
+                        wheelRadius));
     }
 
     private ShotData getNearestShot(double distance) {
 
         ShotData lowerShot = getLivetunedShot(distance - 1);
         ShotData higherShot = getLivetunedShot(distance + 1);
-        Angle hoodAngle = Degrees.of(interpolate(distance, distance - 1, distance + 1, lowerShot.getHoodAngle().in(Degrees), higherShot.getHoodAngle().in(Degrees)));
-        AngularVelocity shooterRPM = RPM.of(interpolate(distance, distance - 1, distance + 1, lowerShot.getShotAngularVelocity(wheelRadius).in(RPM), higherShot.getShotAngularVelocity(wheelRadius).in(RPM)));
+        Angle hoodAngle = Degrees.of(interpolate(distance, distance - 1, distance + 1,
+                lowerShot.getHoodAngle().in(Degrees), higherShot.getHoodAngle().in(Degrees)));
+        AngularVelocity shooterRPM = RPM.of(
+                interpolate(distance, distance - 1, distance + 1, lowerShot.getShotAngularVelocity(wheelRadius).in(RPM),
+                        higherShot.getShotAngularVelocity(wheelRadius).in(RPM)));
 
         return new ShotDataRange().new ShotData(hoodAngle, shooterRPM, wheelRadius);
     }
@@ -118,47 +144,57 @@ public class ShooterCalculator {
 
         double deltaX = targetPose.getX() - currentPose.getX();
         double deltaY = targetPose.getY() - currentPose.getY();
-        double distance = Math.sqrt( Math.pow(deltaX, 2) + Math.pow(deltaY, 2) );
+        double distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
 
         ShotData shot = getNearestShot(Meters.of(distance).in(Feet));
 
-        return new ShotDataRange(shot.getHoodAngle(), TOLERANCE_DEGREES, shot.getShotVelocity(), TOLERANCE_LINEAR_VELOCITY);
+        return new ShotDataRange(shot.getHoodAngle(), TOLERANCE_DEGREES, shot.getShotVelocity(),
+                TOLERANCE_LINEAR_VELOCITY);
     }
 
     /**
      * The "new" method that we want tested but are not sure of
      */
-    public ShotDataRange calculateShotBeta () {
-        //TODO interpolate velocity from 3500 - 5000 (5500)
-        // LinearVelocity shooterLaunchVelocity = angularVelocityToLinearVelocity(RPM.of(RobotConstants.SHOOTER.MAX_RPM), Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS));
+    public ShotDataRange calculateShotBeta() {
+        // TODO interpolate velocity from 3500 - 5000 (5500)
+        // LinearVelocity shooterLaunchVelocity =
+        // angularVelocityToLinearVelocity(RPM.of(RobotConstants.SHOOTER.MAX_RPM),
+        // Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS));
         double g = 9.80665;
         double TOLERANCE_DEGREES = 1;
         double TOLERANCE_LINEAR_VELOCITY = 2;
         double deltaX = targetPose.getX() - currentPose.getX();
         double deltaY = targetPose.getY() - currentPose.getY();
-        double distance = Math.sqrt( Math.pow(deltaX, 2) + Math.pow(deltaY, 2) );
+        double distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
 
-        LinearVelocity shooterLaunchVelocity = angularVelocityToLinearVelocity(RPM.of(interpolate(distance, 3, 17, 3500, 5000)), wheelRadius);
+        LinearVelocity shooterLaunchVelocity = angularVelocityToLinearVelocity(
+                RPM.of(interpolate(distance, 3, 17, 3500, 5000)), wheelRadius);
 
-        Angle theta = Degree.of(Math.atan(Math.pow(shooterLaunchVelocity.in(MetersPerSecond), 2) * Math.sqrt(Math.pow(shooterLaunchVelocity.in(MetersPerSecond), 4) - g * (g * Math.pow(deltaX, 2) + 2 * deltaY * Math.pow(shooterLaunchVelocity.in(MetersPerSecond), 2))) / g * deltaX));
+        Angle theta = Degree
+                .of(Math.atan(Math.pow(shooterLaunchVelocity.in(MetersPerSecond), 2)
+                        * Math.sqrt(
+                                Math.pow(shooterLaunchVelocity.in(MetersPerSecond), 4) - g * (g * Math.pow(deltaX, 2)
+                                        + 2 * deltaY * Math.pow(shooterLaunchVelocity.in(MetersPerSecond), 2)))
+                        / g * deltaX));
 
-        return new ShotDataRange(theta, Degrees.of(TOLERANCE_DEGREES), shooterLaunchVelocity, MetersPerSecond.of(TOLERANCE_LINEAR_VELOCITY));
+        return new ShotDataRange(theta, Degrees.of(TOLERANCE_DEGREES), shooterLaunchVelocity,
+                MetersPerSecond.of(TOLERANCE_LINEAR_VELOCITY));
     }
 
     private boolean isValidShotPrimary(Angle hoodAngle, LinearVelocity shotVelocity) {
         ShotDataRange shotRange = calculateShot();
         return hoodAngle.in(Degree) >= shotRange.getMinShot().getHoodAngle().in(Degree) &&
-               hoodAngle.in(Degree) <= shotRange.getMaxShot().getHoodAngle().in(Degree) &&
-               shotVelocity.in(MetersPerSecond) >= shotRange.getMinShot().getShotVelocity().in(MetersPerSecond) &&
-               shotVelocity.in(MetersPerSecond) <= shotRange.getMaxShot().getShotVelocity().in(MetersPerSecond);
+                hoodAngle.in(Degree) <= shotRange.getMaxShot().getHoodAngle().in(Degree) &&
+                shotVelocity.in(MetersPerSecond) >= shotRange.getMinShot().getShotVelocity().in(MetersPerSecond) &&
+                shotVelocity.in(MetersPerSecond) <= shotRange.getMaxShot().getShotVelocity().in(MetersPerSecond);
     }
 
     private boolean isValidShotBeta(Angle hoodAngle, LinearVelocity shotVelocity) {
         ShotDataRange shotRange = calculateShotBeta();
         return hoodAngle.in(Degree) >= shotRange.getMinShot().getHoodAngle().in(Degree) &&
-               hoodAngle.in(Degree) <= shotRange.getMaxShot().getHoodAngle().in(Degree) &&
-               shotVelocity.in(MetersPerSecond) >= shotRange.getMinShot().getShotVelocity().in(MetersPerSecond) &&
-               shotVelocity.in(MetersPerSecond) <= shotRange.getMaxShot().getShotVelocity().in(MetersPerSecond);
+                hoodAngle.in(Degree) <= shotRange.getMaxShot().getHoodAngle().in(Degree) &&
+                shotVelocity.in(MetersPerSecond) >= shotRange.getMinShot().getShotVelocity().in(MetersPerSecond) &&
+                shotVelocity.in(MetersPerSecond) <= shotRange.getMaxShot().getShotVelocity().in(MetersPerSecond);
     }
 
     public Triboolean isValidShot(Angle hoodAngle, LinearVelocity shotVelocity) {
@@ -177,7 +213,7 @@ public class ShooterCalculator {
     }
 
     private LinearVelocity angularVelocityToLinearVelocity(AngularVelocity angularVelocity, Distance wheelRadius) {
-        return MetersPerSecond.of( (angularVelocity.in(RPM) * Math.PI * 2 * wheelRadius.in(Meters)) / 60.0 );
+        return MetersPerSecond.of((angularVelocity.in(RPM) * Math.PI * 2 * wheelRadius.in(Meters)) / 60.0);
     }
 
     public void refresh(ChassisSpeeds robotVelocity, Pose3d currentPose, Pose3d targetPose) {
@@ -191,7 +227,8 @@ public class ShooterCalculator {
         private ShotData idealShot;
         private ShotData maxShot;
 
-        public ShotDataRange(Angle minHoodAngle, Angle idealHoodAngle, Angle maxHoodAngle, LinearVelocity minShotVelocity, LinearVelocity idealShotVelocity, LinearVelocity maxShotVelocity) {
+        public ShotDataRange(Angle minHoodAngle, Angle idealHoodAngle, Angle maxHoodAngle,
+                LinearVelocity minShotVelocity, LinearVelocity idealShotVelocity, LinearVelocity maxShotVelocity) {
             this.minShot = new ShotData(minHoodAngle, minShotVelocity);
             this.idealShot = new ShotData(idealHoodAngle, idealShotVelocity);
             this.maxShot = new ShotData(maxHoodAngle, maxShotVelocity);
@@ -203,11 +240,14 @@ public class ShooterCalculator {
             this.maxShot = new ShotData(Degree.of(0.0), MetersPerSecond.of(0.0));
         }
 
-        public ShotDataRange(Angle idealHoodAngle, Angle allowedHoodAngleDifference, LinearVelocity idealShotVelocity, LinearVelocity allowedShotVelocityDifference) {
+        public ShotDataRange(Angle idealHoodAngle, Angle allowedHoodAngleDifference, LinearVelocity idealShotVelocity,
+                LinearVelocity allowedShotVelocityDifference) {
             this.idealShot = new ShotData(idealHoodAngle, idealShotVelocity);
-            this.minShot = new ShotData(idealHoodAngle.minus(allowedHoodAngleDifference), idealShotVelocity.minus(allowedShotVelocityDifference));
-            this.maxShot = new ShotData(idealHoodAngle.plus(allowedHoodAngleDifference), idealShotVelocity.plus(allowedShotVelocityDifference));
-        }   
+            this.minShot = new ShotData(idealHoodAngle.minus(allowedHoodAngleDifference),
+                    idealShotVelocity.minus(allowedShotVelocityDifference));
+            this.maxShot = new ShotData(idealHoodAngle.plus(allowedHoodAngleDifference),
+                    idealShotVelocity.plus(allowedShotVelocityDifference));
+        }
 
         public ShotData getMinShot() {
             return minShot;
@@ -223,7 +263,8 @@ public class ShooterCalculator {
 
         @Override
         public String toString() {
-            return "ShotDataRange:\n" + "Min Shot: " + minShot.toString() + "\nIdeal Shot: " + idealShot.toString() + "\nMax Shot: " + maxShot.toString();
+            return "ShotDataRange:\n" + "Min Shot: " + minShot.toString() + "\nIdeal Shot: " + idealShot.toString()
+                    + "\nMax Shot: " + maxShot.toString();
         }
 
         public class ShotData {
@@ -253,14 +294,15 @@ public class ShooterCalculator {
             }
 
             public AngularVelocity getShotAngularVelocity(Distance wheelRadius) {
-                return RPM.of( (shotVelocity.in(MetersPerSecond) * 60.0) / (Math.PI * 2 * wheelRadius.in(Meters)) );
+                return RPM.of((shotVelocity.in(MetersPerSecond) * 60.0) / (Math.PI * 2 * wheelRadius.in(Meters)));
             }
 
             @Override
             public String toString() {
-                return "ShotData:\nShot Velocity (m/s): " + shotVelocity.in(MetersPerSecond) + "\nHood Angle (deg): " + hoodAngle.in(Degree);
+                return "ShotData:\nShot Velocity (m/s): " + shotVelocity.in(MetersPerSecond) + "\nHood Angle (deg): "
+                        + hoodAngle.in(Degree);
             }
-        }   
+        }
     }
-    
+
 }
