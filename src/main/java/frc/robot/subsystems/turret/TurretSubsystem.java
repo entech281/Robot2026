@@ -131,8 +131,8 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
             return;
         Angle desiredPos = latestInput.getRequestedPosition();
         if (getForwardLimitSwitch() && getForwardLimitSwitch() != lastLimitSwitchState) {
-            turretEncoder.setPosition(LiveTuningHandler.getInstance().getValue("TurretSubsystem/UpperLimitDegrees"));
-            turretMotor.getEncoder().setPosition(LiveTuningHandler.getInstance().getValue("TurretSubsystem/LowerLimitDegrees"));
+            turretEncoder.setPosition(LiveTuningHandler.getInstance().getValue("TurretSubsystem/HomeSwitchPosition"));
+            turretMotor.getEncoder().setPosition(LiveTuningHandler.getInstance().getValue("TurretSubsystem/HomeSwitchPosition"));
         }
         Logger.recordOutput("TurretOutput/switch", getForwardLimitSwitch());
         lastLimitSwitchState = getForwardLimitSwitch();

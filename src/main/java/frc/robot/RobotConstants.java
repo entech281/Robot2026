@@ -166,6 +166,7 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/PresetOneRPM", 3500.0),
         Map.entry("ShooterSubsystem/PresetTwoRPM", 4500.0),
         Map.entry("ShiftStateTracker/WarningSeconds", 5.0),
+        Map.entry("TurretSubsystem/HomeSwitchPosition", -5.0),
         Map.entry("ShooterSubsystem/kP", 0.00030),
         Map.entry("ShooterSubsystem/kI", 0.0),
         Map.entry("ShooterSubsystem/kD", 0.0),
