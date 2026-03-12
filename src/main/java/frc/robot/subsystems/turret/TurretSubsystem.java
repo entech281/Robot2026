@@ -31,6 +31,7 @@ import frc.entech.util.stall.MotorStallDetector;
 import frc.robot.RobotConstants;
 import frc.robot.io.RobotIO;
 import frc.robot.livetuning.LiveTuningHandler;
+import frc.robot.subsystems.turret.TurretEncoder;
 
 /**
  *
@@ -49,6 +50,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     private double PID_MAX = 1;
     private double PID_MIN = -1;
     private DigitalInput forwardLimitSwitch;
+    private boolean inverted = true;
 
     private boolean lastLimitSwitchState = false;
 
@@ -66,7 +68,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     public void initialize() {
         if (!ENABLED)
             return;
-        forwardLimitSwitch = new DigitalInput(RobotConstants.PORTS.DIO.TURRET_FORWARD_LIMIT_SWITCH);
+        forwardLimitSwitch = new DigitalInput(RobotConstants.PORTS.DIO.HOME_TURRET_SWITCH);
         turretMotor = new SparkMax(RobotConstants.PORTS.CAN.TURRET_MOTOR, MotorType.kBrushless);
         turretConfig = new SparkMaxConfig();
         turretConfig.idleMode(IdleMode.kBrake);
@@ -108,6 +110,10 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
                 LiveTuningHandler.getInstance().getValue("TurretSubsystem/LowerLimitDegrees"),
                 LiveTuningHandler.getInstance().getValue("TurretSubsystem/UpperLimitDegrees"));
 
+        if (inverted) {
+            clamped = -clamped;
+        }
+
         boolean isStalled = (stallDetector != null && stallDetector.isStalled(turretMotor));
         if (isStalled && turretEncoder.getPosition() < 0) {
             if (clamped < turretEncoder.getPosition()) {
@@ -120,7 +126,6 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         }
 
         m_goal = new TrapezoidProfile.State(clamped, 0);
-        Logger.recordOutput("TURRETSETPOINT", desiredAngle);
         m_setpoint = m_profile.calculate(RobotConstants.TURRET.TRAPEZOIDAL_DELTA_TIME.in(Seconds), m_setpoint, m_goal);
         turretMotor.set(EntechUtils.capDoubleValue(control.calculate(turretEncoder.getPosition(), m_setpoint.position),
                 PID_MIN, PID_MAX));
@@ -132,8 +137,8 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
             return;
         Angle desiredPos = latestInput.getRequestedPosition();
         if (getForwardLimitSwitch() && getForwardLimitSwitch() != lastLimitSwitchState) {
-            turretEncoder.setPosition(RobotConstants.TURRET.UPPER_LIMIT.in(Degrees));
-            turretMotor.getEncoder().setPosition(RobotConstants.TURRET.UPPER_LIMIT.in(Degrees));
+            turretEncoder.setPosition(LiveTuningHandler.getInstance().getValue("TurretSubsystem/HomeSwitchPosition"));
+            turretMotor.getEncoder().setPosition(LiveTuningHandler.getInstance().getValue("TurretSubsystem/HomeSwitchPosition"));
         }
         Logger.recordOutput("TurretOutput/switch", getForwardLimitSwitch());
         lastLimitSwitchState = getForwardLimitSwitch();
