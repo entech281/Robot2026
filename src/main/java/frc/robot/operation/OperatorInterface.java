@@ -321,6 +321,12 @@ public class OperatorInterface
                       shooterCalculator.calculateShot().getIdealShot().getHoodAngle().in(Degrees)));
                 })));
 
+    // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DISTANCE_DOWN)
+    // .onTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), -1.0));
+
+    // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DISTANCE_UP)
+    // .onTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), 1.0));
+
     // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INCREASE_DISTANCE_OFFSET)
     //     .onTrue(
     //         new ParallelCommandGroup(
