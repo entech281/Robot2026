@@ -1,0 +1,103 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.5047615384615396,
+        "y": 2.702407692307693
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.7540575768497293,
+        "y": 2.7211556320332826
+      },
+      "isLocked": false,
+      "linkedName": "R_Hub"
+    },
+    {
+      "anchor": {
+        "x": 3.093123076923078,
+        "y": 0.7139846153846157
+      },
+      "prevControl": {
+        "x": 2.1533230873276463,
+        "y": 1.341802002147999
+      },
+      "nextControl": {
+        "x": 3.351665090846911,
+        "y": 0.5412700236127238
+      },
+      "isLocked": false,
+      "linkedName": "In_R_Trench"
+    },
+    {
+      "anchor": {
+        "x": 7.544,
+        "y": 1.147
+      },
+      "prevControl": {
+        "x": 7.014807248379733,
+        "y": 0.6456050948465502
+      },
+      "nextControl": {
+        "x": 8.099319539387086,
+        "y": 1.6731492847896043
+      },
+      "isLocked": false,
+      "linkedName": "Out_R_Trench"
+    },
+    {
+      "anchor": {
+        "x": 7.816500000000001,
+        "y": 2.7442692307692313
+      },
+      "prevControl": {
+        "x": 7.698047866236519,
+        "y": 2.489723346417903
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "R_Pass1_End"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.205471124620056,
+      "rotationDegrees": 90.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Intake",
+      "waypointRelativePos": 1.5,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 38.38653951768536
+  },
+  "useDefaultConstraints": true
+}

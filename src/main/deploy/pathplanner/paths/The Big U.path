@@ -12,7 +12,7 @@
         "y": 2.831980358123526
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "R_Hub"
     },
     {
       "anchor": {
@@ -28,7 +28,7 @@
         "y": 0.3569065191378825
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "In_R_Trench"
     },
     {
       "anchor": {
@@ -44,7 +44,7 @@
         "y": 1.5340757759533061
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Out_R_Trench"
     },
     {
       "anchor": {
@@ -76,7 +76,7 @@
         "y": 7.768497789646919
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Out_L_Trench"
     },
     {
       "anchor": {
@@ -92,7 +92,7 @@
         "y": 7.0894865803007345
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "In_L_Trench"
     },
     {
       "anchor": {
