@@ -280,7 +280,7 @@ public class OperatorInterface
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_UP)
     .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount")));
 
-    scoreOperatorPanel.button(0)
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_DOWN)
     .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), -LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount")));
 
     // Latching toggle switch — pressed down = won auto, released = did not win auto
