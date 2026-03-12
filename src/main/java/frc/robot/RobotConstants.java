@@ -155,10 +155,10 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/SetSpeed", 0.0),
         Map.entry("IntakeSubsystem/SetSpeed", 0.0),
         Map.entry("TransferSubsystem/SetSpeed", 0.0),
-        Map.entry("TurretSubsystem/LowerLimitDegrees", -45.0),
-        Map.entry("TurretSubsystem/UpperLimitDegrees", 45.0),
-        Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -40.0),
-        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 45.0),
+        Map.entry("TurretSubsystem/LowerLimitDegrees", -240.0),
+        Map.entry("TurretSubsystem/UpperLimitDegrees", 0.0),
+        Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -230.0),
+        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 5.0),
         Map.entry("TurretSubsystem/PresetOneDegrees", 0.0),
         Map.entry("TurretSubsystem/PresetTwoDegrees", 0.0),
         Map.entry("HoodSubsystem/PresetOneDegrees", 0.0),
@@ -166,6 +166,7 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/PresetOneRPM", 3500.0),
         Map.entry("ShooterSubsystem/PresetTwoRPM", 4500.0),
         Map.entry("ShiftStateTracker/WarningSeconds", 5.0),
+        Map.entry("TurretSubsystem/HomeSwitchPosition", -5.0),
         Map.entry("ShooterSubsystem/kP", 0.00030),
         Map.entry("ShooterSubsystem/kI", 0.0),
         Map.entry("ShooterSubsystem/kD", 0.0),
@@ -173,7 +174,7 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/kA", 0.0006),
         Map.entry("ShooterSubsystem/kS", 0.08),
         Map.entry("TurretSubsystem/LiveAngle", 0.0),
-        Map.entry("TurretSubsystem/NudgeAmount", 1.0),
+        Map.entry("TurretSubsystem/NudgeAmount", 5.0),
         Map.entry("UserPolicy/DistanceNudgeAmountMeters", 0.5),
         Map.entry("ShotTuningRPM/5ft", 0.0),
         Map.entry("ShotTuningRPM/6ft", 0.0),
@@ -270,8 +271,8 @@ public final class RobotConstants {
     }
 
     public static interface DIO {
-      public static final int HALL_EFFECT_SENSOR = 0;
-      public static final int TURRET_FORWARD_LIMIT_SWITCH = 1;
+      public static final int HALL_EFFECT_SENSOR = 20;
+      public static final int HOME_TURRET_SWITCH = 1;
     }
   }
 
@@ -420,7 +421,6 @@ public final class RobotConstants {
     public static final AngularAcceleration TURRET_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(1200);
     public static final Angle TURRET_POSITION_TOLERANCE_DEGREES = Degrees.of(1.0); // considered at setpoint within this
     public static final Angle HOME_POSITION_DEGREES = Degrees.of(0.0); // position to reset to
-    public static final Angle UPPER_LIMIT = Degrees.of(-45.0);
 
     public static final Pose3d BLUE_HUB_LOCATION = new Pose3d(Inches.of(182.11).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
@@ -456,6 +456,8 @@ public final class RobotConstants {
     public static final double HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5;
 
     public static final double HOOD_JOG_STEP_DEGREES = 5.0; // Change this value
+    public static final Angle HOOD_OFFSET = Degrees.of(0.0); //TODO, when switching from interpolation 
+                                                                      //strategy make this real and implement
 
   }
 
@@ -471,10 +473,11 @@ public final class RobotConstants {
         Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")),
         RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
         Meters.of(WHEEL_RADIUS_METERS));
-    public static final Distance minShotDistance = Meters.of(8);
-    public static final Distance maxShotDistance = Feet.of(14);
-    public static final AngularVelocity minShotSpeed = RPM.of(3500);
-    public static final AngularVelocity maxShotSpeed = RPM.of(5000);
+    public static final Distance MIN_SHOT_DISTANCE = Meters.of(8);
+    public static final Distance MAX_SHOT_DISTANCE = Feet.of(14);
+    public static final AngularVelocity MIN_SHOT_SPEED = RPM.of(3500);
+    public static final AngularVelocity MAX_SHOT_SPEED = RPM.of(5000);
+    public static final AngularVelocity TOLERANCE = RPM.of(250);
   }
 
   public static interface HOPPER {

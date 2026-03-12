@@ -16,6 +16,7 @@ import frc.robot.subsystems.hood.HoodOutput;
 import frc.robot.subsystems.hopper.HopperOutput;
 import frc.robot.subsystems.intake.IntakeOutput;
 import frc.robot.sensors.HallEffectSensor.HallEffectOutput;
+import frc.robot.sensors.HomeTurretSwitch.HomeTurretOutput;
 import frc.robot.sensors.gyro.GyroOutput;
 import frc.robot.sensors.vision.VisionOutput;
 import frc.robot.subsystems.shooter.ShooterOutput;
@@ -96,6 +97,10 @@ public class RobotIO implements DriveInputSupplier {
     return latestHallEffectOutput;
   }
 
+  public HomeTurretOutput getHomeTurretOutput() {
+    return latestHomeTurretOutput;
+  }
+
   public void updateGyro(GyroOutput no) {
     latestGyroOutput = no;
     no.log();
@@ -157,6 +162,11 @@ public class RobotIO implements DriveInputSupplier {
     heo.log();
   }
 
+  public void updateHomeTurret(HomeTurretOutput hto) {
+    latestHomeTurretOutput = hto;
+    hto.log();
+  }
+
   private GyroOutput latestGyroOutput;
   private DriveOutput latestDriveOutput;
   private VisionOutput latestVisionOutput;
@@ -169,4 +179,5 @@ public class RobotIO implements DriveInputSupplier {
   private Pose2d latestOdometryPose = RobotConstants.ODOMETRY.INITIAL_POSE;
   private TurretOutput latestTurretOutput;
   private HallEffectOutput latestHallEffectOutput;
+  private HomeTurretOutput latestHomeTurretOutput;
 }
