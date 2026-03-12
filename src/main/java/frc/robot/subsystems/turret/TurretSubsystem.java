@@ -220,6 +220,6 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     }
 
     private boolean getForwardLimitSwitch() {
-        return !forwardLimitSwitch.get();
+        return forwardLimitSwitch.get();
     }
 }
