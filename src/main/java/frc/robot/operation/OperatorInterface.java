@@ -195,25 +195,25 @@ public class OperatorInterface
     new Trigger(() -> getShiftState() == ShiftState.YOUR_SHIFT)
         .onTrue(new InstantCommand(() -> {
           DriverStation.reportWarning("Green Solid", false);
-          shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, true);
+          shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, false);
         }));
 
     new Trigger(() -> getShiftState() == ShiftState.SHIFT_ENDING)
         .onTrue(new InstantCommand(() -> {
           DriverStation.reportWarning("Green Blinking", false);
-          shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, false);
+          shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, true);
         }));
 
     new Trigger(() -> getShiftState() == ShiftState.THEIR_SHIFT)
         .onTrue(new InstantCommand(() -> {
           DriverStation.reportWarning("Red Solid", false);
-          shiftLightOutput.setLED(LedNumber.k0, Color.RED, true);
+          shiftLightOutput.setLED(LedNumber.k0, Color.RED, false);
         }));
 
     new Trigger(() -> getShiftState() == ShiftState.SHIFT_STARTING)
         .onTrue(new InstantCommand(() -> {
           DriverStation.reportWarning("Red Blinking", false);
-          shiftLightOutput.setLED(LedNumber.k0, Color.RED, false);
+          shiftLightOutput.setLED(LedNumber.k0, Color.RED, true);
         }));
   }
 
