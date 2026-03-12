@@ -50,7 +50,7 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
             if (setSpeed == 0.0) {
                 shooterMotorA.set(0);
             } else {
-                shooterMotorA.getClosedLoopController().setSetpoint(-input.getSpeed(),
+                shooterMotorA.getClosedLoopController().setSetpoint(input.getSpeed(),
                         ControlType.kVelocity,
                         ClosedLoopSlot.kSlot0);
             }
@@ -98,6 +98,7 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
         shooterAConfig.encoder.velocityConversionFactor(1.0);
         shooterAConfig.closedLoop.pid(factors[0], factors[1], factors[2], ClosedLoopSlot.kSlot0);
         shooterAConfig.voltageCompensation(12.5);
+        shooterAConfig.inverted(true);
 
         shooterMotorA.configure(shooterAConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
