@@ -3,6 +3,9 @@ package frc.robot.subsystems.shooter;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
+
+import static edu.wpi.first.units.Units.RPM;
+
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
@@ -12,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.subsystems.SparkOutput;
+import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.livetuning.LiveTuningHandler;
 
@@ -68,7 +72,7 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
         if (ENABLED) {
             so.setSpeed(setSpeed);
             so.setBraking(BRAKING);
-            so.setAtSpeed(shooterMotorA.getClosedLoopController().isAtSetpoint());
+            so.setAtSpeed(Math.abs(shooterMotorA.getEncoder().getVelocity() - setSpeed) <= RobotConstants.SHOOTER.TOLERANCE.in(RPM));
 
             so.setShooterMotorA(SparkOutput.createOutput(shooterMotorA));
             so.setShooterMotorB(SparkOutput.createOutput(shooterMotorB));

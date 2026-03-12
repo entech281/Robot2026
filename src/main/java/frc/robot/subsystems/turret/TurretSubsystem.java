@@ -50,6 +50,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     private double PID_MAX = 1;
     private double PID_MIN = -1;
     private DigitalInput forwardLimitSwitch;
+    private boolean inverted = true;
 
     private boolean lastLimitSwitchState = false;
 
@@ -108,6 +109,10 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         double clamped = EntechUtils.capDoubleValue(desiredAngle.in(Degrees),
                 LiveTuningHandler.getInstance().getValue("TurretSubsystem/LowerLimitDegrees"),
                 LiveTuningHandler.getInstance().getValue("TurretSubsystem/UpperLimitDegrees"));
+
+        if (inverted) {
+            clamped = -clamped;
+        }
 
         boolean isStalled = (stallDetector != null && stallDetector.isStalled(turretMotor));
         if (isStalled && turretEncoder.getPosition() < 0) {
