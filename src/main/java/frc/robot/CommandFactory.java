@@ -113,9 +113,13 @@ public class CommandFactory {
 
     NamedCommands.registerCommand("example", Commands.deferredProxy(Commands::none));
 
+    NamedCommands.registerCommand("ShootFromLeft", getFullShootCommand());
+
     autoChooser = AutoBuilder.buildAutoChooser();
 
     autoChooser.addOption("Something", Commands.none());
+
+    autoChooser.addOption("Shoot", getAutoCommand());
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
@@ -124,6 +128,7 @@ public class CommandFactory {
     SequentialCommandGroup auto = new SequentialCommandGroup();
     auto.addCommands(new GyroResetByAngleCommand(gyroSubsystem, odometry, autoChooser.getSelected().getName()));
     auto.addCommands(new WaitCommand(0.5));
+    auto.addCommands(getFullShootCommand());
     auto.addCommands(autoChooser.getSelected());
     return auto;
   }
