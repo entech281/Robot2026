@@ -29,14 +29,10 @@ import frc.robot.CommandFactory;
 import frc.robot.HardwareManager;
 import frc.robot.RobotConstants;
 import frc.robot.RobotConstants.LiveTuning;
-import frc.robot.commands.DeployHopper;
 import frc.robot.commands.DriveCommand;
 import frc.robot.Robot;
 import frc.robot.commands.AimTurretLiveCommand;
-import frc.robot.commands.DeployHopper;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.DropHopper;
-import frc.robot.commands.DropThenRaiseHopper;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.GyroReset;
 import frc.robot.commands.HoodJogCommand;
@@ -125,7 +121,6 @@ public class OperatorInterface
     tuningController.b().whileTrue(new RunTransferCommand(subsystemManager.getTransferSubsystem()));
     tuningController.x().whileTrue(new RunShooterCommand(subsystemManager.getShooterSubsystem()));
     // Momentary drop-then-raise hopper cycle for tuning
-    tuningController.y().onTrue(new DropThenRaiseHopper(subsystemManager.getHopperSubsystem()));
 
     // Turret tuning: bumpers jog left/right alrwhile held (small steps)
     tuningController.povLeft()
@@ -274,10 +269,6 @@ public class OperatorInterface
     // TODO add stop intake for both of these onFalse()
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.OUTTAKE)
         .whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false));
-
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DEPLOY_HOPPER)
-        .onTrue(new DeployHopper(subsystemManager.getHopperSubsystem(), true))
-        .onFalse(new DeployHopper(subsystemManager.getHopperSubsystem(), false));
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.PRESET_1_FIRE)
         .whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_ONE))

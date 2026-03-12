@@ -24,12 +24,12 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.subsystems.SparkOutput;
 import frc.entech.util.EntechUtils;
 import frc.entech.util.stall.MotorStallDetector;
 import frc.robot.RobotConstants;
+import frc.robot.io.RobotIO;
 import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.subsystems.turret.TurretEncoder;
 
@@ -156,12 +156,13 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
 
     @Override
     public void updateInputs(TurretInput input) {
+        RobotIO.processInput(input);
         this.latestInput = input;
     }
 
     @Override
     public Command getTestCommand() {
-        return Commands.none();
+        return new TestTurretCommand(this);
     }
 
     @Override

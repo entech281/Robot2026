@@ -3,6 +3,7 @@ package frc.robot.subsystems.climb;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
+import frc.robot.io.RobotIO;
 
 public class ClimbSubsystem extends EntechSubsystem<ClimbInput, ClimbOutput> {
     private static final boolean ENABLED = false;
@@ -20,9 +21,7 @@ public class ClimbSubsystem extends EntechSubsystem<ClimbInput, ClimbOutput> {
 
     @Override
     public void updateInputs(ClimbInput input) {
-        // TODO Auto-generated method stub
-        // throw new UnsupportedOperationException("Unimplemented method
-        // 'updateInputs'");
+        RobotIO.processInput(input);
     }
 
     @Override

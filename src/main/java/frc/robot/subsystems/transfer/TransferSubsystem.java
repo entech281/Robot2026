@@ -8,10 +8,10 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.subsystems.SparkOutput;
 import frc.robot.RobotConstants;
+import frc.robot.io.RobotIO;
 
 public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOutput> {
     private static final boolean ENABLED = true;
@@ -41,17 +41,18 @@ public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOu
 
     @Override
     public void updateInputs(TransferInput input) {
+        RobotIO.processInput(input);
         if (ENABLED) {
             if (input.getSpeed() != setSpeed) {
                 setSpeed = input.getSpeed();
-                transferMotor.set(input.getSpeed());
+                transferMotor.set(-input.getSpeed());
             }
         }
     }
 
     @Override
     public Command getTestCommand() {
-        return Commands.none();
+        return new TestTransferCommand(this);
     }
 
     @Override
