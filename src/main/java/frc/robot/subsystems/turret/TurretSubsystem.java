@@ -67,7 +67,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     public void initialize() {
         if (!ENABLED)
             return;
-        forwardLimitSwitch = new DigitalInput(RobotConstants.PORTS.DIO.TURRET_FORWARD_LIMIT_SWITCH);
+        forwardLimitSwitch = new DigitalInput(RobotConstants.PORTS.DIO.HOME_TURRET_SWITCH);
         turretMotor = new SparkMax(RobotConstants.PORTS.CAN.TURRET_MOTOR, MotorType.kBrushless);
         turretConfig = new SparkMaxConfig();
         turretConfig.idleMode(IdleMode.kBrake);

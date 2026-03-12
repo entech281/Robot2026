@@ -286,6 +286,12 @@ public class OperatorInterface
         .whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_TWO))
         .onFalse(commandFactory.getStopShootingCommand());
 
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_UP)
+    .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount")));
+
+    scoreOperatorPanel.button(0)
+    .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), -LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount")));
+
     // Latching toggle switch — pressed down = won auto, released = did not win auto
     // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.WON_AUTO_SWITCH)
     // .onTrue(new InstantCommand(() ->
@@ -293,14 +299,14 @@ public class OperatorInterface
     // .onFalse(new InstantCommand(() ->
     // UserPolicy.getInstance().setIsAutoWon(false)));
 
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_UP)
-        .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), true))
-        .onFalse(commandFactory.getStopShootingCommand());
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_DOWN)
-        .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), false))
-        .onFalse(commandFactory.getStopShootingCommand());
+    // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_UP)
+    //     .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), true))
+    //     .onFalse(commandFactory.getStopShootingCommand());
+    // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_DOWN)
+    //     .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), false))
+    //     .onFalse(commandFactory.getStopShootingCommand());
 
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DISTANCE_DOWN)
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DISTANCE_UP)
         .onTrue(
             new ParallelCommandGroup(
                 new InstantCommand(() -> UserPolicy.getInstance()
@@ -324,18 +330,18 @@ public class OperatorInterface
                       shooterCalculator.calculateShot().getIdealShot().getHoodAngle().in(Degrees)));
                 })));
 
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DISTANCE_UP)
-        .onTrue(
-            new ParallelCommandGroup(
-                new InstantCommand(() -> UserPolicy.getInstance()
-                    .setHubOffset(UserPolicy.getInstance().getHubOffset().minus(
-                        Meters.of(LiveTuningHandler.getInstance().getValue("UserPolicy/DistanceNudgeAmountMeters"))))),
-                new InstantCommand(() -> {
-                  Angle angle = subsystemManager.getGyroSubsystem().getOutputs().getYaw();
-                }
-                )));
+    // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INCREASE_DISTANCE_OFFSET)
+    //     .onTrue(
+    //         new ParallelCommandGroup(
+    //             new InstantCommand(() -> UserPolicy.getInstance()
+    //                 .setHubOffset(UserPolicy.getInstance().getHubOffset().minus(
+    //                     Meters.of(LiveTuningHandler.getInstance().getValue("UserPolicy/DistanceNudgeAmountMeters"))))),
+    //             new InstantCommand(() -> {
+    //               Angle angle = subsystemManager.getGyroSubsystem().getOutputs().getYaw();
+    //             }
+    //             )));
 
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DECREASE_DISTANCE_OFFSET)
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DISTANCE_DOWN)
     .onTrue(
       new SequentialCommandGroup(
         new InstantCommand( () -> UserPolicy.getInstance().setHubOffset(UserPolicy.getInstance().getHubOffset().minus(Meters.of(LiveTuningHandler.getInstance().getValue("UserPolicy/DistanceNudgeAmountMeters"))))),
@@ -345,17 +351,15 @@ public class OperatorInterface
                   Pose3d currentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
                       .plus(RobotConstants.SHOOTER.SHOT_TRANSFORM);
                   Pose3d targetPose = currentPose.plus(
-                      new Transform3d(UserPolicy.getInstance().getHubOffset().in(Meters) * Math.sin(angle.in(Radians)),
-                          UserPolicy.getInstance().getHubOffset().in(Meters) * Math.cos(angle.in(Radians)), 0.0,
+                      new Transform3d(-UserPolicy.getInstance().getHubOffset().in(Meters) * Math.sin(angle.in(Radians)),
+                          -UserPolicy.getInstance().getHubOffset().in(Meters) * Math.cos(angle.in(Radians)), 0.0,
                           new Rotation3d()));
 
                   ShooterCalculator shooterCalculator = new ShooterCalculator(
                       subsystemManager.getDriveSubsystem().getChassisSpeeds(), currentPose, targetPose,
-                      Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.maxShotSpeed,
-                      RobotConstants.SHOOTER.minShotSpeed, RobotConstants.SHOOTER.maxShotDistance,
-                      RobotConstants.SHOOTER.maxShotDistance);
-
-            ShooterCalculator shooterCalculator = new ShooterCalculator(subsystemManager.getDriveSubsystem().getChassisSpeeds(), currentPose, targetPose, Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED, RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE, RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
+                      Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
+                      RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
+                      RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
 
             CommandScheduler.getInstance().schedule(new ManualHoodCommand(subsystemManager.getHoodSubsystem(), shooterCalculator.calculateShot().getIdealShot().getHoodAngle().in(Degrees)));
         })

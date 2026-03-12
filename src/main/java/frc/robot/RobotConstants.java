@@ -174,7 +174,7 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/kA", 0.0006),
         Map.entry("ShooterSubsystem/kS", 0.08),
         Map.entry("TurretSubsystem/LiveAngle", 0.0),
-        Map.entry("TurretSubsystem/NudgeAmount", 1.0),
+        Map.entry("TurretSubsystem/NudgeAmount", 5.0),
         Map.entry("UserPolicy/DistanceNudgeAmountMeters", 0.5),
         Map.entry("ShotTuningRPM/5ft", 0.0),
         Map.entry("ShotTuningRPM/6ft", 0.0),
@@ -287,18 +287,11 @@ public final class RobotConstants {
       public static final int PRESET_1_FIRE = 3;
       public static final int PRESET_2_FIRE = 4;
       public static final int SNOWBLOW_FIRE = 13;
-<<<<<<< HEAD
-      public static final int INCREASE_DISTANCE_OFFSET = 10;
-      public static final int DECREASE_DISTANCE_OFFSET = 99;
-      public static final int POSITIVE_TURRET_NUDGE = 100;
-      public static final int NEGATIVE_TURRET_NUDGE = 101;
-=======
       public static final int CLIMB = 12;
       public static final int TURRET_NUDGE_UP = 8;
       public static final int TURRET_NUDGE_DOWN = 9;
       public static final int DISTANCE_UP = 11;
       public static final int DISTANCE_DOWN = 10;
->>>>>>> main
     }
 
     public static interface SWITCHES {

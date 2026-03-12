@@ -18,7 +18,7 @@ public class HomeTurretSwitch extends EntechSensor<HomeTurretOutput> {
     @Override
     public void initialize() {
         if (ENABLED) {
-            sensor = new DigitalInput(RobotConstants.PORTS.DIO.HOME_TURRET_SWITCH);
+            sensor = new DigitalInput(8);
         }
     }
 

@@ -1,11 +1,8 @@
 package frc.robot.commands;
 
-<<<<<<< HEAD
 import static edu.wpi.first.units.Units.Degrees;
 
-=======
 import edu.wpi.first.units.measure.Angle;
->>>>>>> main
 import frc.entech.commands.EntechCommand;
 import frc.robot.RobotConstants;
 import frc.robot.io.RobotIO;
