@@ -51,10 +51,18 @@ public class ShootAtTargetCommand extends EntechCommand {
         this.turretCalculatorSupplier = turretCalculatorSupplier;
     }
 
-    //nothing to end
+    // nothing to end
     @Override
     public void end(boolean interrupted) {
-        //no need to end
+        transferInput = new TransferInput();
+        hoodInput = new HoodInput();
+        shooterInput = new ShooterInput();
+        turretInput = new TurretInput();
+
+        transferSS.updateInputs(transferInput);
+        hoodSS.updateInputs(hoodInput);
+        shooterSS.updateInputs(shooterInput);
+        turretSS.updateInputs(turretInput);
     }
 
     @Override
@@ -73,16 +81,21 @@ public class ShootAtTargetCommand extends EntechCommand {
         hoodSS.updateInputs(hoodInput);
         turretSS.updateInputs(turretInput);
 
-        boolean turretIsReady = turretCalculatorSupplier.get().isValidTurretAngle(
-                turretSS.getOutputs().getCurrentPosition(),
-                RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES);
-        Triboolean shotIsReady = shooterCalculatorSupplier.get().isValidShot(
-                Degrees.of(hoodSS.getOutputs().getHoodMotor().getCurrentPosition()),
-                RPM.of(shooterSS.getOutputs().getShooterMotorA().getCurrentSpeed()),
-                Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS));
-        Triboolean isReadyToShoot = shotIsReady.fand(Triboolean.of(turretIsReady));
+        // boolean turretIsReady = turretCalculatorSupplier.get().isValidTurretAngle(
+        // turretSS.getOutputs().getCurrentPosition(),
+        // RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES);
+        // Triboolean shotIsReady = shooterCalculatorSupplier.get().isValidShot(
+        // Degrees.of(hoodSS.getOutputs().getHoodMotor().getCurrentPosition()),
+        // RPM.of(shooterSS.getOutputs().getShooterMotorA().getCurrentSpeed()),
+        // Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS));
 
-        if (isReadyToShoot.getProbability() > 0) {
+        // Triboolean isReadyToShoot = shotIsReady.fand(Triboolean.of(turretIsReady));
+
+        boolean isReadyToShoot = turretSS.getOutputs().isAtRequestedPosition()
+                && hoodSS.getOutputs().isAtRequestedPosition()
+                && shooterSS.getOutputs().isAtSpeed();
+
+        if (isReadyToShoot) {
             transferInput.setSpeed(LiveTuningHandler.getInstance().getValue("TransferSubsystem/SetSpeed"));
             transferSS.updateInputs(transferInput);
         } else {
@@ -90,10 +103,10 @@ public class ShootAtTargetCommand extends EntechCommand {
             transferSS.updateInputs(transferInput);
         }
 
-        Logger.recordOutput("TurretCalculatorIsReadyToShoot", turretIsReady);
-        Logger.recordOutput("ShotIsReady", shotIsReady + "");
-        Logger.recordOutput("IsReadyToShoot", isReadyToShoot + "");
-        Logger.recordOutput("ShotRange", shotRange + "");
+        // Logger.recordOutput("TurretCalculatorIsReadyToShoot", turretIsReady);
+        // Logger.recordOutput("ShotIsReady", shotIsReady + "");
+        // Logger.recordOutput("IsReadyToShoot", isReadyToShoot + "");
+        // Logger.recordOutput("ShotRange", shotRange + "");
 
     }
 

@@ -50,7 +50,6 @@ public class NavX3 implements GyroI {
 
     @Override
     public void setAngleOffset(Angle angle) {
-        Logger.recordOutput("SubsystemTest", angle);
         angleOffset = angle;
     }
 

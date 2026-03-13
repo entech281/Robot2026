@@ -451,7 +451,7 @@ public final class RobotConstants {
     public static final double INITIAL_POSITION_DEGREES = 0.0;
     public static final double HOOD_LOWER_LIMIT_DEGREES = 0.0;
     public static final double HOOD_UPPER_LIMIT_DEGREES = 30.0;
-    public static final double HOOD_POSITION_TOLERANCE_DEGREES = 0.1;
+    public static final double HOOD_POSITION_TOLERANCE_DEGREES = 2.0;
     public static final AngularVelocity HOOD_CRUISE_VELOCITY = DegreesPerSecond.of(55.14705882366667);
     public static final AngularAcceleration HOOD_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(275.73529411833334);
     public static final double HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5;

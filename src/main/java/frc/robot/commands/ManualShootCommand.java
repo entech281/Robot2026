@@ -62,8 +62,12 @@ public class ManualShootCommand extends EntechCommand {
     @Override
     public void end(boolean interrupted) {
         transferInput = new TransferInput();
+        hoodInput = new HoodInput();
+        shooterInput = new ShooterInput();
 
         transferSS.updateInputs(transferInput);
+        hoodSS.updateInputs(hoodInput);
+        shooterSS.updateInputs(shooterInput);
     }
 
     @Override
