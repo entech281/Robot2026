@@ -299,7 +299,7 @@ public class OperatorInterface
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DISTANCE_UP)
         .onTrue(
-            new ParallelCommandGroup(
+            new SequentialCommandGroup(
                 new InstantCommand(() -> UserPolicy.getInstance()
                     .setHubOffset(UserPolicy.getInstance().getHubOffset().plus(
                         Meters.of(LiveTuningHandler.getInstance().getValue("UserPolicy/DistanceNudgeAmountMeters"))))),
@@ -345,11 +345,13 @@ public class OperatorInterface
         new InstantCommand( () -> {
             Angle angle = subsystemManager.getGyroSubsystem().getOutputs().getYaw();
 
+            angle = Degrees.of(angle.in(Degrees) % 360);
+
                   Pose3d currentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
                       .plus(RobotConstants.SHOOTER.SHOT_TRANSFORM);
                   Pose3d targetPose = currentPose.plus(
-                      new Transform3d(-UserPolicy.getInstance().getHubOffset().in(Meters) * Math.sin(angle.in(Radians)),
-                          -UserPolicy.getInstance().getHubOffset().in(Meters) * Math.cos(angle.in(Radians)), 0.0,
+                      new Transform3d(UserPolicy.getInstance().getHubOffset().in(Meters) * Math.sin(angle.in(Radians)),
+                          UserPolicy.getInstance().getHubOffset().in(Meters) * Math.cos(angle.in(Radians)), 0.0,
                           new Rotation3d()));
 
                   ShooterCalculator shooterCalculator = new ShooterCalculator(
