@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.952660413321401,
-        "y": 0.9394688419215969
+        "x": 3.977461622344455,
+        "y": 0.9009002776896631
       },
       "isLocked": false,
       "linkedName": "R_Trench_S"
@@ -20,8 +20,8 @@
         "y": 0.7139846153846157
       },
       "prevControl": {
-        "x": 2.8509152951473826,
-        "y": 0.652054086182152
+        "x": 2.7824121146587335,
+        "y": 0.6392121854473132
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 59.00000000000001
   },
   "reversed": false,
   "folder": null,

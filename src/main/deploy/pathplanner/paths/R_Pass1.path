@@ -37,7 +37,7 @@
       },
       "prevControl": {
         "x": 7.709636572700768,
-        "y": 1.6958986258181696
+        "y": 1.6958986258181694
       },
       "nextControl": null,
       "isLocked": false,
@@ -85,7 +85,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 59.00000000000001
   },
   "useDefaultConstraints": true
 }

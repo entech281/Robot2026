@@ -116,6 +116,7 @@ public class CommandFactory {
     NamedCommands.registerCommand("AutoShoot", getFullShootCommand());
     NamedCommands.registerCommand("Intake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
     NamedCommands.registerCommand("ReverseIntake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false));
+    NamedCommands.registerCommand("TrenchPreset", getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_TWO));
 
     autoChooser = AutoBuilder.buildAutoChooser();
 

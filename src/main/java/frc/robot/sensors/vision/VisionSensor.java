@@ -58,8 +58,7 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
             // RobotConstants.Vision.Transforms.robotToCameraD,
             // fieldLayout);
 
-            cameraNet = new MultiCameraContainer(cameraContainerA, cameraContainerB, cameraContainerC,
-                    cameraContainerD);
+            cameraNet = new MultiCameraContainer(cameraContainerA, cameraContainerC);
         }
     }
 
