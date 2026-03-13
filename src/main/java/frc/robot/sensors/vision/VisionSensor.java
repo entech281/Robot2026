@@ -19,9 +19,9 @@ import frc.robot.livetuning.LiveTuningHandler;
 public class VisionSensor extends EntechSensor<VisionOutput> {
     private final static boolean ENABLED = true;
     private CameraContainerI cameraContainerA;
-    private CameraContainerI cameraContainerB;
+    // private CameraContainerI cameraContainerB;
     private CameraContainerI cameraContainerC;
-    private CameraContainerI cameraContainerD;
+    // private CameraContainerI cameraContainerD;
     private CameraContainerI cameraNet;
     private AprilTagFieldLayout fieldLayout;
     ArrayList<Integer> poseCountBuffer = new ArrayList<>();
@@ -121,7 +121,7 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
 
     @Override
     public Command getTestCommand() {
-        return Commands.none();
+        return new TestVisionCommand();
     }
 
     @Override

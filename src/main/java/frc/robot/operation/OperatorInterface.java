@@ -109,7 +109,8 @@ public class OperatorInterface
     // Basic motor toggles for quick tuning
     tuningController.a().whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
     tuningController.b().whileTrue(new RunTransferCommand(subsystemManager.getTransferSubsystem()));
-    tuningController.x().whileTrue(new RunShooterCommand(subsystemManager.getShooterSubsystem()));
+    tuningController.x().whileTrue(new RunShooterCommand(subsystemManager.getShooterSubsystem()))
+        .onFalse(commandFactory.getStopShootingCommand());
     // Momentary drop-then-raise hopper cycle for tuning
 
     // Turret tuning: bumpers jog left/right alrwhile held (small steps)
@@ -250,7 +251,8 @@ public class OperatorInterface
         .onFalse(commandFactory.getStopShootingCommand());
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.AUTO_FIRE)
-        .whileTrue(commandFactory.getFullShootCommand());
+        .whileTrue(commandFactory.getFullShootCommand())
+        .onFalse(commandFactory.getStopShootingCommand());
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.SNOWBLOW_FIRE)
         .whileTrue(commandFactory.getSnowblowCommand())
