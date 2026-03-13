@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5047615384615396,
-        "y": 2.702407692307693
+        "x": 3.608,
+        "y": 0.85
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.7185626709968433,
-        "y": 2.831980358123526
+        "x": 3.821801132535304,
+        "y": 0.979572665815833
       },
       "isLocked": false,
       "linkedName": "R_Hub"
@@ -149,7 +149,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 38.38653951768536
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

@@ -138,7 +138,8 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         Angle desiredPos = latestInput.getRequestedPosition();
         if (getForwardLimitSwitch() && getForwardLimitSwitch() != lastLimitSwitchState) {
             turretEncoder.setPosition(LiveTuningHandler.getInstance().getValue("TurretSubsystem/HomeSwitchPosition"));
-            turretMotor.getEncoder().setPosition(LiveTuningHandler.getInstance().getValue("TurretSubsystem/HomeSwitchPosition"));
+            turretMotor.getEncoder()
+                    .setPosition(LiveTuningHandler.getInstance().getValue("TurretSubsystem/HomeSwitchPosition"));
         }
         Logger.recordOutput("TurretOutput/switch", getForwardLimitSwitch());
         lastLimitSwitchState = getForwardLimitSwitch();
@@ -210,7 +211,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         // velocity)
         out.setMoving(Math.abs(turretEncoder.getVelocity()) > 1e-3);
         out.setRequestedPosition(reqPos);
-        out.setCurrentPosition(currentPos);
+        out.setCurrentPosition(inverted ? currentPos.times(-1) : currentPos);
         out.setAtRequestedPosition(
                 Math.abs(currentPos.minus(reqPos)
                         .in(Degrees)) <= RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES.in(Degrees));

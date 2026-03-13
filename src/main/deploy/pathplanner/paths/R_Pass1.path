@@ -3,29 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5047615384615396,
-        "y": 2.702407692307693
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 3.7540575768497293,
-        "y": 2.7211556320332826
-      },
-      "isLocked": false,
-      "linkedName": "R_Hub"
-    },
-    {
-      "anchor": {
         "x": 3.093123076923078,
         "y": 0.7139846153846157
       },
-      "prevControl": {
-        "x": 2.1533230873276463,
-        "y": 1.341802002147999
-      },
+      "prevControl": null,
       "nextControl": {
-        "x": 3.351665090846911,
-        "y": 0.5412700236127238
+        "x": 3.4222527642578653,
+        "y": 0.7988424105279245
       },
       "isLocked": false,
       "linkedName": "In_R_Trench"
@@ -36,12 +20,12 @@
         "y": 1.147
       },
       "prevControl": {
-        "x": 7.014807248379733,
-        "y": 0.6456050948465502
+        "x": 7.033946620957926,
+        "y": 0.6247371218054838
       },
       "nextControl": {
-        "x": 8.099319539387086,
-        "y": 1.6731492847896043
+        "x": 7.940258915138451,
+        "y": 1.5527444378059374
       },
       "isLocked": false,
       "linkedName": "Out_R_Trench"
@@ -52,8 +36,8 @@
         "y": 2.7442692307692313
       },
       "prevControl": {
-        "x": 7.698047866236519,
-        "y": 2.489723346417903
+        "x": 7.709636572700768,
+        "y": 1.6958986258181696
       },
       "nextControl": null,
       "isLocked": false,
@@ -62,7 +46,11 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.205471124620056,
+      "waypointRelativePos": 0.585247883917775,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 0.9093107617896015,
       "rotationDegrees": 90.0
     }
   ],
@@ -71,7 +59,7 @@
   "eventMarkers": [
     {
       "name": "Intake",
-      "waypointRelativePos": 1.5,
+      "waypointRelativePos": 0.75,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -97,7 +85,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 38.38653951768536
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

@@ -94,7 +94,8 @@ public class CommandFactory {
     Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST, "No Current Test");
     SmartDashboard.putData("Test Chooser", testChooser);
     Shuffleboard.getTab("stuffs").add("Run Test", new RunTestCommand(testChooser));
-    Shuffleboard.getTab("stuffs").add("Home Turret", new HomeTurretCommand(subsystemManager.getTurretSubsystem(), subsystemManager.getHomeTurretSwitch()));
+    Shuffleboard.getTab("stuffs").add("Home Turret",
+        new HomeTurretCommand(subsystemManager.getTurretSubsystem(), subsystemManager.getHomeTurretSwitch()));
 
     AutoBuilder.configure(odometry::getEstimatedPose,
         odometry::resetOdometry,
@@ -114,6 +115,7 @@ public class CommandFactory {
 
     NamedCommands.registerCommand("AutoShoot", getFullShootCommand());
     NamedCommands.registerCommand("Intake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
+    NamedCommands.registerCommand("ReverseIntake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false));
 
     autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -198,7 +200,10 @@ public class CommandFactory {
         .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
 
     Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(
-        RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target, Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED, RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE, RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
+        RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target,
+        Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
+        RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
+        RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
     Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(target.toPose2d(),
         RobotIO.getInstance().getOdometryPose());
 
@@ -247,9 +252,14 @@ public class CommandFactory {
     Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
         .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
 
-    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, getSnowblowTarget(), Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED, RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE, RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
-    
-    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(getSnowblowTarget().toPose2d(), RobotIO.getInstance().getOdometryPose());
+    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(
+        RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, getSnowblowTarget(),
+        Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
+        RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
+        RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
+
+    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(getSnowblowTarget().toPose2d(),
+        RobotIO.getInstance().getOdometryPose());
 
     return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
         subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
@@ -274,7 +284,9 @@ public class CommandFactory {
   }
 
   public Command getStopShootingCommand() {
-    return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), Degrees.of(0.0), RPM.of(0.0), Degree.of(0.0));
+    return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
+        subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), Degrees.of(0.0), RPM.of(0.0),
+        Degree.of(0.0));
   }
 
   private Command getSubsystemTestMessageCommand(String message) {

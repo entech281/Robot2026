@@ -61,7 +61,9 @@ public class ManualShootCommand extends EntechCommand {
     // no sudden ends
     @Override
     public void end(boolean interrupted) {
-        // no need to end
+        transferInput = new TransferInput();
+
+        transferSS.updateInputs(transferInput);
     }
 
     @Override

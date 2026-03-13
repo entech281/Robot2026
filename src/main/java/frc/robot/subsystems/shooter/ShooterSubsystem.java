@@ -6,6 +6,8 @@ import com.revrobotics.spark.SparkBase.ControlType;
 
 import static edu.wpi.first.units.Units.RPM;
 
+import java.util.Arrays;
+
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
@@ -73,7 +75,8 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
         if (ENABLED) {
             so.setSpeed(setSpeed);
             so.setBraking(BRAKING);
-            so.setAtSpeed(Math.abs(shooterMotorA.getEncoder().getVelocity() - setSpeed) <= RobotConstants.SHOOTER.TOLERANCE.in(RPM));
+            so.setAtSpeed(Math.abs(
+                    shooterMotorA.getEncoder().getVelocity() - setSpeed) <= RobotConstants.SHOOTER.TOLERANCE.in(RPM));
 
             so.setShooterMotorA(SparkOutput.createOutput(shooterMotorA));
             so.setShooterMotorB(SparkOutput.createOutput(shooterMotorB));
@@ -85,7 +88,7 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
     @Override
     public void periodic() {
         double[] live = grabLiveTuning();
-        if (lastLiveTuning.equals(live)) {
+        if (!Arrays.equals(live, lastLiveTuning)) {
             configure(live);
             lastLiveTuning = live;
         }
@@ -102,7 +105,7 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
         shooterAConfig.encoder.velocityConversionFactor(1.0);
         shooterAConfig.closedLoop.pid(factors[0], factors[1], factors[2], ClosedLoopSlot.kSlot0);
         shooterAConfig.voltageCompensation(12.5);
-        shooterAConfig.inverted(true);
+        shooterAConfig.inverted(false);
 
         shooterMotorA.configure(shooterAConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
