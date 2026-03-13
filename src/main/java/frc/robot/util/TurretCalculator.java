@@ -23,7 +23,7 @@ public class TurretCalculator {
     }
 
     public double calculateTargetTurretAngle() {
-        Translation2d targetTranslation = target.getTranslation().minus(
+        Translation2d targetTranslation = target.getTranslation().plus(
                 robotPose.getTranslation().plus(RobotConstants.TURRET.TURRET_OFFSET.rotateBy(robotPose.getRotation())));
         return targetTranslation.getAngle().getDegrees() + robotPose.getRotation().getDegrees();
     }
