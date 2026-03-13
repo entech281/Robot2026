@@ -209,9 +209,14 @@ public class CommandFactory {
     Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(target.toPose2d(),
         RobotIO.getInstance().getOdometryPose());
 
-    return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
-        subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
-        shooterCalculatorSupplier);
+    // return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(),
+    // subsystemManager.getHoodSubsystem(),
+    // subsystemManager.getTransferSubsystem(),
+    // subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
+    // shooterCalculatorSupplier);
+
+    return new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
+        turretCalculatorSupplier.get().calculateTargetTurretAngle());
 
   }
 
