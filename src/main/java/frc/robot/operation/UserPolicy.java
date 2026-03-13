@@ -5,8 +5,6 @@ import static edu.wpi.first.units.Units.Meters;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class UserPolicy {
   private static final UserPolicy instance = new UserPolicy();
@@ -56,7 +54,7 @@ public class UserPolicy {
     Logger.recordOutput("UserPolicy/targetAngle", targetAngle);
   }
 
-public boolean isAutoWon() {
+  public boolean isAutoWon() {
     return this.isAutoWon;
   }
 

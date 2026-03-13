@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import frc.entech.commands.EntechCommand;
-import frc.robot.io.RobotIO;
 import frc.robot.subsystems.hood.HoodInput;
 import frc.robot.subsystems.hood.HoodSubsystem;
 
@@ -25,7 +24,7 @@ public class DecreaseDistanceCommand extends EntechCommand {
         // Get current hood position and decrease it
         double currentHoodPos = hood.getOutputs().getCurrentPosition();
         double newHoodPos = Math.max(MIN_HOOD_ANGLE, currentHoodPos - INCREMENT);
-        
+
         HoodInput input = new HoodInput();
         input.setRequestedPosition(newHoodPos);
         hood.updateInputs(input);
@@ -35,10 +34,10 @@ public class DecreaseDistanceCommand extends EntechCommand {
     public void execute() {
         // Continue holding at the new position
         double currentHoodPos = hood.getOutputs().getCurrentPosition();
-        double newHoodPos = Math.max(MIN_HOOD_ANGLE, currentHoodPos - INCREMENT-1);
-        
+        double newHoodPos = Math.max(MIN_HOOD_ANGLE, currentHoodPos - INCREMENT - 1);
+
         HoodInput input = new HoodInput();
-        input.setRequestedPosition(newHoodPos+1);
+        input.setRequestedPosition(newHoodPos + 1);
         hood.updateInputs(input);
     }
 

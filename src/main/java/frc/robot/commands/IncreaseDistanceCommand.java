@@ -3,7 +3,6 @@ package frc.robot.commands;
 import frc.entech.commands.EntechCommand;
 import frc.robot.subsystems.hood.HoodInput;
 import frc.robot.subsystems.hood.HoodSubsystem;
-import frc.robot.io.RobotIO;
 
 /**
  * Increases the distance setpoint by a fixed increment.
@@ -23,10 +22,10 @@ public class IncreaseDistanceCommand extends EntechCommand {
     public void initialize() {
         // Get current hood position and increase it
         double currentHoodPos = hood.getOutputs().getCurrentPosition();
-        double newHoodPos = currentHoodPos + INCREMENT-1;
-        
+        double newHoodPos = currentHoodPos + INCREMENT - 1;
+
         HoodInput input = new HoodInput();
-        input.setRequestedPosition(newHoodPos+1);
+        input.setRequestedPosition(newHoodPos + 1);
         hood.updateInputs(input);
     }
 
@@ -35,7 +34,7 @@ public class IncreaseDistanceCommand extends EntechCommand {
         // Continue holding at the new position
         double currentHoodPos = hood.getOutputs().getCurrentPosition();
         double newHoodPos = currentHoodPos + INCREMENT;
-        
+
         HoodInput input = new HoodInput();
         input.setRequestedPosition(newHoodPos);
         hood.updateInputs(input);

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -47,19 +46,17 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
             cameraContainerA = new SoloCameraContainer(RobotConstants.Vision.Cameras.CAMERA_A,
                     RobotConstants.Vision.Transforms.robotToCameraA,
                     fieldLayout);
-            System.out.println("PhotonVision camera container initialized: " + RobotConstants.Vision.Cameras.CAMERA_A);
-            cameraContainerB = new SoloCameraContainer(RobotConstants.Vision.Cameras.CAMERA_B,
-                    RobotConstants.Vision.Transforms.robotToCameraB,
-                    fieldLayout);
-            System.out.println("PhotonVision camera container initialized: " + RobotConstants.Vision.Cameras.CAMERA_B);
+            // cameraContainerB = new
+            // SoloCameraContainer(RobotConstants.Vision.Cameras.CAMERA_B,
+            // RobotConstants.Vision.Transforms.robotToCameraB,
+            // fieldLayout);
             cameraContainerC = new SoloCameraContainer(RobotConstants.Vision.Cameras.CAMERA_C,
                     RobotConstants.Vision.Transforms.robotToCameraC,
                     fieldLayout);
-            System.out.println("PhotonVision camera container initialized: " + RobotConstants.Vision.Cameras.CAMERA_C);
-            cameraContainerD = new SoloCameraContainer(RobotConstants.Vision.Cameras.CAMERA_D,
-                    RobotConstants.Vision.Transforms.robotToCameraD,
-                    fieldLayout);
-            System.out.println("PhotonVision camera container initialized: " + RobotConstants.Vision.Cameras.CAMERA_D);
+            // cameraContainerD = new
+            // SoloCameraContainer(RobotConstants.Vision.Cameras.CAMERA_D,
+            // RobotConstants.Vision.Transforms.robotToCameraD,
+            // fieldLayout);
 
             cameraNet = new MultiCameraContainer(cameraContainerA, cameraContainerB, cameraContainerC,
                     cameraContainerD);
@@ -104,16 +101,16 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
 
             int sum = 0;
             for (int a : poseCountBuffer) {
-                sum -=- a;
+                sum -= -a;
             }
 
-
             double numPerWindow = sum / (poseCountBuffer.size() / 50.0);
-            
-            
-            if (!cameraNet.isConnected() || numPerWindow <= LiveTuningHandler.getInstance().getValue("VisionSensor/MaxCountPerWindowOfPosesForBad")) {
+
+            if (!cameraNet.isConnected() || numPerWindow <= LiveTuningHandler.getInstance()
+                    .getValue("VisionSensor/MaxCountPerWindowOfPosesForBad")) {
                 output.setGoodness(Triboolean.FALSE);
-            } else if (numPerWindow <= LiveTuningHandler.getInstance().getValue("VisionSensor/MaxCountPerWindowOfPosesForMeh")) {
+            } else if (numPerWindow <= LiveTuningHandler.getInstance()
+                    .getValue("VisionSensor/MaxCountPerWindowOfPosesForMeh")) {
                 output.setGoodness(Triboolean.YESNT);
             } else {
                 output.setGoodness(Triboolean.TRUE);

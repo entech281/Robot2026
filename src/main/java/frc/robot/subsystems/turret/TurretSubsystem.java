@@ -31,7 +31,6 @@ import frc.entech.util.stall.MotorStallDetector;
 import frc.robot.RobotConstants;
 import frc.robot.io.RobotIO;
 import frc.robot.livetuning.LiveTuningHandler;
-import frc.robot.subsystems.turret.TurretEncoder;
 
 /**
  *

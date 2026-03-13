@@ -4,10 +4,8 @@ import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.units.measure.Angle;
 import frc.entech.commands.EntechCommand;
-import frc.robot.RobotConstants;
 import frc.robot.io.RobotIO;
 
-import static edu.wpi.first.units.Units.Degrees;
 import frc.robot.subsystems.turret.TurretInput;
 import frc.robot.subsystems.turret.TurretSubsystem;
 

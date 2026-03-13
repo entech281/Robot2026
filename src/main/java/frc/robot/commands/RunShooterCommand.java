@@ -12,7 +12,6 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 public class RunShooterCommand extends EntechCommand {
     private final ShooterSubsystem shooter;
     private boolean direction;
-    private static final String KEY_STRING = "ShooterSubsystem/SetSpeed";
 
     public RunShooterCommand(ShooterSubsystem shooter) {
         this(shooter, false);
