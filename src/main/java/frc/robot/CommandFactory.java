@@ -45,6 +45,7 @@ import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.ShootAtTargetCommand;
 import frc.robot.commands.ManualShootCommand;
 import frc.robot.commands.ManualTurretCommand;
+import frc.robot.commands.ManualTurretCommandSupplier;
 import frc.robot.commands.RunShooterAtLiveSpeedCommand;
 import frc.robot.commands.RunTestCommand;
 import frc.robot.commands.ShootAtTargetCommand;
@@ -215,8 +216,8 @@ public class CommandFactory {
     // subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
     // shooterCalculatorSupplier);
 
-    return new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
-        turretCalculatorSupplier.get().calculateTargetTurretAngle());
+    return new ManualTurretCommandSupplier(subsystemManager.getTurretSubsystem(),
+        turretCalculatorSupplier);
 
   }
 

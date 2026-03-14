@@ -282,10 +282,10 @@ public class OperatorInterface
     // -LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount")));
 
     scoreOperatorPanel.button(6)
-        .onTrue(new TurretContinuousNudgeCommand(subsystemManager.getTurretSubsystem(), false));
+        .whileTrue(new TurretContinuousNudgeCommand(subsystemManager.getTurretSubsystem(), true));
 
     scoreOperatorPanel.button(12)
-        .onTrue(new TurretContinuousNudgeCommand(subsystemManager.getTurretSubsystem(), true));
+        .whileTrue(new TurretContinuousNudgeCommand(subsystemManager.getTurretSubsystem(), false));
 
     // Latching toggle switch — pressed down = won auto, released = did not win auto
     // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.WON_AUTO_SWITCH)
@@ -336,10 +336,10 @@ public class OperatorInterface
     // })));
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DISTANCE_DOWN)
-        .onTrue(new HoodContinuousNudgeCommand(subsystemManager.getHoodSubsystem(), true));
+        .onTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), -5.0));
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DISTANCE_UP)
-        .onTrue(new HoodContinuousNudgeCommand(subsystemManager.getHoodSubsystem(), false));
+        .onTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), 5.0));
 
     // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INCREASE_DISTANCE_OFFSET)
     // .onTrue(
