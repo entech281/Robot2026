@@ -1,14 +1,7 @@
 package frc.robot.operation;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.Radians;
-
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -27,13 +20,14 @@ import frc.robot.HardwareManager;
 import frc.robot.RobotConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.GyroReset;
+import frc.robot.commands.HoodContinuousNudgeCommand;
 import frc.robot.commands.HoodJogCommand;
-import frc.robot.commands.ManualShootCommand;
 import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.RunShooterCommand;
 import frc.robot.commands.RunTransferCommand;
+import frc.robot.commands.TurretContinuousNudgeCommand;
 import frc.robot.commands.TurretJogCommand;
 import frc.robot.commands.TwistCommand;
 import frc.robot.io.DebugInput;
@@ -42,12 +36,10 @@ import frc.robot.io.DriveInputSupplier;
 import frc.robot.io.OperatorInput;
 import frc.robot.io.OperatorInputSupplier;
 import frc.robot.io.RobotIO;
-import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.processors.OdometryProcessor;
 import frc.robot.subsystems.drive.DriveInput;
 import frc.robot.util.ShiftStateTracker;
 import frc.robot.util.ShiftStateTracker.ShiftState;
-import frc.robot.util.ShooterCalculator;
 
 public class OperatorInterface
     implements DriveInputSupplier, DebugInputSupplier, OperatorInputSupplier {
@@ -281,21 +273,19 @@ public class OperatorInterface
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.PRESET_2_FIRE)
         .whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_TWO));
 
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_UP)
-        .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(),
-            LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount")));
+    // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_UP)
+    // .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(),
+    // LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount")));
 
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_DOWN)
-        .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(),
-            -LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount")));
+    // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_DOWN)
+    // .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(),
+    // -LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount")));
 
     scoreOperatorPanel.button(6)
-        .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(),
-            LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount")));
+        .whileTrue(new TurretContinuousNudgeCommand(subsystemManager.getTurretSubsystem(), true));
 
     scoreOperatorPanel.button(12)
-        .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(),
-            -LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount")));
+        .whileTrue(new TurretContinuousNudgeCommand(subsystemManager.getTurretSubsystem(), false));
 
     // Latching toggle switch — pressed down = won auto, released = did not win auto
     // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.WON_AUTO_SWITCH)

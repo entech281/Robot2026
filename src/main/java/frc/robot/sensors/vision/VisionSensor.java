@@ -7,7 +7,6 @@ import java.util.Optional;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.sensors.EntechSensor;
 import frc.entech.util.Triboolean;
 import frc.robot.RobotConstants;
@@ -19,9 +18,9 @@ import frc.robot.livetuning.LiveTuningHandler;
 public class VisionSensor extends EntechSensor<VisionOutput> {
     private final static boolean ENABLED = true;
     private CameraContainerI cameraContainerA;
-    // private CameraContainerI cameraContainerB;
+    private CameraContainerI cameraContainerB;
     private CameraContainerI cameraContainerC;
-    // private CameraContainerI cameraContainerD;
+    private CameraContainerI cameraContainerD;
     private CameraContainerI cameraNet;
     private AprilTagFieldLayout fieldLayout;
     ArrayList<Integer> poseCountBuffer = new ArrayList<>();
@@ -46,17 +45,15 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
             cameraContainerA = new SoloCameraContainer(RobotConstants.Vision.Cameras.CAMERA_A,
                     RobotConstants.Vision.Transforms.robotToCameraA,
                     fieldLayout);
-            // cameraContainerB = new
-            // SoloCameraContainer(RobotConstants.Vision.Cameras.CAMERA_B,
-            // RobotConstants.Vision.Transforms.robotToCameraB,
-            // fieldLayout);
+            cameraContainerB = new SoloCameraContainer(RobotConstants.Vision.Cameras.CAMERA_B,
+                    RobotConstants.Vision.Transforms.robotToCameraB,
+                    fieldLayout);
             cameraContainerC = new SoloCameraContainer(RobotConstants.Vision.Cameras.CAMERA_C,
                     RobotConstants.Vision.Transforms.robotToCameraC,
                     fieldLayout);
-            // cameraContainerD = new
-            // SoloCameraContainer(RobotConstants.Vision.Cameras.CAMERA_D,
-            // RobotConstants.Vision.Transforms.robotToCameraD,
-            // fieldLayout);
+            cameraContainerD = new SoloCameraContainer(RobotConstants.Vision.Cameras.CAMERA_D,
+                    RobotConstants.Vision.Transforms.robotToCameraD,
+                    fieldLayout);
 
             cameraNet = new MultiCameraContainer(cameraContainerA, cameraContainerC);
         }
@@ -72,11 +69,6 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
         VisionOutput output = new VisionOutput();
 
         if (ENABLED) {
-            output.setUnreadResultsA(cameraContainerA.getAllUnreadResults());
-            // output.setUnreadResultsB(cameraContainerB.getAllUnreadResults());
-            output.setUnreadResultsC(cameraContainerC.getAllUnreadResults());
-            // output.setUnreadResultsD(cameraContainerD.getAllUnreadResults());
-
             output.setConnected(cameraNet.isConnected());
 
             Optional<List<VisionPose>> poses = cameraNet.getEstimatedPoses();
@@ -114,6 +106,11 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
             } else {
                 output.setGoodness(Triboolean.TRUE);
             }
+
+            output.setUnreadResultsA(cameraContainerA.getAllUnreadResults());
+            output.setUnreadResultsB(cameraContainerB.getAllUnreadResults());
+            output.setUnreadResultsC(cameraContainerC.getAllUnreadResults());
+            output.setUnreadResultsD(cameraContainerD.getAllUnreadResults());
         }
 
         return output;

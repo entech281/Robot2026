@@ -21,7 +21,6 @@ public class TestVisionCommand extends EntechCommand {
                         "PUT TAG " + TARGET_FIDUCIAL_ID + " IN-FRONT CAMERA A");
                 if (checkResults(RobotIO.getInstance().getVisionOutput().getUnreadResultsA())) {
                     stage++;
-                    stage++;
                 }
                 break;
             case 1:
@@ -34,7 +33,6 @@ public class TestVisionCommand extends EntechCommand {
                 Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST,
                         "PUT TAG " + TARGET_FIDUCIAL_ID + " IN-FRONT CAMERA C");
                 if (checkResults(RobotIO.getInstance().getVisionOutput().getUnreadResultsC())) {
-                    stage++;
                     stage++;
                 }
             case 3:
