@@ -295,7 +295,7 @@ public class CommandFactory {
   public Command getStopShootingCommand() {
     return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
         subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), Degrees.of(0.0), RPM.of(0.0),
-        Degree.of(0.0));
+        Degree.of(0.0), false);
   }
 
   private Command getSubsystemTestMessageCommand(String message) {
