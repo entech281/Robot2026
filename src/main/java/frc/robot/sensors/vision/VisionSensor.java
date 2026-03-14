@@ -7,7 +7,6 @@ import java.util.Optional;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.sensors.EntechSensor;
 import frc.entech.util.Triboolean;
 import frc.robot.RobotConstants;
@@ -72,11 +71,6 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
         VisionOutput output = new VisionOutput();
 
         if (ENABLED) {
-            output.setUnreadResultsA(cameraContainerA.getAllUnreadResults());
-            // output.setUnreadResultsB(cameraContainerB.getAllUnreadResults());
-            output.setUnreadResultsC(cameraContainerC.getAllUnreadResults());
-            // output.setUnreadResultsD(cameraContainerD.getAllUnreadResults());
-
             output.setConnected(cameraNet.isConnected());
 
             Optional<List<VisionPose>> poses = cameraNet.getEstimatedPoses();
@@ -114,6 +108,11 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
             } else {
                 output.setGoodness(Triboolean.TRUE);
             }
+
+            output.setUnreadResultsA(cameraContainerA.getAllUnreadResults());
+            // output.setUnreadResultsB(cameraContainerB.getAllUnreadResults());
+            output.setUnreadResultsC(cameraContainerC.getAllUnreadResults());
+            // output.setUnreadResultsD(cameraContainerD.getAllUnreadResults());
         }
 
         return output;

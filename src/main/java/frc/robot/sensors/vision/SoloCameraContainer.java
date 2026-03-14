@@ -21,6 +21,7 @@ public class SoloCameraContainer implements CameraContainerI {
   private final PhotonCamera camera;
   private final PhotonPoseEstimator estimator;
   private PhotonPipelineResult latestResult; // Store the latest result for latency access
+  private List<PhotonPipelineResult> latestReadResults = new ArrayList<>();
 
   public SoloCameraContainer(String cameraName, Transform3d robotToCamera,
       AprilTagFieldLayout fieldLayout) {
@@ -127,12 +128,12 @@ public class SoloCameraContainer implements CameraContainerI {
 
   @Override
   public Optional<List<VisionPose>> getEstimatedPoses() {
-    List<PhotonPipelineResult> unfilteredList = getAllUnreadResults();
+    latestReadResults = camera.getAllUnreadResults();
     List<PhotonPipelineResult> filteredList = new ArrayList<>();
 
-    Logger.recordOutput("SubsystemTest2201", unfilteredList.size());
-    Logger.recordOutput("SubsystemTest2202", unfilteredList.size());
-    for (PhotonPipelineResult result : unfilteredList) {
+    Logger.recordOutput("SubsystemTest2201", latestReadResults.size());
+    Logger.recordOutput("SubsystemTest2202", latestReadResults.size());
+    for (PhotonPipelineResult result : latestReadResults) {
       filteredList.add(getFilteredResult(result));
     }
 
@@ -237,6 +238,6 @@ public class SoloCameraContainer implements CameraContainerI {
 
   @Override
   public List<PhotonPipelineResult> getAllUnreadResults() {
-    return camera.getAllUnreadResults();
+    return latestReadResults;
   }
 }
