@@ -32,9 +32,12 @@ public class TurretCalculator {
         Pose2d turretPose = new Pose2d(robotPose.getX() - turretToRobot.getX(), robotPose.getY() - turretToRobot.getY(),
                 robotPose.getRotation());
 
-        double angle = Math.toDegrees(Math.atan2(target.getY() - turretPose.getY(), target.getX() - turretPose.getX()));
+        double angleToTarget = Math
+                .toDegrees(Math.atan2(target.getY() - turretPose.getY(), target.getX() - turretPose.getX()));
 
-        return ((-robotPose.getRotation().getDegrees()) + (-angle) % 180) + 180;
+        double fieldTurretAngle = angleToTarget - robotPose.getRotation().getDegrees();
+
+        return -(((fieldTurretAngle % 360) + 360) % 360);
     }
 
     public boolean isValidTurretAngle(double angle, double toleranceDegrees) {
