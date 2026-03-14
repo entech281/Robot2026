@@ -187,28 +187,43 @@ public class CommandFactory {
   }
 
   public Command getFullShootCommand() {
-    Pose3d target;
 
-    Optional<Alliance> alliance = DriverStation.getAlliance();
+    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> {
+      Pose3d target;
 
-    if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-      target = RobotConstants.TURRET.RED_HUB_LOCATION;
-    } else if (alliance.isPresent() && alliance.get() == Alliance.Blue) {
-      target = RobotConstants.TURRET.BLUE_HUB_LOCATION;
-    } else {
-      return Commands.none();
-    }
+      Optional<Alliance> alliance = DriverStation.getAlliance();
 
-    Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
+      if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+        target = RobotConstants.TURRET.RED_HUB_LOCATION;
+      } else {
+        target = RobotConstants.TURRET.BLUE_HUB_LOCATION;
+      }
+
+      Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
         .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
-
-    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(
+      
+      return new ShooterCalculator(
         RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target,
         Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
         RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
         RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
-    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(target.toPose2d(),
+      };
+    Supplier<TurretCalculator> turretCalculatorSupplier = () -> {
+      Pose3d target;
+
+      Optional<Alliance> alliance = DriverStation.getAlliance();
+
+      if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+        target = RobotConstants.TURRET.RED_HUB_LOCATION;
+      } else {
+        target = RobotConstants.TURRET.BLUE_HUB_LOCATION;
+      }
+
+      Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
+        .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
+      return new TurretCalculator(target.toPose2d(),
         RobotIO.getInstance().getOdometryPose());
+      };
 
     // return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(),
     // subsystemManager.getHoodSubsystem(),

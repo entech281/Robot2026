@@ -254,8 +254,7 @@ public class OperatorInterface
         new RunShooterCommand(subsystemManager.getShooterSubsystem()), new SequentialCommandGroup(new WaitCommand(2),
             new RunTransferCommand(subsystemManager.getTransferSubsystem()))));
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.AUTO_FIRE)
-        .whileTrue(commandFactory.getFullShootCommand())
-        .onFalse(commandFactory.getStopShootingCommand());
+        .whileTrue(commandFactory.getFullShootCommand());
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.SNOWBLOW_FIRE)
         .whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SNOW_BLOW_PRESET));

@@ -39,6 +39,6 @@ public class ManualTurretCommandSupplier extends EntechCommand {
 
     @Override
     public boolean isFinished() {
-        return RobotIO.getInstance().getTurretOutput().isAtRequestedPosition();
+        return false;
     }
 }
