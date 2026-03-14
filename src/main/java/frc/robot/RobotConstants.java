@@ -164,6 +164,8 @@ public final class RobotConstants {
         Map.entry("TurretSubsystem/PresetTwoDegrees", 0.0),
         Map.entry("HoodSubsystem/PresetOneDegrees", 0.0),
         Map.entry("HoodSubsystem/PresetTwoDegrees", 13.0),
+        Map.entry("HoodSubsystem/SnowBlowPresetDegrees", 13.0),
+        Map.entry("ShooterSubsystem/SnowBlowPresetRPM", 4000.0),
         Map.entry("ShooterSubsystem/PresetOneRPM", 3500.0),
         Map.entry("ShooterSubsystem/PresetTwoRPM", 4500.0),
         Map.entry("ShiftStateTracker/WarningSeconds", 5.0),
@@ -473,6 +475,10 @@ public final class RobotConstants {
     public static final ShotData SHOT_PRESET_TWO = new ShooterCalculator().new ShotDataRange().new ShotData(
         Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")),
         RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
+        Meters.of(WHEEL_RADIUS_METERS));
+    public static final ShotData SNOW_BLOW_PRESET = new ShooterCalculator().new ShotDataRange().new ShotData(
+        Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/SnowBlowPresetDegrees")),
+        RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SnowBlowPresetRPM")),
         Meters.of(WHEEL_RADIUS_METERS));
     public static final Distance MIN_SHOT_DISTANCE = Meters.of(8);
     public static final Distance MAX_SHOT_DISTANCE = Feet.of(14);

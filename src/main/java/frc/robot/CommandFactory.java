@@ -279,15 +279,16 @@ public class CommandFactory {
     if (preset == RobotConstants.SHOOTER.SHOT_PRESET_ONE) {
       return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
           subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(),
-          Degrees.of(LiveTuningHandler.getInstance().getValue("TurretSubsystem/PresetOneDegrees")),
+          RobotIO.getInstance().getTurretOutput().getCurrentPosition(),
           RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetOneRPM")),
-          Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")));
+          Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")),
+          false);
     } else {
       return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
           subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(),
-          Degrees.of(LiveTuningHandler.getInstance().getValue("TurretSubsystem/PresetTwoDegrees")),
+          RobotIO.getInstance().getTurretOutput().getCurrentPosition(),
           RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
-          Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")));
+          Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")), false);
     }
   }
 

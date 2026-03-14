@@ -40,6 +40,7 @@ import frc.robot.livetuning.LiveTuningHandler;
 public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> {
 
     private static final boolean ENABLED = true;
+    private boolean homed = false;
 
     private SparkMax turretMotor;
     private TurretEncoder turretEncoder;
@@ -49,7 +50,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     private double PID_MAX = 1;
     private double PID_MIN = -1;
     private DigitalInput forwardLimitSwitch;
-    private boolean inverted = true;
+    private boolean inverted = false;
 
     private boolean lastLimitSwitchState = false;
 
@@ -113,16 +114,17 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
             clamped = -clamped;
         }
 
-        boolean isStalled = (stallDetector != null && stallDetector.isStalled(turretMotor));
-        if (isStalled && turretEncoder.getPosition() < 0) {
-            if (clamped < turretEncoder.getPosition()) {
-                clamped = turretEncoder.getPosition();
-            }
-        } else if (isStalled && turretEncoder.getPosition() > 0) {
-            if (clamped > turretEncoder.getPosition()) {
-                clamped = turretEncoder.getPosition();
-            }
-        }
+        // boolean isStalled = (stallDetector != null &&
+        // stallDetector.isStalled(turretMotor));
+        // if (isStalled && turretEncoder.getPosition() < 0) {
+        // if (clamped < turretEncoder.getPosition()) {
+        // clamped = turretEncoder.getPosition();
+        // }
+        // } else if (isStalled && turretEncoder.getPosition() > 0) {
+        // if (clamped > turretEncoder.getPosition()) {
+        // clamped = turretEncoder.getPosition();
+        // }
+        // }
 
         m_goal = new TrapezoidProfile.State(clamped, 0);
         m_setpoint = m_profile.calculate(RobotConstants.TURRET.TRAPEZOIDAL_DELTA_TIME.in(Seconds), m_setpoint, m_goal);
@@ -135,7 +137,8 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         if (!ENABLED)
             return;
         Angle desiredPos = latestInput.getRequestedPosition();
-        if (getForwardLimitSwitch() && getForwardLimitSwitch() != lastLimitSwitchState) {
+        if (getForwardLimitSwitch() && getForwardLimitSwitch() != lastLimitSwitchState && !homed) {
+            homed = true;
             turretEncoder.setPosition(LiveTuningHandler.getInstance().getValue("TurretSubsystem/HomeSwitchPosition"));
             turretMotor.getEncoder()
                     .setPosition(LiveTuningHandler.getInstance().getValue("TurretSubsystem/HomeSwitchPosition"));

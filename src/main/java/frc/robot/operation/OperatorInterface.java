@@ -20,7 +20,6 @@ import frc.robot.HardwareManager;
 import frc.robot.RobotConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.GyroReset;
-import frc.robot.commands.HoodContinuousNudgeCommand;
 import frc.robot.commands.HoodJogCommand;
 import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.ResetOdometryCommand;
@@ -259,8 +258,7 @@ public class OperatorInterface
         .onFalse(commandFactory.getStopShootingCommand());
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.SNOWBLOW_FIRE)
-        .whileTrue(commandFactory.getSnowblowCommand())
-        .onFalse(commandFactory.getStopShootingCommand());
+        .whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SNOW_BLOW_PRESET));
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INTAKE)
         .whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), true));
@@ -281,10 +279,10 @@ public class OperatorInterface
     // .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(),
     // -LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount")));
 
-    scoreOperatorPanel.button(6)
+    scoreOperatorPanel.button(12)
         .whileTrue(new TurretContinuousNudgeCommand(subsystemManager.getTurretSubsystem(), true));
 
-    scoreOperatorPanel.button(12)
+    scoreOperatorPanel.button(6)
         .whileTrue(new TurretContinuousNudgeCommand(subsystemManager.getTurretSubsystem(), false));
 
     // Latching toggle switch — pressed down = won auto, released = did not win auto

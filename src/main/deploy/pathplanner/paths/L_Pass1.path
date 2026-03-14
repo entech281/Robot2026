@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.3094076923076936,
-        "y": 7.369969230769231
+        "x": 3.148577586206897,
+        "y": 7.602403017241379
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5370390755360703,
-        "y": 7.320310606409335
+        "x": 2.376208969435274,
+        "y": 7.5527443928814835
       },
       "isLocked": false,
       "linkedName": "In_L_Trench"
@@ -89,7 +89,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": -50.71059313749963
   },
   "useDefaultConstraints": true
 }
