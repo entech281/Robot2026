@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -129,6 +130,8 @@ public class SoloCameraContainer implements CameraContainerI {
     List<PhotonPipelineResult> unfilteredList = getAllUnreadResults();
     List<PhotonPipelineResult> filteredList = new ArrayList<>();
 
+    Logger.recordOutput("SubsystemTest2201", unfilteredList.size());
+    Logger.recordOutput("SubsystemTest2202", unfilteredList.size());
     for (PhotonPipelineResult result : unfilteredList) {
       filteredList.add(getFilteredResult(result));
     }
@@ -139,11 +142,22 @@ public class SoloCameraContainer implements CameraContainerI {
       if (!result.hasTargets()) {
         continue;
       }
-      Optional<EstimatedRobotPose> estimatedPose = estimator.estimateAverageBestTargetsPose(result);
+      Logger.recordOutput("SubsystemTest21", result);
+      Optional<EstimatedRobotPose> estimatedPose = estimator.estimateCoprocMultiTagPose(result);
+      if (!estimatedPose.isPresent()) {
+        estimatedPose = estimator.estimateLowestAmbiguityPose(result);
+      }
+
+      Logger.recordOutput("SubsystemTest0", estimatedPose.isPresent());
+      if (estimatedPose.isPresent()) {
+        Logger.recordOutput("SubsystemTest01", estimatedPose.get().timestampSeconds);
+        Logger.recordOutput("SubsystemTest1", estimatedPose.get().targetsUsed.size());
+        Logger.recordOutput("SubsystemTest2", estimatedPose.get().estimatedPose.toPose2d());
+      }
 
       if (estimatedPose.isPresent()) {
         Pose2d pose = estimatedPose.get().estimatedPose.toPose2d();
-        double timeStamp = result.metadata.getCaptureTimestampMicros() / 1_000_000.0;
+        double timeStamp = result.getTimestampSeconds();
 
         double ambiguity = 0.0;
         for (PhotonTrackedTarget target : estimatedPose.get().targetsUsed) {
