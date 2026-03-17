@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5047615384615396,
-        "y": 2.702407692307693
+        "x": 3.608,
+        "y": 0.85
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.7185626709968433,
-        "y": 2.831980358123526
+        "x": 3.821801132535304,
+        "y": 0.979572665815833
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "R_Hub"
     },
     {
       "anchor": {
@@ -28,7 +28,7 @@
         "y": 0.3569065191378825
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "In_R_Trench"
     },
     {
       "anchor": {
@@ -44,7 +44,7 @@
         "y": 1.5340757759533061
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Out_R_Trench"
     },
     {
       "anchor": {
@@ -76,23 +76,23 @@
         "y": 7.768497789646919
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Out_L_Trench"
     },
     {
       "anchor": {
-        "x": 3.3094076923076936,
-        "y": 7.369969230769231
+        "x": 3.138803879310345,
+        "y": 7.5144396551724135
       },
       "prevControl": {
-        "x": 3.664407824668951,
-        "y": 7.679924881287308
+        "x": 3.4938040116716027,
+        "y": 7.824395305690491
       },
       "nextControl": {
-        "x": 2.9881637405522627,
-        "y": 7.0894865803007345
+        "x": 2.8175599275549144,
+        "y": 7.2339570047039174
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "In_L_Trench"
     },
     {
       "anchor": {
@@ -149,7 +149,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 38.38653951768536
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

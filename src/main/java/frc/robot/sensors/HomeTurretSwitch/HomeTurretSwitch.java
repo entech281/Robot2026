@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.sensors.EntechSensor;
-import frc.robot.RobotConstants;
 
 public class HomeTurretSwitch extends EntechSensor<HomeTurretOutput> {
     private static final boolean ENABLED = true;

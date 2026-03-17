@@ -164,18 +164,20 @@ public final class RobotConstants {
         Map.entry("TurretSubsystem/PresetTwoDegrees", 0.0),
         Map.entry("HoodSubsystem/PresetOneDegrees", 0.0),
         Map.entry("HoodSubsystem/PresetTwoDegrees", 13.0),
+        Map.entry("HoodSubsystem/SnowBlowPresetDegrees", 13.0),
+        Map.entry("ShooterSubsystem/SnowBlowPresetRPM", 4000.0),
         Map.entry("ShooterSubsystem/PresetOneRPM", 3500.0),
         Map.entry("ShooterSubsystem/PresetTwoRPM", 4500.0),
         Map.entry("ShiftStateTracker/WarningSeconds", 5.0),
-        Map.entry("TurretSubsystem/HomeSwitchPosition", -5.0),
-        Map.entry("ShooterSubsystem/kP", 0.00030),
+        Map.entry("TurretSubsystem/HomeSwitchPosition", -17.0),
+        Map.entry("ShooterSubsystem/kP", 0.0001),
         Map.entry("ShooterSubsystem/kI", 0.0),
         Map.entry("ShooterSubsystem/kD", 0.0),
-        Map.entry("ShooterSubsystem/kV", 0.00175),
-        Map.entry("ShooterSubsystem/kA", 0.0006),
+        Map.entry("ShooterSubsystem/kV", 0.001765),
+        Map.entry("ShooterSubsystem/kA", 0.001),
         Map.entry("ShooterSubsystem/kS", 0.08),
         Map.entry("TurretSubsystem/LiveAngle", 0.0),
-        Map.entry("TurretSubsystem/NudgeAmount", 5.0),
+        Map.entry("TurretSubsystem/NudgeAmount", 10.0),
         Map.entry("UserPolicy/DistanceNudgeAmountMeters", 0.5),
         Map.entry("ShotTuningRPM/5ft", 0.0),
         Map.entry("ShotTuningRPM/6ft", 0.0),
@@ -451,14 +453,14 @@ public final class RobotConstants {
     public static final double INITIAL_POSITION_DEGREES = 0.0;
     public static final double HOOD_LOWER_LIMIT_DEGREES = 0.0;
     public static final double HOOD_UPPER_LIMIT_DEGREES = 30.0;
-    public static final double HOOD_POSITION_TOLERANCE_DEGREES = 0.1;
+    public static final double HOOD_POSITION_TOLERANCE_DEGREES = 2.0;
     public static final AngularVelocity HOOD_CRUISE_VELOCITY = DegreesPerSecond.of(55.14705882366667);
     public static final AngularAcceleration HOOD_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(275.73529411833334);
     public static final double HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5;
 
     public static final double HOOD_JOG_STEP_DEGREES = 5.0; // Change this value
-    public static final Angle HOOD_OFFSET = Degrees.of(0.0); //TODO, when switching from interpolation 
-                                                                      //strategy make this real and implement
+    public static final Angle HOOD_OFFSET = Degrees.of(0.0); // TODO, when switching from interpolation
+                                                             // strategy make this real and implement
 
   }
 
@@ -473,6 +475,10 @@ public final class RobotConstants {
     public static final ShotData SHOT_PRESET_TWO = new ShooterCalculator().new ShotDataRange().new ShotData(
         Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")),
         RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
+        Meters.of(WHEEL_RADIUS_METERS));
+    public static final ShotData SNOW_BLOW_PRESET = new ShooterCalculator().new ShotDataRange().new ShotData(
+        Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/SnowBlowPresetDegrees")),
+        RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SnowBlowPresetRPM")),
         Meters.of(WHEEL_RADIUS_METERS));
     public static final Distance MIN_SHOT_DISTANCE = Meters.of(8);
     public static final Distance MAX_SHOT_DISTANCE = Feet.of(14);

@@ -31,7 +31,6 @@ import frc.entech.util.stall.MotorStallDetector;
 import frc.robot.RobotConstants;
 import frc.robot.io.RobotIO;
 import frc.robot.livetuning.LiveTuningHandler;
-import frc.robot.subsystems.turret.TurretEncoder;
 
 /**
  *
@@ -41,6 +40,7 @@ import frc.robot.subsystems.turret.TurretEncoder;
 public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> {
 
     private static final boolean ENABLED = true;
+    private boolean homed = false;
 
     private SparkMax turretMotor;
     private TurretEncoder turretEncoder;
@@ -50,7 +50,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     private double PID_MAX = 1;
     private double PID_MIN = -1;
     private DigitalInput forwardLimitSwitch;
-    private boolean inverted = true;
+    private boolean inverted = false;
 
     private boolean lastLimitSwitchState = false;
 
@@ -114,16 +114,17 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
             clamped = -clamped;
         }
 
-        boolean isStalled = (stallDetector != null && stallDetector.isStalled(turretMotor));
-        if (isStalled && turretEncoder.getPosition() < 0) {
-            if (clamped < turretEncoder.getPosition()) {
-                clamped = turretEncoder.getPosition();
-            }
-        } else if (isStalled && turretEncoder.getPosition() > 0) {
-            if (clamped > turretEncoder.getPosition()) {
-                clamped = turretEncoder.getPosition();
-            }
-        }
+        // boolean isStalled = (stallDetector != null &&
+        // stallDetector.isStalled(turretMotor));
+        // if (isStalled && turretEncoder.getPosition() < 0) {
+        // if (clamped < turretEncoder.getPosition()) {
+        // clamped = turretEncoder.getPosition();
+        // }
+        // } else if (isStalled && turretEncoder.getPosition() > 0) {
+        // if (clamped > turretEncoder.getPosition()) {
+        // clamped = turretEncoder.getPosition();
+        // }
+        // }
 
         m_goal = new TrapezoidProfile.State(clamped, 0);
         m_setpoint = m_profile.calculate(RobotConstants.TURRET.TRAPEZOIDAL_DELTA_TIME.in(Seconds), m_setpoint, m_goal);
@@ -136,9 +137,11 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         if (!ENABLED)
             return;
         Angle desiredPos = latestInput.getRequestedPosition();
-        if (getForwardLimitSwitch() && getForwardLimitSwitch() != lastLimitSwitchState) {
+        if (getForwardLimitSwitch() && getForwardLimitSwitch() != lastLimitSwitchState && !homed) {
+            homed = true;
             turretEncoder.setPosition(LiveTuningHandler.getInstance().getValue("TurretSubsystem/HomeSwitchPosition"));
-            turretMotor.getEncoder().setPosition(LiveTuningHandler.getInstance().getValue("TurretSubsystem/HomeSwitchPosition"));
+            turretMotor.getEncoder()
+                    .setPosition(LiveTuningHandler.getInstance().getValue("TurretSubsystem/HomeSwitchPosition"));
         }
         Logger.recordOutput("TurretOutput/switch", getForwardLimitSwitch());
         lastLimitSwitchState = getForwardLimitSwitch();
@@ -210,7 +213,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         // velocity)
         out.setMoving(Math.abs(turretEncoder.getVelocity()) > 1e-3);
         out.setRequestedPosition(reqPos);
-        out.setCurrentPosition(currentPos);
+        out.setCurrentPosition(inverted ? currentPos.times(-1) : currentPos);
         out.setAtRequestedPosition(
                 Math.abs(currentPos.minus(reqPos)
                         .in(Degrees)) <= RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES.in(Degrees));
@@ -220,6 +223,6 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     }
 
     private boolean getForwardLimitSwitch() {
-        return !forwardLimitSwitch.get();
+        return forwardLimitSwitch.get();
     }
 }

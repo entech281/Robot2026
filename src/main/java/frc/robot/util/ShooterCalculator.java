@@ -14,7 +14,6 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import frc.entech.util.Triboolean;
-import frc.robot.RobotConstants;
 import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
 

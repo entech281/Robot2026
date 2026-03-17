@@ -35,10 +35,11 @@ public class ManualShootCommand extends EntechCommand {
     private Angle turretAngle;
     private AngularVelocity shooterSpeed;
     private Angle hoodAngle;
+    private boolean moveTurret;
 
     public ManualShootCommand(ShooterSubsystem shooterSubsystem, HoodSubsystem hoodSubsystem,
             TransferSubsystem transferSubsystem, TurretSubsystem turretSubsystem, Angle turretAngle,
-            AngularVelocity shooterSpeed, Angle hoodAngle) {
+            AngularVelocity shooterSpeed, Angle hoodAngle, boolean moveTurret) {
         super(hoodSubsystem, shooterSubsystem, transferSubsystem, turretSubsystem);
         this.hoodSS = hoodSubsystem;
         this.shooterSS = shooterSubsystem;
@@ -47,6 +48,14 @@ public class ManualShootCommand extends EntechCommand {
         this.turretAngle = turretAngle;
         this.shooterSpeed = shooterSpeed;
         this.hoodAngle = hoodAngle;
+        this.moveTurret = moveTurret;
+    }
+
+    public ManualShootCommand(ShooterSubsystem shooterSubsystem, HoodSubsystem hoodSubsystem,
+            TransferSubsystem transferSubsystem, TurretSubsystem turretSubsystem, Angle turretAngle,
+            AngularVelocity shooterSpeed, Angle hoodAngle) {
+        this(shooterSubsystem, hoodSubsystem, transferSubsystem, turretSubsystem, turretAngle, shooterSpeed, hoodAngle,
+                true);
     }
 
     public ManualShootCommand(ShooterSubsystem shooterSubsystem, HoodSubsystem hoodSubsystem,
@@ -61,7 +70,13 @@ public class ManualShootCommand extends EntechCommand {
     // no sudden ends
     @Override
     public void end(boolean interrupted) {
-        // no need to end
+        transferInput = new TransferInput();
+        hoodInput = new HoodInput();
+        shooterInput = new ShooterInput();
+
+        transferSS.updateInputs(transferInput);
+        hoodSS.updateInputs(hoodInput);
+        shooterSS.updateInputs(shooterInput);
     }
 
     @Override
@@ -69,11 +84,13 @@ public class ManualShootCommand extends EntechCommand {
 
         shooterInput.setSpeed(-shooterSpeed.in(RPM));
         hoodInput.setRequestedPosition(hoodAngle.in(Degrees));
-        turretInput.setRequestedPosition(turretAngle);
+        if (moveTurret) {
+            turretInput.setRequestedPosition(turretAngle);
+            turretSS.updateInputs(turretInput);
+        }
 
         shooterSS.updateInputs(shooterInput);
         hoodSS.updateInputs(hoodInput);
-        turretSS.updateInputs(turretInput);
 
         boolean turretIsReady = turretSS.getOutputs().isAtRequestedPosition();
         boolean hoodIsReady = hoodSS.getOutputs().isAtRequestedPosition();

@@ -1,0 +1,95 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.138803879310345,
+        "y": 7.5144396551724135
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.366435262538722,
+        "y": 7.464781030812518
+      },
+      "isLocked": false,
+      "linkedName": "In_L_Trench"
+    },
+    {
+      "anchor": {
+        "x": 7.544,
+        "y": 7.3071769230769235
+      },
+      "prevControl": {
+        "x": 6.916314124201839,
+        "y": 7.573083171749505
+      },
+      "nextControl": {
+        "x": 8.03701764625653,
+        "y": 7.098320108067731
+      },
+      "isLocked": false,
+      "linkedName": "Out_L_Trench"
+    },
+    {
+      "anchor": {
+        "x": 7.823476923071958,
+        "y": 5.862953846150728
+      },
+      "prevControl": {
+        "x": 7.926933633497767,
+        "y": 6.090542749807893
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "L_Pass_1_End"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.3240628778718258,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 0.5997581620314393,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 0.933494558645708,
+      "rotationDegrees": -90.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0.8,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -50.71059313749963
+  },
+  "useDefaultConstraints": true
+}

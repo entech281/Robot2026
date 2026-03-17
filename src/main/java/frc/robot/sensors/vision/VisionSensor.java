@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.sensors.EntechSensor;
 import frc.entech.util.Triboolean;
 import frc.robot.RobotConstants;
@@ -20,9 +18,9 @@ import frc.robot.livetuning.LiveTuningHandler;
 public class VisionSensor extends EntechSensor<VisionOutput> {
     private final static boolean ENABLED = true;
     private CameraContainerI cameraContainerA;
-    private CameraContainerI cameraContainerB;
+    // private CameraContainerI cameraContainerB;
     private CameraContainerI cameraContainerC;
-    private CameraContainerI cameraContainerD;
+    // private CameraContainerI cameraContainerD;
     private CameraContainerI cameraNet;
     private AprilTagFieldLayout fieldLayout;
     ArrayList<Integer> poseCountBuffer = new ArrayList<>();
@@ -47,22 +45,17 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
             cameraContainerA = new SoloCameraContainer(RobotConstants.Vision.Cameras.CAMERA_A,
                     RobotConstants.Vision.Transforms.robotToCameraA,
                     fieldLayout);
-            System.out.println("PhotonVision camera container initialized: " + RobotConstants.Vision.Cameras.CAMERA_A);
-            cameraContainerB = new SoloCameraContainer(RobotConstants.Vision.Cameras.CAMERA_B,
-                    RobotConstants.Vision.Transforms.robotToCameraB,
-                    fieldLayout);
-            System.out.println("PhotonVision camera container initialized: " + RobotConstants.Vision.Cameras.CAMERA_B);
+            // cameraContainerB = new SoloCameraContainer(RobotConstants.Vision.Cameras.CAMERA_B,
+            //         RobotConstants.Vision.Transforms.robotToCameraB,
+            //         fieldLayout);
             cameraContainerC = new SoloCameraContainer(RobotConstants.Vision.Cameras.CAMERA_C,
                     RobotConstants.Vision.Transforms.robotToCameraC,
                     fieldLayout);
-            System.out.println("PhotonVision camera container initialized: " + RobotConstants.Vision.Cameras.CAMERA_C);
-            cameraContainerD = new SoloCameraContainer(RobotConstants.Vision.Cameras.CAMERA_D,
-                    RobotConstants.Vision.Transforms.robotToCameraD,
-                    fieldLayout);
-            System.out.println("PhotonVision camera container initialized: " + RobotConstants.Vision.Cameras.CAMERA_D);
+            // cameraContainerD = new SoloCameraContainer(RobotConstants.Vision.Cameras.CAMERA_D,
+            //         RobotConstants.Vision.Transforms.robotToCameraD,
+            //         fieldLayout);
 
-            cameraNet = new MultiCameraContainer(cameraContainerA, cameraContainerB, cameraContainerC,
-                    cameraContainerD);
+            cameraNet = new MultiCameraContainer(cameraContainerA, cameraContainerC);
         }
     }
 
@@ -76,11 +69,6 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
         VisionOutput output = new VisionOutput();
 
         if (ENABLED) {
-            output.setUnreadResultsA(cameraContainerA.getAllUnreadResults());
-            output.setUnreadResultsB(cameraContainerB.getAllUnreadResults());
-            output.setUnreadResultsC(cameraContainerC.getAllUnreadResults());
-            output.setUnreadResultsD(cameraContainerD.getAllUnreadResults());
-
             output.setConnected(cameraNet.isConnected());
 
             Optional<List<VisionPose>> poses = cameraNet.getEstimatedPoses();
@@ -104,20 +92,25 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
 
             int sum = 0;
             for (int a : poseCountBuffer) {
-                sum -=- a;
+                sum -= -a;
             }
 
-
             double numPerWindow = sum / (poseCountBuffer.size() / 50.0);
-            
-            
-            if (!cameraNet.isConnected() || numPerWindow <= LiveTuningHandler.getInstance().getValue("VisionSensor/MaxCountPerWindowOfPosesForBad")) {
+
+            if (!cameraNet.isConnected() || numPerWindow <= LiveTuningHandler.getInstance()
+                    .getValue("VisionSensor/MaxCountPerWindowOfPosesForBad")) {
                 output.setGoodness(Triboolean.FALSE);
-            } else if (numPerWindow <= LiveTuningHandler.getInstance().getValue("VisionSensor/MaxCountPerWindowOfPosesForMeh")) {
+            } else if (numPerWindow <= LiveTuningHandler.getInstance()
+                    .getValue("VisionSensor/MaxCountPerWindowOfPosesForMeh")) {
                 output.setGoodness(Triboolean.YESNT);
             } else {
                 output.setGoodness(Triboolean.TRUE);
             }
+
+            output.setUnreadResultsA(cameraContainerA.getAllUnreadResults());
+            // output.setUnreadResultsB(cameraContainerB.getAllUnreadResults());
+            output.setUnreadResultsC(cameraContainerC.getAllUnreadResults());
+            // output.setUnreadResultsD(cameraContainerD.getAllUnreadResults());
         }
 
         return output;
@@ -125,7 +118,7 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
 
     @Override
     public Command getTestCommand() {
-        return Commands.none();
+        return new TestVisionCommand();
     }
 
     @Override

@@ -29,7 +29,7 @@ public class NavX3 implements GyroI {
 
         out.setPitch(gyro.getPitch());
         out.setRoll(gyro.getRoll());
-        out.setYaw(getAngle().minus(angleOffset));
+        out.setYaw(getAngle().plus(angleOffset));
         out.setYawRate(gyro.getAngularVel()[2]);
         out.setTemperature(gyro.getTemperature());
         out.setAngleAdjustment(angleOffset);
@@ -55,7 +55,7 @@ public class NavX3 implements GyroI {
 
     @Override
     public void zeroYaw() {
-        angleOffset = gyro.getYaw();
+        angleOffset = gyro.getYaw().times(-1);
     }
 
     @Override

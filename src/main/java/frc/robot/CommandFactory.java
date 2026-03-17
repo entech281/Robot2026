@@ -45,6 +45,7 @@ import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.ShootAtTargetCommand;
 import frc.robot.commands.ManualShootCommand;
 import frc.robot.commands.ManualTurretCommand;
+import frc.robot.commands.ManualTurretCommandSupplier;
 import frc.robot.commands.RunShooterAtLiveSpeedCommand;
 import frc.robot.commands.RunTestCommand;
 import frc.robot.commands.ShootAtTargetCommand;
@@ -94,7 +95,8 @@ public class CommandFactory {
     Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST, "No Current Test");
     SmartDashboard.putData("Test Chooser", testChooser);
     Shuffleboard.getTab("stuffs").add("Run Test", new RunTestCommand(testChooser));
-    Shuffleboard.getTab("stuffs").add("Home Turret", new HomeTurretCommand(subsystemManager.getTurretSubsystem(), subsystemManager.getHomeTurretSwitch()));
+    Shuffleboard.getTab("stuffs").add("Home Turret",
+        new HomeTurretCommand(subsystemManager.getTurretSubsystem(), subsystemManager.getHomeTurretSwitch()));
 
     AutoBuilder.configure(odometry::getEstimatedPose,
         odometry::resetOdometry,
@@ -114,6 +116,9 @@ public class CommandFactory {
 
     NamedCommands.registerCommand("AutoShoot", getFullShootCommand());
     NamedCommands.registerCommand("Intake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
+    NamedCommands.registerCommand("ReverseIntake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false));
+    NamedCommands.registerCommand("TrenchPreset", getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_TWO));
+    NamedCommands.registerCommand("TowerPreset", getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_ONE));
 
     autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -182,29 +187,52 @@ public class CommandFactory {
   }
 
   public Command getFullShootCommand() {
-    Pose3d target;
 
-    Optional<Alliance> alliance = DriverStation.getAlliance();
+    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> {
+      Pose3d target;
 
-    if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-      target = RobotConstants.TURRET.RED_HUB_LOCATION;
-    } else if (alliance.isPresent() && alliance.get() == Alliance.Blue) {
-      target = RobotConstants.TURRET.BLUE_HUB_LOCATION;
-    } else {
-      return Commands.none();
-    }
+      Optional<Alliance> alliance = DriverStation.getAlliance();
 
-    Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
+      if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+        target = RobotConstants.TURRET.RED_HUB_LOCATION;
+      } else {
+        target = RobotConstants.TURRET.BLUE_HUB_LOCATION;
+      }
+
+      Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
         .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
+      
+      return new ShooterCalculator(
+        RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target,
+        Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
+        RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
+        RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
+      };
+    Supplier<TurretCalculator> turretCalculatorSupplier = () -> {
+      Pose3d target;
 
-    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(
-        RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target, Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED, RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE, RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
-    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(target.toPose2d(),
+      Optional<Alliance> alliance = DriverStation.getAlliance();
+
+      if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+        target = RobotConstants.TURRET.RED_HUB_LOCATION;
+      } else {
+        target = RobotConstants.TURRET.BLUE_HUB_LOCATION;
+      }
+
+      Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
+        .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
+      return new TurretCalculator(target.toPose2d(),
         RobotIO.getInstance().getOdometryPose());
+      };
 
-    return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
-        subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
-        shooterCalculatorSupplier);
+    // return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(),
+    // subsystemManager.getHoodSubsystem(),
+    // subsystemManager.getTransferSubsystem(),
+    // subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
+    // shooterCalculatorSupplier);
+
+    return new ManualTurretCommandSupplier(subsystemManager.getTurretSubsystem(),
+        turretCalculatorSupplier);
 
   }
 
@@ -247,9 +275,14 @@ public class CommandFactory {
     Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
         .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
 
-    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, getSnowblowTarget(), Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED, RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE, RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
-    
-    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(getSnowblowTarget().toPose2d(), RobotIO.getInstance().getOdometryPose());
+    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(
+        RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, getSnowblowTarget(),
+        Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
+        RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
+        RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
+
+    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(getSnowblowTarget().toPose2d(),
+        RobotIO.getInstance().getOdometryPose());
 
     return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
         subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
@@ -261,20 +294,23 @@ public class CommandFactory {
     if (preset == RobotConstants.SHOOTER.SHOT_PRESET_ONE) {
       return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
           subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(),
-          Degrees.of(LiveTuningHandler.getInstance().getValue("TurretSubsystem/PresetOneDegrees")),
+          RobotIO.getInstance().getTurretOutput().getCurrentPosition(),
           RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetOneRPM")),
-          Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")));
+          Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")),
+          false);
     } else {
       return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
           subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(),
-          Degrees.of(LiveTuningHandler.getInstance().getValue("TurretSubsystem/PresetTwoDegrees")),
+          RobotIO.getInstance().getTurretOutput().getCurrentPosition(),
           RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
-          Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")));
+          Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")), false);
     }
   }
 
   public Command getStopShootingCommand() {
-    return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), Degrees.of(0.0), RPM.of(0.0), Degree.of(0.0));
+    return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
+        subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), Degrees.of(0.0), RPM.of(0.0),
+        Degree.of(0.0), false);
   }
 
   private Command getSubsystemTestMessageCommand(String message) {

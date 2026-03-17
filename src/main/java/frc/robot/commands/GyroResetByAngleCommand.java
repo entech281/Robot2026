@@ -3,6 +3,7 @@ package frc.robot.commands;
 import static edu.wpi.first.units.Units.Degrees;
 
 import java.util.Optional;
+
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 
@@ -45,17 +46,20 @@ public class GyroResetByAngleCommand extends EntechCommand {
       if (teamOpt.get() == Alliance.Blue) {
         set = () -> gyro
             .setAngleAdjustment(
-                RobotIO.getInstance().getGyroOutput().getAngleAdjustment().plus(Angle.ofRelativeUnits(angle, Degrees)));
+                RobotIO.getInstance().getGyroOutput().getAngleAdjustment().plus(Angle.ofRelativeUnits(angle, Degrees))
+                    .minus(RobotIO.getInstance().getGyroOutput().getYaw()));
       } else {
         set = () -> gyro
             .setAngleAdjustment(
                 RobotIO.getInstance().getGyroOutput().getAngleAdjustment()
-                    .minus(Angle.ofRelativeUnits(angle, Degrees)));
+                    .minus(Angle.ofRelativeUnits(angle, Degrees))
+                    .minus(RobotIO.getInstance().getGyroOutput().getYaw()));
       }
     } else {
       set = () -> gyro
           .setAngleAdjustment(
-              RobotIO.getInstance().getGyroOutput().getAngleAdjustment().plus(Angle.ofRelativeUnits(angle, Degrees)));
+              RobotIO.getInstance().getGyroOutput().getAngleAdjustment().plus(Angle.ofRelativeUnits(angle, Degrees))
+                  .minus(RobotIO.getInstance().getGyroOutput().getYaw()));
     }
     correctOdometry = () -> {
       Pose2d pose = new Pose2d(odometry.getEstimatedPose().getTranslation(), Rotation2d.fromDegrees(angle));
@@ -65,7 +69,7 @@ public class GyroResetByAngleCommand extends EntechCommand {
 
   @Override
   public void initialize() {
-    reset.run();
+    // reset.run();
     correctOdometry.run();
     set.run();
   }
