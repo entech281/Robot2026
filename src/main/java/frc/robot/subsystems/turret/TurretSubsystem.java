@@ -10,8 +10,6 @@ import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -143,9 +141,9 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
             turretMotor.getEncoder()
                     .setPosition(LiveTuningHandler.getInstance().getValue("TurretSubsystem/HomeSwitchPosition"));
         }
-        Logger.recordOutput("TurretOutput/switch", getForwardLimitSwitch());
+
         lastLimitSwitchState = getForwardLimitSwitch();
-        if (latestInput.getActivate()) {
+        if (latestInput.getActivate() && homed) {
             setTurretPosition(desiredPos);
         } else {
             turretMotor.set(0.0);
@@ -181,6 +179,8 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         boolean isStalled = (stallDetector != null && stallDetector.isStalled(turretMotor));
 
         out.setIsStalled(isStalled);
+        out.setHomed(homed);
+        out.setHomingSwitchState(getForwardLimitSwitch());
 
         if (isStalled && turretEncoder.getPosition() < 0) {
             out.setAtReverseLimitStall(true);

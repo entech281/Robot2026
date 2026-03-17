@@ -436,8 +436,8 @@ public final class RobotConstants {
     public static final Pose3d RED_SNOWBLOW_TARGET = new Pose3d(Inches.of(651).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
 
-    public static final Translation2d TURRET_OFFSET = new Translation2d(-DrivetrainConstants.WHEEL_BASE_METERS / 2.0,
-        0.0);
+    public static final Translation2d TURRET_OFFSET = new Translation2d(-Units.inchesToMeters(6.125),
+        -Units.inchesToMeters(1.375));
 
     public static final double TURRET_JOG_STEP_DEGREES = 5.0; // Change this value
 

@@ -82,7 +82,7 @@ public class ManualShootCommand extends EntechCommand {
     @Override
     public void execute() {
 
-        shooterInput.setSpeed(-shooterSpeed.in(RPM));
+        shooterInput.setSpeed(shooterSpeed.in(RPM));
         hoodInput.setRequestedPosition(hoodAngle.in(Degrees));
         if (moveTurret) {
             turretInput.setRequestedPosition(turretAngle);

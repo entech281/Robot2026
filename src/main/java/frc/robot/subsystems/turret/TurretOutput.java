@@ -19,6 +19,8 @@ public class TurretOutput extends SubsystemOutput {
   private boolean isStalled = false;
   private boolean isPastSofterLowerLimit = false;
   private boolean isPastSofterUpperLimit = false;
+  private boolean homingSwitchState = false;
+  private boolean homed = false;
 
   private SparkOutput turretMotor;
 
@@ -30,6 +32,8 @@ public class TurretOutput extends SubsystemOutput {
     Logger.recordOutput("TurretOutput/isAtForwardLimitStall", isAtForwardLimitStall);
     Logger.recordOutput("TurretOutput/isAtReverseLimitStall", isAtReverseLimitStall);
     Logger.recordOutput("TurretOutput/isAtRequestedPosition", isAtRequestedPosition);
+    Logger.recordOutput("TurretOutput/switch", homingSwitchState);
+    Logger.recordOutput("TurretOutput/homed", homed);
 
     if (turretMotor != null)
       turretMotor.log("TurretOutput/turretMotor");
@@ -114,4 +118,110 @@ public class TurretOutput extends SubsystemOutput {
   public void setPastSofterUpperLimit(boolean isPastSofterUpperLimit) {
     this.isPastSofterUpperLimit = isPastSofterUpperLimit;
   }
+
+  /**
+   * @return boolean return the isAtRequestedPosition
+   */
+  public boolean isIsAtRequestedPosition() {
+    return isAtRequestedPosition;
+  }
+
+  /**
+   * @param isAtRequestedPosition the isAtRequestedPosition to set
+   */
+  public void setIsAtRequestedPosition(boolean isAtRequestedPosition) {
+    this.isAtRequestedPosition = isAtRequestedPosition;
+  }
+
+  /**
+   * @return boolean return the isAtForwardLimitStall
+   */
+  public boolean isIsAtForwardLimitStall() {
+    return isAtForwardLimitStall;
+  }
+
+  /**
+   * @param isAtForwardLimitStall the isAtForwardLimitStall to set
+   */
+  public void setIsAtForwardLimitStall(boolean isAtForwardLimitStall) {
+    this.isAtForwardLimitStall = isAtForwardLimitStall;
+  }
+
+  /**
+   * @return boolean return the isAtReverseLimitStall
+   */
+  public boolean isIsAtReverseLimitStall() {
+    return isAtReverseLimitStall;
+  }
+
+  /**
+   * @param isAtReverseLimitStall the isAtReverseLimitStall to set
+   */
+  public void setIsAtReverseLimitStall(boolean isAtReverseLimitStall) {
+    this.isAtReverseLimitStall = isAtReverseLimitStall;
+  }
+
+  /**
+   * @return boolean return the isStalled
+   */
+  public boolean isIsStalled() {
+    return isStalled;
+  }
+
+  /**
+   * @return boolean return the isPastSofterLowerLimit
+   */
+  public boolean isIsPastSofterLowerLimit() {
+    return isPastSofterLowerLimit;
+  }
+
+  /**
+   * @param isPastSofterLowerLimit the isPastSofterLowerLimit to set
+   */
+  public void setIsPastSofterLowerLimit(boolean isPastSofterLowerLimit) {
+    this.isPastSofterLowerLimit = isPastSofterLowerLimit;
+  }
+
+  /**
+   * @return boolean return the isPastSofterUpperLimit
+   */
+  public boolean isIsPastSofterUpperLimit() {
+    return isPastSofterUpperLimit;
+  }
+
+  /**
+   * @param isPastSofterUpperLimit the isPastSofterUpperLimit to set
+   */
+  public void setIsPastSofterUpperLimit(boolean isPastSofterUpperLimit) {
+    this.isPastSofterUpperLimit = isPastSofterUpperLimit;
+  }
+
+  /**
+   * @return boolean return the homingSwitchState
+   */
+  public boolean isHomingSwitchState() {
+    return homingSwitchState;
+  }
+
+  /**
+   * @param homingSwitchState the homingSwitchState to set
+   */
+  public void setHomingSwitchState(boolean homingSwitchState) {
+    this.homingSwitchState = homingSwitchState;
+  }
+
+  /**
+   * @return boolean return the homed
+   */
+  public boolean isHomed() {
+    return homed;
+  }
+
+  /**
+   * @param homed the homed to set
+   */
+  public void setHomed(boolean homed) {
+    this.homed = homed;
+  }
+
 }

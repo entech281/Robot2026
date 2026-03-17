@@ -200,14 +200,14 @@ public class CommandFactory {
       }
 
       Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
-        .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
-      
+          .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
+
       return new ShooterCalculator(
-        RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target,
-        Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
-        RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
-        RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
-      };
+          RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target,
+          Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
+          RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
+          RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
+    };
     Supplier<TurretCalculator> turretCalculatorSupplier = () -> {
       Pose3d target;
 
@@ -220,20 +220,19 @@ public class CommandFactory {
       }
 
       Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
-        .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
+          .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
       return new TurretCalculator(target.toPose2d(),
-        RobotIO.getInstance().getOdometryPose());
-      };
+          RobotIO.getInstance().getOdometryPose());
+    };
 
-    // return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(),
-    // subsystemManager.getHoodSubsystem(),
-    // subsystemManager.getTransferSubsystem(),
-    // subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
-    // shooterCalculatorSupplier);
+    return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(),
+        subsystemManager.getHoodSubsystem(),
+        subsystemManager.getTransferSubsystem(),
+        subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
+        shooterCalculatorSupplier);
 
-    return new ManualTurretCommandSupplier(subsystemManager.getTurretSubsystem(),
-        turretCalculatorSupplier);
-
+    // return new ManualTurretCommandSupplier(subsystemManager.getTurretSubsystem(),
+    // turretCalculatorSupplier);
   }
 
   public Command getRotateForBumpCommand() {

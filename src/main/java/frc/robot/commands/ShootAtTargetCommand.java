@@ -57,12 +57,10 @@ public class ShootAtTargetCommand extends EntechCommand {
         transferInput = new TransferInput();
         hoodInput = new HoodInput();
         shooterInput = new ShooterInput();
-        turretInput = new TurretInput();
 
         transferSS.updateInputs(transferInput);
         hoodSS.updateInputs(hoodInput);
         shooterSS.updateInputs(shooterInput);
-        turretSS.updateInputs(turretInput);
     }
 
     @Override
@@ -72,10 +70,15 @@ public class ShootAtTargetCommand extends EntechCommand {
 
         ShotData shot = shotRange.getIdealShot();
 
-        shooterInput
-                .setSpeed(shot.getShotAngularVelocity(Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS)).in(RPM));
-        hoodInput.setRequestedPosition(shot.getHoodAngle().in(Degree));
+        // shooterInput
+        // .setSpeed(shot.getShotAngularVelocity(Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS)).in(RPM));
+        // hoodInput.setRequestedPosition(shot.getHoodAngle().in(Degree));
         turretInput.setRequestedPosition(Degrees.of(targetTurretAngle));
+
+        shooterInput
+                .setSpeed(3750);
+        hoodInput.setRequestedPosition(20);
+        // turretInput.setRequestedPosition(Degrees.of(45));
 
         shooterSS.updateInputs(shooterInput);
         hoodSS.updateInputs(hoodInput);

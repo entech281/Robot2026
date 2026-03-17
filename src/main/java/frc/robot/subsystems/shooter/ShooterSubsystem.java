@@ -104,7 +104,7 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
         shooterAConfig.encoder.velocityConversionFactor(1.0);
         shooterAConfig.closedLoop.pid(factors[0], factors[1], factors[2], ClosedLoopSlot.kSlot0);
         shooterAConfig.voltageCompensation(12.5);
-        shooterAConfig.inverted(false);
+        shooterAConfig.inverted(true);
 
         shooterMotorA.configure(shooterAConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
