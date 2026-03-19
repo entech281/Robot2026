@@ -123,7 +123,7 @@ public final class RobotConstants {
     public static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT_RADIANS = (2 * Math.PI);
     // radians
 
-    public static final double DRIVING_P = 0.4; // Origional P = 0.07
+    public static final double DRIVING_P = 0.375; //0.4 //Origional P = 0.07
     public static final double DRIVING_I = 0;
     public static final double DRIVING_D = 0;
     public static final double DRIVING_FF = 1 / DRIVE_WHEEL_FREE_SPEED_RPS;
@@ -141,7 +141,7 @@ public final class RobotConstants {
     public static final IdleMode DRIVING_MOTOR_IDLE_MODE = IdleMode.kBrake;
     public static final IdleMode TURNING_MOTOR_IDLE_MODE = IdleMode.kBrake;
 
-    public static final int DRIVING_MOTOR_CURRENT_LIMIT_AMPS = 160; // 50; // amps
+    public static final int DRIVING_MOTOR_CURRENT_LIMIT_AMPS = 60; // 50; // amps
     public static final int TURNING_MOTOR_CURRENT_LIMIT_AMPS = 40; // amps
 
     public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 2.285;

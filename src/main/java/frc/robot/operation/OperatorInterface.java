@@ -204,11 +204,13 @@ public class OperatorInterface
   public void enableTriggers() {
     new Trigger(() -> RobotIO.getInstance().getTurretOutput().isPastSofterLowerLimit())
         .onTrue(new InstantCommand(() -> DriverStation.reportWarning("Turret past softer lower limit!", false)))
-        .onTrue(new InstantCommand(() -> xboxController.setRumble(RumbleType.kLeftRumble, 0.5)));
+        .onTrue(new InstantCommand(() -> xboxController.setRumble(RumbleType.kLeftRumble, 0.5)))
+        .onFalse(new InstantCommand(() -> xboxController.setRumble(RumbleType.kLeftRumble, 0.0)));
 
     new Trigger(() -> RobotIO.getInstance().getTurretOutput().isPastSofterUpperLimit())
         .onTrue(new InstantCommand(() -> DriverStation.reportWarning("Turret past softer upper limit!", false)))
-        .onTrue(new InstantCommand(() -> xboxController.setRumble(RumbleType.kRightRumble, 0.5)));
+        .onTrue(new InstantCommand(() -> xboxController.setRumble(RumbleType.kRightRumble, 0.5)))
+        .onFalse(new InstantCommand(() -> xboxController.setRumble(RumbleType.kRightRumble, 0.0)));
 
   }
 
