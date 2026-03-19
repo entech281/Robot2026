@@ -179,6 +179,7 @@ public final class RobotConstants {
         Map.entry("TurretSubsystem/LiveAngle", 0.0),
         Map.entry("TurretSubsystem/NudgeAmount", 10.0),
         Map.entry("UserPolicy/DistanceNudgeAmountMeters", 0.5),
+        Map.entry("IntakeSubsystem/MinimumVariableSpeed", 0.3),
         Map.entry("ShotTuningRPM/5ft", 0.0),
         Map.entry("ShotTuningRPM/6ft", 0.0),
         Map.entry("ShotTuningRPM/7ft", 0.0),
