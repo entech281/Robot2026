@@ -24,6 +24,7 @@ import frc.robot.commands.HoodJogCommand;
 import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.RunIntakeCommand;
+import frc.robot.commands.RunIntakeVariableCommand;
 import frc.robot.commands.RunShooterCommand;
 import frc.robot.commands.RunTransferCommand;
 import frc.robot.commands.TurretContinuousNudgeCommand;
@@ -262,7 +263,7 @@ public class OperatorInterface
         .whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SNOW_BLOW_PRESET));
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INTAKE)
-        .whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), true));
+        .whileTrue(new RunIntakeVariableCommand(subsystemManager.getIntakeSubsystem(), this));
     // TODO add stop intake for both of these onFalse()
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.OUTTAKE)
         .whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false));
