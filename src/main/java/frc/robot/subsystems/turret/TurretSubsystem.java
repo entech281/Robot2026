@@ -99,14 +99,27 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         latestInput.setRequestedPosition(Degrees.of(0.0));
     }
 
+    //TODO: move to EntechUtils and Unit test
+    private double circularDistance(double a, double b) {
+        double diff = Math.abs(a - b);
+        return Math.min(diff, 360 - diff);
+    }
+
     private void setTurretPosition(Angle desiredAngle) {
         if (!ENABLED)
             return;
 
-        // clamp to allowed range
-        double clamped = EntechUtils.capDoubleValue(desiredAngle.in(Degrees),
-                LiveTuningHandler.getInstance().getValue("TurretSubsystem/LowerLimitDegrees"),
-                LiveTuningHandler.getInstance().getValue("TurretSubsystem/UpperLimitDegrees"));
+        double lowerLimit = LiveTuningHandler.getInstance().getValue("TurretSubsystem/LowerLimitDegrees");
+        double upperLimit = LiveTuningHandler.getInstance().getValue("TurretSubsystem/UpperLimitDegrees");
+
+        double clamped = desiredAngle.in(Degrees);
+
+        if (desiredAngle.in(Degrees) > upperLimit || desiredAngle.in(Degrees) < lowerLimit) {
+            double distToLower = circularDistance(desiredAngle.in(Degrees), lowerLimit);
+            double distToUpper = circularDistance(desiredAngle.in(Degrees), upperLimit);
+
+            clamped = (distToLower < distToUpper) ? lowerLimit : upperLimit;
+        }
 
         if (inverted) {
             clamped = -clamped;
