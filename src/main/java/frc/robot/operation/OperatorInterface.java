@@ -1,6 +1,8 @@
 package frc.robot.operation;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RPM;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -103,8 +105,8 @@ public class OperatorInterface
     // Basic motor toggles for quick tuning
     tuningController.a().whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
     tuningController.b().whileTrue(new RunTransferCommand(subsystemManager.getTransferSubsystem()));
-    tuningController.x().whileTrue(new RunShooterCommand(subsystemManager.getShooterSubsystem()))
-        .onFalse(commandFactory.getStopShootingCommand());
+    tuningController.x().whileTrue(new RunShooterCommand(subsystemManager.getShooterSubsystem()));
+        // .onFalse(commandFactory.getStopShootingCommand());
     // Momentary drop-then-raise hopper cycle for tuning
 
     // Turret tuning: bumpers jog left/right alrwhile held (small steps)
@@ -117,6 +119,10 @@ public class OperatorInterface
     tuningController.povDown().onTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), -1.0));
 
     tuningController.povUp().onTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), 1.0));
+
+    tuningController.leftBumper().onTrue(new InstantCommand( () -> UserPolicy.getInstance().setShooterRPM( UserPolicy.getInstance().getShooterRPM().minus(RPM.of(100)))));
+    tuningController.rightBumper().onTrue(new InstantCommand( () -> UserPolicy.getInstance().setShooterRPM( UserPolicy.getInstance().getShooterRPM().plus(RPM.of(100)))));
+
   }
 
   public void configureBindings() {

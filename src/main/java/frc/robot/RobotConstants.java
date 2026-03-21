@@ -141,8 +141,8 @@ public final class RobotConstants {
     public static final IdleMode DRIVING_MOTOR_IDLE_MODE = IdleMode.kBrake;
     public static final IdleMode TURNING_MOTOR_IDLE_MODE = IdleMode.kBrake;
 
-    public static final int DRIVING_MOTOR_CURRENT_LIMIT_AMPS = 60; // 50; // amps
-    public static final int TURNING_MOTOR_CURRENT_LIMIT_AMPS = 40; // amps
+    public static final int DRIVING_MOTOR_CURRENT_LIMIT_AMPS = 40; // 50; // amps
+    public static final int TURNING_MOTOR_CURRENT_LIMIT_AMPS = 30; // amps
 
     public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 2.285;
     public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = 0.91;
@@ -421,9 +421,9 @@ public final class RobotConstants {
     public static final double TURRET_POSITION_P = 0.02;
     public static final double TURRET_POSITION_I = 0.0;
     public static final double TURRET_POSITION_D = 0.0;
-    public static final AngularVelocity TURRET_CRUISE_VELOCITY = DegreesPerSecond.of(300);
-    public static final AngularAcceleration TURRET_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(1200);
-    public static final Angle TURRET_POSITION_TOLERANCE_DEGREES = Degrees.of(1.0); // considered at setpoint within this
+    public static final AngularVelocity TURRET_CRUISE_VELOCITY = DegreesPerSecond.of(500);
+    public static final AngularAcceleration TURRET_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(2000);
+    public static final Angle TURRET_POSITION_TOLERANCE_DEGREES = Degrees.of(2.0); // considered at setpoint within this
     public static final Angle HOME_POSITION_DEGREES = Degrees.of(0.0); // position to reset to
 
     public static final Pose3d BLUE_HUB_LOCATION = new Pose3d(Inches.of(182.11).in(Meters),
@@ -437,8 +437,8 @@ public final class RobotConstants {
     public static final Pose3d RED_SNOWBLOW_TARGET = new Pose3d(Inches.of(651).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
 
-    public static final Translation2d TURRET_OFFSET = new Translation2d(-Units.inchesToMeters(6.125),
-        -Units.inchesToMeters(1.375));
+    public static final Translation2d TURRET_OFFSET = new Translation2d(Units.inchesToMeters(6.125),
+        Units.inchesToMeters(1.375));
 
     public static final double TURRET_JOG_STEP_DEGREES = 5.0; // Change this value
 
@@ -485,7 +485,7 @@ public final class RobotConstants {
     public static final Distance MAX_SHOT_DISTANCE = Feet.of(14);
     public static final AngularVelocity MIN_SHOT_SPEED = RPM.of(3500);
     public static final AngularVelocity MAX_SHOT_SPEED = RPM.of(5000);
-    public static final AngularVelocity TOLERANCE = RPM.of(250);
+    public static final AngularVelocity TOLERANCE = RPM.of(150);
   }
 
   public static interface HOPPER {

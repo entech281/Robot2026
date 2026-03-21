@@ -131,8 +131,6 @@ public class SoloCameraContainer implements CameraContainerI {
     latestReadResults = camera.getAllUnreadResults();
     List<PhotonPipelineResult> filteredList = new ArrayList<>();
 
-    Logger.recordOutput("SubsystemTest2201", latestReadResults.size());
-    Logger.recordOutput("SubsystemTest2202", latestReadResults.size());
     for (PhotonPipelineResult result : latestReadResults) {
       filteredList.add(getFilteredResult(result));
     }
@@ -143,17 +141,9 @@ public class SoloCameraContainer implements CameraContainerI {
       if (!result.hasTargets()) {
         continue;
       }
-      Logger.recordOutput("SubsystemTest21", result);
       Optional<EstimatedRobotPose> estimatedPose = estimator.estimateCoprocMultiTagPose(result);
       if (!estimatedPose.isPresent()) {
         estimatedPose = estimator.estimateLowestAmbiguityPose(result);
-      }
-
-      Logger.recordOutput("SubsystemTest0", estimatedPose.isPresent());
-      if (estimatedPose.isPresent()) {
-        Logger.recordOutput("SubsystemTest01", estimatedPose.get().timestampSeconds);
-        Logger.recordOutput("SubsystemTest1", estimatedPose.get().targetsUsed.size());
-        Logger.recordOutput("SubsystemTest2", estimatedPose.get().estimatedPose.toPose2d());
       }
 
       if (estimatedPose.isPresent()) {
