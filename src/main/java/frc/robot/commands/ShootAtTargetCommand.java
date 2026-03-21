@@ -37,6 +37,7 @@ public class ShootAtTargetCommand extends EntechCommand {
     private HoodInput hoodInput = new HoodInput();
     private TransferInput transferInput = new TransferInput();
     private TurretInput turretInput = new TurretInput();
+    private boolean shooterReady = false;
 
     public ShootAtTargetCommand(ShooterSubsystem shooterSubsystem, HoodSubsystem hoodSubsystem,
             TransferSubsystem transferSubsystem, TurretSubsystem turretSubsystem,
@@ -61,6 +62,8 @@ public class ShootAtTargetCommand extends EntechCommand {
         transferSS.updateInputs(transferInput);
         hoodSS.updateInputs(hoodInput);
         shooterSS.updateInputs(shooterInput);
+
+        shooterReady = false;
     }
 
     @Override
@@ -94,9 +97,14 @@ public class ShootAtTargetCommand extends EntechCommand {
 
         // Triboolean isReadyToShoot = shotIsReady.fand(Triboolean.of(turretIsReady));
 
+        
+        if (!shooterReady) {
+            shooterReady = shooterSS.getOutputs().isAtSpeed();
+        }
+
         boolean isReadyToShoot = turretSS.getOutputs().isAtRequestedPosition()
                 && hoodSS.getOutputs().isAtRequestedPosition()
-                && shooterSS.getOutputs().isAtSpeed();
+                && shooterReady;
 
         if (isReadyToShoot) {
             transferInput.setSpeed(LiveTuningHandler.getInstance().getValue("TransferSubsystem/SetSpeed"));

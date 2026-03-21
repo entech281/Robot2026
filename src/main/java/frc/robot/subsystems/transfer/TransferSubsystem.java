@@ -30,6 +30,8 @@ public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOu
 
             config.idleMode(BRAKING ? IdleMode.kBrake : IdleMode.kCoast);
 
+            config.secondaryCurrentLimit(30);
+
             transferMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         }
     }
