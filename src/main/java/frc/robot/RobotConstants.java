@@ -290,7 +290,7 @@ public final class RobotConstants {
       public static final int UNDEPLOY_HOPPER = 6;
       public static final int PRESET_1_FIRE = 3;
       public static final int PRESET_2_FIRE = 4;
-      public static final int SNOWBLOW_FIRE = 13;
+      public static final int SNOWBLOW_FIRE = 14;
       public static final int CLIMB = 12;
       public static final int TURRET_NUDGE_UP = 8;
       public static final int TURRET_NUDGE_DOWN = 9;
@@ -485,7 +485,7 @@ public final class RobotConstants {
     public static final Distance MAX_SHOT_DISTANCE = Feet.of(14);
     public static final AngularVelocity MIN_SHOT_SPEED = RPM.of(3500);
     public static final AngularVelocity MAX_SHOT_SPEED = RPM.of(5000);
-    public static final AngularVelocity TOLERANCE = RPM.of(150);
+    public static final AngularVelocity TOLERANCE = RPM.of(4926); //200
   }
 
   public static interface HOPPER {
