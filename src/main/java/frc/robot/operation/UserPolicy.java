@@ -1,10 +1,14 @@
 package frc.robot.operation;
 
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.RPM;
 
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.units.measure.Distance;
+import frc.robot.RobotConstants.LiveTuning;
+import frc.robot.livetuning.LiveTuningHandler;
+import edu.wpi.first.units.measure.AngularVelocity;
 
 public class UserPolicy {
   private static final UserPolicy instance = new UserPolicy();
@@ -14,6 +18,7 @@ public class UserPolicy {
   private double targetAngle = 0.0;
   private boolean isAutoWon = false;
   private Distance manualShotDistance = Meters.of(4);
+  private AngularVelocity shooterRPM = RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed"));
 
   private UserPolicy() {
     Logger.recordOutput("UserPolicy/twistable", twistable);
@@ -21,6 +26,7 @@ public class UserPolicy {
     Logger.recordOutput("UserPolicy/targetAngle", targetAngle);
     Logger.recordOutput("UserPolicy/isAutoWon", isAutoWon);
     Logger.recordOutput("UserPolicy/hubOffset", manualShotDistance.in(Meters));
+    Logger.recordOutput("UserPolicy/shooterRPM", shooterRPM.in(RPM));
   }
 
   public static UserPolicy getInstance() {
@@ -70,5 +76,14 @@ public class UserPolicy {
   public void setHubOffset(Distance manualShotDistance) {
     Logger.recordOutput("UserPolicy/hubOffset", manualShotDistance.in(Meters));
     this.manualShotDistance = manualShotDistance;
+  }
+
+  public void setShooterRPM (AngularVelocity shooterRPM) {
+    Logger.recordOutput("UserPolicy/shooterRPM", shooterRPM.in(RPM));
+    this.shooterRPM = shooterRPM;
+  }
+
+  public AngularVelocity getShooterRPM() {
+    return shooterRPM;
   }
 }

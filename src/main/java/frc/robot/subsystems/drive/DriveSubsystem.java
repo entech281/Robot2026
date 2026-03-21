@@ -287,6 +287,9 @@ public class DriveSubsystem extends EntechSubsystem<DriveInput, DriveOutput> {
 
       drivingConfig.smartCurrentLimit(RobotConstants.SwerveModuleConstants.DRIVING_MOTOR_CURRENT_LIMIT_AMPS);
       turningConfig.smartCurrentLimit(RobotConstants.SwerveModuleConstants.TURNING_MOTOR_CURRENT_LIMIT_AMPS);
+      drivingConfig.voltageCompensation(12.5);
+      turningConfig.voltageCompensation(12.5);
+      drivingConfig.secondaryCurrentLimit(50);
 
       drivingConfig.inverted(false);
       turningConfig.inverted(true);

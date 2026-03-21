@@ -297,14 +297,53 @@ public class CommandFactory {
           RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetOneRPM")),
           Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")),
           false);
-    } else {
+    } else if (preset == RobotConstants.SHOOTER.SHOT_PRESET_TWO) {
       return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
           subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(),
           RobotIO.getInstance().getTurretOutput().getCurrentPosition(),
           RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
           Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")), false);
-    }
+    } else {
+      Supplier<TurretCalculator> turretCalculatorSupplier = () -> {
+        Pose3d target;
+
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+
+        if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+          target = RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
+        } else {
+          target = RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;
+        }
+
+        Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
+            .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
+        return new TurretCalculator(target.toPose2d(),
+            RobotIO.getInstance().getOdometryPose());
+      };      
+
+    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> {
+      Pose3d target;
+
+      Optional<Alliance> alliance = DriverStation.getAlliance();
+
+      if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+        target = RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
+      } else {
+        target = RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;
+      }
+
+      Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
+          .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
+
+      return new ShooterCalculator(
+          RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target,
+          Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
+          RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
+          RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
+    };
+    return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier, shooterCalculatorSupplier);
   }
+}
 
   public Command getStopShootingCommand() {
     return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),

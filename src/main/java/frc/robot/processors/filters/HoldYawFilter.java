@@ -8,7 +8,7 @@ import frc.robot.subsystems.drive.DriveInput;
 
 public class HoldYawFilter implements DriveFilterI {
   private static final double RESET_MARGIN = 25.0;
-  private final PIDController controller = new PIDController(0.0085, 0, 0.0);
+  private final PIDController controller = new PIDController(0.005, 0, 0.0);
   private final StoppingCounter stopCounter = new StoppingCounter(0.25);
   private Rotation2d holdAngle = new Rotation2d(0);
 

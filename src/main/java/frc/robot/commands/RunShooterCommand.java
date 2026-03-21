@@ -1,7 +1,10 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.RPM;
+
 import frc.entech.commands.EntechCommand;
 import frc.robot.livetuning.LiveTuningHandler;
+import frc.robot.operation.UserPolicy;
 import frc.robot.subsystems.shooter.ShooterInput;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
@@ -31,7 +34,7 @@ public class RunShooterCommand extends EntechCommand {
     @Override
     public void initialize() {
         ShooterInput input = new ShooterInput();
-        double speed = LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed");
+        double speed = UserPolicy.getInstance().getShooterRPM().in(RPM);
         input.setSpeed(speed);
         shooter.updateInputs(input);
     }

@@ -150,13 +150,6 @@ public class SoloCameraContainer implements CameraContainerI {
         estimatedPose = estimator.estimateLowestAmbiguityPose(result);
       }
 
-      Logger.recordOutput("SubsystemTest0", estimatedPose.isPresent());
-      if (estimatedPose.isPresent()) {
-        Logger.recordOutput("SubsystemTest01", estimatedPose.get().timestampSeconds);
-        Logger.recordOutput("SubsystemTest1", estimatedPose.get().targetsUsed.size());
-        Logger.recordOutput("SubsystemTest2", estimatedPose.get().estimatedPose.toPose2d());
-      }
-
       if (estimatedPose.isPresent()) {
         Pose3d pose = estimatedPose.get().estimatedPose;
         double timeStamp = result.getTimestampSeconds();

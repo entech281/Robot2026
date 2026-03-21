@@ -15,7 +15,7 @@ import frc.robot.io.RobotIO;
 
 public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOutput> {
     private static final boolean ENABLED = true;
-    private static final boolean BRAKING = true;
+    private static final boolean BRAKING = false;
 
     private double setSpeed = 0.0;
 

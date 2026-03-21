@@ -1,6 +1,8 @@
 package frc.robot.operation;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RPM;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -24,6 +26,7 @@ import frc.robot.commands.HoodJogCommand;
 import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.RunIntakeCommand;
+import frc.robot.commands.RunIntakeVariableCommand;
 import frc.robot.commands.RunShooterCommand;
 import frc.robot.commands.RunTransferCommand;
 import frc.robot.commands.TurretContinuousNudgeCommand;
@@ -102,8 +105,8 @@ public class OperatorInterface
     // Basic motor toggles for quick tuning
     tuningController.a().whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
     tuningController.b().whileTrue(new RunTransferCommand(subsystemManager.getTransferSubsystem()));
-    tuningController.x().whileTrue(new RunShooterCommand(subsystemManager.getShooterSubsystem()))
-        .onFalse(commandFactory.getStopShootingCommand());
+    tuningController.x().whileTrue(new RunShooterCommand(subsystemManager.getShooterSubsystem()));
+        // .onFalse(commandFactory.getStopShootingCommand());
     // Momentary drop-then-raise hopper cycle for tuning
 
     // Turret tuning: bumpers jog left/right alrwhile held (small steps)
@@ -116,6 +119,10 @@ public class OperatorInterface
     tuningController.povDown().onTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), -1.0));
 
     tuningController.povUp().onTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), 1.0));
+
+    tuningController.leftBumper().onTrue(new InstantCommand( () -> UserPolicy.getInstance().setShooterRPM( UserPolicy.getInstance().getShooterRPM().minus(RPM.of(100)))));
+    tuningController.rightBumper().onTrue(new InstantCommand( () -> UserPolicy.getInstance().setShooterRPM( UserPolicy.getInstance().getShooterRPM().plus(RPM.of(100)))));
+
   }
 
   public void configureBindings() {
@@ -203,12 +210,12 @@ public class OperatorInterface
 
   public void enableTriggers() {
     new Trigger(() -> RobotIO.getInstance().getTurretOutput().isPastSofterLowerLimit())
-        .onTrue(new InstantCommand(() -> DriverStation.reportWarning("Turret past softer lower limit!", false)))
-        .onTrue(new InstantCommand(() -> xboxController.setRumble(RumbleType.kLeftRumble, 0.5)));
+        .onTrue(new InstantCommand(() -> xboxController.setRumble(RumbleType.kLeftRumble, 0.5)))
+        .onFalse(new InstantCommand(() -> xboxController.setRumble(RumbleType.kLeftRumble, 0.0)));
 
     new Trigger(() -> RobotIO.getInstance().getTurretOutput().isPastSofterUpperLimit())
-        .onTrue(new InstantCommand(() -> DriverStation.reportWarning("Turret past softer upper limit!", false)))
-        .onTrue(new InstantCommand(() -> xboxController.setRumble(RumbleType.kRightRumble, 0.5)));
+        .onTrue(new InstantCommand(() -> xboxController.setRumble(RumbleType.kRightRumble, 0.5)))
+        .onFalse(new InstantCommand(() -> xboxController.setRumble(RumbleType.kRightRumble, 0.0)));
 
   }
 
@@ -260,7 +267,7 @@ public class OperatorInterface
         .whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SNOW_BLOW_PRESET));
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INTAKE)
-        .whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), true));
+        .whileTrue(new RunIntakeVariableCommand(subsystemManager.getIntakeSubsystem(), this));
     // TODO add stop intake for both of these onFalse()
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.OUTTAKE)
         .whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false));

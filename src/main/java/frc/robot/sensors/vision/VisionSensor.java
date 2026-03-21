@@ -109,9 +109,9 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
             }
 
             output.setUnreadResultsA(cameraContainerA.getAllUnreadResults());
-            // output.setUnreadResultsB(cameraContainerB.getAllUnreadResults());
+            output.setUnreadResultsB(cameraContainerB.getAllUnreadResults());
             output.setUnreadResultsC(cameraContainerC.getAllUnreadResults());
-            // output.setUnreadResultsD(cameraContainerD.getAllUnreadResults());
+            output.setUnreadResultsD(cameraContainerD.getAllUnreadResults());
         }
 
         return output;

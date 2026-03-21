@@ -119,7 +119,7 @@ public final class RobotConstants {
     public static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT_RADIANS = (2 * Math.PI);
     // radians
 
-    public static final double DRIVING_P = 0.4; // Origional P = 0.07
+    public static final double DRIVING_P = 0.375; //0.4 //Origional P = 0.07
     public static final double DRIVING_I = 0;
     public static final double DRIVING_D = 0;
     public static final double DRIVING_FF = 1 / DRIVE_WHEEL_FREE_SPEED_RPS;
@@ -137,8 +137,8 @@ public final class RobotConstants {
     public static final IdleMode DRIVING_MOTOR_IDLE_MODE = IdleMode.kBrake;
     public static final IdleMode TURNING_MOTOR_IDLE_MODE = IdleMode.kBrake;
 
-    public static final int DRIVING_MOTOR_CURRENT_LIMIT_AMPS = 160; // 50; // amps
-    public static final int TURNING_MOTOR_CURRENT_LIMIT_AMPS = 40; // amps
+    public static final int DRIVING_MOTOR_CURRENT_LIMIT_AMPS = 40; // 50; // amps
+    public static final int TURNING_MOTOR_CURRENT_LIMIT_AMPS = 30; // amps
 
     public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 2.285;
     public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = 0.91;
@@ -149,21 +149,21 @@ public final class RobotConstants {
   public static interface LiveTuning {
     public static final Map<String, Double> VALUES = Map.ofEntries(
 
-        Map.entry("ShooterSubsystem/SetSpeed", 4000.0),
-        Map.entry("IntakeSubsystem/SetSpeed", 0.5),
-        Map.entry("TransferSubsystem/SetSpeed", 0.8),
-        Map.entry("TurretSubsystem/LowerLimitDegrees", -240.0),
-        Map.entry("TurretSubsystem/UpperLimitDegrees", 0.0),
-        Map.entry("TurretSubsystem/SofterLowerLimitDegrees", -230.0),
-        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 5.0),
+        Map.entry("ShooterSubsystem/SetSpeed", 3750.0),
+        Map.entry("IntakeSubsystem/SetSpeed", 0.75),
+        Map.entry("TransferSubsystem/SetSpeed", 1.0),
+        Map.entry("TurretSubsystem/LowerLimitDegrees", 0.0),
+        Map.entry("TurretSubsystem/UpperLimitDegrees", 240.0),
+        Map.entry("TurretSubsystem/SofterLowerLimitDegrees", 5.0),
+        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 235.0),
         Map.entry("TurretSubsystem/PresetOneDegrees", 0.0),
         Map.entry("TurretSubsystem/PresetTwoDegrees", 0.0),
-        Map.entry("HoodSubsystem/PresetOneDegrees", 0.0),
-        Map.entry("HoodSubsystem/PresetTwoDegrees", 13.0),
+        Map.entry("HoodSubsystem/PresetOneDegrees", 15.0),
+        Map.entry("HoodSubsystem/PresetTwoDegrees", 0.0),
         Map.entry("HoodSubsystem/SnowBlowPresetDegrees", 13.0),
         Map.entry("ShooterSubsystem/SnowBlowPresetRPM", 4000.0),
-        Map.entry("ShooterSubsystem/PresetOneRPM", 3500.0),
-        Map.entry("ShooterSubsystem/PresetTwoRPM", 4500.0),
+        Map.entry("ShooterSubsystem/PresetOneRPM", 3750.0),
+        Map.entry("ShooterSubsystem/PresetTwoRPM", 4400.0),
         Map.entry("ShiftStateTracker/WarningSeconds", 5.0),
         Map.entry("TurretSubsystem/HomeSwitchPosition", -17.0),
         Map.entry("ShooterSubsystem/kP", 0.0001),
@@ -173,34 +173,35 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/kA", 0.001),
         Map.entry("ShooterSubsystem/kS", 0.08),
         Map.entry("TurretSubsystem/LiveAngle", 0.0),
-        Map.entry("TurretSubsystem/NudgeAmount", 10.0),
+        Map.entry("TurretSubsystem/NudgeAmount", 20.0),
         Map.entry("UserPolicy/DistanceNudgeAmountMeters", 0.5),
-        Map.entry("ShotTuningRPM/5ft", 0.0),
-        Map.entry("ShotTuningRPM/6ft", 0.0),
-        Map.entry("ShotTuningRPM/7ft", 0.0),
-        Map.entry("ShotTuningRPM/8ft", 0.0),
-        Map.entry("ShotTuningRPM/9ft", 0.0),
-        Map.entry("ShotTuningRPM/10ft", 0.0),
-        Map.entry("ShotTuningRPM/11ft", 0.0),
-        Map.entry("ShotTuningRPM/12ft", 0.0),
-        Map.entry("ShotTuningRPM/13ft", 0.0),
-        Map.entry("ShotTuningRPM/14ft", 0.0),
-        Map.entry("ShotTuningRPM/15ft", 0.0),
-        Map.entry("ShotTuningRPM/16ft", 0.0),
-        Map.entry("ShotTuningRPM/17ft", 0.0),
-        Map.entry("ShotTuningRPM/18ft", 0.0),
-        Map.entry("ShotTuningRPM/19ft", 0.0),
-        Map.entry("ShotTuningRPM/20ft", 0.0),
-        Map.entry("ShotTuningRPM/21ft", 0.0),
+        Map.entry("IntakeSubsystem/MinimumVariableSpeed", 0.3),
+        Map.entry("ShotTuningRPM/5ft", 3800.0),
+        Map.entry("ShotTuningRPM/6ft", 3800.0),
+        Map.entry("ShotTuningRPM/7ft", 3800.0),
+        Map.entry("ShotTuningRPM/8ft", 3800.0),
+        Map.entry("ShotTuningRPM/9ft", 3750.0),
+        Map.entry("ShotTuningRPM/10ft", 3750.0),
+        Map.entry("ShotTuningRPM/11ft", 3750.0),
+        Map.entry("ShotTuningRPM/12ft", 3750.0),
+        Map.entry("ShotTuningRPM/13ft", 3800.0),
+        Map.entry("ShotTuningRPM/14ft", 3800.0),
+        Map.entry("ShotTuningRPM/15ft", 3800.0),
+        Map.entry("ShotTuningRPM/16ft", 3800.0),
+        Map.entry("ShotTuningRPM/17ft", 3800.0),
+        Map.entry("ShotTuningRPM/18ft", 3800.0),
+        Map.entry("ShotTuningRPM/19ft", 3800.0),
+        Map.entry("ShotTuningRPM/20ft", 3800.0),
+        Map.entry("ShotTuningRPM/21ft", 3800.0),
         Map.entry("ShotTuningAngle/5ft", 0.0),
         Map.entry("ShotTuningAngle/6ft", 0.0),
         Map.entry("ShotTuningAngle/7ft", 0.0),
         Map.entry("ShotTuningAngle/8ft", 0.0),
-        Map.entry("ShotTuningAngle/9ft", 0.0),
+        Map.entry("ShotTuningAngle/9ft", 5.0),
         Map.entry("ShotTuningAngle/10ft", 0.0),
-        Map.entry("ShotTuningAngle/11ft", 0.0),
-        Map.entry("ShotTuningAngle/12ft", 0.0),
-        Map.entry("ShotTuningAngle/13ft", 0.0),
+        Map.entry("ShotTuningAngle/11ft", 5.0),
+        Map.entry("ShotTuningAngle/12ft", 10.0),
+        Map.entry("ShotTuningAngle/13ft", 15.0),
         Map.entry("ShotTuningAngle/14ft", 0.0),
         Map.entry("ShotTuningAngle/15ft", 0.0),
         Map.entry("ShotTuningAngle/16ft", 0.0),
@@ -285,7 +286,7 @@ public final class RobotConstants {
       public static final int UNDEPLOY_HOPPER = 6;
       public static final int PRESET_1_FIRE = 3;
       public static final int PRESET_2_FIRE = 4;
-      public static final int SNOWBLOW_FIRE = 13;
+      public static final int SNOWBLOW_FIRE = 14;
       public static final int CLIMB = 12;
       public static final int TURRET_NUDGE_UP = 8;
       public static final int TURRET_NUDGE_DOWN = 9;
@@ -416,9 +417,9 @@ public final class RobotConstants {
     public static final double TURRET_POSITION_P = 0.02;
     public static final double TURRET_POSITION_I = 0.0;
     public static final double TURRET_POSITION_D = 0.0;
-    public static final AngularVelocity TURRET_CRUISE_VELOCITY = DegreesPerSecond.of(300);
-    public static final AngularAcceleration TURRET_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(1200);
-    public static final Angle TURRET_POSITION_TOLERANCE_DEGREES = Degrees.of(1.0); // considered at setpoint within this
+    public static final AngularVelocity TURRET_CRUISE_VELOCITY = DegreesPerSecond.of(500);
+    public static final AngularAcceleration TURRET_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(2000);
+    public static final Angle TURRET_POSITION_TOLERANCE_DEGREES = Degrees.of(2.0); // considered at setpoint within this
     public static final Angle HOME_POSITION_DEGREES = Degrees.of(0.0); // position to reset to
 
     public static final Pose3d BLUE_HUB_LOCATION = new Pose3d(Inches.of(182.11).in(Meters),
@@ -432,8 +433,8 @@ public final class RobotConstants {
     public static final Pose3d RED_SNOWBLOW_TARGET = new Pose3d(Inches.of(651).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
 
-    public static final Translation2d TURRET_OFFSET = new Translation2d(-Units.inchesToMeters(6.125),
-        -Units.inchesToMeters(1.375));
+    public static final Translation2d TURRET_OFFSET = new Translation2d(Units.inchesToMeters(6.125),
+        Units.inchesToMeters(1.375));
 
     public static final double TURRET_JOG_STEP_DEGREES = 5.0; // Change this value
 
@@ -480,7 +481,7 @@ public final class RobotConstants {
     public static final Distance MAX_SHOT_DISTANCE = Feet.of(14);
     public static final AngularVelocity MIN_SHOT_SPEED = RPM.of(3500);
     public static final AngularVelocity MAX_SHOT_SPEED = RPM.of(5000);
-    public static final AngularVelocity TOLERANCE = RPM.of(250);
+    public static final AngularVelocity TOLERANCE = RPM.of(4926); //200
   }
 
   public static interface HOPPER {
