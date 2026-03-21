@@ -55,7 +55,8 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
                     RobotConstants.Vision.Transforms.robotToCameraD,
                     fieldLayout);
 
-            cameraNet = new MultiCameraContainer(cameraContainerA, cameraContainerB, cameraContainerC, cameraContainerD);
+            cameraNet = new MultiCameraContainer(cameraContainerA, cameraContainerB, cameraContainerC,
+                    cameraContainerD);
         }
     }
 
@@ -66,7 +67,7 @@ public class VisionSensor extends EntechSensor<VisionOutput> {
 
     @Override
     protected VisionOutput toOutputs() {
-        VisionOutput output = new VisionOutput();
+        VisionOutput output = new VisionOutput(fieldLayout.getFieldWidth(), fieldLayout.getFieldLength());
 
         if (ENABLED) {
             output.setConnected(cameraNet.isConnected());

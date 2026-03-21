@@ -1,5 +1,6 @@
 package frc.robot.processors;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -8,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
 import frc.robot.io.RobotIO;
+import frc.robot.sensors.vision.VisionOutput;
 import frc.robot.sensors.vision.VisionPose;
 
 import static edu.wpi.first.units.Units.Degrees;
@@ -28,8 +30,6 @@ public class OdometryProcessor {
         Rotation2d.fromDegrees(RobotIO.getInstance().getGyroOutput().getYaw().in(Degrees)),
         RobotIO.getInstance().getDriveOutput().getModulePositions(),
         RobotConstants.ODOMETRY.INITIAL_POSE);
-
-    estimator.setVisionMeasurementStdDevs(RobotConstants.Vision.VISION_STD_DEVS);
     field.setRobotPose(getEstimatedPose());
     SmartDashboard.putData(field);
   }
@@ -54,7 +54,7 @@ public class OdometryProcessor {
 
     if (integrateVision) {
       for (VisionPose vp : RobotIO.getInstance().getVisionOutput().getVisionPoses()) {
-        addVisionEstimatedPose(vp.getPose(), vp.getTimeStamp(),
+        addVisionEstimatedPose(vp, RobotIO.getInstance().getVisionOutput(),
             Rotation2d.fromDegrees(RobotIO.getInstance().getGyroOutput().getYaw().in(Degrees)));
       }
     }
@@ -69,6 +69,25 @@ public class OdometryProcessor {
   public void addVisionEstimatedPose(Pose2d visionPose, double timeStamp, Rotation2d yaw) {
     Pose2d fixedVisionPose = new Pose2d(visionPose.getTranslation(), yaw);
     estimator.addVisionMeasurement(fixedVisionPose, timeStamp);
+  }
+
+  public void addVisionEstimatedPose(VisionPose vp, VisionOutput vo, Rotation2d yaw) {
+    Pose2d visionPose = vp.getPose2d();
+    if (visionPose.getX() < -RobotConstants.ODOMETRY.FIELD_BORDER_MARGIN
+        || visionPose.getX() > vo.getFieldLength() + RobotConstants.ODOMETRY.FIELD_BORDER_MARGIN
+        || visionPose.getY() < -RobotConstants.ODOMETRY.FIELD_BORDER_MARGIN
+        || visionPose.getY() > vo.getFieldWidth() + RobotConstants.ODOMETRY.FIELD_BORDER_MARGIN) {
+      return;
+    }
+
+    double xyStdDev = RobotConstants.ODOMETRY.xyStdDevCoefficient
+        * Math.pow(vp.getAvgDistanceToTags(), 1.2)
+        / Math.pow(vp.getTrackedTargets().size(), 2.0);
+
+    Pose2d fixedVisionPose = new Pose2d(visionPose.getTranslation(), yaw);
+
+    estimator.addVisionMeasurement(fixedVisionPose, vp.getTimeStamp(),
+        VecBuilder.fill(xyStdDev, xyStdDev, Double.POSITIVE_INFINITY));
   }
 
   public double calculateDistanceFromTarget(Pose2d target) {
