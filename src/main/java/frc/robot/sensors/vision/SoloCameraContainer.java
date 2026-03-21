@@ -13,6 +13,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.RobotConstants;
@@ -20,6 +21,7 @@ import frc.robot.RobotConstants;
 public class SoloCameraContainer implements CameraContainerI {
   private final PhotonCamera camera;
   private final PhotonPoseEstimator estimator;
+  private final Transform3d robotToCamera;
   private PhotonPipelineResult latestResult; // Store the latest result for latency access
   private List<PhotonPipelineResult> latestReadResults = new ArrayList<>();
 
@@ -29,6 +31,7 @@ public class SoloCameraContainer implements CameraContainerI {
     estimator = new PhotonPoseEstimator(fieldLayout, robotToCamera);
     camera.setDriverMode(false);
     latestResult = new PhotonPipelineResult(); // Initialize with empty result
+    this.robotToCamera = robotToCamera;
   }
 
   public SoloCameraContainer(String cameraName, Transform3d robotToCamera,
@@ -37,6 +40,7 @@ public class SoloCameraContainer implements CameraContainerI {
     estimator = new PhotonPoseEstimator(fieldLayout, robotToCamera);
     camera.setDriverMode(false);
     latestResult = new PhotonPipelineResult(); // Initialize with empty result
+    this.robotToCamera = robotToCamera;
   }
 
   @Override
@@ -131,8 +135,6 @@ public class SoloCameraContainer implements CameraContainerI {
     latestReadResults = camera.getAllUnreadResults();
     List<PhotonPipelineResult> filteredList = new ArrayList<>();
 
-    Logger.recordOutput("SubsystemTest2201", latestReadResults.size());
-    Logger.recordOutput("SubsystemTest2202", latestReadResults.size());
     for (PhotonPipelineResult result : latestReadResults) {
       filteredList.add(getFilteredResult(result));
     }
@@ -143,7 +145,6 @@ public class SoloCameraContainer implements CameraContainerI {
       if (!result.hasTargets()) {
         continue;
       }
-      Logger.recordOutput("SubsystemTest21", result);
       Optional<EstimatedRobotPose> estimatedPose = estimator.estimateCoprocMultiTagPose(result);
       if (!estimatedPose.isPresent()) {
         estimatedPose = estimator.estimateLowestAmbiguityPose(result);
@@ -157,7 +158,7 @@ public class SoloCameraContainer implements CameraContainerI {
       }
 
       if (estimatedPose.isPresent()) {
-        Pose2d pose = estimatedPose.get().estimatedPose.toPose2d();
+        Pose3d pose = estimatedPose.get().estimatedPose;
         double timeStamp = result.getTimestampSeconds();
 
         double ambiguity = 0.0;
@@ -166,7 +167,21 @@ public class SoloCameraContainer implements CameraContainerI {
         }
         ambiguity /= estimatedPose.get().targetsUsed.size();
 
-        visionPoses.add(new VisionPose(pose, timeStamp, ambiguity, camera.getName()));
+        List<Transform3d> camToTargetTransforms = new ArrayList<>();
+        for (PhotonTrackedTarget target : estimatedPose.get().targetsUsed) {
+          camToTargetTransforms.add(target.getBestCameraToTarget());
+        }
+
+        // Calculate average distance to tag
+        double totalDistance = 0.0;
+        for (Transform3d transform : camToTargetTransforms) {
+          totalDistance += transform.getTranslation().getDistance(robotToCamera.getTranslation());
+        }
+        double avgDistance = totalDistance / estimatedPose.get().targetsUsed.size();
+
+        visionPoses
+            .add(new VisionPose(pose, timeStamp, ambiguity, camera.getName(), estimatedPose.get().targetsUsed,
+                avgDistance));
       }
     }
 
@@ -185,7 +200,7 @@ public class SoloCameraContainer implements CameraContainerI {
       return Optional.empty();
     }
 
-    return Optional.of(latestVisionPose.get().get(latestVisionPose.get().size() - 1).getPose());
+    return Optional.of(latestVisionPose.get().get(latestVisionPose.get().size() - 1).getPose2d());
   }
 
   @Override

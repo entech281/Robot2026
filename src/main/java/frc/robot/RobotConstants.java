@@ -13,8 +13,6 @@ import java.util.Map;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -23,8 +21,6 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularAcceleration;
@@ -302,8 +298,6 @@ public final class RobotConstants {
   }
 
   public static interface Vision {
-    public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(5, 5, 1000000);
-
     public static interface Cameras {
       public static final String CAMERA_A = "Arducam_Alpha";
       public static final String CAMERA_B = "Arducam_Beta";
@@ -392,6 +386,8 @@ public final class RobotConstants {
   }
 
   public static interface ODOMETRY {
+    public static final double xyStdDevCoefficient = 0.01;
+    public static final double FIELD_BORDER_MARGIN = 0.5;
     public static final int ODOMETRY_FREQUENCY = 150;
     public static final double FIELD_LENGTH_INCHES = 54 * 12 + 3.25;
     public static final double FIELD_WIDTH_INCHES = 26 * 12 + 11.25;

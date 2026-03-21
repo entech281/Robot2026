@@ -21,7 +21,15 @@ public class VisionOutput extends SensorOutput {
 
     private double averagePoseAmbiguity = 0.0;
 
+    private final double fieldWidth;
+    private final double fieldLength;
+
     private Triboolean goodness;
+
+    public VisionOutput(double fieldWidth, double fieldLength) {
+        this.fieldWidth = fieldWidth;
+        this.fieldLength = fieldLength;
+    }
 
     @Override
     public void toLog() {
@@ -42,7 +50,7 @@ public class VisionOutput extends SensorOutput {
         }
 
         for (int i = 0; i < visionPoses.size(); i++) {
-            Logger.recordOutput("VisionOutput/visionPoses/visionPose_" + i + "/pose", visionPoses.get(i).getPose());
+            Logger.recordOutput("VisionOutput/visionPoses/visionPose_" + i + "/pose", visionPoses.get(i).getPose3d());
         }
 
         for (int i = 0; i < visionPoses.size(); i++) {
@@ -159,6 +167,25 @@ public class VisionOutput extends SensorOutput {
         this.goodness = goodness;
     }
 
-    
+    /**
+     * @return double return the averagePoseAmbiguity
+     */
+    public double getAveragePoseAmbiguity() {
+        return averagePoseAmbiguity;
+    }
 
+    /**
+     * @param averagePoseAmbiguity the averagePoseAmbiguity to set
+     */
+    public void setAveragePoseAmbiguity(double averagePoseAmbiguity) {
+        this.averagePoseAmbiguity = averagePoseAmbiguity;
+    }
+
+    public double getFieldWidth() {
+        return fieldWidth;
+    }
+
+    public double getFieldLength() {
+        return fieldLength;
+    }
 }
