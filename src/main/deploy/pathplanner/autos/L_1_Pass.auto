@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "L_Jostle_Out"
+            "pathName": "L_Start"
           }
         },
         {
@@ -17,13 +17,13 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 6.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "TrenchPreset"
+                  "name": "AutoShoot"
                 }
               },
               {

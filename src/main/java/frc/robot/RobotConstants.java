@@ -481,7 +481,7 @@ public final class RobotConstants {
     public static final Distance MAX_SHOT_DISTANCE = Feet.of(14);
     public static final AngularVelocity MIN_SHOT_SPEED = RPM.of(3500);
     public static final AngularVelocity MAX_SHOT_SPEED = RPM.of(5000);
-    public static final AngularVelocity TOLERANCE = RPM.of(4926); //200
+    public static final AngularVelocity TOLERANCE = RPM.of(100); //200
   }
 
   public static interface HOPPER {
