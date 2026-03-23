@@ -222,7 +222,7 @@ public class CommandFactory {
       Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
           .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
       return new TurretCalculator(target.toPose2d(),
-          RobotIO.getInstance().getOdometryPose());
+          RobotIO.getInstance().getOdometryPose(), RobotIO.getInstance().getDriveOutput().getSpeeds());
     };
 
     return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(),
@@ -281,7 +281,7 @@ public class CommandFactory {
         RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
 
     Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(getSnowblowTarget().toPose2d(),
-        RobotIO.getInstance().getOdometryPose());
+        RobotIO.getInstance().getOdometryPose(), RobotIO.getInstance().getDriveOutput().getSpeeds());
 
     return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
         subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
@@ -318,7 +318,7 @@ public class CommandFactory {
         Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
             .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
         return new TurretCalculator(target.toPose2d(),
-            RobotIO.getInstance().getOdometryPose());
+            RobotIO.getInstance().getOdometryPose(), RobotIO.getInstance().getDriveOutput().getSpeeds());
       };      
 
     Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> {

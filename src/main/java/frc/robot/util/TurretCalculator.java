@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import frc.robot.RobotConstants;
 
@@ -11,15 +12,19 @@ public class TurretCalculator {
 
     private Pose2d target;
     private Pose2d robotPose;
+    private ChassisSpeeds chassisSpeeds;
+    private static final double SPEED_MULTIPLIER = 1.0;
 
     public TurretCalculator() {
         this.target = new Pose2d();
         this.robotPose = new Pose2d();
+        this.chassisSpeeds = new ChassisSpeeds();
     }
 
-    public TurretCalculator(Pose2d target, Pose2d robotPose) {
+    public TurretCalculator(Pose2d target, Pose2d robotPose, ChassisSpeeds chassisSpeeds) {
         this.target = target;
         this.robotPose = robotPose;
+        this.chassisSpeeds = chassisSpeeds;
     }
 
     public double calculateTargetTurretAngle() {
@@ -36,6 +41,10 @@ public class TurretCalculator {
 
         double turretAngleToTarget = ((((-fieldTurretAngle) % 360) + 360) % 360);
 
+        ChassisSpeeds fieldAbsolute = ChassisSpeeds.fromRobotRelativeSpeeds(chassisSpeeds, robotPose.getRotation());
+
+        turretAngleToTarget = turretAngleToTarget + (Math.cos(Math.toRadians(angleToTarget)) * (fieldAbsolute.vyMetersPerSecond * SPEED_MULTIPLIER)) + (-Math.sin(Math.toRadians(angleToTarget)) * (fieldAbsolute.vxMetersPerSecond * SPEED_MULTIPLIER));
+
         return turretAngleToTarget;
     }
 
@@ -48,9 +57,10 @@ public class TurretCalculator {
         return isValidTurretAngle(angle.in(Degrees), toleranceDegrees.in(Degrees));
     }
 
-    public void refresh(Pose2d target, Pose2d robotPose) {
+    public void refresh(Pose2d target, Pose2d robotPose, ChassisSpeeds chassisSpeeds) {
         this.target = target;
         this.robotPose = robotPose;
+        this.chassisSpeeds = chassisSpeeds;
     }
 
 }
