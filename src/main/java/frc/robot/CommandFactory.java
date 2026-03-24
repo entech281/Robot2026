@@ -219,8 +219,6 @@ public class CommandFactory {
         target = RobotConstants.TURRET.BLUE_HUB_LOCATION;
       }
 
-      Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
-          .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
       return new TurretCalculator(target.toPose2d(),
           RobotIO.getInstance().getOdometryPose(), RobotIO.getInstance().getDriveOutput().getSpeeds());
     };

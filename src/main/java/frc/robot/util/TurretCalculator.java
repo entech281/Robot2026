@@ -28,14 +28,14 @@ public class TurretCalculator {
     }
 
     public double calculateTargetTurretAngle() {
-        // Translation2d turretToRobot = RobotConstants.TURRET.TURRET_OFFSET.rotateBy(robotPose.getRotation());
-        // Pose2d turretPose = new Pose2d(robotPose.getX() + turretToRobot.getX(),
-        //         robotPose.getY() + turretToRobot.getY(),
-        //         robotPose.getRotation());
+        Translation2d turretToRobot = RobotConstants.TURRET.TURRET_OFFSET.rotateBy(robotPose.getRotation());
+        Pose2d turretPose = new Pose2d(robotPose.getX() + turretToRobot.getX(),
+                robotPose.getY() + turretToRobot.getY(),
+                robotPose.getRotation());
 
         double angleToTarget = Math
-                // .toDegrees(Math.atan2(target.getY() - turretPose.getY(), target.getX() - turretPose.getX()));
-                .toDegrees(Math.atan2(target.getY() - robotPose.getY(), target.getX() - robotPose.getX()));
+                .toDegrees(Math.atan2(target.getY() - turretPose.getY(), target.getX() - turretPose.getX()));
+                // .toDegrees(Math.atan2(target.getY() - robotPose.getY(), target.getX() - robotPose.getX()));
 
         double fieldTurretAngle = angleToTarget - robotPose.getRotation().getDegrees();
 
