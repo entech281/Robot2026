@@ -119,7 +119,7 @@ public final class RobotConstants {
     public static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT_RADIANS = (2 * Math.PI);
     // radians
 
-    public static final double DRIVING_P = 0.375; //0.4 //Origional P = 0.07
+    public static final double DRIVING_P = 0.375; // 0.4 //Origional P = 0.07
     public static final double DRIVING_I = 0;
     public static final double DRIVING_D = 0;
     public static final double DRIVING_FF = 1 / DRIVE_WHEEL_FREE_SPEED_RPS;
@@ -332,7 +332,7 @@ public final class RobotConstants {
           ),
           new Rotation3d(
               Math.toRadians(0), // Roll (rotation around X axis)
-              Math.toRadians(0), // Pitch (rotation around Y axis, negative = tilted down)
+              Math.toRadians(20), // Pitch (rotation around Y axis, negative = tilted down)
               Math.toRadians(135) // Yaw (rotation around Z axis)
           ));
 
@@ -344,7 +344,7 @@ public final class RobotConstants {
           ),
           new Rotation3d(
               Math.toRadians(0), // Roll (rotation around X axis)
-              Math.toRadians(0), // Pitch (rotation around Y axis, negative = tilted down)
+              Math.toRadians(20), // Pitch (rotation around Y axis, negative = tilted down)
               Math.toRadians(-135) // Yaw (rotation around Z axis)
           ));
 
@@ -356,7 +356,7 @@ public final class RobotConstants {
           ),
           new Rotation3d(
               Math.toRadians(0), // Roll (rotation around X axis)
-              Math.toRadians(0), // Pitch (rotation around Y axis, negative = tilted down)
+              Math.toRadians(20), // Pitch (rotation around Y axis, negative = tilted down)
               Math.toRadians(45) // Yaw (rotation around Z axis)
           ));
 
@@ -368,7 +368,7 @@ public final class RobotConstants {
           ),
           new Rotation3d(
               Math.toRadians(0), // Roll (rotation around X axis)
-              Math.toRadians(0), // Pitch (rotation around Y axis, negative = tilted down)
+              Math.toRadians(20), // Pitch (rotation around Y axis, negative = tilted down)
               Math.toRadians(-45) // Yaw (rotation around Z axis)
           ));
     }
@@ -481,7 +481,7 @@ public final class RobotConstants {
     public static final Distance MAX_SHOT_DISTANCE = Feet.of(14);
     public static final AngularVelocity MIN_SHOT_SPEED = RPM.of(3500);
     public static final AngularVelocity MAX_SHOT_SPEED = RPM.of(5000);
-    public static final AngularVelocity TOLERANCE = RPM.of(100); //200
+    public static final AngularVelocity TOLERANCE = RPM.of(100); // 200
   }
 
   public static interface HOPPER {
