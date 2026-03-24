@@ -12,24 +12,12 @@ import frc.robot.RobotConstants;
 
 public class TurretCalculator {
 
-    private Pose2d target;
-    private Pose2d robotPose;
-    private ChassisSpeeds chassisSpeeds;
     private static final double SPEED_MULTIPLIER = 1.0;
 
     public TurretCalculator() {
-        this.target = new Pose2d();
-        this.robotPose = new Pose2d();
-        this.chassisSpeeds = new ChassisSpeeds();
     }
 
-    public TurretCalculator(Pose2d target, Pose2d robotPose, ChassisSpeeds chassisSpeeds) {
-        this.target = target;
-        this.robotPose = robotPose;
-        this.chassisSpeeds = chassisSpeeds;
-    }
-
-    public double calculateTargetTurretAngle() {
+    public double calculateTargetTurretAngle(Pose2d target, Pose2d robotPose, ChassisSpeeds chassisSpeeds) {
         // Find the turret's pose in the field using the robot's pose and the turret's robot-relative offset.
         Transform2d robotToTurret = new Transform2d(RobotConstants.TURRET.TURRET_OFFSET, new Rotation2d());
         Pose2d turretPose = robotPose.transformBy(robotToTurret);
@@ -67,19 +55,16 @@ public class TurretCalculator {
         return (((turretAngleToTarget % 360) + 360) % 360);
     }
 
-    public boolean isValidTurretAngle(double angle, double toleranceDegrees) {
-        double calculatedAngle = calculateTargetTurretAngle();
+    public boolean isValidTurretAngle(double angle, double toleranceDegrees, Pose2d target, Pose2d robotPose, ChassisSpeeds chassisSpeeds) {
+        double calculatedAngle = calculateTargetTurretAngle(target, robotPose, chassisSpeeds);
+        // Since angles wrap, we should use WPILib's MathUtil.inputModulus or similar, 
+        // but for now we keep the original logic assuming the physical motor angle matches.
+        // For a more robust check: return Math.abs(MathUtil.inputModulus(angle - calculatedAngle, -180, 180)) <= toleranceDegrees;
         return angle >= calculatedAngle - toleranceDegrees && angle <= calculatedAngle + toleranceDegrees;
     }
 
-    public boolean isValidTurretAngle(Angle angle, Angle toleranceDegrees) {
-        return isValidTurretAngle(angle.in(Degrees), toleranceDegrees.in(Degrees));
-    }
-
-    public void refresh(Pose2d target, Pose2d robotPose, ChassisSpeeds chassisSpeeds) {
-        this.target = target;
-        this.robotPose = robotPose;
-        this.chassisSpeeds = chassisSpeeds;
+    public boolean isValidTurretAngle(Angle angle, Angle toleranceDegrees, Pose2d target, Pose2d robotPose, ChassisSpeeds chassisSpeeds) {
+        return isValidTurretAngle(angle.in(Degrees), toleranceDegrees.in(Degrees), target, robotPose, chassisSpeeds);
     }
 
 }

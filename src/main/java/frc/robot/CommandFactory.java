@@ -19,6 +19,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -48,7 +49,6 @@ import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.ManualTurretCommandSupplier;
 import frc.robot.commands.RunShooterAtLiveSpeedCommand;
 import frc.robot.commands.RunTestCommand;
-import frc.robot.commands.ShootAtTargetCommand;
 import frc.robot.io.RobotIO;
 import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.livetuning.WheelDiameterCharacterizer;
@@ -187,50 +187,20 @@ public class CommandFactory {
   }
 
   public Command getFullShootCommand() {
+    Pose3d target;
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+    if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+      target = RobotConstants.TURRET.RED_HUB_LOCATION;
+    } else {
+      target = RobotConstants.TURRET.BLUE_HUB_LOCATION;
+    }
 
-    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> {
-      Pose3d target;
-
-      Optional<Alliance> alliance = DriverStation.getAlliance();
-
-      if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-        target = RobotConstants.TURRET.RED_HUB_LOCATION;
-      } else {
-        target = RobotConstants.TURRET.BLUE_HUB_LOCATION;
-      }
-
-      Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
-          .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
-
-      return new ShooterCalculator(
-          RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target,
-          Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
-          RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
-          RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
-    };
-    Supplier<TurretCalculator> turretCalculatorSupplier = () -> {
-      Pose3d target;
-
-      Optional<Alliance> alliance = DriverStation.getAlliance();
-
-      if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-        target = RobotConstants.TURRET.RED_HUB_LOCATION;
-      } else {
-        target = RobotConstants.TURRET.BLUE_HUB_LOCATION;
-      }
-
-      return new TurretCalculator(target.toPose2d(),
-          RobotIO.getInstance().getOdometryPose(), RobotIO.getInstance().getDriveOutput().getSpeeds());
-    };
-
-    return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(),
+    return new ShootAtTargetCommand(
+        subsystemManager.getShooterSubsystem(),
         subsystemManager.getHoodSubsystem(),
         subsystemManager.getTransferSubsystem(),
-        subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
-        shooterCalculatorSupplier);
-
-    // return new ManualTurretCommandSupplier(subsystemManager.getTurretSubsystem(),
-    // turretCalculatorSupplier);
+        subsystemManager.getTurretSubsystem(),
+        target);
   }
 
   public Command getRotateForBumpCommand() {
@@ -268,23 +238,12 @@ public class CommandFactory {
   }
 
   public Command getSnowblowCommand() {
-
-    Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
-        .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
-
-    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(
-        RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, getSnowblowTarget(),
-        Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
-        RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
-        RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
-
-    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(getSnowblowTarget().toPose2d(),
-        RobotIO.getInstance().getOdometryPose(), RobotIO.getInstance().getDriveOutput().getSpeeds());
-
-    return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
-        subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
-        shooterCalculatorSupplier);
-
+    return new ShootAtTargetCommand(
+        subsystemManager.getShooterSubsystem(),
+        subsystemManager.getHoodSubsystem(),
+        subsystemManager.getTransferSubsystem(),
+        subsystemManager.getTurretSubsystem(),
+        getSnowblowTarget());
   }
 
   public Command getPresetShootCommand(ShotData preset) {
@@ -302,46 +261,14 @@ public class CommandFactory {
           RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
           Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")), false);
     } else {
-      Supplier<TurretCalculator> turretCalculatorSupplier = () -> {
-        Pose3d target;
-
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-
-        if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-          target = RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
-        } else {
-          target = RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;
-        }
-
-        Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
-            .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
-        return new TurretCalculator(target.toPose2d(),
-            RobotIO.getInstance().getOdometryPose(), RobotIO.getInstance().getDriveOutput().getSpeeds());
-      };      
-
-    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> {
-      Pose3d target;
-
-      Optional<Alliance> alliance = DriverStation.getAlliance();
-
-      if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-        target = RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
-      } else {
-        target = RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;
-      }
-
-      Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
-          .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
-
-      return new ShooterCalculator(
-          RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target,
-          Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
-          RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
-          RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
-    };
-    return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier, shooterCalculatorSupplier);
+      return new ShootAtTargetCommand(
+          subsystemManager.getShooterSubsystem(),
+          subsystemManager.getHoodSubsystem(),
+          subsystemManager.getTransferSubsystem(),
+          subsystemManager.getTurretSubsystem(),
+          getSnowblowTarget());
+    }
   }
-}
 
   public Command getStopShootingCommand() {
     return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),

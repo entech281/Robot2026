@@ -30,8 +30,7 @@ public class TurretCalculatorTest {
         Pose2d target = new Pose2d(targetX, targetY, new Rotation2d());
         Pose2d robotPose = new Pose2d(robotX, robotY, new Rotation2d()); // Facing 0 degrees
 
-        calculator.refresh(target, robotPose, new ChassisSpeeds());
-        double calculatedAngle = calculator.calculateTargetTurretAngle();
+        double calculatedAngle = calculator.calculateTargetTurretAngle(target, robotPose, new ChassisSpeeds());
 
         assertEquals(expectedAngle, calculatedAngle, EPS,
                 String.format("Failed for Robot at (%.2f, %.2f) aiming at (%.2f, %.2f)", robotX, robotY, targetX,
@@ -93,15 +92,13 @@ public class TurretCalculatorTest {
         // Point 1
         double startX = 10.9153940;
         Pose2d pose1 = new Pose2d(startX, RED_HUB_Y, new Rotation2d());
-        calculator.refresh(target, pose1, new ChassisSpeeds());
-        double angle1 = calculator.calculateTargetTurretAngle();
+        double angle1 = calculator.calculateTargetTurretAngle(target, pose1, new ChassisSpeeds());
         assertEquals(356.2782908, angle1, EPS);
 
         // Point 2 (1 foot = 0.3048 meters shifted X)
         double footShiftedX = startX - 0.3048;
         Pose2d pose2 = new Pose2d(footShiftedX, RED_HUB_Y, new Rotation2d());
-        calculator.refresh(target, pose2, new ChassisSpeeds());
-        double angle2 = calculator.calculateTargetTurretAngle();
+        double angle2 = calculator.calculateTargetTurretAngle(target, pose2, new ChassisSpeeds());
         assertEquals(357.0451704, angle2, EPS);
 
         // Assert that the physical difference algorithm matches exactly what was
@@ -152,12 +149,10 @@ public class TurretCalculatorTest {
         Pose2d estimatedTarget = new Pose2d(estimatedX, estimatedY, new Rotation2d());
 
         // Calculate the physical Angle output required for the ACTUAL target
-        calculator.refresh(trueTarget, robotPose, new ChassisSpeeds());
-        double trueTurretAngle = calculator.calculateTargetTurretAngle();
+        double trueTurretAngle = calculator.calculateTargetTurretAngle(trueTarget, robotPose, new ChassisSpeeds());
 
         // Calculate the requested angle given the CORRUPTED target location
-        calculator.refresh(estimatedTarget, robotPose, new ChassisSpeeds());
-        double estimatedTurretAngle = calculator.calculateTargetTurretAngle();
+        double estimatedTurretAngle = calculator.calculateTargetTurretAngle(estimatedTarget, robotPose, new ChassisSpeeds());
 
         double errorDegrees = Math.abs(trueTurretAngle - estimatedTurretAngle);
         if (errorDegrees > 180) {

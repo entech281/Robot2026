@@ -5,31 +5,29 @@ import static edu.wpi.first.units.Units.Degrees;
 import java.util.function.Supplier;
 
 import frc.entech.commands.EntechCommand;
-import frc.robot.io.RobotIO;
 import frc.robot.subsystems.turret.TurretInput;
 import frc.robot.subsystems.turret.TurretSubsystem;
-import frc.robot.util.TurretCalculator;
 
 public class ManualTurretCommandSupplier extends EntechCommand {
     private final TurretInput turretInput = new TurretInput();
     private final TurretSubsystem turretSS;
-    private Supplier<TurretCalculator> turretCalculator;
+    private Supplier<Double> turretAngleSupplier;
 
-    public ManualTurretCommandSupplier(TurretSubsystem turretSubsystem, Supplier<TurretCalculator> turretCalculator) {
+    public ManualTurretCommandSupplier(TurretSubsystem turretSubsystem, Supplier<Double> turretAngleSupplier) {
         super(turretSubsystem);
         this.turretSS = turretSubsystem;
-        this.turretCalculator = turretCalculator;
+        this.turretAngleSupplier = turretAngleSupplier;
     }
 
     @Override
     public void initialize() {
-        turretInput.setRequestedPosition(Degrees.of(turretCalculator.get().calculateTargetTurretAngle()));
+        turretInput.setRequestedPosition(Degrees.of(turretAngleSupplier.get()));
         turretSS.updateInputs(turretInput);
     }
 
     @Override
     public void execute() {
-        turretInput.setRequestedPosition(Degrees.of(turretCalculator.get().calculateTargetTurretAngle()));
+        turretInput.setRequestedPosition(Degrees.of(turretAngleSupplier.get()));
         turretSS.updateInputs(turretInput);
     }
 
