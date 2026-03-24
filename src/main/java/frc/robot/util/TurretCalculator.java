@@ -13,7 +13,7 @@ public class TurretCalculator {
     private Pose2d target;
     private Pose2d robotPose;
     private ChassisSpeeds chassisSpeeds;
-    private static final double SPEED_MULTIPLIER = 1.0;
+    private static final double SPEED_MULTIPLIER = 5.0;
 
     public TurretCalculator() {
         this.target = new Pose2d();

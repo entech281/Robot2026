@@ -119,7 +119,7 @@ public final class RobotConstants {
     public static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT_RADIANS = (2 * Math.PI);
     // radians
 
-    public static final double DRIVING_P = 0.375; //0.4 //Origional P = 0.07
+    public static final double DRIVING_P = 0.375; // 0.4 //Origional P = 0.07
     public static final double DRIVING_I = 0;
     public static final double DRIVING_D = 0;
     public static final double DRIVING_FF = 1 / DRIVE_WHEEL_FREE_SPEED_RPS;
@@ -323,52 +323,55 @@ public final class RobotConstants {
       // Define where your camera is mounted on the robot/rig
       // *** YOU MUST MEASURE AND UPDATE THESE VALUES ***
       // Example values shown below - camera 0.3m forward, centered, 0.4m high, tilted
-      // down 25 degrees
+      //left Rear
       Transform3d robotToCameraA = new Transform3d(
           new Translation3d(
-              Units.inchesToMeters(-11.125), // X: meters forward from robot center (positive = forward)
-              Units.inchesToMeters(11.875), // Y: meters left from robot center (positive = left)
-              Units.inchesToMeters(8.25) // Z: meters up from ground (camera height)
+              Units.inchesToMeters(-11.4), // X: meters forward from robot center (positive = forward)
+              Units.inchesToMeters(10.4), // Y: meters left from robot center (positive = left)
+              Units.inchesToMeters(8.00) // Z: meters up from ground (camera height)
           ),
           new Rotation3d(
               Math.toRadians(0), // Roll (rotation around X axis)
-              Math.toRadians(0), // Pitch (rotation around Y axis, negative = tilted down)
+              Math.toRadians(-20), // Pitch (rotation around Y axis, negative = tilted down)
               Math.toRadians(135) // Yaw (rotation around Z axis)
           ));
 
+      //right rear
       Transform3d robotToCameraB = new Transform3d(
           new Translation3d(
-              Units.inchesToMeters(-11.125), // X: meters forward from robot center (positive = forward)
-              Units.inchesToMeters(-11.875), // Y: meters left from robot center (positive = left)
-              Units.inchesToMeters(8.25) // Z: meters up from ground (camera height)
+              Units.inchesToMeters(-11.4), // X: meters forward from robot center (positive = forward)
+              Units.inchesToMeters(-10.4), // Y: meters left from robot center (positive = left)
+              Units.inchesToMeters(8.00) // Z: meters up from ground (camera height)
           ),
           new Rotation3d(
               Math.toRadians(0), // Roll (rotation around X axis)
-              Math.toRadians(0), // Pitch (rotation around Y axis, negative = tilted down)
+              Math.toRadians(-20), // Pitch (rotation around Y axis, negative = tilted down)
               Math.toRadians(-135) // Yaw (rotation around Z axis)
           ));
 
+      //left top
       Transform3d robotToCameraC = new Transform3d(
           new Translation3d(
-              Units.inchesToMeters(-1.375), // X: meters forward from robot center (positive = forward)
-              Units.inchesToMeters(10.375), // Y: meters left from robot center (positive = left)
-              Units.inchesToMeters(16.25) // Z: meters up from ground (camera height)
+              Units.inchesToMeters(-1.5), // X: meters forward from robot center (positive = forward)
+              Units.inchesToMeters(12.0), // Y: meters left from robot center (positive = left)
+              Units.inchesToMeters(16.15) // Z: meters up from ground (camera height)
           ),
           new Rotation3d(
               Math.toRadians(0), // Roll (rotation around X axis)
-              Math.toRadians(0), // Pitch (rotation around Y axis, negative = tilted down)
+              Math.toRadians(-20), // Pitch (rotation around Y axis, negative = tilted down)
               Math.toRadians(45) // Yaw (rotation around Z axis)
           ));
 
+      //right top
       Transform3d robotToCameraD = new Transform3d(
           new Translation3d(
-              Units.inchesToMeters(-1.375), // X: meters forward from robot center (positive = forward)
-              Units.inchesToMeters(-10.375), // Y: meters left from robot center (positive = left)
-              Units.inchesToMeters(16.25) // Z: meters up from ground (camera height)
+              Units.inchesToMeters(-1.5), // X: meters forward from robot center (positive = forward)
+              Units.inchesToMeters(-12.00), // Y: meters left from robot center (positive = left)
+              Units.inchesToMeters(16.15) // Z: meters up from ground (camera height)
           ),
           new Rotation3d(
               Math.toRadians(0), // Roll (rotation around X axis)
-              Math.toRadians(0), // Pitch (rotation around Y axis, negative = tilted down)
+              Math.toRadians(-20), // Pitch (rotation around Y axis, negative = tilted down)
               Math.toRadians(-45) // Yaw (rotation around Z axis)
           ));
     }
@@ -481,7 +484,7 @@ public final class RobotConstants {
     public static final Distance MAX_SHOT_DISTANCE = Feet.of(14);
     public static final AngularVelocity MIN_SHOT_SPEED = RPM.of(3500);
     public static final AngularVelocity MAX_SHOT_SPEED = RPM.of(5000);
-    public static final AngularVelocity TOLERANCE = RPM.of(100); //200
+    public static final AngularVelocity TOLERANCE = RPM.of(100); // 200
   }
 
   public static interface HOPPER {
