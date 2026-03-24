@@ -332,7 +332,7 @@ public final class RobotConstants {
           ),
           new Rotation3d(
               Math.toRadians(0), // Roll (rotation around X axis)
-              Math.toRadians(20), // Pitch (rotation around Y axis, negative = tilted down)
+              Math.toRadians(-20), // Pitch (rotation around Y axis, negative = tilted down)
               Math.toRadians(135) // Yaw (rotation around Z axis)
           ));
 
@@ -344,7 +344,7 @@ public final class RobotConstants {
           ),
           new Rotation3d(
               Math.toRadians(0), // Roll (rotation around X axis)
-              Math.toRadians(20), // Pitch (rotation around Y axis, negative = tilted down)
+              Math.toRadians(-20), // Pitch (rotation around Y axis, negative = tilted down)
               Math.toRadians(-135) // Yaw (rotation around Z axis)
           ));
 
@@ -356,7 +356,7 @@ public final class RobotConstants {
           ),
           new Rotation3d(
               Math.toRadians(0), // Roll (rotation around X axis)
-              Math.toRadians(20), // Pitch (rotation around Y axis, negative = tilted down)
+              Math.toRadians(-20), // Pitch (rotation around Y axis, negative = tilted down)
               Math.toRadians(45) // Yaw (rotation around Z axis)
           ));
 
@@ -368,7 +368,7 @@ public final class RobotConstants {
           ),
           new Rotation3d(
               Math.toRadians(0), // Roll (rotation around X axis)
-              Math.toRadians(20), // Pitch (rotation around Y axis, negative = tilted down)
+              Math.toRadians(-20), // Pitch (rotation around Y axis, negative = tilted down)
               Math.toRadians(-45) // Yaw (rotation around Z axis)
           ));
     }
