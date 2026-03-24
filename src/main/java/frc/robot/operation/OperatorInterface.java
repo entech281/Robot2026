@@ -106,7 +106,7 @@ public class OperatorInterface
     tuningController.a().whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
     tuningController.b().whileTrue(new RunTransferCommand(subsystemManager.getTransferSubsystem()));
     tuningController.x().whileTrue(new RunShooterCommand(subsystemManager.getShooterSubsystem()));
-        // .onFalse(commandFactory.getStopShootingCommand());
+    // .onFalse(commandFactory.getStopShootingCommand());
     // Momentary drop-then-raise hopper cycle for tuning
 
     // Turret tuning: bumpers jog left/right alrwhile held (small steps)
@@ -120,8 +120,10 @@ public class OperatorInterface
 
     tuningController.povUp().onTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), 1.0));
 
-    tuningController.leftBumper().onTrue(new InstantCommand( () -> UserPolicy.getInstance().setShooterRPM( UserPolicy.getInstance().getShooterRPM().minus(RPM.of(100)))));
-    tuningController.rightBumper().onTrue(new InstantCommand( () -> UserPolicy.getInstance().setShooterRPM( UserPolicy.getInstance().getShooterRPM().plus(RPM.of(100)))));
+    tuningController.leftBumper().onTrue(new InstantCommand(
+        () -> UserPolicy.getInstance().setShooterRPM(UserPolicy.getInstance().getShooterRPM().minus(RPM.of(100)))));
+    tuningController.rightBumper().onTrue(new InstantCommand(
+        () -> UserPolicy.getInstance().setShooterRPM(UserPolicy.getInstance().getShooterRPM().plus(RPM.of(100)))));
 
   }
 
@@ -270,7 +272,8 @@ public class OperatorInterface
         .whileTrue(new RunIntakeVariableCommand(subsystemManager.getIntakeSubsystem(), this));
     // TODO add stop intake for both of these onFalse()
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.OUTTAKE)
-        .whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false));
+        .whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false))
+        .whileTrue(new RunTransferCommand(subsystemManager.getTransferSubsystem(), false));
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.PRESET_1_FIRE)
         .whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_ONE));
