@@ -2,7 +2,10 @@ package frc.robot.util;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
@@ -28,24 +31,29 @@ public class TurretCalculator {
     }
 
     public double calculateTargetTurretAngle() {
-        Translation2d turretToRobot = RobotConstants.TURRET.TURRET_OFFSET.rotateBy(robotPose.getRotation());
-        Pose2d turretPose = new Pose2d(robotPose.getX() + turretToRobot.getX(),
-                robotPose.getY() + turretToRobot.getY(),
-                robotPose.getRotation());
+        // 1. Turret field pose: apply robot-relative offset to robot pose
+        Pose2d turretPose = robotPose.transformBy(
+                new Transform2d(RobotConstants.TURRET.TURRET_OFFSET, new Rotation2d()));
 
-        double angleToTarget = Math
-                .toDegrees(Math.atan2(target.getY() - turretPose.getY(), target.getX() - turretPose.getX()));
-                // .toDegrees(Math.atan2(target.getY() - robotPose.getY(), target.getX() - robotPose.getX()));
+        // 2. Target position in turret's coordinate frame
+        Translation2d targetInTurretFrame = target.relativeTo(turretPose).getTranslation();
 
-        double fieldTurretAngle = angleToTarget - robotPose.getRotation().getDegrees();
+        // 3. CW angle from turret forward to target, normalized to [0, 360)
+        double turretAngleDeg = MathUtil.inputModulus(-targetInTurretFrame.getAngle().getDegrees(), 0, 360);
 
-        double turretAngleToTarget = ((((-fieldTurretAngle) % 360) + 360) % 360);
+        // 4. Velocity lead compensation
+        //    Project field velocity perpendicular to the line of sight.
+        //    NOTE: adds m/s directly to degrees -- known dimensional mismatch.
+        ChassisSpeeds fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
+                chassisSpeeds, robotPose.getRotation());
+        Rotation2d fieldAngleToTarget = target.getTranslation()
+                .minus(turretPose.getTranslation()).getAngle();
+        double perpendicularVelocity =
+                fieldAngleToTarget.getCos() * fieldSpeeds.vyMetersPerSecond
+              - fieldAngleToTarget.getSin() * fieldSpeeds.vxMetersPerSecond;
+        turretAngleDeg += perpendicularVelocity * SPEED_MULTIPLIER;
 
-        ChassisSpeeds fieldAbsolute = ChassisSpeeds.fromRobotRelativeSpeeds(chassisSpeeds, robotPose.getRotation());
-
-        turretAngleToTarget = turretAngleToTarget + (Math.cos(Math.toRadians(angleToTarget)) * (fieldAbsolute.vyMetersPerSecond * SPEED_MULTIPLIER)) + (-Math.sin(Math.toRadians(angleToTarget)) * (fieldAbsolute.vxMetersPerSecond * SPEED_MULTIPLIER));
-
-        return turretAngleToTarget;
+        return turretAngleDeg;
     }
 
     public boolean isValidTurretAngle(double angle, double toleranceDegrees) {
