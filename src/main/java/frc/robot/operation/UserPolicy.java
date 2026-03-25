@@ -19,6 +19,7 @@ public class UserPolicy {
   private boolean isAutoWon = false;
   private Distance manualShotDistance = Meters.of(4);
   private AngularVelocity shooterRPM = RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed"));
+  private boolean useBeta = false;
 
   private UserPolicy() {
     Logger.recordOutput("UserPolicy/twistable", twistable);
@@ -27,6 +28,7 @@ public class UserPolicy {
     Logger.recordOutput("UserPolicy/isAutoWon", isAutoWon);
     Logger.recordOutput("UserPolicy/hubOffset", manualShotDistance.in(Meters));
     Logger.recordOutput("UserPolicy/shooterRPM", shooterRPM.in(RPM));
+    Logger.recordOutput("UserPolicy/useBeta", useBeta);
   }
 
   public static UserPolicy getInstance() {
@@ -85,5 +87,14 @@ public class UserPolicy {
 
   public AngularVelocity getShooterRPM() {
     return shooterRPM;
+  }
+
+  public void setUseBeta (boolean useBeta) {
+    this.useBeta = useBeta;
+    Logger.recordOutput("UserPolicy/useBeta", useBeta);
+  }
+
+  public boolean getUseBeta () {
+    return useBeta;
   }
 }

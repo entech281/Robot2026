@@ -52,6 +52,7 @@ import frc.robot.commands.ShootAtTargetCommand;
 import frc.robot.io.RobotIO;
 import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.livetuning.WheelDiameterCharacterizer;
+import frc.robot.operation.UserPolicy;
 import frc.robot.processors.OdometryProcessor;
 import frc.robot.sensors.gyro.GyroSensor;
 import frc.robot.subsystems.drive.DriveSubsystem;
@@ -90,6 +91,7 @@ public class CommandFactory {
     tab.add("Load", new InstantAnytimeCommand(() -> LiveTuningHandler.getInstance().resetToJSON()));
     tab.add("Code Defaults", new InstantAnytimeCommand(() -> LiveTuningHandler.getInstance().resetToDefaults()));
     tab.add("Characterize Wheel Diameter", getWheelCharacterizationCommand());
+    tab.add("Use Beta Shot Calculation", new InstantAnytimeCommand( () -> UserPolicy.getInstance().setUseBeta(!UserPolicy.getInstance().getUseBeta())));
     this.testChooser = getTestCommandChooser();
     testChooser.addOption("All tests", getTestCommand());
     Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST, "No Current Test");
@@ -203,7 +205,7 @@ public class CommandFactory {
           .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
 
       return new ShooterCalculator(
-          RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target,
+          ChassisSpeeds.fromRobotRelativeSpeeds(RobotIO.getInstance().getDriveOutput().getSpeeds(), RobotIO.getInstance().getOdometryPose().getRotation()), shooterCurrentPose, target,
           Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
           RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
           RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
@@ -273,7 +275,7 @@ public class CommandFactory {
         .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
 
     Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(
-        RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, getSnowblowTarget(),
+        ChassisSpeeds.fromRobotRelativeSpeeds(RobotIO.getInstance().getDriveOutput().getSpeeds(), RobotIO.getInstance().getOdometryPose().getRotation()), shooterCurrentPose, getSnowblowTarget(),
         Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
         RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
         RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
@@ -334,7 +336,7 @@ public class CommandFactory {
           .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
 
       return new ShooterCalculator(
-          RobotIO.getInstance().getGyroOutput().getChassisSpeeds(), shooterCurrentPose, target,
+          ChassisSpeeds.fromRobotRelativeSpeeds(RobotIO.getInstance().getDriveOutput().getSpeeds(), RobotIO.getInstance().getOdometryPose().getRotation()), shooterCurrentPose, target,
           Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
           RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
           RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);

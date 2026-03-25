@@ -7,6 +7,8 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RPM;
 
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
@@ -27,12 +29,24 @@ public class ShooterCalculator {
     private AngularVelocity shooterMin;
     private Distance distanceMin;
     private Distance distanceMax;
+    private static final double SPEED_MULTIPLIER = 1.0;
 
     public ShooterCalculator() {
         this(new ChassisSpeeds(), new Pose3d(), new Pose3d(), Meters.of(1), RPM.of(0), RPM.of(0), Meters.of(0),
                 Meters.of(0));
     }
 
+    /**
+     * 
+     * @param robotVelocity field absolute robot velocity (may want to use ChassisSpeeds.fromRobotRelativeSpeeds())
+     * @param currentPose
+     * @param targetPose
+     * @param wheelRadius
+     * @param shooterMax
+     * @param shooterMin
+     * @param distanceMax
+     * @param distanceMin
+     */
     public ShooterCalculator(ChassisSpeeds robotVelocity, Pose3d currentPose, Pose3d targetPose, Distance wheelRadius,
             AngularVelocity shooterMax, AngularVelocity shooterMin, Distance distanceMax, Distance distanceMin) {
 
@@ -155,30 +169,41 @@ public class ShooterCalculator {
      * The "new" method that we want tested but are not sure of
      */
     public ShotDataRange calculateShotBeta() {
-        // TODO interpolate velocity from 3500 - 5000 (5500)
-        // LinearVelocity shooterLaunchVelocity =
-        // angularVelocityToLinearVelocity(RPM.of(RobotConstants.SHOOTER.MAX_RPM),
-        // Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS));
-        double g = 9.80665;
-        double TOLERANCE_DEGREES = 1;
-        double TOLERANCE_LINEAR_VELOCITY = 2;
-        double deltaX = targetPose.getX() - currentPose.getX();
-        double deltaY = targetPose.getY() - currentPose.getY();
-        double distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+        Angle TOLERANCE_DEGREES = Degree.of(1);
+        LinearVelocity TOLERANCE_LINEAR_VELOCITY = MetersPerSecond.of(3.5);
 
-        LinearVelocity shooterLaunchVelocity = angularVelocityToLinearVelocity(
-                RPM.of(interpolate(distance, 3, 17, 3500, 5000)), wheelRadius);
+        ShotDataRange unModded = calculateShot();
 
-        Angle theta = Degree
-                .of(Math.atan(Math.pow(shooterLaunchVelocity.in(MetersPerSecond), 2)
-                        * Math.sqrt(
-                                Math.pow(shooterLaunchVelocity.in(MetersPerSecond), 4) - g * (g * Math.pow(deltaX, 2)
-                                        + 2 * deltaY * Math.pow(shooterLaunchVelocity.in(MetersPerSecond), 2)))
-                        / g * deltaX));
+        double angleToTarget = Math
+            .toDegrees(Math.atan2(targetPose.getY() - currentPose.getY(), targetPose.getX() - currentPose.getX()));
 
-        return new ShotDataRange(theta, Degrees.of(TOLERANCE_DEGREES), shooterLaunchVelocity,
-                MetersPerSecond.of(TOLERANCE_LINEAR_VELOCITY));
+        double modification = (Math.sin(Math.toRadians(angleToTarget)) * (robotVelocity.vyMetersPerSecond * SPEED_MULTIPLIER)) + (Math.cos(Math.toRadians(angleToTarget)) * (robotVelocity.vxMetersPerSecond * SPEED_MULTIPLIER));
+
+        ShotData moddedShot = new ShotDataRange().new ShotData( unModded.getIdealShot().getHoodAngle(),  unModded.getIdealShot().getShotVelocity().minus(MetersPerSecond.of(modification)));
+
+        return new ShotDataRange( moddedShot.getHoodAngle(), TOLERANCE_DEGREES, moddedShot.getShotVelocity(), TOLERANCE_LINEAR_VELOCITY);
     }
+    // public ShotDataRange calculateShotBeta() {
+    //     double g = 9.80665;
+    //     double TOLERANCE_DEGREES = 1;
+    //     double TOLERANCE_LINEAR_VELOCITY = 2;
+    //     double deltaX = targetPose.getX() - currentPose.getX();
+    //     double deltaY = targetPose.getY() - currentPose.getY();
+    //     double distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+
+    //     LinearVelocity shooterLaunchVelocity = angularVelocityToLinearVelocity(
+    //             RPM.of(interpolate(distance, 3, 17, 3500, 5000)), wheelRadius);
+
+    //     Angle theta = Degree
+    //             .of(Math.atan(Math.pow(shooterLaunchVelocity.in(MetersPerSecond), 2)
+    //                     * Math.sqrt(
+    //                             Math.pow(shooterLaunchVelocity.in(MetersPerSecond), 4) - g * (g * Math.pow(deltaX, 2)
+    //                                     + 2 * deltaY * Math.pow(shooterLaunchVelocity.in(MetersPerSecond), 2)))
+    //                     / g * deltaX));
+
+    //     return new ShotDataRange(theta, Degrees.of(TOLERANCE_DEGREES), shooterLaunchVelocity,
+    //             MetersPerSecond.of(TOLERANCE_LINEAR_VELOCITY));
+    // }
 
     private boolean isValidShotPrimary(Angle hoodAngle, LinearVelocity shotVelocity) {
         ShotDataRange shotRange = calculateShot();

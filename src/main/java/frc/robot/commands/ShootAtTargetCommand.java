@@ -13,6 +13,7 @@ import frc.entech.commands.EntechCommand;
 import frc.entech.util.Triboolean;
 import frc.robot.RobotConstants;
 import frc.robot.livetuning.LiveTuningHandler;
+import frc.robot.operation.UserPolicy;
 import frc.robot.subsystems.hood.HoodInput;
 import frc.robot.subsystems.hood.HoodSubsystem;
 import frc.robot.subsystems.shooter.ShooterInput;
@@ -68,7 +69,13 @@ public class ShootAtTargetCommand extends EntechCommand {
 
     @Override
     public void execute() {
-        ShotDataRange shotRange = shooterCalculatorSupplier.get().calculateShot();
+        ShotDataRange shotRange;
+        if (UserPolicy.getInstance().getUseBeta()) {
+            shotRange = shooterCalculatorSupplier.get().calculateShotBeta();
+        } else {
+            shotRange = shooterCalculatorSupplier.get().calculateShot();
+        }
+
         double targetTurretAngle = turretCalculatorSupplier.get().calculateTargetTurretAngle();
 
         ShotData shot = shotRange.getIdealShot();
