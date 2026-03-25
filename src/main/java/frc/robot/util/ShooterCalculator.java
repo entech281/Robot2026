@@ -29,7 +29,6 @@ public class ShooterCalculator {
     private AngularVelocity shooterMin;
     private Distance distanceMin;
     private Distance distanceMax;
-    private static final double SPEED_MULTIPLIER = 1.0;
 
     public ShooterCalculator() {
         this(new ChassisSpeeds(), new Pose3d(), new Pose3d(), Meters.of(1), RPM.of(0), RPM.of(0), Meters.of(0),
@@ -174,10 +173,19 @@ public class ShooterCalculator {
 
         ShotDataRange unModded = calculateShot();
 
+        double deltaX = targetPose.getX() - currentPose.getX();
+        double deltaY = targetPose.getY() - currentPose.getY();
+        double distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+
         double angleToTarget = Math
             .toDegrees(Math.atan2(targetPose.getY() - currentPose.getY(), targetPose.getX() - currentPose.getX()));
 
-        double modification = (Math.sin(Math.toRadians(angleToTarget)) * (robotVelocity.vyMetersPerSecond * SPEED_MULTIPLIER)) + (Math.cos(Math.toRadians(angleToTarget)) * (robotVelocity.vxMetersPerSecond * SPEED_MULTIPLIER));
+        //TODO: Magic number (it's the hood offset to convert from hood coordinate
+        //system to relative to the ground)
+        // double estimatedTimeOfFlight = distance / (Math.cos(Math.toRadians(unModded.getIdealShot().getHoodAngle().in(Degrees) + 30)) * unModded.getIdealShot().getShotVelocity().in(MetersPerSecond));
+        //multiply the below by estimateTimeOfFLightMaybe?
+
+        double modification = ((Math.sin(Math.toRadians(angleToTarget)) * robotVelocity.vyMetersPerSecond) + (Math.cos(Math.toRadians(angleToTarget)) * robotVelocity.vxMetersPerSecond));
 
         ShotData moddedShot = new ShotDataRange().new ShotData( unModded.getIdealShot().getHoodAngle(),  unModded.getIdealShot().getShotVelocity().minus(MetersPerSecond.of(modification)));
 
