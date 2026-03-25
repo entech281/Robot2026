@@ -323,12 +323,12 @@ public final class RobotConstants {
       // Define where your camera is mounted on the robot/rig
       // *** YOU MUST MEASURE AND UPDATE THESE VALUES ***
       // Example values shown below - camera 0.3m forward, centered, 0.4m high, tilted
-      // down 25 degrees
+      //left Rear
       Transform3d robotToCameraA = new Transform3d(
           new Translation3d(
-              Units.inchesToMeters(-11.125), // X: meters forward from robot center (positive = forward)
-              Units.inchesToMeters(11.875), // Y: meters left from robot center (positive = left)
-              Units.inchesToMeters(8.25) // Z: meters up from ground (camera height)
+              Units.inchesToMeters(-11.4), // X: meters forward from robot center (positive = forward)
+              Units.inchesToMeters(10.4), // Y: meters left from robot center (positive = left)
+              Units.inchesToMeters(8.00) // Z: meters up from ground (camera height)
           ),
           new Rotation3d(
               Math.toRadians(0), // Roll (rotation around X axis)
@@ -336,11 +336,12 @@ public final class RobotConstants {
               Math.toRadians(135) // Yaw (rotation around Z axis)
           ));
 
+      //right rear
       Transform3d robotToCameraB = new Transform3d(
           new Translation3d(
-              Units.inchesToMeters(-11.125), // X: meters forward from robot center (positive = forward)
-              Units.inchesToMeters(-11.875), // Y: meters left from robot center (positive = left)
-              Units.inchesToMeters(8.25) // Z: meters up from ground (camera height)
+              Units.inchesToMeters(-11.4), // X: meters forward from robot center (positive = forward)
+              Units.inchesToMeters(-10.4), // Y: meters left from robot center (positive = left)
+              Units.inchesToMeters(8.00) // Z: meters up from ground (camera height)
           ),
           new Rotation3d(
               Math.toRadians(0), // Roll (rotation around X axis)
@@ -348,11 +349,12 @@ public final class RobotConstants {
               Math.toRadians(-135) // Yaw (rotation around Z axis)
           ));
 
+      //left top
       Transform3d robotToCameraC = new Transform3d(
           new Translation3d(
-              Units.inchesToMeters(-1.375), // X: meters forward from robot center (positive = forward)
-              Units.inchesToMeters(10.375), // Y: meters left from robot center (positive = left)
-              Units.inchesToMeters(16.25) // Z: meters up from ground (camera height)
+              Units.inchesToMeters(-1.5), // X: meters forward from robot center (positive = forward)
+              Units.inchesToMeters(12.0), // Y: meters left from robot center (positive = left)
+              Units.inchesToMeters(16.15) // Z: meters up from ground (camera height)
           ),
           new Rotation3d(
               Math.toRadians(0), // Roll (rotation around X axis)
@@ -360,11 +362,12 @@ public final class RobotConstants {
               Math.toRadians(45) // Yaw (rotation around Z axis)
           ));
 
+      //right top
       Transform3d robotToCameraD = new Transform3d(
           new Translation3d(
-              Units.inchesToMeters(-1.375), // X: meters forward from robot center (positive = forward)
-              Units.inchesToMeters(-10.375), // Y: meters left from robot center (positive = left)
-              Units.inchesToMeters(16.25) // Z: meters up from ground (camera height)
+              Units.inchesToMeters(-1.5), // X: meters forward from robot center (positive = forward)
+              Units.inchesToMeters(-12.00), // Y: meters left from robot center (positive = left)
+              Units.inchesToMeters(16.15) // Z: meters up from ground (camera height)
           ),
           new Rotation3d(
               Math.toRadians(0), // Roll (rotation around X axis)
