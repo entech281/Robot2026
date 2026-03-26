@@ -21,6 +21,7 @@ import frc.robot.subsystems.transfer.TransferInput;
 import frc.robot.subsystems.transfer.TransferSubsystem;
 import frc.robot.subsystems.turret.TurretInput;
 import frc.robot.subsystems.turret.TurretSubsystem;
+import frc.robot.util.FlightTimeEstimator;
 import frc.robot.util.ShooterCalculator;
 import frc.robot.util.TurretCalculator;
 import frc.robot.util.ShooterCalculator.ShotDataRange;
@@ -68,34 +69,34 @@ public class ShootAtTargetCommand extends EntechCommand {
 
     @Override
     public void execute() {
-        ShotDataRange shotRange = shooterCalculatorSupplier.get().calculateShot();
-        double targetTurretAngle = turretCalculatorSupplier.get().calculateTargetTurretAngle();
-
+        ShotDataRange shotRange = shooterCalculatorSupplier.get().calculateShotBeta();
         ShotData shot = shotRange.getIdealShot();
+
+        // Pass the hood angle to turret calculator for accurate flight time estimation
+        double hoodAngleDeg = shot.getHoodAngle().in(Degree);
+        double targetTurretAngle = turretCalculatorSupplier.get().calculateTargetTurretAngle(hoodAngleDeg);
 
         shooterInput
         .setSpeed(shot.getShotAngularVelocity(Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS)).in(RPM));
-        hoodInput.setRequestedPosition(shot.getHoodAngle().in(Degree));
+        hoodInput.setRequestedPosition(hoodAngleDeg);
         turretInput.setRequestedPosition(Degrees.of(targetTurretAngle));
-
-        // shooterInput
-        //         .setSpeed(3750);
-        // hoodInput.setRequestedPosition(20);
-        // turretInput.setRequestedPosition(Degrees.of(45));
 
         shooterSS.updateInputs(shooterInput);
         hoodSS.updateInputs(hoodInput);
         turretSS.updateInputs(turretInput);
 
-        // boolean turretIsReady = turretCalculatorSupplier.get().isValidTurretAngle(
-        // turretSS.getOutputs().getCurrentPosition(),
-        // RobotConstants.TURRET.TURRET_POSITION_TOLERANCE_DEGREES);
-        // Triboolean shotIsReady = shooterCalculatorSupplier.get().isValidShot(
-        // Degrees.of(hoodSS.getOutputs().getHoodMotor().getCurrentPosition()),
-        // RPM.of(shooterSS.getOutputs().getShooterMotorA().getCurrentSpeed()),
-        // Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS));
-
-        // Triboolean isReadyToShoot = shotIsReady.fand(Triboolean.of(turretIsReady));
+        // Log shoot-while-moving telemetry
+        TurretCalculator tc = turretCalculatorSupplier.get();
+        ShooterCalculator sc = shooterCalculatorSupplier.get();
+        double distanceM = tc.getDistanceToTargetMeters();
+        double flightTime = FlightTimeEstimator.getFlightTimeSeconds(distanceM, hoodAngleDeg);
+        Logger.recordOutput("ShootWhileMoving/FlightTimeSeconds", flightTime);
+        Logger.recordOutput("ShootWhileMoving/DistanceMeters", distanceM);
+        Logger.recordOutput("ShootWhileMoving/HoodAngleDeg", hoodAngleDeg);
+        Logger.recordOutput("ShootWhileMoving/TurretAngleDeg", targetTurretAngle);
+        Logger.recordOutput("ShootWhileMoving/RadialVelocityMps", sc.getRadialVelocityMps());
+        Logger.recordOutput("ShootWhileMoving/CommandedRPM",
+                shot.getShotAngularVelocity(Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS)).in(RPM));
 
         
         if (!shooterReady) {

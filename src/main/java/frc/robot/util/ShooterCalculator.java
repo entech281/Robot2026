@@ -152,32 +152,66 @@ public class ShooterCalculator {
     }
 
     /**
-     * The "new" method that we want tested but are not sure of
+     * Compute the component of robot velocity along the robot→target axis.
+     * Positive = moving toward target, negative = moving away.
      */
-    public ShotDataRange calculateShotBeta() {
-        // TODO interpolate velocity from 3500 - 5000 (5500)
-        // LinearVelocity shooterLaunchVelocity =
-        // angularVelocityToLinearVelocity(RPM.of(RobotConstants.SHOOTER.MAX_RPM),
-        // Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS));
-        double g = 9.80665;
-        double TOLERANCE_DEGREES = 1;
-        double TOLERANCE_LINEAR_VELOCITY = 2;
+    private double computeRadialVelocityMps(double deltaX, double deltaY, double distance) {
+        if (distance < 0.1) {
+            return 0.0;
+        }
+        double unitX = deltaX / distance;
+        double unitY = deltaY / distance;
+
+        ChassisSpeeds fieldVelocity = ChassisSpeeds.fromRobotRelativeSpeeds(
+                robotVelocity,
+                currentPose.toPose2d().getRotation());
+
+        return fieldVelocity.vxMetersPerSecond * unitX + fieldVelocity.vyMetersPerSecond * unitY;
+    }
+
+    /** Get the radial velocity in m/s for logging. Positive = moving toward target. */
+    public double getRadialVelocityMps() {
         double deltaX = targetPose.getX() - currentPose.getX();
         double deltaY = targetPose.getY() - currentPose.getY();
         double distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+        return computeRadialVelocityMps(deltaX, deltaY, distance);
+    }
 
-        LinearVelocity shooterLaunchVelocity = angularVelocityToLinearVelocity(
-                RPM.of(interpolate(distance, 3, 17, 3500, 5000)), wheelRadius);
+    /**
+     * Motion-compensated shooting: accounts for robot velocity toward/away from hub.
+     * Uses flight time estimates from pyshooter to compute an effective distance,
+     * then looks up RPM and hood angle at that effective distance.
+     */
+    public ShotDataRange calculateShotBeta() {
 
-        Angle theta = Degree
-                .of(Math.atan(Math.pow(shooterLaunchVelocity.in(MetersPerSecond), 2)
-                        * Math.sqrt(
-                                Math.pow(shooterLaunchVelocity.in(MetersPerSecond), 4) - g * (g * Math.pow(deltaX, 2)
-                                        + 2 * deltaY * Math.pow(shooterLaunchVelocity.in(MetersPerSecond), 2)))
-                        / g * deltaX));
+        Angle TOLERANCE_DEGREES = Degree.of(1);
+        LinearVelocity TOLERANCE_LINEAR_VELOCITY = MetersPerSecond.of(3.5);
 
-        return new ShotDataRange(theta, Degrees.of(TOLERANCE_DEGREES), shooterLaunchVelocity,
-                MetersPerSecond.of(TOLERANCE_LINEAR_VELOCITY));
+        double deltaX = targetPose.getX() - currentPose.getX();
+        double deltaY = targetPose.getY() - currentPose.getY();
+        double distanceMeters = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+        double distanceFeet = Meters.of(distanceMeters).in(Feet);
+
+        // First lookup at actual distance to get hood angle for flight time estimate
+        ShotData baseShot = getNearestShot(distanceFeet);
+        double hoodAngleDeg = baseShot.getHoodAngle().in(Degrees);
+
+        // Compute radial velocity (robot motion toward/away from hub)
+        double radialVelocityMps = computeRadialVelocityMps(deltaX, deltaY, distanceMeters);
+
+        // Compute effective distance: the ball inherits the robot's radial velocity,
+        // so moving toward the hub is equivalent to shooting at a shorter distance.
+        // This lets the tuning table naturally correct both RPM and hood angle.
+        double flightTime = FlightTimeEstimator.getFlightTimeSeconds(distanceMeters, hoodAngleDeg);
+        double effectiveDistanceFeet = distanceFeet - Meters.of(radialVelocityMps * flightTime).in(Feet);
+
+        // Clamp to tuning table range
+        effectiveDistanceFeet = Math.max(5.0, Math.min(21.0, effectiveDistanceFeet));
+
+        ShotData shot = getNearestShot(effectiveDistanceFeet);
+
+        return new ShotDataRange(shot.getHoodAngle(), TOLERANCE_DEGREES, shot.getShotVelocity(),
+                TOLERANCE_LINEAR_VELOCITY);
     }
 
     private boolean isValidShotPrimary(Angle hoodAngle, LinearVelocity shotVelocity) {
