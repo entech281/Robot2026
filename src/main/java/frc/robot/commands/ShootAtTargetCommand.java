@@ -39,6 +39,7 @@ public class ShootAtTargetCommand extends EntechCommand {
     private TransferInput transferInput = new TransferInput();
     private TurretInput turretInput = new TurretInput();
     private boolean shooterReady = false;
+    private boolean turretReady = false;
 
     public ShootAtTargetCommand(ShooterSubsystem shooterSubsystem, HoodSubsystem hoodSubsystem,
             TransferSubsystem transferSubsystem, TurretSubsystem turretSubsystem,
@@ -65,6 +66,7 @@ public class ShootAtTargetCommand extends EntechCommand {
         shooterSS.updateInputs(shooterInput);
 
         shooterReady = false;
+        turretReady = false;
     }
 
     @Override
@@ -81,12 +83,12 @@ public class ShootAtTargetCommand extends EntechCommand {
         ShotData shot = shotRange.getIdealShot();
 
         shooterInput
-        .setSpeed(shot.getShotAngularVelocity(Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS)).in(RPM));
+                .setSpeed(shot.getShotAngularVelocity(Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS)).in(RPM));
         hoodInput.setRequestedPosition(shot.getHoodAngle().in(Degree));
         turretInput.setRequestedPosition(Degrees.of(targetTurretAngle));
 
         // shooterInput
-        //         .setSpeed(3750);
+        // .setSpeed(3750);
         // hoodInput.setRequestedPosition(20);
         // turretInput.setRequestedPosition(Degrees.of(45));
 
@@ -104,12 +106,15 @@ public class ShootAtTargetCommand extends EntechCommand {
 
         // Triboolean isReadyToShoot = shotIsReady.fand(Triboolean.of(turretIsReady));
 
-        
         if (!shooterReady) {
             shooterReady = shooterSS.getOutputs().isAtSpeed();
         }
 
-        boolean isReadyToShoot = turretSS.getOutputs().isAtRequestedPosition()
+        if (!turretReady) {
+            turretReady = turretSS.getOutputs().isAtRequestedPosition();
+        }
+
+        boolean isReadyToShoot = turretReady
                 && hoodSS.getOutputs().isAtRequestedPosition()
                 && shooterReady;
 

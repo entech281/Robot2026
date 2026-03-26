@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.ResetTurningEncoderCommand;
 import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.operation.OperatorInterface;
+import frc.robot.operation.UserPolicy;
 import frc.robot.processors.OdometryProcessor;
 
 /**
@@ -76,6 +77,7 @@ public class Robot extends LoggedRobot {
     operatorInterface = new OperatorInterface(commandFactory, subsystemManager, odometry);
     operatorInterface.create();
     odometry.createEstimator();
+    UserPolicy.getInstance();
   }
 
   @Override

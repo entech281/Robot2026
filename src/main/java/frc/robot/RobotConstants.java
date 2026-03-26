@@ -1,5 +1,6 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
@@ -323,7 +324,7 @@ public final class RobotConstants {
       // Define where your camera is mounted on the robot/rig
       // *** YOU MUST MEASURE AND UPDATE THESE VALUES ***
       // Example values shown below - camera 0.3m forward, centered, 0.4m high, tilted
-      //left Rear
+      // left Rear
       Transform3d robotToCameraA = new Transform3d(
           new Translation3d(
               Units.inchesToMeters(-11.4), // X: meters forward from robot center (positive = forward)
@@ -336,7 +337,7 @@ public final class RobotConstants {
               Math.toRadians(135) // Yaw (rotation around Z axis)
           ));
 
-      //right rear
+      // right rear
       Transform3d robotToCameraB = new Transform3d(
           new Translation3d(
               Units.inchesToMeters(-11.4), // X: meters forward from robot center (positive = forward)
@@ -349,7 +350,7 @@ public final class RobotConstants {
               Math.toRadians(-135) // Yaw (rotation around Z axis)
           ));
 
-      //left top
+      // left top
       Transform3d robotToCameraC = new Transform3d(
           new Translation3d(
               Units.inchesToMeters(-1.5), // X: meters forward from robot center (positive = forward)
@@ -362,7 +363,7 @@ public final class RobotConstants {
               Math.toRadians(45) // Yaw (rotation around Z axis)
           ));
 
-      //right top
+      // right top
       Transform3d robotToCameraD = new Transform3d(
           new Translation3d(
               Units.inchesToMeters(-1.5), // X: meters forward from robot center (positive = forward)
@@ -423,6 +424,7 @@ public final class RobotConstants {
     public static final AngularVelocity TURRET_CRUISE_VELOCITY = DegreesPerSecond.of(500);
     public static final AngularAcceleration TURRET_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(2000);
     public static final Angle TURRET_POSITION_TOLERANCE_DEGREES = Degrees.of(2.0); // considered at setpoint within this
+    public static final Angle TURRET_POSITION_TOLERANCE_MOVING = Degrees.of(3.5);
     public static final Angle HOME_POSITION_DEGREES = Degrees.of(0.0); // position to reset to
 
     public static final Pose3d BLUE_HUB_LOCATION = new Pose3d(Inches.of(182.11).in(Meters),
