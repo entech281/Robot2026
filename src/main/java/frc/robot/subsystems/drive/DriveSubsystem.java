@@ -168,9 +168,11 @@ public class DriveSubsystem extends EntechSubsystem<DriveInput, DriveOutput> {
         output.setDrivePositions(moduleDrivePositions);
         output.setTurningPositions(moduleTuringPositions);
 
+        SwerveModuleState[] moduleStates = new SwerveModuleState[] { frontLeft.getState(), frontRight.getState(),
+            rearLeft.getState(), rearRight.getState() };
+
         output.setModulePositions(getModulePositions());
-        output.setModuleStates(new SwerveModuleState[] { frontLeft.getState(), frontRight.getState(),
-            rearLeft.getState(), rearRight.getState() });
+        output.setModuleStates(moduleStates);
         output.setRawAbsoluteEncoders(new double[] { frontLeft.getTurningAbsoluteEncoder().getPosition(),
             frontRight.getTurningAbsoluteEncoder().getPosition(),
             rearLeft.getTurningAbsoluteEncoder().getPosition(),
@@ -180,7 +182,7 @@ public class DriveSubsystem extends EntechSubsystem<DriveInput, DriveOutput> {
                 frontRight.getTurningAbsoluteEncoder().getVirtualPosition(),
                 rearLeft.getTurningAbsoluteEncoder().getVirtualPosition(),
                 rearRight.getTurningAbsoluteEncoder().getVirtualPosition() });
-        output.setSpeeds(lastChassisSpeeds);
+        output.setSpeeds(RobotConstants.DrivetrainConstants.DRIVE_KINEMATICS.toChassisSpeeds(moduleStates));
 
         // keep SparkMax outputs as before
         output.setFrontLeftDrive(frontLeft.getDriveOuput());
