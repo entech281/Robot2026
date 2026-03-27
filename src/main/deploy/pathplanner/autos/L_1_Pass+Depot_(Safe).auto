@@ -36,15 +36,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Shoot_Get_Shoot_End_Slow"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Shoot_Get_Shoot_End_Slow"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              }
+            ]
           }
         },
         {
