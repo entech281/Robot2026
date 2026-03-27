@@ -32,6 +32,7 @@ import frc.robot.commands.RunTransferCommand;
 import frc.robot.commands.TurretContinuousNudgeCommand;
 import frc.robot.commands.TurretJogCommand;
 import frc.robot.commands.TwistCommand;
+import frc.robot.commands.XDriveCommand;
 import frc.robot.io.DebugInput;
 import frc.robot.io.DebugInputSupplier;
 import frc.robot.io.DriveInputSupplier;
@@ -157,24 +158,23 @@ public class OperatorInterface
     subsystemManager.getDriveSubsystem()
         .setDefaultCommand(new DriveCommand(subsystemManager.getDriveSubsystem(), this));
 
-    // xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.DRIVE_X)
-    // .whileTrue(new XDriveCommand(subsystemManager.getDriveSubsystem()));
+    xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.DRIVE_X)
+        .whileTrue(new XDriveCommand(subsystemManager.getDriveSubsystem()));
 
     xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.RESET_ODOMETRY)
         .onTrue(new ResetOdometryCommand(odometry));
 
-    xboxController.a().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
-        0));
+    // xboxController.a().whileTrue(new
+    // ManualTurretCommand(subsystemManager.getTurretSubsystem(),
+    // 0));
 
-    xboxController.b().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
-        30));
+    // xboxController.b().whileTrue(new
+    // ManualTurretCommand(subsystemManager.getTurretSubsystem(),
+    // 30));
 
-    xboxController.y().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
-        -30));
-
-    xboxController.x()
-        .whileTrue(new ParallelCommandGroup(
-            new RunTransferCommand(subsystemManager.getTransferSubsystem(), true)));
+    // xboxController.y().whileTrue(new
+    // ManualTurretCommand(subsystemManager.getTurretSubsystem(),
+    // -30));
 
     xboxController.leftBumper().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
     xboxController.rightBumper().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
