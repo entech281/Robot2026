@@ -38,7 +38,6 @@ import frc.entech.TestableHardwareI;
 import frc.entech.commands.AutonomousException;
 import frc.entech.commands.InstantAnytimeCommand;
 import frc.robot.commands.GyroResetByAngleCommand;
-import frc.robot.commands.HomeTurretCommand;
 import frc.robot.commands.RotateToAngleCommand;
 import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
@@ -91,14 +90,13 @@ public class CommandFactory {
     tab.add("Load", new InstantAnytimeCommand(() -> LiveTuningHandler.getInstance().resetToJSON()));
     tab.add("Code Defaults", new InstantAnytimeCommand(() -> LiveTuningHandler.getInstance().resetToDefaults()));
     tab.add("Characterize Wheel Diameter", getWheelCharacterizationCommand());
-    tab.add("Use Beta Shot Calculation", new InstantAnytimeCommand( () -> UserPolicy.getInstance().setUseBeta(!UserPolicy.getInstance().getUseBeta())));
+    tab.add("Use Beta Shot Calculation",
+        new InstantAnytimeCommand(() -> UserPolicy.getInstance().setUseBeta(!UserPolicy.getInstance().getUseBeta())));
     this.testChooser = getTestCommandChooser();
     testChooser.addOption("All tests", getTestCommand());
     Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST, "No Current Test");
     SmartDashboard.putData("Test Chooser", testChooser);
     Shuffleboard.getTab("stuffs").add("Run Test", new RunTestCommand(testChooser));
-    Shuffleboard.getTab("stuffs").add("Home Turret",
-        new HomeTurretCommand(subsystemManager.getTurretSubsystem(), subsystemManager.getHomeTurretSwitch()));
 
     AutoBuilder.configure(odometry::getEstimatedPose,
         odometry::resetOdometry,
@@ -205,7 +203,9 @@ public class CommandFactory {
           .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
 
       return new ShooterCalculator(
-          ChassisSpeeds.fromRobotRelativeSpeeds(RobotIO.getInstance().getDriveOutput().getSpeeds(), RobotIO.getInstance().getOdometryPose().getRotation()), shooterCurrentPose, target,
+          ChassisSpeeds.fromRobotRelativeSpeeds(RobotIO.getInstance().getDriveOutput().getSpeeds(),
+              RobotIO.getInstance().getOdometryPose().getRotation()),
+          shooterCurrentPose, target,
           Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
           RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
           RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
@@ -275,7 +275,9 @@ public class CommandFactory {
         .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
 
     Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(
-        ChassisSpeeds.fromRobotRelativeSpeeds(RobotIO.getInstance().getDriveOutput().getSpeeds(), RobotIO.getInstance().getOdometryPose().getRotation()), shooterCurrentPose, getSnowblowTarget(),
+        ChassisSpeeds.fromRobotRelativeSpeeds(RobotIO.getInstance().getDriveOutput().getSpeeds(),
+            RobotIO.getInstance().getOdometryPose().getRotation()),
+        shooterCurrentPose, getSnowblowTarget(),
         Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
         RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
         RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
@@ -319,31 +321,35 @@ public class CommandFactory {
             .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
         return new TurretCalculator(target.toPose2d(),
             RobotIO.getInstance().getOdometryPose(), RobotIO.getInstance().getDriveOutput().getSpeeds());
-      };      
+      };
 
-    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> {
-      Pose3d target;
+      Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> {
+        Pose3d target;
 
-      Optional<Alliance> alliance = DriverStation.getAlliance();
+        Optional<Alliance> alliance = DriverStation.getAlliance();
 
-      if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-        target = RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
-      } else {
-        target = RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;
-      }
+        if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+          target = RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
+        } else {
+          target = RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;
+        }
 
-      Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
-          .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
+        Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
+            .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
 
-      return new ShooterCalculator(
-          ChassisSpeeds.fromRobotRelativeSpeeds(RobotIO.getInstance().getDriveOutput().getSpeeds(), RobotIO.getInstance().getOdometryPose().getRotation()), shooterCurrentPose, target,
-          Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
-          RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
-          RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
-    };
-    return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier, shooterCalculatorSupplier);
+        return new ShooterCalculator(
+            ChassisSpeeds.fromRobotRelativeSpeeds(RobotIO.getInstance().getDriveOutput().getSpeeds(),
+                RobotIO.getInstance().getOdometryPose().getRotation()),
+            shooterCurrentPose, target,
+            Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
+            RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
+            RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
+      };
+      return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
+          subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
+          shooterCalculatorSupplier);
+    }
   }
-}
 
   public Command getStopShootingCommand() {
     return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),

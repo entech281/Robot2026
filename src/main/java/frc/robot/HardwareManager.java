@@ -9,11 +9,8 @@ import java.util.List;
 
 import frc.entech.TestableHardwareI;
 import frc.robot.io.RobotIO;
-import frc.robot.sensors.HallEffectSensor.HallEffectSensor;
-import frc.robot.sensors.HomeTurretSwitch.HomeTurretSwitch;
 import frc.robot.sensors.gyro.GyroSensor;
 import frc.robot.sensors.vision.VisionSensor;
-import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.hood.HoodSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -27,7 +24,6 @@ import frc.robot.subsystems.turret.TurretSubsystem;
 public class HardwareManager {
   private final VisionSensor visionSensor = new VisionSensor();
   private final GyroSensor gyroSensor = new GyroSensor();
-  private final HomeTurretSwitch homeTurretSwitch = new HomeTurretSwitch();
 
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
@@ -35,8 +31,6 @@ public class HardwareManager {
   private final TurretSubsystem turretSubsystem = new TurretSubsystem();
   private final TransferSubsystem transferSubsystem = new TransferSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  private final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
-  private final HallEffectSensor hallEffectSensor = new HallEffectSensor();
 
   public HardwareManager() {
     gyroSensor.initialize();
@@ -46,10 +40,7 @@ public class HardwareManager {
     hoodSubsystem.initialize();
     turretSubsystem.initialize();
     intakeSubsystem.initialize();
-    // climbSubsystem.initialize();
     transferSubsystem.initialize();
-    hallEffectSensor.initialize();
-    homeTurretSwitch.initialize();
 
     periodic();
   }
@@ -78,24 +69,12 @@ public class HardwareManager {
     return intakeSubsystem;
   }
 
-  public ClimbSubsystem getClimbSubsystem() {
-    return climbSubsystem;
-  }
-
   public TurretSubsystem getTurretSubsystem() {
     return turretSubsystem;
   }
 
   public TransferSubsystem getTransferSubsystem() {
     return transferSubsystem;
-  }
-
-  public HallEffectSensor getHallEffectSensor() {
-    return hallEffectSensor;
-  }
-
-  public HomeTurretSwitch getHomeTurretSwitch() {
-    return homeTurretSwitch;
   }
 
   public List<TestableHardwareI> getSubsystemList() {
@@ -106,12 +85,8 @@ public class HardwareManager {
     r.add(transferSubsystem);
     r.add(turretSubsystem);
     r.add(hoodSubsystem);
-    r.add(climbSubsystem);
     r.add(gyroSensor);
     r.add(visionSensor);
-    r.add(hallEffectSensor);
-    r.add(homeTurretSwitch);
-
     return r;
   }
 
@@ -125,9 +100,6 @@ public class HardwareManager {
     outputs.updateShooter(shooterSubsystem.getOutputs());
 
     outputs.updateVision(visionSensor.getOutputs());
-
-    // outputs.updateClimb(climbSubsystem.getOutputs());
-
     outputs.updateHood(hoodSubsystem.getOutputs());
 
     outputs.updateIntake(intakeSubsystem.getOutputs());
@@ -135,9 +107,5 @@ public class HardwareManager {
     outputs.updateTransfer(transferSubsystem.getOutputs());
 
     outputs.updateTurret(turretSubsystem.getOutputs());
-
-    outputs.updateHallEffect(hallEffectSensor.getOutputs());
-
-    outputs.updateHomeTurret(homeTurretSwitch.getOutputs());
   }
 }
