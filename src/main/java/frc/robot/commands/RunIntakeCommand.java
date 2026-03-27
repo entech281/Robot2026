@@ -29,7 +29,7 @@ public class RunIntakeCommand extends EntechCommand {
     @Override
     public void initialize() {
         IntakeInput input = new IntakeInput();
-        double speed = 0.75;
+        double speed = 0.5;
         if (!direction) {
             input.setSpeed(-speed);
         } else {
@@ -41,7 +41,7 @@ public class RunIntakeCommand extends EntechCommand {
     @Override
     public void execute() {
         IntakeInput input = new IntakeInput();
-        double speed = 0.75;
+        double speed = 0.5;
         if (direction) {
             input.setSpeed(speed);
         } else {
