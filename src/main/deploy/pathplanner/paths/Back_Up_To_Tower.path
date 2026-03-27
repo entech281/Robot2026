@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.778094869396835,
-        "y": 3.9945690880835074
+        "x": 3.876335526635673,
+        "y": 3.991190679728336
       },
       "isLocked": false,
       "linkedName": "Hub_Sit"
     },
     {
       "anchor": {
-        "x": 1.594558189655173,
+        "x": 1.91709051724138,
         "y": 4.0
       },
       "prevControl": {
-        "x": 1.3445602919971695,
-        "y": 4.00102526415058
+        "x": 1.5690220357616425,
+        "y": 4.003593425674588
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
