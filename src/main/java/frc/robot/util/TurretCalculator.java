@@ -52,7 +52,7 @@ public class TurretCalculator {
                 + (Math.cos(Math.toRadians(angleToTarget)) * (fieldAbsolute.vyMetersPerSecond * SPEED_MULTIPLIER))
                 + (-Math.sin(Math.toRadians(angleToTarget)) * (fieldAbsolute.vxMetersPerSecond * SPEED_MULTIPLIER));
 
-        return turretAngleToTarget;
+        return turretAngleToTarget + 2;
     }
 
     public boolean isValidTurretAngle(double angle, double toleranceDegrees) {
