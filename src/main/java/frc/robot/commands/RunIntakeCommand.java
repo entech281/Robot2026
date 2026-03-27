@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import frc.entech.commands.EntechCommand;
-import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.subsystems.intake.IntakeInput;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 
@@ -12,7 +11,6 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 public class RunIntakeCommand extends EntechCommand {
     private final IntakeSubsystem intakeSS;
     private boolean direction;
-    private static final String KEY_STRING = "IntakeSubsystem/SetSpeed";
 
     public RunIntakeCommand(IntakeSubsystem intake) {
         this(intake, true);
@@ -31,7 +29,7 @@ public class RunIntakeCommand extends EntechCommand {
     @Override
     public void initialize() {
         IntakeInput input = new IntakeInput();
-        double speed = LiveTuningHandler.getInstance().getValue(KEY_STRING);
+        double speed = 0.75;
         if (!direction) {
             input.setSpeed(-speed);
         } else {
@@ -43,7 +41,7 @@ public class RunIntakeCommand extends EntechCommand {
     @Override
     public void execute() {
         IntakeInput input = new IntakeInput();
-        double speed = LiveTuningHandler.getInstance().getValue(KEY_STRING);
+        double speed = 0.75;
         if (direction) {
             input.setSpeed(speed);
         } else {
