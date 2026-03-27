@@ -20,7 +20,7 @@ public class UserPolicy {
   private Distance manualShotDistance = Meters.of(4);
   private AngularVelocity shooterRPM = RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed"));
   private boolean useBeta = false;
-  private double turretCalculatorSpeedMultiplier = 6.5;
+  private double shooterCalculatorSpeedMultiplier = 1.5;
 
   private UserPolicy() {
     Logger.recordOutput("UserPolicy/twistable", twistable);
@@ -30,7 +30,7 @@ public class UserPolicy {
     Logger.recordOutput("UserPolicy/hubOffset", manualShotDistance.in(Meters));
     Logger.recordOutput("UserPolicy/shooterRPM", shooterRPM.in(RPM));
     Logger.recordOutput("UserPolicy/useBeta", useBeta);
-    Logger.recordOutput("UserPolicy/turretCalculatorSpeedMultiplier", turretCalculatorSpeedMultiplier);
+    Logger.recordOutput("UserPolicy/shooterCalculatorSpeedMultiplier", shooterCalculatorSpeedMultiplier);
   }
 
   public static UserPolicy getInstance() {
@@ -96,13 +96,13 @@ public class UserPolicy {
     Logger.recordOutput("UserPolicy/useBeta", useBeta);
   }
 
-  public void setTurretCalculatorSpeedMultiplier(double turretCalculatorSpeedMultiplier) {
-    this.turretCalculatorSpeedMultiplier = turretCalculatorSpeedMultiplier;
-    Logger.recordOutput("UserPolicy/turretCalculatorSpeedMultiplier", turretCalculatorSpeedMultiplier);
+  public void setShooterCalculatorSpeedMultiplier(double shooterCalculatorSpeedMultiplier) {
+    this.shooterCalculatorSpeedMultiplier = shooterCalculatorSpeedMultiplier;
+    Logger.recordOutput("UserPolicy/shooterCalculatorSpeedMultiplier", shooterCalculatorSpeedMultiplier);
   }
 
-  public double getTurretCalculatorSpeedMultiplier() {
-    return turretCalculatorSpeedMultiplier;
+  public double getShooterCalculatorSpeedMultiplier() {
+    return shooterCalculatorSpeedMultiplier;
   }
 
   public boolean getUseBeta() {

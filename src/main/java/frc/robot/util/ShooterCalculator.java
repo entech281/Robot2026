@@ -17,6 +17,7 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import frc.entech.util.Triboolean;
 import frc.robot.livetuning.LiveTuningHandler;
+import frc.robot.operation.UserPolicy;
 import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
 
 public class ShooterCalculator {
@@ -29,6 +30,8 @@ public class ShooterCalculator {
     private AngularVelocity shooterMin;
     private Distance distanceMin;
     private Distance distanceMax;
+
+    private static double SPEED_MULTIPLIER = 1.5;
 
     public ShooterCalculator() {
         this(new ChassisSpeeds(), new Pose3d(), new Pose3d(), Meters.of(1), RPM.of(0), RPM.of(0), Meters.of(0),
@@ -169,6 +172,9 @@ public class ShooterCalculator {
      * The "new" method that we want tested but are not sure of
      */
     public ShotDataRange calculateShotBeta() {
+
+        SPEED_MULTIPLIER = UserPolicy.getInstance().getShooterCalculatorSpeedMultiplier();
+
         Angle TOLERANCE_DEGREES = Degree.of(1);
         LinearVelocity TOLERANCE_LINEAR_VELOCITY = MetersPerSecond.of(3.5);
 
@@ -190,9 +196,9 @@ public class ShooterCalculator {
         // multiply the below by estimateTimeOfFLightMaybe?
 
         double modification = ((Math.sin(Math.toRadians(angleToTarget)) *
-                robotVelocity.vyMetersPerSecond)
+                (SPEED_MULTIPLIER * robotVelocity.vyMetersPerSecond))
                 + (Math.cos(Math.toRadians(angleToTarget)) *
-                        robotVelocity.vxMetersPerSecond));
+                        (SPEED_MULTIPLIER * robotVelocity.vxMetersPerSecond)));
 
         ShotData moddedShot = new ShotDataRange().new ShotData(
                 unModded.getIdealShot().getHoodAngle(),

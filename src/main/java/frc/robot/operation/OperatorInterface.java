@@ -291,14 +291,16 @@ public class OperatorInterface
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_UP)
         .onTrue(new InstantCommand(() -> UserPolicy.getInstance()
-            .setTurretCalculatorSpeedMultiplier(UserPolicy.getInstance().getTurretCalculatorSpeedMultiplier() + 0.1)));
+            .setShooterCalculatorSpeedMultiplier(
+                UserPolicy.getInstance().getShooterCalculatorSpeedMultiplier() + 0.1)));
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_DOWN)
         .onTrue(new InstantCommand(() -> UserPolicy.getInstance()
-            .setTurretCalculatorSpeedMultiplier(UserPolicy.getInstance().getTurretCalculatorSpeedMultiplier() - 0.1)));
+            .setShooterCalculatorSpeedMultiplier(
+                UserPolicy.getInstance().getShooterCalculatorSpeedMultiplier() - 0.1)));
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.CLIMB).onTrue(new InstantCommand(() -> {
-      UserPolicy.getInstance().setTurretCalculatorSpeedMultiplier(6.5);
+      UserPolicy.getInstance().setShooterCalculatorSpeedMultiplier(1.5);
     }));
 
     scoreOperatorPanel.button(12)

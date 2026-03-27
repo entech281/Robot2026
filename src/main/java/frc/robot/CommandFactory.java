@@ -352,7 +352,7 @@ public class CommandFactory {
       };
       return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
           subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
-          shooterCalculatorSupplier);
+          shooterCalculatorSupplier, true);
     }
   }
 

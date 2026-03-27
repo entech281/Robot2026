@@ -40,11 +40,20 @@ public class ShootAtTargetCommand extends EntechCommand {
     private TurretInput turretInput = new TurretInput();
     private boolean shooterReady = false;
     private boolean turretReady = false;
+    private boolean snowblow = false;
 
     public ShootAtTargetCommand(ShooterSubsystem shooterSubsystem, HoodSubsystem hoodSubsystem,
             TransferSubsystem transferSubsystem, TurretSubsystem turretSubsystem,
             Supplier<TurretCalculator> turretCalculatorSupplier,
             Supplier<ShooterCalculator> shooterCalculatorSupplier) {
+        this(shooterSubsystem, hoodSubsystem, transferSubsystem, turretSubsystem, turretCalculatorSupplier,
+                shooterCalculatorSupplier, false);
+    }
+
+    public ShootAtTargetCommand(ShooterSubsystem shooterSubsystem, HoodSubsystem hoodSubsystem,
+            TransferSubsystem transferSubsystem, TurretSubsystem turretSubsystem,
+            Supplier<TurretCalculator> turretCalculatorSupplier,
+            Supplier<ShooterCalculator> shooterCalculatorSupplier, boolean snowblow) {
         super(hoodSubsystem, shooterSubsystem, transferSubsystem, turretSubsystem);
         this.hoodSS = hoodSubsystem;
         this.shooterSS = shooterSubsystem;
@@ -52,6 +61,7 @@ public class ShootAtTargetCommand extends EntechCommand {
         this.turretSS = turretSubsystem;
         this.shooterCalculatorSupplier = shooterCalculatorSupplier;
         this.turretCalculatorSupplier = turretCalculatorSupplier;
+        this.snowblow = snowblow;
     }
 
     // nothing to end
@@ -112,6 +122,10 @@ public class ShootAtTargetCommand extends EntechCommand {
 
         if (!turretReady) {
             turretReady = turretSS.getOutputs().isAtRequestedPosition();
+        }
+
+        if (snowblow) {
+            turretReady = true;
         }
 
         boolean isReadyToShoot = turretReady
