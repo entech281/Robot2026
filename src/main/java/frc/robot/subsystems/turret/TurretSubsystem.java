@@ -145,13 +145,14 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         m_goal = new TrapezoidProfile.State(clamped, 0);
         m_setpoint = m_profile.calculate(RobotConstants.TURRET.TRAPEZOIDAL_DELTA_TIME.in(Seconds), m_setpoint, m_goal);
 
-        if (m_setpoint.position > turretEncoder.getPosition() && getForwardLimitSwitch()) {
-            turretMotor.set(0.0);
-        } else {
-            turretMotor
-                    .set(EntechUtils.capDoubleValue(control.calculate(turretEncoder.getPosition(), m_setpoint.position),
-                            PID_MIN, PID_MAX));
-        }
+        // if (m_setpoint.position > turretEncoder.getPosition() &&
+        // getForwardLimitSwitch()) {
+        // turretMotor.set(0.0);
+        // } else {
+        turretMotor
+                .set(EntechUtils.capDoubleValue(control.calculate(turretEncoder.getPosition(), m_setpoint.position),
+                        PID_MIN, PID_MAX));
+        // }
     }
 
     @Override
