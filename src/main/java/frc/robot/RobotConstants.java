@@ -150,13 +150,13 @@ public final class RobotConstants {
   public static interface LiveTuning {
     public static final Map<String, Double> VALUES = Map.ofEntries(
 
-        Map.entry("ShooterSubsystem/SetSpeed", 3750.0),
+        Map.entry("ShooterSubsystem/SetSpeed", 700.0),
         Map.entry("IntakeSubsystem/SetSpeed", 0.75),
         Map.entry("TransferSubsystem/SetSpeed", 1.0),
         Map.entry("TurretSubsystem/LowerLimitDegrees", 0.0),
-        Map.entry("TurretSubsystem/UpperLimitDegrees", 240.0),
+        Map.entry("TurretSubsystem/UpperLimitDegrees", 270.0),
         Map.entry("TurretSubsystem/SofterLowerLimitDegrees", 20.0),
-        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 220.0),
+        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 250.0),
         Map.entry("TurretSubsystem/PresetOneDegrees", 0.0),
         Map.entry("TurretSubsystem/PresetTwoDegrees", 0.0),
         Map.entry("HoodSubsystem/PresetOneDegrees", 15.0),

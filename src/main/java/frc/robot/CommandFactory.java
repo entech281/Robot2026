@@ -38,6 +38,7 @@ import frc.entech.TestableHardwareI;
 import frc.entech.commands.AutonomousException;
 import frc.entech.commands.InstantAnytimeCommand;
 import frc.robot.commands.GyroResetByAngleCommand;
+import frc.robot.commands.ManualHoodCommand;
 import frc.robot.commands.RotateToAngleCommand;
 import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
@@ -46,7 +47,9 @@ import frc.robot.commands.ManualShootCommand;
 import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.ManualTurretCommandSupplier;
 import frc.robot.commands.RunShooterAtLiveSpeedCommand;
+import frc.robot.commands.RunShooterCommand;
 import frc.robot.commands.RunTestCommand;
+import frc.robot.commands.RunTransferCommand;
 import frc.robot.commands.ShootAtTargetCommand;
 import frc.robot.io.RobotIO;
 import frc.robot.livetuning.LiveTuningHandler;
@@ -55,6 +58,7 @@ import frc.robot.operation.UserPolicy;
 import frc.robot.processors.OdometryProcessor;
 import frc.robot.sensors.gyro.GyroSensor;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.util.ShooterCalculator;
 import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
 import frc.robot.util.TurretCalculator;
@@ -97,6 +101,7 @@ public class CommandFactory {
     Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST, "No Current Test");
     SmartDashboard.putData("Test Chooser", testChooser);
     Shuffleboard.getTab("stuffs").add("Run Test", new RunTestCommand(testChooser));
+    tab.add("FOUNTAIN", getFountainCommand());
 
     AutoBuilder.configure(odometry::getEstimatedPose,
         odometry::resetOdometry,
@@ -367,5 +372,14 @@ public class CommandFactory {
     return new InstantCommand(() -> {
       Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST, "" + (message.getAsDouble() * 2));
     });
+  }
+
+  public Command getFountainCommand() {
+    return new ParallelCommandGroup(
+        new RunIntakeCommand(subsystemManager.getIntakeSubsystem()),
+        new RunTransferCommand(subsystemManager.getTransferSubsystem()),
+        new RunShooterAtLiveSpeedCommand(subsystemManager.getShooterSubsystem()),
+        new ManualTurretCommand(subsystemManager.getTurretSubsystem(), 0),
+        new ManualHoodCommand(subsystemManager.getHoodSubsystem(), 25));
   }
 }
