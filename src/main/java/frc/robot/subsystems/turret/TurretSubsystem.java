@@ -83,6 +83,8 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
 
         turretEncoder.setPositionConversionFactor(RobotConstants.TURRET.POSITION_CONVERSION_FACTOR_ABSOLUTE_ENCODER);
 
+        turretConfig.smartCurrentLimit(20);
+
         // Configure the motor with these settings
         turretMotor.configure(turretConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
