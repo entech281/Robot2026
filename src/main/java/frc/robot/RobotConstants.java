@@ -274,7 +274,7 @@ public final class RobotConstants {
     public static interface DIO {
       public static final int HALL_EFFECT_SENSOR = 20;
       public static final int HOME_TURRET_SWITCH = 1;
-      public static final int FORWARD_TURRET_SWITCH = 0;
+      public static final int FORWARD_TURRET_SWITCH = 2;
     }
   }
 
