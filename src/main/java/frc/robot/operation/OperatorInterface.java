@@ -19,6 +19,7 @@ import frc.entech.operatorpanel.OutputJoystick.Color;
 import frc.entech.operatorpanel.OutputJoystick.LedNumber;
 import frc.robot.CommandFactory;
 import frc.robot.HardwareManager;
+import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.GyroReset;
@@ -286,7 +287,19 @@ public class OperatorInterface
 
     // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_DOWN)
     // .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(),
-    // -LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount")));
+    // -LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount")))
+
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_UP)
+        .onTrue(new InstantCommand(() -> UserPolicy.getInstance()
+            .setTurretCalculatorSpeedMultiplier(UserPolicy.getInstance().getTurretCalculatorSpeedMultiplier() + 0.1)));
+
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_DOWN)
+        .onTrue(new InstantCommand(() -> UserPolicy.getInstance()
+            .setTurretCalculatorSpeedMultiplier(UserPolicy.getInstance().getTurretCalculatorSpeedMultiplier() - 0.1)));
+
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.CLIMB).onTrue(new InstantCommand(() -> {
+      UserPolicy.getInstance().setTurretCalculatorSpeedMultiplier(6.5);
+    }));
 
     scoreOperatorPanel.button(12)
         .whileTrue(new TurretContinuousNudgeCommand(subsystemManager.getTurretSubsystem(), true));

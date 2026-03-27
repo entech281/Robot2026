@@ -289,9 +289,9 @@ public final class RobotConstants {
       public static final int PRESET_1_FIRE = 3;
       public static final int PRESET_2_FIRE = 4;
       public static final int SNOWBLOW_FIRE = 14;
-      public static final int CLIMB = 12;
-      public static final int TURRET_NUDGE_UP = 8;
-      public static final int TURRET_NUDGE_DOWN = 9;
+      public static final int CLIMB = 13;
+      public static final int TURRET_NUDGE_UP = 9;
+      public static final int TURRET_NUDGE_DOWN = 8;
       public static final int DISTANCE_UP = 11;
       public static final int DISTANCE_DOWN = 10;
     }

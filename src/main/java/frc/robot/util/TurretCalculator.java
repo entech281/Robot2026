@@ -7,13 +7,14 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import frc.robot.RobotConstants;
+import frc.robot.operation.UserPolicy;
 
 public class TurretCalculator {
 
     private Pose2d target;
     private Pose2d robotPose;
     private ChassisSpeeds chassisSpeeds;
-    private static final double SPEED_MULTIPLIER = 6.5;
+    private static double SPEED_MULTIPLIER = 6.5;
 
     public TurretCalculator() {
         this.target = new Pose2d();
@@ -28,6 +29,9 @@ public class TurretCalculator {
     }
 
     public double calculateTargetTurretAngle() {
+
+        SPEED_MULTIPLIER = UserPolicy.getInstance().getTurretCalculatorSpeedMultiplier();
+
         Translation2d turretToRobot = RobotConstants.TURRET.TURRET_OFFSET.rotateBy(robotPose.getRotation());
         Pose2d turretPose = new Pose2d(robotPose.getX() + turretToRobot.getX(),
                 robotPose.getY() + turretToRobot.getY(),
