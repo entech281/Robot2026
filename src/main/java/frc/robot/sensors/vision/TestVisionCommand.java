@@ -29,18 +29,21 @@ public class TestVisionCommand extends EntechCommand {
                 if (checkResults(RobotIO.getInstance().getVisionOutput().getUnreadResultsB())) {
                     stage = 2;
                 }
+                break;
             case 2:
                 Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST,
                         "PUT TAG " + TARGET_FIDUCIAL_ID + " IN-FRONT CAMERA C");
                 if (checkResults(RobotIO.getInstance().getVisionOutput().getUnreadResultsC())) {
                     stage = 3;
                 }
+                break;
             case 3:
                 Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST,
                         "PUT TAG " + TARGET_FIDUCIAL_ID + " IN-FRONT CAMERA D");
                 if (checkResults(RobotIO.getInstance().getVisionOutput().getUnreadResultsD())) {
                     stage = 4;
                 }
+                break;
             default:
                 break;
         }
