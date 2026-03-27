@@ -13,7 +13,7 @@ public class TurretCalculator {
     private Pose2d target;
     private Pose2d robotPose;
     private ChassisSpeeds chassisSpeeds;
-    private static final double SPEED_MULTIPLIER = 5.0;
+    private static final double SPEED_MULTIPLIER = 6.5;
 
     public TurretCalculator() {
         this.target = new Pose2d();
@@ -35,7 +35,8 @@ public class TurretCalculator {
 
         double angleToTarget = Math
                 .toDegrees(Math.atan2(target.getY() - turretPose.getY(), target.getX() - turretPose.getX()));
-                // .toDegrees(Math.atan2(target.getY() - robotPose.getY(), target.getX() - robotPose.getX()));
+        // .toDegrees(Math.atan2(target.getY() - robotPose.getY(), target.getX() -
+        // robotPose.getX()));
 
         double fieldTurretAngle = angleToTarget - robotPose.getRotation().getDegrees();
 
@@ -43,7 +44,9 @@ public class TurretCalculator {
 
         ChassisSpeeds fieldAbsolute = ChassisSpeeds.fromRobotRelativeSpeeds(chassisSpeeds, robotPose.getRotation());
 
-        turretAngleToTarget = turretAngleToTarget + (Math.cos(Math.toRadians(angleToTarget)) * (fieldAbsolute.vyMetersPerSecond * SPEED_MULTIPLIER)) + (-Math.sin(Math.toRadians(angleToTarget)) * (fieldAbsolute.vxMetersPerSecond * SPEED_MULTIPLIER));
+        turretAngleToTarget = turretAngleToTarget
+                + (Math.cos(Math.toRadians(angleToTarget)) * (fieldAbsolute.vyMetersPerSecond * SPEED_MULTIPLIER))
+                + (-Math.sin(Math.toRadians(angleToTarget)) * (fieldAbsolute.vxMetersPerSecond * SPEED_MULTIPLIER));
 
         return turretAngleToTarget;
     }
