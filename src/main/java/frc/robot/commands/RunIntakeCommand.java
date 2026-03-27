@@ -19,7 +19,7 @@ public class RunIntakeCommand extends EntechCommand {
     }
 
     /**
-     * @param intake the intake subsystem
+     * @param intake    the intake subsystem
      * @param direction true for intake, false for outtake
      */
     public RunIntakeCommand(IntakeSubsystem intake, boolean direction) {
@@ -52,7 +52,7 @@ public class RunIntakeCommand extends EntechCommand {
         intakeSS.updateInputs(input);
     }
 
-    public void runIntake(){
+    public void runIntake() {
         IntakeInput input = new IntakeInput();
         input.setSpeed(0.5);
     }
