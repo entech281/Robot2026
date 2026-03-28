@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8066124627880638,
-        "y": 7.4688602774372415
+        "x": 3.7844211202515616,
+        "y": 7.496894096988754
       },
       "isLocked": false,
       "linkedName": "L_Start_Reverse"
     },
     {
       "anchor": {
-        "x": 0.8419827586206905,
-        "y": 5.921325431034482
+        "x": 0.40003076923077063,
+        "y": 5.932723076923078
       },
       "prevControl": {
-        "x": 0.5339148209030651,
-        "y": 5.753975348379003
+        "x": 0.03107586510499405,
+        "y": 5.756215079385293
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Depot"
     }
   ],
   "rotationTargets": [],
