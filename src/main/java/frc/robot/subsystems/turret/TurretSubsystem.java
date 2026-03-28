@@ -37,7 +37,7 @@ import frc.robot.livetuning.LiveTuningHandler;
  */
 public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> {
 
-    private static final boolean ENABLED = true;
+    private static final boolean ENABLED = false;
     private boolean homed = false;
 
     private SparkMax turretMotor;
@@ -195,8 +195,10 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     public TurretOutput toOutputs() {
         TurretOutput out = new TurretOutput();
 
-        if (!ENABLED)
+        if (!ENABLED) {
+            out.setIsAtRequestedPosition(true);
             return out;
+        }
 
         Angle currentPos = Degrees.of(turretEncoder.getPosition());
         Angle reqPos = latestInput.getRequestedPosition();
