@@ -37,7 +37,7 @@ import frc.robot.livetuning.LiveTuningHandler;
  */
 public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> {
 
-    private static final boolean ENABLED = false;
+    private static final boolean ENABLED = true;
     private boolean homed = false;
 
     private SparkMax turretMotor;
