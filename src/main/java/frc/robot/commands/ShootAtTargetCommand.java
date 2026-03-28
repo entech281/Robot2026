@@ -94,7 +94,7 @@ public class ShootAtTargetCommand extends EntechCommand {
 
         shooterInput
                 .setSpeed(shot.getShotAngularVelocity(Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS)).in(RPM)
-                        + 50);
+                        + 50 + 17);
         hoodInput.setRequestedPosition(shot.getHoodAngle().in(Degree));
         turretInput.setRequestedPosition(Degrees.of(targetTurretAngle));
 
