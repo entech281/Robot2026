@@ -10,7 +10,7 @@ import frc.robot.RobotConstants;
 import frc.robot.io.RobotIO;
 
 public class TestVisionCommand extends EntechCommand {
-    private static final int TARGET_FIDUCIAL_ID = 12;
+    private static final int TARGET_FIDUCIAL_ID = 30;
     private int stage = 0;
 
     @Override
@@ -20,27 +20,30 @@ public class TestVisionCommand extends EntechCommand {
                 Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST,
                         "PUT TAG " + TARGET_FIDUCIAL_ID + " IN-FRONT CAMERA A");
                 if (checkResults(RobotIO.getInstance().getVisionOutput().getUnreadResultsA())) {
-                    stage++;
+                    stage = 1;
                 }
                 break;
             case 1:
                 Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST,
                         "PUT TAG " + TARGET_FIDUCIAL_ID + " IN-FRONT CAMERA B");
                 if (checkResults(RobotIO.getInstance().getVisionOutput().getUnreadResultsB())) {
-                    stage++;
+                    stage = 2;
                 }
+                break;
             case 2:
                 Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST,
                         "PUT TAG " + TARGET_FIDUCIAL_ID + " IN-FRONT CAMERA C");
                 if (checkResults(RobotIO.getInstance().getVisionOutput().getUnreadResultsC())) {
-                    stage++;
+                    stage = 3;
                 }
+                break;
             case 3:
                 Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST,
                         "PUT TAG " + TARGET_FIDUCIAL_ID + " IN-FRONT CAMERA D");
                 if (checkResults(RobotIO.getInstance().getVisionOutput().getUnreadResultsD())) {
-                    stage++;
+                    stage = 4;
                 }
+                break;
             default:
                 break;
         }
@@ -64,8 +67,14 @@ public class TestVisionCommand extends EntechCommand {
     }
 
     @Override
+    public void end(boolean interrupted) {
+        Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST,
+                "VISION TEST COMPLETE");
+    }
+
+    @Override
     public boolean isFinished() {
-        return stage == 4;
+        return stage > 3;
     }
 
     @Override

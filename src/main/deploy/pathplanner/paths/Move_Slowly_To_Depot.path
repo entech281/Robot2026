@@ -4,28 +4,28 @@
     {
       "anchor": {
         "x": 3.6,
-        "y": 7.25
+        "y": 7.328107692307692
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.059650322580812,
-        "y": 7.490270311044257
+        "x": 3.877240412891659,
+        "y": 7.448963066152667
       },
       "isLocked": false,
       "linkedName": "L_Start_Reverse"
     },
     {
       "anchor": {
-        "x": 1.13,
-        "y": 5.95
+        "x": 0.40003076923077063,
+        "y": 5.932723076923078
       },
       "prevControl": {
-        "x": 0.9063394791489954,
-        "y": 5.8331496949347255
+        "x": 0.05235539914253795,
+        "y": 5.773352034456565
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Depot"
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.5,
+    "maxVelocity": 1.0,
     "maxAcceleration": 1.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,

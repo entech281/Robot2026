@@ -3,32 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.608,
-        "y": 0.85
+        "x": 3.5954615384615396,
+        "y": 0.777
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.821801132535304,
-        "y": 0.979572665815833
+        "x": 3.8092626709968433,
+        "y": 0.9065726658158332
       },
       "isLocked": false,
-      "linkedName": "R_Hub"
-    },
-    {
-      "anchor": {
-        "x": 3.093123076923078,
-        "y": 0.7139846153846157
-      },
-      "prevControl": {
-        "x": 2.8538103070404595,
-        "y": 1.090526364391423
-      },
-      "nextControl": {
-        "x": 3.3200656364204395,
-        "y": 0.3569065191378825
-      },
-      "isLocked": false,
-      "linkedName": "In_R_Trench"
+      "linkedName": "R_Start"
     },
     {
       "anchor": {
@@ -110,11 +94,11 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 0.5,
       "rotationDegrees": 90.0
     },
     {
-      "waypointRelativePos": 5.0,
+      "waypointRelativePos": 4.0,
       "rotationDegrees": 90.0
     }
   ],
@@ -123,7 +107,7 @@
   "eventMarkers": [
     {
       "name": "Intake",
-      "waypointRelativePos": 1.7,
+      "waypointRelativePos": 0.85,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

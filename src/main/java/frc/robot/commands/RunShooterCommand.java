@@ -3,7 +3,6 @@ package frc.robot.commands;
 import static edu.wpi.first.units.Units.RPM;
 
 import frc.entech.commands.EntechCommand;
-import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.operation.UserPolicy;
 import frc.robot.subsystems.shooter.ShooterInput;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -14,7 +13,6 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
  */
 public class RunShooterCommand extends EntechCommand {
     private final ShooterSubsystem shooter;
-    private boolean direction;
 
     public RunShooterCommand(ShooterSubsystem shooter) {
         this(shooter, false);
@@ -28,7 +26,6 @@ public class RunShooterCommand extends EntechCommand {
     public RunShooterCommand(ShooterSubsystem shooter, boolean direction) {
         super(shooter);
         this.shooter = shooter;
-        this.direction = direction;
     }
 
     @Override

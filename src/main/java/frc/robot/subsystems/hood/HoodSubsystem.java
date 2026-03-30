@@ -22,7 +22,7 @@ import frc.robot.RobotConstants;
 import frc.robot.io.RobotIO;
 
 public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
-    private static final boolean ENABLED = true;
+    private static final boolean ENABLED = false;
 
     private SparkMax hoodMotor;
     private SparkClosedLoopController hoodPIDController;
@@ -93,8 +93,10 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
     public HoodOutput toOutputs() {
         HoodOutput out = new HoodOutput();
 
-        if (!ENABLED)
+        if (!ENABLED) {
+            out.setAtRequestedPosition(true);
             return out;
+        }
 
         double reqPos = latestInput.getRequestedPosition();
         SparkOutput spark = SparkOutput.createOutput(hoodMotor);

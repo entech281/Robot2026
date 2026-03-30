@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5,
-        "y": 4.0
+        "x": 3.6,
+        "y": 7.328107692307692
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.7449098857477767,
-        "y": 4.050191113386844
+        "x": 3.7844211202515616,
+        "y": 7.496894096988754
       },
       "isLocked": false,
-      "linkedName": "Hub_Sit"
+      "linkedName": "L_Start_Reverse"
     },
     {
       "anchor": {
-        "x": 3.5,
-        "y": 4.0
+        "x": 0.40003076923077063,
+        "y": 5.932723076923078
       },
       "prevControl": {
-        "x": 3.2252231268563434,
-        "y": 3.9437651257328934
+        "x": 0.03107586510499405,
+        "y": 5.756215079385293
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Hub_Sit"
+      "linkedName": "Depot"
     }
   ],
   "rotationTargets": [],
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 1.0,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -47,8 +47,8 @@
   "reversed": false,
   "folder": null,
   "idealStartingState": {
-    "velocity": 0,
+    "velocity": 1.0,
     "rotation": 180.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

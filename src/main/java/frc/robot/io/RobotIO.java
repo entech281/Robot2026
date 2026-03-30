@@ -8,14 +8,11 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.RobotConstants;
-import frc.robot.subsystems.climb.ClimbOutput;
 import frc.robot.subsystems.drive.DriveInput;
 import frc.robot.subsystems.drive.DriveOutput;
 import frc.robot.subsystems.turret.TurretOutput;
 import frc.robot.subsystems.hood.HoodOutput;
 import frc.robot.subsystems.intake.IntakeOutput;
-import frc.robot.sensors.HallEffectSensor.HallEffectOutput;
-import frc.robot.sensors.HomeTurretSwitch.HomeTurretOutput;
 import frc.robot.sensors.gyro.GyroOutput;
 import frc.robot.sensors.vision.VisionOutput;
 import frc.robot.subsystems.shooter.ShooterOutput;
@@ -68,10 +65,6 @@ public class RobotIO implements DriveInputSupplier {
     return latestVisionOutput;
   }
 
-  public ClimbOutput getClimbOutput() {
-    return latestClimbOutput;
-  }
-
   public TurretOutput getTurretOutput() {
     return latestTurretOutput;
   }
@@ -86,14 +79,6 @@ public class RobotIO implements DriveInputSupplier {
 
   public IntakeOutput getIntakeOutput() {
     return latestIntakeOutput;
-  }
-
-  public HallEffectOutput getHallEffectOutput() {
-    return latestHallEffectOutput;
-  }
-
-  public HomeTurretOutput getHomeTurretOutput() {
-    return latestHomeTurretOutput;
   }
 
   public void updateGyro(GyroOutput no) {
@@ -136,24 +121,9 @@ public class RobotIO implements DriveInputSupplier {
     tro.log();
   }
 
-  public void updateClimb(ClimbOutput co) {
-    latestClimbOutput = co;
-    co.log();
-  }
-
   public void updateTurret(TurretOutput to) {
     latestTurretOutput = to;
     to.log();
-  }
-
-  public void updateHallEffect(HallEffectOutput heo) {
-    latestHallEffectOutput = heo;
-    heo.log();
-  }
-
-  public void updateHomeTurret(HomeTurretOutput hto) {
-    latestHomeTurretOutput = hto;
-    hto.log();
   }
 
   private GyroOutput latestGyroOutput;
@@ -161,11 +131,8 @@ public class RobotIO implements DriveInputSupplier {
   private VisionOutput latestVisionOutput;
   private ShooterOutput latestShooterOutput;
   private HoodOutput latestHoodOutput;
-  private ClimbOutput latestClimbOutput;
   private TransferOutput latestTransferOutput;
   private IntakeOutput latestIntakeOutput;
   private Pose2d latestOdometryPose = RobotConstants.ODOMETRY.INITIAL_POSE;
   private TurretOutput latestTurretOutput;
-  private HallEffectOutput latestHallEffectOutput;
-  private HomeTurretOutput latestHomeTurretOutput;
 }

@@ -26,7 +26,7 @@ public class TestTurretCommand extends EntechCommand {
     public void initialize() {
         counter.reset();
         TurretInput input = new TurretInput();
-        input.setRequestedPosition(Degrees.of(20.0));
+        input.setRequestedPosition(Degrees.of(180.0));
         turretSubsystem.updateInputs(input);
     }
 

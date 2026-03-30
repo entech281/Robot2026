@@ -1,1 +1,7 @@
-{}
+{
+  "download": {
+    "localDir": "C:\\Users\\theye\\OneDrive\\Desktop\\logs\\matches\\hartsville2026",
+    "remoteDir": "/u/logs",
+    "serverTeam": "281"
+  }
+}

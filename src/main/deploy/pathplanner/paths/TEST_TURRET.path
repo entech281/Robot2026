@@ -1,0 +1,83 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.5,
+        "y": 4.0
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.7202427005411374,
+        "y": 4.118292657668796
+      },
+      "isLocked": false,
+      "linkedName": "Hub_Sit"
+    },
+    {
+      "anchor": {
+        "x": 1.9268642241379315,
+        "y": 4.0
+      },
+      "prevControl": {
+        "x": 3.0823547724748765,
+        "y": 3.8912275759950887
+      },
+      "nextControl": {
+        "x": 1.6779645976561692,
+        "y": 4.023430235535292
+      },
+      "isLocked": false,
+      "linkedName": "Backup"
+    },
+    {
+      "anchor": {
+        "x": 3.7350000000000003,
+        "y": 2.2170905172413793
+      },
+      "prevControl": {
+        "x": 3.2143425415586386,
+        "y": 1.9682558651541373
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Test_end"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "AutoShoot",
+      "waypointRelativePos": 0.9518716577540105,
+      "endWaypointRelativePos": 2.0,
+      "command": null
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0.9572192513369006,
+      "endWaypointRelativePos": 2.0,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 1.5,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": false
+}

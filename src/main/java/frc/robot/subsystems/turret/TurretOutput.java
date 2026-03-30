@@ -21,6 +21,7 @@ public class TurretOutput extends SubsystemOutput {
   private boolean isPastSofterUpperLimit = false;
   private boolean homingSwitchState = false;
   private boolean homed = false;
+  private boolean farLimitSwitchState = false;
 
   private SparkOutput turretMotor;
 
@@ -32,8 +33,9 @@ public class TurretOutput extends SubsystemOutput {
     Logger.recordOutput("TurretOutput/isAtForwardLimitStall", isAtForwardLimitStall);
     Logger.recordOutput("TurretOutput/isAtReverseLimitStall", isAtReverseLimitStall);
     Logger.recordOutput("TurretOutput/isAtRequestedPosition", isAtRequestedPosition);
-    Logger.recordOutput("TurretOutput/switch", homingSwitchState);
+    Logger.recordOutput("TurretOutput/homingSwitch", homingSwitchState);
     Logger.recordOutput("TurretOutput/homed", homed);
+    Logger.recordOutput("TurretOutput/farLimitSwitch", farLimitSwitchState);
 
     if (turretMotor != null)
       turretMotor.log("TurretOutput/turretMotor");
@@ -222,6 +224,20 @@ public class TurretOutput extends SubsystemOutput {
    */
   public void setHomed(boolean homed) {
     this.homed = homed;
+  }
+
+  /**
+   * @return boolean return the farLimitSwitchState
+   */
+  public boolean isFarLimitSwitchState() {
+    return farLimitSwitchState;
+  }
+
+  /**
+   * @param farLimitSwitchState the farLimitSwitchState to set
+   */
+  public void setFarLimitSwitchState(boolean farLimitSwitchState) {
+    this.farLimitSwitchState = farLimitSwitchState;
   }
 
 }

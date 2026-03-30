@@ -13,7 +13,7 @@ public class TurretCalculator {
     private Pose2d target;
     private Pose2d robotPose;
     private ChassisSpeeds chassisSpeeds;
-    private static final double SPEED_MULTIPLIER = 5.0;
+    private static double SPEED_MULTIPLIER = 7.3;
 
     public TurretCalculator() {
         this.target = new Pose2d();
@@ -28,6 +28,7 @@ public class TurretCalculator {
     }
 
     public double calculateTargetTurretAngle() {
+
         Translation2d turretToRobot = RobotConstants.TURRET.TURRET_OFFSET.rotateBy(robotPose.getRotation());
         Pose2d turretPose = new Pose2d(robotPose.getX() + turretToRobot.getX(),
                 robotPose.getY() + turretToRobot.getY(),
@@ -35,7 +36,8 @@ public class TurretCalculator {
 
         double angleToTarget = Math
                 .toDegrees(Math.atan2(target.getY() - turretPose.getY(), target.getX() - turretPose.getX()));
-                // .toDegrees(Math.atan2(target.getY() - robotPose.getY(), target.getX() - robotPose.getX()));
+        // .toDegrees(Math.atan2(target.getY() - robotPose.getY(), target.getX() -
+        // robotPose.getX()));
 
         double fieldTurretAngle = angleToTarget - robotPose.getRotation().getDegrees();
 
@@ -43,9 +45,11 @@ public class TurretCalculator {
 
         ChassisSpeeds fieldAbsolute = ChassisSpeeds.fromRobotRelativeSpeeds(chassisSpeeds, robotPose.getRotation());
 
-        turretAngleToTarget = turretAngleToTarget + (Math.cos(Math.toRadians(angleToTarget)) * (fieldAbsolute.vyMetersPerSecond * SPEED_MULTIPLIER)) + (-Math.sin(Math.toRadians(angleToTarget)) * (fieldAbsolute.vxMetersPerSecond * SPEED_MULTIPLIER));
+        turretAngleToTarget = turretAngleToTarget
+                + (Math.cos(Math.toRadians(angleToTarget)) * (fieldAbsolute.vyMetersPerSecond * SPEED_MULTIPLIER))
+                + (-Math.sin(Math.toRadians(angleToTarget)) * (fieldAbsolute.vxMetersPerSecond * SPEED_MULTIPLIER));
 
-        return turretAngleToTarget;
+        return turretAngleToTarget + 2;
     }
 
     public boolean isValidTurretAngle(double angle, double toleranceDegrees) {

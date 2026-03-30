@@ -7,17 +7,17 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Back_Up_To_Tower"
+            "pathName": "TEST_TURRET"
           }
         },
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 13.0
+                  "name": "Intake"
                 }
               },
               {
@@ -27,12 +27,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ReverseIntake"
           }
         }
       ]

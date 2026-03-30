@@ -1,5 +1,6 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
@@ -93,7 +94,7 @@ public final class RobotConstants {
 
     // Calculations required for driving motor conversion factors and feed forward
     public static final double DRIVING_MOTOR_FREE_SPEED_RPS = FREE_SPEED_RPM / 60;
-    public static final double WHEEL_DIAMETER_METERS = 0.09802701871182373;
+    public static final double WHEEL_DIAMETER_METERS = 0.099793655;
     public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
     public static final double DRIVING_MOTOR_REDUCTION = (45.0 * 17 * 50) / (DRIVING_MOTOR_PINION_TEETH * 15 * 27);
     public static final double DRIVE_WHEEL_FREE_SPEED_RPS = (DRIVING_MOTOR_FREE_SPEED_RPS * WHEEL_CIRCUMFERENCE_METERS)
@@ -149,21 +150,21 @@ public final class RobotConstants {
   public static interface LiveTuning {
     public static final Map<String, Double> VALUES = Map.ofEntries(
 
-        Map.entry("ShooterSubsystem/SetSpeed", 3750.0),
+        Map.entry("ShooterSubsystem/SetSpeed", 700.0),
         Map.entry("IntakeSubsystem/SetSpeed", 0.75),
         Map.entry("TransferSubsystem/SetSpeed", 1.0),
         Map.entry("TurretSubsystem/LowerLimitDegrees", 0.0),
-        Map.entry("TurretSubsystem/UpperLimitDegrees", 240.0),
-        Map.entry("TurretSubsystem/SofterLowerLimitDegrees", 5.0),
-        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 235.0),
+        Map.entry("TurretSubsystem/UpperLimitDegrees", 270.0),
+        Map.entry("TurretSubsystem/SofterLowerLimitDegrees", 20.0),
+        Map.entry("TurretSubsystem/SofterUpperLimitDegrees", 250.0),
         Map.entry("TurretSubsystem/PresetOneDegrees", 0.0),
         Map.entry("TurretSubsystem/PresetTwoDegrees", 0.0),
         Map.entry("HoodSubsystem/PresetOneDegrees", 15.0),
         Map.entry("HoodSubsystem/PresetTwoDegrees", 0.0),
-        Map.entry("HoodSubsystem/SnowBlowPresetDegrees", 13.0),
-        Map.entry("ShooterSubsystem/SnowBlowPresetRPM", 4000.0),
-        Map.entry("ShooterSubsystem/PresetOneRPM", 3750.0),
-        Map.entry("ShooterSubsystem/PresetTwoRPM", 4400.0),
+        Map.entry("HoodSubsystem/SnowBlowPresetDegrees", 15.0),
+        Map.entry("ShooterSubsystem/SnowBlowPresetRPM", 5800.0),
+        Map.entry("ShooterSubsystem/PresetOneRPM", 4350.0),
+        Map.entry("ShooterSubsystem/PresetTwoRPM", 4200.0),
         Map.entry("ShiftStateTracker/WarningSeconds", 5.0),
         Map.entry("TurretSubsystem/HomeSwitchPosition", -17.0),
         Map.entry("ShooterSubsystem/kP", 0.0001),
@@ -173,43 +174,43 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/kA", 0.001),
         Map.entry("ShooterSubsystem/kS", 0.08),
         Map.entry("TurretSubsystem/LiveAngle", 0.0),
-        Map.entry("TurretSubsystem/NudgeAmount", 20.0),
+        Map.entry("TurretSubsystem/NudgeAmount", 15.0),
         Map.entry("UserPolicy/DistanceNudgeAmountMeters", 0.5),
         Map.entry("IntakeSubsystem/MinimumVariableSpeed", 0.3),
-        Map.entry("ShotTuningRPM/5ft", 3800.0),
-        Map.entry("ShotTuningRPM/6ft", 3800.0),
-        Map.entry("ShotTuningRPM/7ft", 3800.0),
-        Map.entry("ShotTuningRPM/8ft", 3800.0),
-        Map.entry("ShotTuningRPM/9ft", 3750.0),
-        Map.entry("ShotTuningRPM/10ft", 3750.0),
-        Map.entry("ShotTuningRPM/11ft", 3750.0),
-        Map.entry("ShotTuningRPM/12ft", 3750.0),
-        Map.entry("ShotTuningRPM/13ft", 3800.0),
-        Map.entry("ShotTuningRPM/14ft", 3800.0),
-        Map.entry("ShotTuningRPM/15ft", 3800.0),
-        Map.entry("ShotTuningRPM/16ft", 3800.0),
-        Map.entry("ShotTuningRPM/17ft", 3800.0),
-        Map.entry("ShotTuningRPM/18ft", 3800.0),
-        Map.entry("ShotTuningRPM/19ft", 3800.0),
-        Map.entry("ShotTuningRPM/20ft", 3800.0),
-        Map.entry("ShotTuningRPM/21ft", 3800.0),
+        Map.entry("ShotTuningRPM/5ft", 3050.0),
+        Map.entry("ShotTuningRPM/6ft", 3150.0),
+        Map.entry("ShotTuningRPM/7ft", 3250.0),
+        Map.entry("ShotTuningRPM/8ft", 3400.0),
+        Map.entry("ShotTuningRPM/9ft", 3550.0),
+        Map.entry("ShotTuningRPM/10ft", 3825.0),
+        Map.entry("ShotTuningRPM/11ft", 4050.0),
+        Map.entry("ShotTuningRPM/12ft", 4035.0),
+        Map.entry("ShotTuningRPM/13ft", 4200.0),
+        Map.entry("ShotTuningRPM/14ft", 4300.0),
+        Map.entry("ShotTuningRPM/15ft", 4350.0),
+        Map.entry("ShotTuningRPM/16ft", 4550.0),
+        Map.entry("ShotTuningRPM/17ft", 4750.0),
+        Map.entry("ShotTuningRPM/18ft", 4950.0),
+        Map.entry("ShotTuningRPM/19ft", 5400.0),
+        Map.entry("ShotTuningRPM/20ft", 5500.0),
+        Map.entry("ShotTuningRPM/21ft", 5800.0),
         Map.entry("ShotTuningAngle/5ft", 0.0),
         Map.entry("ShotTuningAngle/6ft", 0.0),
         Map.entry("ShotTuningAngle/7ft", 0.0),
         Map.entry("ShotTuningAngle/8ft", 0.0),
-        Map.entry("ShotTuningAngle/9ft", 5.0),
+        Map.entry("ShotTuningAngle/9ft", 0.0),
         Map.entry("ShotTuningAngle/10ft", 0.0),
-        Map.entry("ShotTuningAngle/11ft", 5.0),
-        Map.entry("ShotTuningAngle/12ft", 10.0),
-        Map.entry("ShotTuningAngle/13ft", 15.0),
+        Map.entry("ShotTuningAngle/11ft", 0.0),
+        Map.entry("ShotTuningAngle/12ft", 0.0),
+        Map.entry("ShotTuningAngle/13ft", 0.0),
         Map.entry("ShotTuningAngle/14ft", 0.0),
         Map.entry("ShotTuningAngle/15ft", 0.0),
         Map.entry("ShotTuningAngle/16ft", 0.0),
-        Map.entry("ShotTuningAngle/17ft", 0.0),
+        Map.entry("ShotTuningAngle/17ft", 2.2),
         Map.entry("ShotTuningAngle/18ft", 0.0),
         Map.entry("ShotTuningAngle/19ft", 0.0),
-        Map.entry("ShotTuningAngle/20ft", 0.0),
-        Map.entry("ShotTuningAngle/21ft", 0.0));
+        Map.entry("ShotTuningAngle/20ft", 7.0),
+        Map.entry("ShotTuningAngle/21ft", 15.0));
   }
 
   public static interface PORTS {
@@ -273,6 +274,7 @@ public final class RobotConstants {
     public static interface DIO {
       public static final int HALL_EFFECT_SENSOR = 20;
       public static final int HOME_TURRET_SWITCH = 1;
+      public static final int FORWARD_TURRET_SWITCH = 2;
     }
   }
 
@@ -287,9 +289,9 @@ public final class RobotConstants {
       public static final int PRESET_1_FIRE = 3;
       public static final int PRESET_2_FIRE = 4;
       public static final int SNOWBLOW_FIRE = 14;
-      public static final int CLIMB = 12;
-      public static final int TURRET_NUDGE_UP = 8;
-      public static final int TURRET_NUDGE_DOWN = 9;
+      public static final int CLIMB = 13;
+      public static final int TURRET_NUDGE_UP = 9;
+      public static final int TURRET_NUDGE_DOWN = 8;
       public static final int DISTANCE_UP = 11;
       public static final int DISTANCE_DOWN = 10;
     }
@@ -323,7 +325,7 @@ public final class RobotConstants {
       // Define where your camera is mounted on the robot/rig
       // *** YOU MUST MEASURE AND UPDATE THESE VALUES ***
       // Example values shown below - camera 0.3m forward, centered, 0.4m high, tilted
-      //left Rear
+      // left Rear
       Transform3d robotToCameraA = new Transform3d(
           new Translation3d(
               Units.inchesToMeters(-11.4), // X: meters forward from robot center (positive = forward)
@@ -336,7 +338,7 @@ public final class RobotConstants {
               Math.toRadians(135) // Yaw (rotation around Z axis)
           ));
 
-      //right rear
+      // right rear
       Transform3d robotToCameraB = new Transform3d(
           new Translation3d(
               Units.inchesToMeters(-11.4), // X: meters forward from robot center (positive = forward)
@@ -349,7 +351,7 @@ public final class RobotConstants {
               Math.toRadians(-135) // Yaw (rotation around Z axis)
           ));
 
-      //left top
+      // left top
       Transform3d robotToCameraC = new Transform3d(
           new Translation3d(
               Units.inchesToMeters(-1.5), // X: meters forward from robot center (positive = forward)
@@ -362,7 +364,7 @@ public final class RobotConstants {
               Math.toRadians(45) // Yaw (rotation around Z axis)
           ));
 
-      //right top
+      // right top
       Transform3d robotToCameraD = new Transform3d(
           new Translation3d(
               Units.inchesToMeters(-1.5), // X: meters forward from robot center (positive = forward)
@@ -423,6 +425,7 @@ public final class RobotConstants {
     public static final AngularVelocity TURRET_CRUISE_VELOCITY = DegreesPerSecond.of(500);
     public static final AngularAcceleration TURRET_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(2000);
     public static final Angle TURRET_POSITION_TOLERANCE_DEGREES = Degrees.of(2.0); // considered at setpoint within this
+    public static final Angle TURRET_POSITION_TOLERANCE_MOVING = Degrees.of(3.5);
     public static final Angle HOME_POSITION_DEGREES = Degrees.of(0.0); // position to reset to
 
     public static final Pose3d BLUE_HUB_LOCATION = new Pose3d(Inches.of(182.11).in(Meters),
@@ -430,10 +433,10 @@ public final class RobotConstants {
     public static final Pose3d RED_HUB_LOCATION = new Pose3d(Inches.of(469.11).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
 
-    public static final Pose3d BLUE_SNOWBLOW_TARGET = new Pose3d(0.0,
+    public static final Pose3d BLUE_SNOWBLOW_TARGET = new Pose3d(Feet.of(12).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
 
-    public static final Pose3d RED_SNOWBLOW_TARGET = new Pose3d(Inches.of(651).in(Meters),
+    public static final Pose3d RED_SNOWBLOW_TARGET = new Pose3d(Inches.of(651).minus(Feet.of(12)).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
 
     public static final Translation2d TURRET_OFFSET = new Translation2d(Units.inchesToMeters(-6.75),

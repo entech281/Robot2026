@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.778094869396835,
-        "y": 3.9945690880835074
+        "x": 3.8095038060760786,
+        "y": 3.9923252199832877
       },
       "isLocked": false,
       "linkedName": "Hub_Sit"
     },
     {
       "anchor": {
-        "x": 1.594558189655173,
+        "x": 1.9268642241379315,
         "y": 4.0
       },
       "prevControl": {
-        "x": 1.3445602919971695,
-        "y": 4.00102526415058
+        "x": 1.6291973557489343,
+        "y": 4.001944987013263
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Backup"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

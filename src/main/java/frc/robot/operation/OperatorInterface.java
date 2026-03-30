@@ -19,6 +19,7 @@ import frc.entech.operatorpanel.OutputJoystick.Color;
 import frc.entech.operatorpanel.OutputJoystick.LedNumber;
 import frc.robot.CommandFactory;
 import frc.robot.HardwareManager;
+import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.GyroReset;
@@ -32,6 +33,7 @@ import frc.robot.commands.RunTransferCommand;
 import frc.robot.commands.TurretContinuousNudgeCommand;
 import frc.robot.commands.TurretJogCommand;
 import frc.robot.commands.TwistCommand;
+import frc.robot.commands.XDriveCommand;
 import frc.robot.io.DebugInput;
 import frc.robot.io.DebugInputSupplier;
 import frc.robot.io.DriveInputSupplier;
@@ -157,24 +159,23 @@ public class OperatorInterface
     subsystemManager.getDriveSubsystem()
         .setDefaultCommand(new DriveCommand(subsystemManager.getDriveSubsystem(), this));
 
-    // xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.DRIVE_X)
-    // .whileTrue(new XDriveCommand(subsystemManager.getDriveSubsystem()));
+    xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.DRIVE_X)
+        .whileTrue(new XDriveCommand(subsystemManager.getDriveSubsystem()));
 
     xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.RESET_ODOMETRY)
         .onTrue(new ResetOdometryCommand(odometry));
 
-    xboxController.a().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
-        0));
+    // xboxController.a().whileTrue(new
+    // ManualTurretCommand(subsystemManager.getTurretSubsystem(),
+    // 0));
 
-    xboxController.b().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
-        30));
+    // xboxController.b().whileTrue(new
+    // ManualTurretCommand(subsystemManager.getTurretSubsystem(),
+    // 30));
 
-    xboxController.y().whileTrue(new ManualTurretCommand(subsystemManager.getTurretSubsystem(),
-        -30));
-
-    xboxController.x()
-        .whileTrue(new ParallelCommandGroup(
-            new RunTransferCommand(subsystemManager.getTransferSubsystem(), true)));
+    // xboxController.y().whileTrue(new
+    // ManualTurretCommand(subsystemManager.getTurretSubsystem(),
+    // -30));
 
     xboxController.leftBumper().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
     xboxController.rightBumper().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
@@ -286,7 +287,21 @@ public class OperatorInterface
 
     // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_DOWN)
     // .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(),
-    // -LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount")));
+    // -LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount")))
+
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_UP)
+        .onTrue(new InstantCommand(() -> UserPolicy.getInstance()
+            .setShooterCalculatorSpeedMultiplier(
+                UserPolicy.getInstance().getShooterCalculatorSpeedMultiplier() + 0.1)));
+
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_DOWN)
+        .onTrue(new InstantCommand(() -> UserPolicy.getInstance()
+            .setShooterCalculatorSpeedMultiplier(
+                UserPolicy.getInstance().getShooterCalculatorSpeedMultiplier() - 0.1)));
+
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.CLIMB).onTrue(new InstantCommand(() -> {
+      UserPolicy.getInstance().setShooterCalculatorSpeedMultiplier(1.5);
+    }));
 
     scoreOperatorPanel.button(12)
         .whileTrue(new TurretContinuousNudgeCommand(subsystemManager.getTurretSubsystem(), true));
