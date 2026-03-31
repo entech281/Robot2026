@@ -19,6 +19,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -265,12 +266,20 @@ public class CommandFactory {
     });
   }
 
-  private Pose3d getSnowblowTarget() {
+  private Pose3d getSnowblowTarget( Pose2d robotPose) {
     Optional<Alliance> alliance = DriverStation.getAlliance();
     if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-      return RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
+      if (robotPose.getY() > RobotConstants.ODOMETRY.FIELD_WIDTH_INCHES / 2) {
+        return RobotConstants.TURRET.RED_SNOWBLOW_TARGET_TOP;
+      } else {
+        return RobotConstants.TURRET.RED_SNOWBLOW_TARGET_BOTTOM;
+      }
     } else {
-      return RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;
+      if (robotPose.getY() > RobotConstants.ODOMETRY.FIELD_WIDTH_INCHES / 2) {
+        return RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET_TOP;
+      } else {
+        return RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET_BOTTOM;
+      }
     }
   }
 
@@ -282,12 +291,12 @@ public class CommandFactory {
     Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(
         ChassisSpeeds.fromRobotRelativeSpeeds(RobotIO.getInstance().getDriveOutput().getSpeeds(),
             RobotIO.getInstance().getOdometryPose().getRotation()),
-        shooterCurrentPose, getSnowblowTarget(),
+        shooterCurrentPose, getSnowblowTarget(shooterCurrentPose.toPose2d()),
         Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
         RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
         RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
 
-    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(getSnowblowTarget().toPose2d(),
+    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(getSnowblowTarget(shooterCurrentPose.toPose2d()).toPose2d(),
         RobotIO.getInstance().getOdometryPose(), RobotIO.getInstance().getDriveOutput().getSpeeds());
 
     return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
@@ -312,35 +321,22 @@ public class CommandFactory {
           Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")), false);
     } else {
       Supplier<TurretCalculator> turretCalculatorSupplier = () -> {
-        Pose3d target;
-
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-
-        if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-          target = RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
-        } else {
-          target = RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;
-        }
 
         Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
             .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
+
+        Pose3d target = getSnowblowTarget(shooterCurrentPose.toPose2d());
+
         return new TurretCalculator(target.toPose2d(),
             RobotIO.getInstance().getOdometryPose(), RobotIO.getInstance().getDriveOutput().getSpeeds());
       };
 
       Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> {
-        Pose3d target;
-
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-
-        if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-          target = RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
-        } else {
-          target = RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;
-        }
 
         Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
             .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
+
+        Pose3d target = getSnowblowTarget(shooterCurrentPose.toPose2d());
 
         return new ShooterCalculator(
             ChassisSpeeds.fromRobotRelativeSpeeds(RobotIO.getInstance().getDriveOutput().getSpeeds(),

@@ -433,11 +433,17 @@ public final class RobotConstants {
     public static final Pose3d RED_HUB_LOCATION = new Pose3d(Inches.of(469.11).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
 
-    public static final Pose3d BLUE_SNOWBLOW_TARGET = new Pose3d(Feet.of(12).in(Meters),
-        Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
+    public static final Pose3d BLUE_SNOWBLOW_TARGET_TOP = new Pose3d(0.0,
+        Inches.of(317.69).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
 
-    public static final Pose3d RED_SNOWBLOW_TARGET = new Pose3d(Inches.of(651).minus(Feet.of(12)).in(Meters),
-        Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
+    public static final Pose3d BLUE_SNOWBLOW_TARGET_BOTTOM = new Pose3d(0.0,
+        Inches.of(0.0).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
+
+    public static final Pose3d RED_SNOWBLOW_TARGET_TOP = new Pose3d(Inches.of(651.22).in(Meters),
+        Inches.of(317.69).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
+
+    public static final Pose3d RED_SNOWBLOW_TARGET_BOTTOM = new Pose3d(Inches.of(651.22).in(Meters),
+        Inches.of(0.0).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
 
     public static final Translation2d TURRET_OFFSET = new Translation2d(Units.inchesToMeters(-6.75),
         Units.inchesToMeters(-3.0));
