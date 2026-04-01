@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 3.6,
-        "y": 7.328107692307692
+        "y": 7.33
       },
       "prevControl": null,
       "nextControl": {
         "x": 3.877240412891659,
-        "y": 7.448963066152667
+        "y": 7.450855373844975
       },
       "isLocked": false,
       "linkedName": "L_Start_Reverse"

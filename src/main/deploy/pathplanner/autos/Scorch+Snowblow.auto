@@ -5,32 +5,13 @@
     "data": {
       "commands": [
         {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "The Big U"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              }
-            ]
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Move_Slowly_To_Depot_Arc"
+                  "pathName": "Scorch"
                 }
               },
               {
@@ -42,7 +23,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "AutoShoot"
+                  "name": "Snowblow"
                 }
               }
             ]
