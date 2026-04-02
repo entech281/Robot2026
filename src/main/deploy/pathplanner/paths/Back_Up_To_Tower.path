@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8095038060760786,
-        "y": 3.9923252199832877
+        "x": 3.7497737040279175,
+        "y": 4.010634696806878
       },
       "isLocked": false,
       "linkedName": "Hub_Sit"
@@ -20,8 +20,8 @@
         "y": 4.0
       },
       "prevControl": {
-        "x": 1.6291973557489343,
-        "y": 4.001944987013263
+        "x": 1.6232951909204762,
+        "y": 3.9985791598390272
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,7 +47,7 @@
   "reversed": false,
   "folder": null,
   "idealStartingState": {
-    "velocity": 0,
+    "velocity": 0.0,
     "rotation": 180.0
   },
   "useDefaultConstraints": true

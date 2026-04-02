@@ -8,11 +8,27 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.7202427005411374,
-        "y": 4.118292657668796
+        "x": 3.4070846153846164,
+        "y": 4.460592307692307
       },
       "isLocked": false,
       "linkedName": "Hub_Sit"
+    },
+    {
+      "anchor": {
+        "x": 3.4629000000000008,
+        "y": 6.05133076923077
+      },
+      "prevControl": {
+        "x": 3.7113861236036136,
+        "y": 6.078801596965842
+      },
+      "nextControl": {
+        "x": 2.0744923076923083,
+        "y": 5.897838461538464
+      },
+      "isLocked": false,
+      "linkedName": null
     },
     {
       "anchor": {
@@ -20,24 +36,24 @@
         "y": 4.0
       },
       "prevControl": {
-        "x": 3.0823547724748765,
-        "y": 3.8912275759950887
+        "x": 1.886115384615386,
+        "y": 4.593153846153847
       },
       "nextControl": {
-        "x": 1.6779645976561692,
-        "y": 4.023430235535292
+        "x": 1.9598785373381071,
+        "y": 3.519432526612758
       },
       "isLocked": false,
       "linkedName": "Backup"
     },
     {
       "anchor": {
-        "x": 3.7350000000000003,
-        "y": 2.2170905172413793
+        "x": 3.6303461538461548,
+        "y": 2.1512307692307697
       },
       "prevControl": {
-        "x": 3.2143425415586386,
-        "y": 1.9682558651541373
+        "x": 2.869861538461539,
+        "y": 2.227976923076923
       },
       "nextControl": null,
       "isLocked": false,
@@ -50,13 +66,13 @@
   "eventMarkers": [
     {
       "name": "AutoShoot",
-      "waypointRelativePos": 0.9518716577540105,
+      "waypointRelativePos": 1.9,
       "endWaypointRelativePos": 2.0,
       "command": null
     },
     {
       "name": "Intake",
-      "waypointRelativePos": 0.9572192513369006,
+      "waypointRelativePos": 1.9,
       "endWaypointRelativePos": 2.0,
       "command": null
     }
