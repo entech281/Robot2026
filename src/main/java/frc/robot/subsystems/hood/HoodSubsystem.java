@@ -64,6 +64,8 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
         hoodConfig.limitSwitch.reverseLimitSwitchPosition(0.0)
                 .reverseLimitSwitchTriggerBehavior(Behavior.kStopMovingMotor);
 
+        hoodConfig.smartCurrentLimit(35);
+
         // Configure the motor with these settings
         hoodMotor.configure(hoodConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
