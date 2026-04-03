@@ -43,6 +43,7 @@ import frc.robot.commands.RotateToAngleCommand;
 import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.ShootAtTargetCommand;
+import frc.robot.commands.VirtualTargetAutoShootCommand;
 import frc.robot.commands.ManualShootCommand;
 import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.ManualTurretCommandSupplier;
@@ -193,52 +194,7 @@ public class CommandFactory {
   }
 
   public Command getFullShootCommand() {
-
-    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> {
-      Pose3d target;
-
-      Optional<Alliance> alliance = DriverStation.getAlliance();
-
-      if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-        target = RobotConstants.TURRET.RED_HUB_LOCATION;
-      } else {
-        target = RobotConstants.TURRET.BLUE_HUB_LOCATION;
-      }
-
-      Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
-          .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
-
-      return new ShooterCalculator(
-          ChassisSpeeds.fromRobotRelativeSpeeds(RobotIO.getInstance().getDriveOutput().getSpeeds(),
-              RobotIO.getInstance().getOdometryPose().getRotation()),
-          shooterCurrentPose, target,
-          Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
-          RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
-          RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
-    };
-    Supplier<TurretCalculator> turretCalculatorSupplier = () -> {
-      Pose3d target;
-
-      Optional<Alliance> alliance = DriverStation.getAlliance();
-
-      if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-        target = RobotConstants.TURRET.RED_HUB_LOCATION;
-      } else {
-        target = RobotConstants.TURRET.BLUE_HUB_LOCATION;
-      }
-
-      return new TurretCalculator(target.toPose2d(),
-          RobotIO.getInstance().getOdometryPose(), RobotIO.getInstance().getDriveOutput().getSpeeds());
-    };
-
-    return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(),
-        subsystemManager.getHoodSubsystem(),
-        subsystemManager.getTransferSubsystem(),
-        subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
-        shooterCalculatorSupplier);
-
-    // return new ManualTurretCommandSupplier(subsystemManager.getTurretSubsystem(),
-    // turretCalculatorSupplier);
+    return new VirtualTargetAutoShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem());
   }
 
   public Command getRotateForBumpCommand() {

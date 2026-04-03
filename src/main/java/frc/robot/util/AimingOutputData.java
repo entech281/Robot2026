@@ -4,9 +4,9 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 
 public final class AimingOutputData {
-    public final Angle turretAngle;
-    public final Angle hoodAngle;
-    public final AngularVelocity shooterSpeed;
+    private final Angle turretAngle;
+    private final Angle hoodAngle;
+    private final AngularVelocity shooterSpeed;
 
     public AimingOutputData(Angle turretAngle, Angle hoodAngle, AngularVelocity shooterSpeed) {
         this.turretAngle = turretAngle;

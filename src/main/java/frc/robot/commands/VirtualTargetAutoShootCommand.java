@@ -1,0 +1,92 @@
+package frc.robot.commands;
+
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RPM;
+
+import java.util.Optional;
+
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.entech.commands.EntechCommand;
+import frc.robot.RobotConstants;
+import frc.robot.io.RobotIO;
+import frc.robot.livetuning.LiveTuningHandler;
+import frc.robot.subsystems.hood.HoodInput;
+import frc.robot.subsystems.hood.HoodSubsystem;
+import frc.robot.subsystems.shooter.ShooterInput;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.transfer.TransferInput;
+import frc.robot.subsystems.transfer.TransferSubsystem;
+import frc.robot.subsystems.turret.TurretInput;
+import frc.robot.subsystems.turret.TurretSubsystem;
+import frc.robot.util.AimingCalculator;
+import frc.robot.util.AimingOutputData;
+
+public class VirtualTargetAutoShootCommand extends EntechCommand {
+    private final ShooterSubsystem shooter;
+    private final HoodSubsystem hood;
+    private final TransferSubsystem transfer;
+    private final TurretSubsystem turret;
+    private boolean speedReached = false;
+
+    public VirtualTargetAutoShootCommand(ShooterSubsystem shooter, HoodSubsystem hood, TransferSubsystem transfer, TurretSubsystem turret) {
+        super(shooter, hood, transfer, turret);
+        this.shooter = shooter;
+        this.hood = hood;
+        this.transfer = transfer;
+        this.turret = turret;
+    }
+
+    @Override
+    public void initialize() {
+        speedReached = false;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        shooter.updateInputs(new ShooterInput());
+        hood.updateInputs(new HoodInput());
+        transfer.updateInputs(new TransferInput());
+    }
+
+    @Override
+    public void execute() {
+        Pose3d robotPose = new Pose3d(RobotIO.getInstance().getOdometryPose());
+
+        Pose3d targetPose;
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+        if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+            targetPose = RobotConstants.TURRET.RED_HUB_LOCATION;
+        } else {
+            targetPose = RobotConstants.TURRET.BLUE_HUB_LOCATION;
+        }
+
+        AimingOutputData shotData = AimingCalculator.calculateAimingData(robotPose, targetPose, RobotIO.getInstance().getDriveOutput().getSpeeds());
+        TurretInput tui = new TurretInput();
+        ShooterInput si = new ShooterInput();
+        TransferInput tri = new TransferInput();
+        HoodInput hi = new HoodInput();
+
+        hi.setRequestedPosition(shotData.getHoodAngle().in(Degrees));
+        si.setSpeed(shotData.getShooterSpeed().in(RPM));
+        tui.setRequestedPosition(shotData.getTurretAngle());
+
+        if (RobotIO.getInstance().getShooterOutput().isAtSpeed()) {
+            speedReached = true;
+        }
+        if (RobotIO.getInstance().getHoodOutput().isAtRequestedPosition() && speedReached) {
+            tri.setSpeed(LiveTuningHandler.getInstance().getValue("TransferSubsystem/SetSpeed"));
+        }
+
+        turret.updateInputs(tui);
+        shooter.updateInputs(si);
+        transfer.updateInputs(tri);
+        hood.updateInputs(hi);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
+}

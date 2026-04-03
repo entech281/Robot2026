@@ -210,7 +210,24 @@ public final class RobotConstants {
         Map.entry("ShotTuningAngle/18ft", 0.0),
         Map.entry("ShotTuningAngle/19ft", 0.0),
         Map.entry("ShotTuningAngle/20ft", 7.0),
-        Map.entry("ShotTuningAngle/21ft", 15.0));
+        Map.entry("ShotTuningAngle/21ft", 15.0),
+        Map.entry("ShotFlightTime/5ft", 1.5),
+        Map.entry("ShotFlightTime/6ft", 1.5),
+        Map.entry("ShotFlightTime/7ft", 1.5),
+        Map.entry("ShotFlightTime/8ft", 1.5),
+        Map.entry("ShotFlightTime/9ft", 1.5),
+        Map.entry("ShotFlightTime/10ft", 1.5),
+        Map.entry("ShotFlightTime/11ft", 1.5),
+        Map.entry("ShotFlightTime/12ft", 1.5),
+        Map.entry("ShotFlightTime/13ft", 1.5),
+        Map.entry("ShotFlightTime/14ft", 1.5),
+        Map.entry("ShotFlightTime/15ft", 1.5),
+        Map.entry("ShotFlightTime/16ft", 1.5),
+        Map.entry("ShotFlightTime/17ft", 1.5),
+        Map.entry("ShotFlightTime/18ft", 1.5),
+        Map.entry("ShotFlightTime/19ft", 1.5),
+        Map.entry("ShotFlightTime/20ft", 1.5),
+        Map.entry("ShotFlightTime/21ft", 1.5));
   }
 
   public static interface PORTS {
