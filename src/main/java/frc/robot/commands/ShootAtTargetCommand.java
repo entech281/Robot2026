@@ -125,9 +125,9 @@ public class ShootAtTargetCommand extends EntechCommand {
             turretReady = turretSS.getOutputs().isAtRequestedPosition();
         }
 
-        if (snowblow) {
-            turretReady = true;
-        }
+        // if (snowblow) {
+        //     turretReady = true;
+        // }
 
         boolean isReadyToShoot = turretReady
                 && hoodSS.getOutputs().isAtRequestedPosition()
