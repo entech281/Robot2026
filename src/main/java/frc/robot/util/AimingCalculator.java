@@ -63,11 +63,11 @@ public final class AimingCalculator {
      *
      * @param robotPose   The current pose of the robot.
      * @param targetPose  The pose of the target.
-     * @param robotSpeeds The current speeds of the robot.
+     * @param robotSpeeds The current speeds of the robot (robot relative).
      * @return The necessary aiming data.
      */
     public static AimingOutputData calculateAimingData(Pose3d robotPose, Pose3d targetPose, ChassisSpeeds robotSpeeds, LinearInterpolationTable flightTimeTable, LinearInterpolationTable shooterSpeedTable, LinearInterpolationTable hoodAngleTable) {
-        ChassisSpeeds fieldAbsoluteSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(robotSpeeds, robotPose.toPose2d().getRotation());
+        ChassisSpeeds fieldAbsoluteSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(robotSpeeds, robotPose.toPose2d().getRotation());
         Pose3d virtualTarget = targetPose;
         if (UserPolicy.getInstance().getVirtualPoseMode() == VirtualPoseMode.ONESHOT) {
             Time flightTime = calculateFlightTime(robotPose, targetPose, flightTimeTable);
@@ -76,7 +76,7 @@ public final class AimingCalculator {
             virtualTarget = calculateVirtualPoseIterative(robotPose, targetPose, fieldAbsoluteSpeeds, robotPose.toPose2d().getRotation(), flightTimeTable);
         }
 
-        Angle turretAngle = calculateTurretAngle(robotPose.toPose2d(), targetPose.toPose2d()); //was virtual target
+        Angle turretAngle = calculateTurretAngle(robotPose.toPose2d(), virtualTarget.toPose2d());
         if (UserPolicy.getInstance().isUseVirtualRotationCompensation()) {
             Time flightTime = calculateFlightTime(robotPose, virtualTarget, flightTimeTable);
             turretAngle = calculateVirtualAngleCompensation(turretAngle, fieldAbsoluteSpeeds, flightTime);
@@ -105,8 +105,8 @@ public final class AimingCalculator {
     }
 
     public static Pose3d calculateVirtualPose(Pose3d targetPose, ChassisSpeeds speeds, Time flightTime) {
-        double virtualPoseX = targetPose.getX() + (speeds.vxMetersPerSecond * flightTime.in(Seconds));
-        double virtualPoseY = targetPose.getY() + (speeds.vyMetersPerSecond * flightTime.in(Seconds));
+        double virtualPoseX = targetPose.getX() - (speeds.vxMetersPerSecond * flightTime.in(Seconds));
+        double virtualPoseY = targetPose.getY() - (speeds.vyMetersPerSecond * flightTime.in(Seconds));
         Logger.recordOutput("virtualPose", new Pose3d(virtualPoseX, virtualPoseY, targetPose.getZ(), targetPose.getRotation()));
         return new Pose3d(virtualPoseX, virtualPoseY, targetPose.getZ(), targetPose.getRotation());
     }

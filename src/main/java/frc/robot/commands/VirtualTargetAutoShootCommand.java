@@ -5,6 +5,8 @@ import static edu.wpi.first.units.Units.RPM;
 
 import java.util.Optional;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -64,7 +66,7 @@ public class VirtualTargetAutoShootCommand extends EntechCommand {
             targetPose = RobotConstants.TURRET.BLUE_HUB_LOCATION;
         }
 
-        AimingOutputData shotData = AimingCalculator.calculateAimingData(robotPose, targetPose, ChassisSpeeds.fromRobotRelativeSpeeds(RobotIO.getInstance().getDriveOutput().getSpeeds(), RobotIO.getInstance().getOdometryPose().getRotation()));
+        AimingOutputData shotData = AimingCalculator.calculateAimingData(robotPose, targetPose, RobotIO.getInstance().getDriveOutput().getSpeeds());
         TurretInput tui = new TurretInput();
         ShooterInput si = new ShooterInput();
         TransferInput tri = new TransferInput();
@@ -81,7 +83,8 @@ public class VirtualTargetAutoShootCommand extends EntechCommand {
         if (!speedReached) {
             speedReached = shooter.getOutputs().isAtSpeed();
         }
-        if (RobotIO.getInstance().getHoodOutput().isAtRequestedPosition() && RobotIO.getInstance().getShooterOutput().isAtSpeed()) {
+        Logger.recordOutput("speedReached", speedReached);
+        if (RobotIO.getInstance().getHoodOutput().isAtRequestedPosition() && speedReached) {
             tri.setSpeed(LiveTuningHandler.getInstance().getValue("TransferSubsystem/SetSpeed"));
         }
 
