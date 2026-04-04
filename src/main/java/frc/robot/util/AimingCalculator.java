@@ -70,7 +70,7 @@ public final class AimingCalculator {
         if (UserPolicy.getInstance().getVirtualPoseMode() == VirtualPoseMode.ONESHOT) {
             Time flightTime = calculateFlightTime(robotPose, targetPose, flightTimeTable);
             virtualTarget = calculateVirtualPose(targetPose, fieldAbsoluteSpeeds, flightTime);
-        } else if (UserPolicy.getInstance().getVirtualPoseMode() == VirtualPoseMode.ONESHOT) {
+        } else if (UserPolicy.getInstance().getVirtualPoseMode() == VirtualPoseMode.ITERATIVE) {
             virtualTarget = calculateVirtualPoseIterative(robotPose, targetPose, fieldAbsoluteSpeeds, robotPose.toPose2d().getRotation(), flightTimeTable);
         }
 
