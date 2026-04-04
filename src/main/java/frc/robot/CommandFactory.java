@@ -120,12 +120,12 @@ public class CommandFactory {
           return false;
         }, driveSubsystem);
 
-    NamedCommands.registerCommand("AutoShoot", getFullShootCommand());
-    NamedCommands.registerCommand("Intake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
-    NamedCommands.registerCommand("ReverseIntake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false));
-    NamedCommands.registerCommand("TrenchPreset", getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_TWO));
-    NamedCommands.registerCommand("TowerPreset", getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_ONE));
-    NamedCommands.registerCommand("Snowblow", getSnowblowCommand());
+    // NamedCommands.registerCommand("AutoShoot", getFullShootCommand());
+    // NamedCommands.registerCommand("Intake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
+    // NamedCommands.registerCommand("ReverseIntake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false));
+    // NamedCommands.registerCommand("TrenchPreset", getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_TWO));
+    // NamedCommands.registerCommand("TowerPreset", getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_ONE));
+    // NamedCommands.registerCommand("Snowblow", getSnowblowCommand());
 
     autoChooser = AutoBuilder.buildAutoChooser();
 

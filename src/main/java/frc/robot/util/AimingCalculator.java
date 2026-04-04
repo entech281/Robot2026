@@ -9,6 +9,8 @@ import static edu.wpi.first.units.Units.Seconds;
 
 import java.awt.geom.Point2D;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -74,7 +76,7 @@ public final class AimingCalculator {
             virtualTarget = calculateVirtualPoseIterative(robotPose, targetPose, fieldAbsoluteSpeeds, robotPose.toPose2d().getRotation(), flightTimeTable);
         }
 
-        Angle turretAngle = calculateTurretAngle(robotPose.toPose2d(), virtualTarget.toPose2d());
+        Angle turretAngle = calculateTurretAngle(robotPose.toPose2d(), targetPose.toPose2d()); //was virtual target
         if (UserPolicy.getInstance().isUseVirtualRotationCompensation()) {
             Time flightTime = calculateFlightTime(robotPose, virtualTarget, flightTimeTable);
             turretAngle = calculateVirtualAngleCompensation(turretAngle, fieldAbsoluteSpeeds, flightTime);
@@ -105,6 +107,7 @@ public final class AimingCalculator {
     public static Pose3d calculateVirtualPose(Pose3d targetPose, ChassisSpeeds speeds, Time flightTime) {
         double virtualPoseX = targetPose.getX() + (speeds.vxMetersPerSecond * flightTime.in(Seconds));
         double virtualPoseY = targetPose.getY() + (speeds.vyMetersPerSecond * flightTime.in(Seconds));
+        Logger.recordOutput("virtualPose", new Pose3d(virtualPoseX, virtualPoseY, targetPose.getZ(), targetPose.getRotation()));
         return new Pose3d(virtualPoseX, virtualPoseY, targetPose.getZ(), targetPose.getRotation());
     }
 

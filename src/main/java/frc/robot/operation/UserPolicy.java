@@ -21,7 +21,7 @@ public class UserPolicy {
   private AngularVelocity shooterRPM = RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed"));
   private boolean useBeta = false;
   private double shooterCalculatorSpeedMultiplier = 1.8;
-  private boolean useVirtualRotationCompensation = true;
+  private boolean useVirtualRotationCompensation = false;
   private VirtualPoseMode virtualPoseMode = VirtualPoseMode.ONESHOT;
 
   private UserPolicy() {
