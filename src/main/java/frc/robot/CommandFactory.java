@@ -119,12 +119,11 @@ public class CommandFactory {
           return false;
         }, driveSubsystem);
 
-    NamedCommands.registerCommand("AutoShoot", getFullShootCommand());
-    NamedCommands.registerCommand("Intake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
-    NamedCommands.registerCommand("ReverseIntake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false));
-    NamedCommands.registerCommand("TrenchPreset", getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_TWO));
-    NamedCommands.registerCommand("TowerPreset", getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_ONE));
-    NamedCommands.registerCommand("Snowblow", getSnowblowCommand());
+    // NamedCommands.registerCommand("AutoShoot", getFullShootCommand());
+    // NamedCommands.registerCommand("Intake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
+    // NamedCommands.registerCommand("ReverseIntake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false));
+    // NamedCommands.registerCommand("TrenchPreset", getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_TWO));
+    // NamedCommands.registerCommand("TowerPreset", getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_ONE));
 
     autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -266,14 +265,23 @@ public class CommandFactory {
     });
   }
 
-  private Pose3d getSnowblowTarget() {
+  private Pose3d getSnowblowTarget(Pose2d robotPose) {
     Optional<Alliance> alliance = DriverStation.getAlliance();
     if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-      return RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
+      if (robotPose.getY() > RobotConstants.ODOMETRY.FIELD_WIDTH_INCHES / 2) {
+        return RobotConstants.TURRET.RED_SNOWBLOW_TARGET_TOP;
+      } else {
+        return RobotConstants.TURRET.RED_SNOWBLOW_TARGET_BOTTOM;
+      }
     } else {
-      return RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;
+      if (robotPose.getY() > RobotConstants.ODOMETRY.FIELD_WIDTH_INCHES / 2) {
+        return RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET_TOP;
+      } else {
+        return RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET_BOTTOM;
+      }
     }
   }
+
 
   public Command getSnowblowCommand() {
 
