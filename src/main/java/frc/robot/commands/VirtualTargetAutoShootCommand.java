@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RPM;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -32,13 +33,21 @@ public class VirtualTargetAutoShootCommand extends EntechCommand {
     private final TransferSubsystem transfer;
     private final TurretSubsystem turret;
     private boolean speedReached = false;
+    private boolean snowblow;
+    private Supplier<Pose3d> snowblowSupplier;
 
-    public VirtualTargetAutoShootCommand(ShooterSubsystem shooter, HoodSubsystem hood, TransferSubsystem transfer, TurretSubsystem turret) {
+    public VirtualTargetAutoShootCommand(ShooterSubsystem shooter, HoodSubsystem hood, TransferSubsystem transfer, TurretSubsystem turret, boolean snowblow, Supplier<Pose3d> snowblowSupplier) {
         super(shooter, hood, transfer, turret);
         this.shooter = shooter;
         this.hood = hood;
         this.transfer = transfer;
         this.turret = turret;
+        this.snowblow = snowblow;
+        this.snowblowSupplier = snowblowSupplier;
+    }
+
+    public VirtualTargetAutoShootCommand(ShooterSubsystem shooter, HoodSubsystem hood, TransferSubsystem transfer, TurretSubsystem turret) {
+        this(shooter, hood, transfer, turret, false, () -> new Pose3d());
     }
 
     @Override
@@ -60,10 +69,14 @@ public class VirtualTargetAutoShootCommand extends EntechCommand {
 
         Pose3d targetPose;
         Optional<Alliance> alliance = DriverStation.getAlliance();
-        if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-            targetPose = RobotConstants.TURRET.RED_HUB_LOCATION;
+        if(!snowblow) {
+            if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+                targetPose = RobotConstants.TURRET.RED_HUB_LOCATION;
+            } else {
+                targetPose = RobotConstants.TURRET.BLUE_HUB_LOCATION;
+            }
         } else {
-            targetPose = RobotConstants.TURRET.BLUE_HUB_LOCATION;
+            targetPose = snowblowSupplier.get();
         }
 
         AimingOutputData shotData = AimingCalculator.calculateAimingData(robotPose, targetPose, RobotIO.getInstance().getDriveOutput().getSpeeds());
@@ -84,7 +97,7 @@ public class VirtualTargetAutoShootCommand extends EntechCommand {
             speedReached = shooter.getOutputs().isAtSpeed();
         }
         Logger.recordOutput("speedReached", speedReached);
-        if (RobotIO.getInstance().getHoodOutput().isAtRequestedPosition() && speedReached) {
+        if (RobotIO.getInstance().getHoodOutput().isAtRequestedPosition() && speedReached || snowblow) {
             tri.setSpeed(LiveTuningHandler.getInstance().getValue("TransferSubsystem/SetSpeed"));
         }
 

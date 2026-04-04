@@ -244,25 +244,7 @@ public class CommandFactory {
 
 
   public Command getSnowblowCommand() {
-
-    Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
-        .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
-
-    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(
-        ChassisSpeeds.fromRobotRelativeSpeeds(RobotIO.getInstance().getDriveOutput().getSpeeds(),
-            RobotIO.getInstance().getOdometryPose().getRotation()),
-        shooterCurrentPose, getSnowblowTarget(RobotIO.getInstance().getOdometryPose()),
-        Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
-        RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
-        RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
-
-    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(getSnowblowTarget(RobotIO.getInstance().getOdometryPose()).toPose2d(),
-        RobotIO.getInstance().getOdometryPose(), RobotIO.getInstance().getDriveOutput().getSpeeds());
-
-    return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
-        subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
-        shooterCalculatorSupplier);
-
+    return new VirtualTargetAutoShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), true, () -> getSnowblowTarget(RobotIO.getInstance().getOdometryPose()));
   }
 
   public Command getPresetShootCommand(ShotData preset) {
