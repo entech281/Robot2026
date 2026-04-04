@@ -6,8 +6,8 @@ import static edu.wpi.first.units.Units.RPM;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.units.measure.Distance;
-import frc.robot.RobotConstants.LiveTuning;
 import frc.robot.livetuning.LiveTuningHandler;
+import frc.robot.util.AimingCalculator.VirtualPoseMode;
 import edu.wpi.first.units.measure.AngularVelocity;
 
 public class UserPolicy {
@@ -21,6 +21,8 @@ public class UserPolicy {
   private AngularVelocity shooterRPM = RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed"));
   private boolean useBeta = false;
   private double shooterCalculatorSpeedMultiplier = 1.8;
+  private boolean useVirtualRotationCompensation = false;
+  private VirtualPoseMode virtualPoseMode = VirtualPoseMode.ONESHOT;
 
   private UserPolicy() {
     Logger.recordOutput("UserPolicy/twistable", twistable);
@@ -108,4 +110,33 @@ public class UserPolicy {
   public boolean getUseBeta() {
     return useBeta;
   }
+
+    /**
+     * @return boolean return the useVirtualRotationCompensation
+     */
+    public boolean isUseVirtualRotationCompensation() {
+        return useVirtualRotationCompensation;
+    }
+
+    /**
+     * @param useVirtualRotationCompensation the useVirtualRotationCompensation to set
+     */
+    public void setUseVirtualRotationCompensation(boolean useVirtualRotationCompensation) {
+        this.useVirtualRotationCompensation = useVirtualRotationCompensation;
+    }
+
+    /**
+     * @return VirtualPoseMode return the virtualPoseMode
+     */
+    public VirtualPoseMode getVirtualPoseMode() {
+        return virtualPoseMode;
+    }
+
+    /**
+     * @param virtualPoseMode the virtualPoseMode to set
+     */
+    public void setVirtualPoseMode(VirtualPoseMode virtualPoseMode) {
+        this.virtualPoseMode = virtualPoseMode;
+    }
+
 }
