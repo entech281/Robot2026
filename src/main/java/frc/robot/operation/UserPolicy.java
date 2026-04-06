@@ -22,7 +22,7 @@ public class UserPolicy {
   private boolean useBeta = false;
   private double shooterCalculatorSpeedMultiplier = 1.8;
   private boolean useVirtualRotationCompensation = false;
-  private VirtualPoseMode virtualPoseMode = VirtualPoseMode.ONESHOT;
+  private VirtualPoseMode virtualPoseMode = VirtualPoseMode.ITERATIVE;
 
   private UserPolicy() {
     Logger.recordOutput("UserPolicy/twistable", twistable);

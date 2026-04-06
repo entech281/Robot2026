@@ -123,12 +123,18 @@ public class CommandFactory {
           return false;
         }, driveSubsystem);
 
-    // NamedCommands.registerCommand("AutoShoot", getFullShootCommand());
-    // NamedCommands.registerCommand("Intake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
-    // NamedCommands.registerCommand("ReverseIntake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false));
-    // NamedCommands.registerCommand("TrenchPreset", getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_TWO));
-    // NamedCommands.registerCommand("TowerPreset", getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_ONE));
-    // NamedCommands.registerCommand("Snowblow", getSnowblowCommand());
+    NamedCommands.registerCommand("AutoShoot", getFullShootCommand());
+    NamedCommands.registerCommand("Intake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
+    NamedCommands.registerCommand("ReverseIntake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false));
+    NamedCommands.registerCommand("TrenchPreset",
+        getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_TWO));
+    NamedCommands.registerCommand("TowerPreset",
+        getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_ONE));
+    // NamedCommands.registerCommand("TrenchPreset",
+    // Commands.none());
+    // NamedCommands.registerCommand("TowerPreset",
+    // Commands.none());
+    NamedCommands.registerCommand("Snowblow", getSnowblowCommand());
 
     autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -197,7 +203,9 @@ public class CommandFactory {
   }
 
   public Command getFullShootCommand() {
-    return new VirtualTargetAutoShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem());
+    return new VirtualTargetAutoShootCommand(subsystemManager.getShooterSubsystem(),
+        subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(),
+        subsystemManager.getTurretSubsystem());
   }
 
   public Command getRotateForBumpCommand() {
@@ -242,9 +250,10 @@ public class CommandFactory {
     }
   }
 
-
   public Command getSnowblowCommand() {
-    return new VirtualTargetAutoShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), true, () -> getSnowblowTarget(RobotIO.getInstance().getOdometryPose()));
+    return new VirtualTargetAutoShootCommand(subsystemManager.getShooterSubsystem(),
+        subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(),
+        subsystemManager.getTurretSubsystem(), true, () -> getSnowblowTarget(RobotIO.getInstance().getOdometryPose()));
   }
 
   public Command getPresetShootCommand(ShotData preset) {
@@ -273,7 +282,7 @@ public class CommandFactory {
 
       Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> {
         Pose2d target2d = RobotIO.getInstance().getOdometryPose();
-        
+
         Pose3d target = new Pose3d(target2d.getX(), target2d.getY(), 0.0, new Rotation3d());
 
         Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
