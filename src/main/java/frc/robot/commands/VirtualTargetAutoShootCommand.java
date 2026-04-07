@@ -61,6 +61,8 @@ public class VirtualTargetAutoShootCommand extends EntechCommand {
         transfer.updateInputs(new TransferInput());
 
         speedReached = false;
+
+        new ShooterLag(shooter, RPM.of(si))
     }
 
     @Override
