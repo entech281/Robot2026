@@ -9,9 +9,9 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.entech.commands.EntechCommand;
 import frc.robot.RobotConstants;
 import frc.robot.io.RobotIO;
@@ -35,6 +35,10 @@ public class VirtualTargetAutoShootCommand extends EntechCommand {
     private boolean speedReached = false;
     private boolean snowblow;
     private Supplier<Pose3d> snowblowSupplier;
+    TurretInput tui = new TurretInput();
+    ShooterInput si = new ShooterInput();
+    TransferInput tri = new TransferInput();
+    HoodInput hi = new HoodInput();
 
     public VirtualTargetAutoShootCommand(ShooterSubsystem shooter, HoodSubsystem hood, TransferSubsystem transfer, TurretSubsystem turret, boolean snowblow, Supplier<Pose3d> snowblowSupplier) {
         super(shooter, hood, transfer, turret);
@@ -62,7 +66,7 @@ public class VirtualTargetAutoShootCommand extends EntechCommand {
 
         speedReached = false;
 
-        new ShooterLag(shooter, RPM.of(si))
+        CommandScheduler.getInstance().schedule(new ShooterLag(shooter, RPM.of(si.getSpeed())));
     }
 
     @Override
@@ -82,10 +86,6 @@ public class VirtualTargetAutoShootCommand extends EntechCommand {
         }
 
         AimingOutputData shotData = AimingCalculator.calculateAimingData(robotPose, targetPose, RobotIO.getInstance().getDriveOutput().getSpeeds());
-        TurretInput tui = new TurretInput();
-        ShooterInput si = new ShooterInput();
-        TransferInput tri = new TransferInput();
-        HoodInput hi = new HoodInput();
 
         hi.setRequestedPosition(shotData.getHoodAngle().in(Degrees));
         si.setSpeed(shotData.getShooterSpeed().in(RPM));
