@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.RPM;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.entech.commands.EntechCommand;
 import frc.entech.util.StoppingCounter;
+import frc.robot.io.RobotIO;
 import frc.robot.subsystems.shooter.ShooterInput;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
@@ -15,10 +16,10 @@ public class ShooterLag extends EntechCommand {
     private ShooterInput input = new ShooterInput();
     private AngularVelocity speed;
 
-    public ShooterLag(ShooterSubsystem shooterSS, AngularVelocity speed) {
+    public ShooterLag(ShooterSubsystem shooterSS) {
         super(shooterSS);
         this.shooterSS = shooterSS;
-        this.speed = speed;
+        this.speed = RPM.of(RobotIO.getInstance().getShooterOutput().getSpeed());
     }
 
     @Override
