@@ -292,8 +292,8 @@ public class CommandFactory {
             ChassisSpeeds.fromRobotRelativeSpeeds(RobotIO.getInstance().getDriveOutput().getSpeeds(),
                 RobotIO.getInstance().getOdometryPose().getRotation()),
             shooterCurrentPose, target,
-            Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
-            RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
+            Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_RPM,
+            RobotConstants.SHOOTER.MIN_RPM, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
             RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
       };
       return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),

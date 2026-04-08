@@ -496,7 +496,8 @@ public final class RobotConstants {
   public static interface SHOOTER {
     public static final Transform3d SHOT_TRANSFORM = new Transform3d(0, 0, 0, new Rotation3d());
     public static final double WHEEL_RADIUS_METERS = 0.048229115; // TODO: Idk my ai made this number
-    public static final double MAX_RPM = 6000.0;
+    public static final AngularVelocity MAX_RPM = RPM.of(6000.0);
+    public static final AngularVelocity MIN_RPM = RPM.of(3000.0);
     public static final ShotData SHOT_PRESET_ONE = new ShooterCalculator().new ShotDataRange().new ShotData(
         Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")),
         RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetOneRPM")),
@@ -511,8 +512,6 @@ public final class RobotConstants {
         Meters.of(WHEEL_RADIUS_METERS));
     public static final Distance MIN_SHOT_DISTANCE = Meters.of(8);
     public static final Distance MAX_SHOT_DISTANCE = Feet.of(14);
-    public static final AngularVelocity MIN_SHOT_SPEED = RPM.of(3500);
-    public static final AngularVelocity MAX_SHOT_SPEED = RPM.of(5000);
     public static final AngularVelocity TOLERANCE = RPM.of(100); // 200
   }
 
