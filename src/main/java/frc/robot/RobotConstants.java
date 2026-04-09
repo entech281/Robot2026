@@ -210,7 +210,24 @@ public final class RobotConstants {
         Map.entry("ShotTuningAngle/18ft", 0.0),
         Map.entry("ShotTuningAngle/19ft", 0.0),
         Map.entry("ShotTuningAngle/20ft", 7.0),
-        Map.entry("ShotTuningAngle/21ft", 15.0));
+        Map.entry("ShotTuningAngle/21ft", 15.0),
+        Map.entry("ShotFlightTime/5ft", 1.5),
+        Map.entry("ShotFlightTime/6ft", 1.5),
+        Map.entry("ShotFlightTime/7ft", 1.5),
+        Map.entry("ShotFlightTime/8ft", 1.5),
+        Map.entry("ShotFlightTime/9ft", 1.5),
+        Map.entry("ShotFlightTime/10ft", 1.5),
+        Map.entry("ShotFlightTime/11ft", 1.5),
+        Map.entry("ShotFlightTime/12ft", 1.5),
+        Map.entry("ShotFlightTime/13ft", 1.5),
+        Map.entry("ShotFlightTime/14ft", 1.5),
+        Map.entry("ShotFlightTime/15ft", 1.5),
+        Map.entry("ShotFlightTime/16ft", 1.5),
+        Map.entry("ShotFlightTime/17ft", 1.5),
+        Map.entry("ShotFlightTime/18ft", 1.5),
+        Map.entry("ShotFlightTime/19ft", 1.5),
+        Map.entry("ShotFlightTime/20ft", 1.5),
+        Map.entry("ShotFlightTime/21ft", 1.5));
   }
 
   public static interface PORTS {
@@ -392,7 +409,7 @@ public final class RobotConstants {
   }
 
   public static interface ODOMETRY {
-    public static final double xyStdDevCoefficient = 0.01;
+    public static final double xyStdDevCoefficient = 0.5;
     public static final double FIELD_BORDER_MARGIN = 0.5;
     public static final int ODOMETRY_FREQUENCY = 150;
     public static final double FIELD_LENGTH_INCHES = 54 * 12 + 3.25;
@@ -433,11 +450,21 @@ public final class RobotConstants {
     public static final Pose3d RED_HUB_LOCATION = new Pose3d(Inches.of(469.11).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
 
-    public static final Pose3d BLUE_SNOWBLOW_TARGET = new Pose3d(Feet.of(12).in(Meters),
-        Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
+    public static final Transform3d SNOWBLOW_CORNER_OFFSET = new Transform3d(Feet.of(4).in(Meters),
+        Feet.of(4).in(Meters), Feet.of(0).in(Meters),
+        new Rotation3d());
 
-    public static final Pose3d RED_SNOWBLOW_TARGET = new Pose3d(Inches.of(651).minus(Feet.of(12)).in(Meters),
-        Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
+    public static final Pose3d BLUE_SNOWBLOW_TARGET_TOP = new Pose3d(0.0,
+        Inches.of(317.69).in(Meters), Inches.of(0).in(Meters), new Rotation3d()).plus(SNOWBLOW_CORNER_OFFSET);
+
+    public static final Pose3d BLUE_SNOWBLOW_TARGET_BOTTOM = new Pose3d(0.0,
+        Inches.of(0.0).in(Meters), Inches.of(0).in(Meters), new Rotation3d()).plus(SNOWBLOW_CORNER_OFFSET);
+
+    public static final Pose3d RED_SNOWBLOW_TARGET_TOP = new Pose3d(Inches.of(651.22).in(Meters),
+        Inches.of(317.69).in(Meters), Inches.of(0).in(Meters), new Rotation3d()).plus(SNOWBLOW_CORNER_OFFSET);
+
+    public static final Pose3d RED_SNOWBLOW_TARGET_BOTTOM = new Pose3d(Inches.of(651.22).in(Meters),
+        Inches.of(0.0).in(Meters), Inches.of(0).in(Meters), new Rotation3d()).plus(SNOWBLOW_CORNER_OFFSET);
 
     public static final Translation2d TURRET_OFFSET = new Translation2d(Units.inchesToMeters(-6.75),
         Units.inchesToMeters(-3.0));
@@ -448,17 +475,17 @@ public final class RobotConstants {
 
   public static interface HOOD {
     // TODO: make these real
-    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 1.65441176471;
-    public static final double VELOCITY_CONVERSION_FACTOR_DEGREES_PER_SECOND_PER_RPM = 1.65441176471 / 60.0;
-    public static final double HOOD_P = 3;
+    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 3.1269000260575;
+    public static final double VELOCITY_CONVERSION_FACTOR_DEGREES_PER_SECOND_PER_RPM = 3.1269000260575 / 60.0;
+    public static final double HOOD_P = 0.00001;
     public static final double HOOD_I = 0.0;
     public static final double HOOD_D = 0.0;
     public static final double INITIAL_POSITION_DEGREES = 0.0;
     public static final double HOOD_LOWER_LIMIT_DEGREES = 0.0;
-    public static final double HOOD_UPPER_LIMIT_DEGREES = 30.0;
-    public static final double HOOD_POSITION_TOLERANCE_DEGREES = 2.0;
-    public static final AngularVelocity HOOD_CRUISE_VELOCITY = DegreesPerSecond.of(55.14705882366667);
-    public static final AngularAcceleration HOOD_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(275.73529411833334);
+    public static final double HOOD_UPPER_LIMIT_DEGREES = 15.0;
+    public static final double HOOD_POSITION_TOLERANCE_DEGREES = 1.0;
+    public static final AngularVelocity HOOD_CRUISE_VELOCITY = DegreesPerSecond.of(10);
+    public static final AngularAcceleration HOOD_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(150);
     public static final double HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5;
 
     public static final double HOOD_JOG_STEP_DEGREES = 5.0; // Change this value
@@ -470,7 +497,8 @@ public final class RobotConstants {
   public static interface SHOOTER {
     public static final Transform3d SHOT_TRANSFORM = new Transform3d(0, 0, 0, new Rotation3d());
     public static final double WHEEL_RADIUS_METERS = 0.048229115; // TODO: Idk my ai made this number
-    public static final double MAX_RPM = 6000.0;
+    public static final AngularVelocity MAX_RPM = RPM.of(6000.0);
+    public static final AngularVelocity MIN_RPM = RPM.of(3000.0);
     public static final ShotData SHOT_PRESET_ONE = new ShooterCalculator().new ShotDataRange().new ShotData(
         Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")),
         RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetOneRPM")),
@@ -485,8 +513,6 @@ public final class RobotConstants {
         Meters.of(WHEEL_RADIUS_METERS));
     public static final Distance MIN_SHOT_DISTANCE = Meters.of(8);
     public static final Distance MAX_SHOT_DISTANCE = Feet.of(14);
-    public static final AngularVelocity MIN_SHOT_SPEED = RPM.of(3500);
-    public static final AngularVelocity MAX_SHOT_SPEED = RPM.of(5000);
     public static final AngularVelocity TOLERANCE = RPM.of(100); // 200
   }
 

@@ -37,7 +37,7 @@
       },
       "prevControl": {
         "x": 7.709636572700768,
-        "y": 1.695898625818169
+        "y": 1.6958986258181687
       },
       "nextControl": null,
       "isLocked": false,
@@ -60,19 +60,7 @@
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Intake",
-      "waypointRelativePos": 0.75,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Intake"
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,

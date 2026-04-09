@@ -63,20 +63,7 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "AutoShoot",
-      "waypointRelativePos": 1.9,
-      "endWaypointRelativePos": 2.0,
-      "command": null
-    },
-    {
-      "name": "Intake",
-      "waypointRelativePos": 1.9,
-      "endWaypointRelativePos": 2.0,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 1.5,
     "maxAcceleration": 3.0,

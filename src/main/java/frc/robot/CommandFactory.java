@@ -2,6 +2,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RPM;
 
@@ -19,7 +20,9 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -43,6 +46,8 @@ import frc.robot.commands.RotateToAngleCommand;
 import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.ShootAtTargetCommand;
+import frc.robot.commands.ShooterLag;
+import frc.robot.commands.VirtualTargetAutoShootCommand;
 import frc.robot.commands.ManualShootCommand;
 import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.ManualTurretCommandSupplier;
@@ -122,8 +127,14 @@ public class CommandFactory {
     NamedCommands.registerCommand("AutoShoot", getFullShootCommand());
     NamedCommands.registerCommand("Intake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
     NamedCommands.registerCommand("ReverseIntake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false));
-    NamedCommands.registerCommand("TrenchPreset", getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_TWO));
-    NamedCommands.registerCommand("TowerPreset", getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_ONE));
+    NamedCommands.registerCommand("TrenchPreset",
+        getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_TWO));
+    NamedCommands.registerCommand("TowerPreset",
+        getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_ONE));
+    // NamedCommands.registerCommand("TrenchPreset",
+    // Commands.none());
+    // NamedCommands.registerCommand("TowerPreset",
+    // Commands.none());
     NamedCommands.registerCommand("Snowblow", getSnowblowCommand());
 
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -193,52 +204,9 @@ public class CommandFactory {
   }
 
   public Command getFullShootCommand() {
-
-    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> {
-      Pose3d target;
-
-      Optional<Alliance> alliance = DriverStation.getAlliance();
-
-      if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-        target = RobotConstants.TURRET.RED_HUB_LOCATION;
-      } else {
-        target = RobotConstants.TURRET.BLUE_HUB_LOCATION;
-      }
-
-      Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
-          .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
-
-      return new ShooterCalculator(
-          ChassisSpeeds.fromRobotRelativeSpeeds(RobotIO.getInstance().getDriveOutput().getSpeeds(),
-              RobotIO.getInstance().getOdometryPose().getRotation()),
-          shooterCurrentPose, target,
-          Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
-          RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
-          RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
-    };
-    Supplier<TurretCalculator> turretCalculatorSupplier = () -> {
-      Pose3d target;
-
-      Optional<Alliance> alliance = DriverStation.getAlliance();
-
-      if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-        target = RobotConstants.TURRET.RED_HUB_LOCATION;
-      } else {
-        target = RobotConstants.TURRET.BLUE_HUB_LOCATION;
-      }
-
-      return new TurretCalculator(target.toPose2d(),
-          RobotIO.getInstance().getOdometryPose(), RobotIO.getInstance().getDriveOutput().getSpeeds());
-    };
-
-    return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(),
-        subsystemManager.getHoodSubsystem(),
-        subsystemManager.getTransferSubsystem(),
-        subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
-        shooterCalculatorSupplier);
-
-    // return new ManualTurretCommandSupplier(subsystemManager.getTurretSubsystem(),
-    // turretCalculatorSupplier);
+    return new VirtualTargetAutoShootCommand(subsystemManager.getShooterSubsystem(),
+        subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(),
+        subsystemManager.getTurretSubsystem()).andThen( new ShooterLag(subsystemManager.getShooterSubsystem()));
   }
 
   public Command getRotateForBumpCommand() {
@@ -266,35 +234,27 @@ public class CommandFactory {
     });
   }
 
-  private Pose3d getSnowblowTarget() {
+  private Pose3d getSnowblowTarget(Pose2d robotPose) {
     Optional<Alliance> alliance = DriverStation.getAlliance();
     if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-      return RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
+      if (Meters.of(robotPose.getY()).in(Inches) > RobotConstants.ODOMETRY.FIELD_WIDTH_INCHES / 2) {
+        return RobotConstants.TURRET.RED_SNOWBLOW_TARGET_TOP;
+      } else {
+        return RobotConstants.TURRET.RED_SNOWBLOW_TARGET_BOTTOM;
+      }
     } else {
-      return RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;
+      if (Meters.of(robotPose.getY()).in(Inches) > RobotConstants.ODOMETRY.FIELD_WIDTH_INCHES / 2) {
+        return RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET_TOP;
+      } else {
+        return RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET_BOTTOM;
+      }
     }
   }
 
   public Command getSnowblowCommand() {
-
-    Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
-        .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
-
-    Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> new ShooterCalculator(
-        ChassisSpeeds.fromRobotRelativeSpeeds(RobotIO.getInstance().getDriveOutput().getSpeeds(),
-            RobotIO.getInstance().getOdometryPose().getRotation()),
-        shooterCurrentPose, getSnowblowTarget(),
-        Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
-        RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
-        RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
-
-    Supplier<TurretCalculator> turretCalculatorSupplier = () -> new TurretCalculator(getSnowblowTarget().toPose2d(),
-        RobotIO.getInstance().getOdometryPose(), RobotIO.getInstance().getDriveOutput().getSpeeds());
-
-    return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
-        subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
-        shooterCalculatorSupplier);
-
+    return new VirtualTargetAutoShootCommand(subsystemManager.getShooterSubsystem(),
+        subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(),
+        subsystemManager.getTurretSubsystem(), true, () -> getSnowblowTarget(RobotIO.getInstance().getOdometryPose()));
   }
 
   public Command getPresetShootCommand(ShotData preset) {
@@ -313,15 +273,7 @@ public class CommandFactory {
           Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")), false);
     } else {
       Supplier<TurretCalculator> turretCalculatorSupplier = () -> {
-        Pose3d target;
-
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-
-        if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-          target = RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
-        } else {
-          target = RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;
-        }
+        Pose3d target = getSnowblowTarget(RobotIO.getInstance().getOdometryPose());
 
         Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
             .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
@@ -330,15 +282,9 @@ public class CommandFactory {
       };
 
       Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> {
-        Pose3d target;
+        Pose2d target2d = RobotIO.getInstance().getOdometryPose();
 
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-
-        if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-          target = RobotConstants.TURRET.RED_SNOWBLOW_TARGET;
-        } else {
-          target = RobotConstants.TURRET.BLUE_SNOWBLOW_TARGET;
-        }
+        Pose3d target = new Pose3d(target2d.getX(), target2d.getY(), 0.0, new Rotation3d());
 
         Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
             .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
@@ -347,8 +293,8 @@ public class CommandFactory {
             ChassisSpeeds.fromRobotRelativeSpeeds(RobotIO.getInstance().getDriveOutput().getSpeeds(),
                 RobotIO.getInstance().getOdometryPose().getRotation()),
             shooterCurrentPose, target,
-            Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_SHOT_SPEED,
-            RobotConstants.SHOOTER.MIN_SHOT_SPEED, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
+            Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_RPM,
+            RobotConstants.SHOOTER.MIN_RPM, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
             RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
       };
       return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
