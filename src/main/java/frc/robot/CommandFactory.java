@@ -62,6 +62,7 @@ import frc.robot.operation.UserPolicy;
 import frc.robot.processors.OdometryProcessor;
 import frc.robot.sensors.gyro.GyroSensor;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.hood.HoodSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.util.ShooterCalculator;
 import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
@@ -178,6 +179,11 @@ public class CommandFactory {
       testCommandChooser.addOption(subsystem.getName(), subsystem.getTestCommand());
     }
     return testCommandChooser;
+  }
+
+  public void setSubsystemDefaultCommands() {
+    HoodSubsystem hoodSS = subsystemManager.getHoodSubsystem();
+    hoodSS.setDefaultCommand( new ManualHoodCommand(hoodSS, 0));
   }
 
   public Command getWheelCharacterizationCommand() {
