@@ -25,6 +25,7 @@ public class ShooterLag extends EntechCommand {
     @Override
     public void end(boolean interrupted) {
         input = new ShooterInput();
+        input.setSpeed(0.0);
         shooterSS.updateInputs(input);
     }
 
