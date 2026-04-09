@@ -166,9 +166,8 @@ public class OperatorInterface
     xboxController.button(RobotConstants.PORTS.CONTROLLER.BUTTONS_XBOX.RESET_ODOMETRY)
         .onTrue(new ResetOdometryCommand(odometry));
 
-    xboxController.y().whileTrue( new RepeatCommand( 
-      new ManualHoodCommand(subsystemManager.getHoodSubsystem(), 0)
-    ));
+    xboxController.y().whileTrue(new RepeatCommand(
+        new ManualHoodCommand(subsystemManager.getHoodSubsystem(), 0)));
 
     // xboxController.a().whileTrue(new
     // ManualTurretCommand(subsystemManager.getTurretSubsystem(),
@@ -272,8 +271,9 @@ public class OperatorInterface
         .whileTrue(commandFactory.getFullShootCommand());
 
     // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.SNOWBLOW_FIRE)
-    //     .whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SNOW_BLOW_PRESET));
-        scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.SNOWBLOW_FIRE)
+    // .whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SNOW_BLOW_PRESET));
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.SNOWBLOW_FIRE)
+        .and(xboxController.y().negate())
         .whileTrue(commandFactory.getSnowblowCommand());
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INTAKE)
@@ -306,9 +306,8 @@ public class OperatorInterface
             .setShooterCalculatorSpeedMultiplier(
                 UserPolicy.getInstance().getShooterCalculatorSpeedMultiplier() - 0.1)));
 
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.CLIMB).onTrue( new RepeatCommand(
-      new ManualHoodCommand(subsystemManager.getHoodSubsystem(), 0)
-    ));
+    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.CLIMB).onTrue(new RepeatCommand(
+        new ManualHoodCommand(subsystemManager.getHoodSubsystem(), 0)));
 
     scoreOperatorPanel.button(12)
         .whileTrue(new TurretContinuousNudgeCommand(subsystemManager.getTurretSubsystem(), true));
