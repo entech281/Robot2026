@@ -9,7 +9,6 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.entech.commands.EntechCommand;
@@ -35,6 +34,10 @@ public class VirtualTargetAutoShootCommand extends EntechCommand {
     private boolean speedReached = false;
     private boolean snowblow;
     private Supplier<Pose3d> snowblowSupplier;
+    TurretInput tui = new TurretInput();
+    ShooterInput si = new ShooterInput();
+    TransferInput tri = new TransferInput();
+    HoodInput hi = new HoodInput();
 
     public VirtualTargetAutoShootCommand(ShooterSubsystem shooter, HoodSubsystem hood, TransferSubsystem transfer, TurretSubsystem turret, boolean snowblow, Supplier<Pose3d> snowblowSupplier) {
         super(shooter, hood, transfer, turret);
@@ -56,7 +59,6 @@ public class VirtualTargetAutoShootCommand extends EntechCommand {
 
     @Override
     public void end(boolean interrupted) {
-        shooter.updateInputs(new ShooterInput());
         hood.updateInputs(new HoodInput());
         transfer.updateInputs(new TransferInput());
 
@@ -80,10 +82,6 @@ public class VirtualTargetAutoShootCommand extends EntechCommand {
         }
 
         AimingOutputData shotData = AimingCalculator.calculateAimingData(robotPose, targetPose, RobotIO.getInstance().getDriveOutput().getSpeeds());
-        TurretInput tui = new TurretInput();
-        ShooterInput si = new ShooterInput();
-        TransferInput tri = new TransferInput();
-        HoodInput hi = new HoodInput();
 
         hi.setRequestedPosition(shotData.getHoodAngle().in(Degrees));
         si.setSpeed(shotData.getShooterSpeed().in(RPM));

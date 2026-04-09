@@ -46,6 +46,7 @@ import frc.robot.commands.RotateToAngleCommand;
 import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.ShootAtTargetCommand;
+import frc.robot.commands.ShooterLag;
 import frc.robot.commands.VirtualTargetAutoShootCommand;
 import frc.robot.commands.ManualShootCommand;
 import frc.robot.commands.ManualTurretCommand;
@@ -205,7 +206,7 @@ public class CommandFactory {
   public Command getFullShootCommand() {
     return new VirtualTargetAutoShootCommand(subsystemManager.getShooterSubsystem(),
         subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(),
-        subsystemManager.getTurretSubsystem());
+        subsystemManager.getTurretSubsystem()).andThen( new ShooterLag(subsystemManager.getShooterSubsystem()));
   }
 
   public Command getRotateForBumpCommand() {
