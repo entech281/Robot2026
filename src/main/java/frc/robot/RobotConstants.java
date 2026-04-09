@@ -450,7 +450,8 @@ public final class RobotConstants {
     public static final Pose3d RED_HUB_LOCATION = new Pose3d(Inches.of(469.11).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
 
-    public static final Transform3d SNOWBLOW_CORNER_OFFSET = new Transform3d(Feet.of(4).in(Meters), Feet.of(4).in(Meters), Feet.of(0).in(Meters),
+    public static final Transform3d SNOWBLOW_CORNER_OFFSET = new Transform3d(Feet.of(4).in(Meters),
+        Feet.of(4).in(Meters), Feet.of(0).in(Meters),
         new Rotation3d());
 
     public static final Pose3d BLUE_SNOWBLOW_TARGET_TOP = new Pose3d(0.0,
@@ -474,17 +475,17 @@ public final class RobotConstants {
 
   public static interface HOOD {
     // TODO: make these real
-    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 1.65441176471;
-    public static final double VELOCITY_CONVERSION_FACTOR_DEGREES_PER_SECOND_PER_RPM = 1.65441176471 / 60.0;
-    public static final double HOOD_P = 3;
+    public static final double POSITION_CONVERSION_FACTOR_DEGREES = 3.1269000260575;
+    public static final double VELOCITY_CONVERSION_FACTOR_DEGREES_PER_SECOND_PER_RPM = 3.1269000260575 / 60.0;
+    public static final double HOOD_P = 0.00001;
     public static final double HOOD_I = 0.0;
     public static final double HOOD_D = 0.0;
     public static final double INITIAL_POSITION_DEGREES = 0.0;
     public static final double HOOD_LOWER_LIMIT_DEGREES = 0.0;
-    public static final double HOOD_UPPER_LIMIT_DEGREES = 30.0;
-    public static final double HOOD_POSITION_TOLERANCE_DEGREES = 2.0;
-    public static final AngularVelocity HOOD_CRUISE_VELOCITY = DegreesPerSecond.of(55.14705882366667);
-    public static final AngularAcceleration HOOD_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(275.73529411833334);
+    public static final double HOOD_UPPER_LIMIT_DEGREES = 15.0;
+    public static final double HOOD_POSITION_TOLERANCE_DEGREES = 1.0;
+    public static final AngularVelocity HOOD_CRUISE_VELOCITY = DegreesPerSecond.of(10);
+    public static final AngularAcceleration HOOD_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(150);
     public static final double HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5;
 
     public static final double HOOD_JOG_STEP_DEGREES = 5.0; // Change this value
