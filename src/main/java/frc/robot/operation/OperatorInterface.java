@@ -280,7 +280,7 @@ public class OperatorInterface
         .onFalse(new ShooterLag(subsystemManager.getShooterSubsystem()));
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INTAKE)
-        .whileTrue(new RunIntakeVariableCommand(subsystemManager.getIntakeSubsystem(), this));
+        .whileTrue(new RunIntakeVariableCommand(subsystemManager.getIntakeSubsystem()));
     // TODO add stop intake for both of these onFalse()
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.OUTTAKE)
         .whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false))

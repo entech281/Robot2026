@@ -1,29 +1,30 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.entech.commands.EntechCommand;
-import frc.robot.io.DriveInputSupplier;
+import frc.robot.io.RobotIO;
 import frc.robot.livetuning.LiveTuningHandler;
-import frc.robot.subsystems.drive.DriveInput;
 import frc.robot.subsystems.intake.IntakeInput;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 
 public class RunIntakeVariableCommand extends EntechCommand {
 
     private final IntakeSubsystem intakeSS;
-    private DriveInputSupplier driveInputSupplier;
 
-    public RunIntakeVariableCommand(IntakeSubsystem intakeSS, DriveInputSupplier driveInputSupplier) {
+    public RunIntakeVariableCommand(IntakeSubsystem intakeSS) {
         this.intakeSS = intakeSS;
-        this.driveInputSupplier = driveInputSupplier;
     }
 
     @Override
     public void execute() {
 
-        DriveInput driveInput = driveInputSupplier.getDriveInput();
+        ChassisSpeeds chassisSpeeds = RobotIO.getInstance().getDriveOutput().getSpeeds();
 
-        double speed = Math.pow(driveInput.getXSpeed(), 2) + Math.pow(driveInput.getYSpeed(), 2); // was Math.sqrt() of
-                                                                                                  // this expression
+        double speed = Math.pow(chassisSpeeds.vxMetersPerSecond, 2) + Math.pow(chassisSpeeds.vyMetersPerSecond, 2); // was
+                                                                                                                    // Math.sqrt()
+                                                                                                                    // of
+                                                                                                                    // this
+                                                                                                                    // expression
 
         double threshold = LiveTuningHandler.getInstance().getValue("IntakeSubsystem/MinimumVariableSpeed");
 

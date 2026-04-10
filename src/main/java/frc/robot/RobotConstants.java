@@ -409,7 +409,7 @@ public final class RobotConstants {
   }
 
   public static interface ODOMETRY {
-    public static final double xyStdDevCoefficient = 0.5;
+    public static final double xyStdDevCoefficient = 1.5;
     public static final double FIELD_BORDER_MARGIN = 0.5;
     public static final int ODOMETRY_FREQUENCY = 150;
     public static final double FIELD_LENGTH_INCHES = 54 * 12 + 3.25;
