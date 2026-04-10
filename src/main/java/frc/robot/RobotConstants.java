@@ -456,7 +456,7 @@ public final class RobotConstants {
     // new Rotation3d());
 
     public static final Distance SNOWBLOW_OFFSET_Y = Feet.of(6);
-    public static final Distance SNOWBLOW_OFFSET_X = Feet.of(4);
+    public static final Distance SNOWBLOW_OFFSET_X = Feet.of(10);
 
     public static final Pose3d BLUE_SNOWBLOW_TARGET_TOP = new Pose3d(0.0,
         Inches.of(317.69).in(Meters), Inches.of(0).in(Meters), new Rotation3d())
