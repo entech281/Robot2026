@@ -59,7 +59,7 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
             if (setSpeed == 0.0) {
                 shooterMotorA.set(0);
             } else {
-                shooterMotorA.getClosedLoopController().setSetpoint(input.getSpeed(),
+                shooterMotorA.getClosedLoopController().setSetpoint(setSpeed,
                         ControlType.kVelocity,
                         ClosedLoopSlot.kSlot0);
             }
@@ -100,8 +100,8 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
     private void configure(double[] factors) {
         SparkFlexConfig shooterAConfig = new SparkFlexConfig();
 
-        shooterAConfig.idleMode(BRAKING ? IdleMode.kBrake : IdleMode.kCoast);
-        shooterAConfig.smartCurrentLimit(160);
+        shooterAConfig.idleMode(IdleMode.kCoast);
+        shooterAConfig.smartCurrentLimit(80);
         shooterAConfig.closedLoop.feedForward.kV(factors[3]);
         shooterAConfig.closedLoop.feedForward.kA(factors[4]);
         shooterAConfig.closedLoop.feedForward.kS(factors[5]);
@@ -115,7 +115,8 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
         SparkFlexConfig shooterBConfig = new SparkFlexConfig().apply(shooterAConfig);
         shooterBConfig.follow(shooterMotorA, true);
 
-        shooterMotorB.configure(shooterBConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        shooterMotorB.configure(shooterBConfig, ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters);
     }
 
     private double[] grabLiveTuning() {

@@ -206,7 +206,7 @@ public class CommandFactory {
   public Command getFullShootCommand() {
     return new VirtualTargetAutoShootCommand(subsystemManager.getShooterSubsystem(),
         subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(),
-        subsystemManager.getTurretSubsystem()).andThen( new ShooterLag(subsystemManager.getShooterSubsystem()));
+        subsystemManager.getTurretSubsystem());
   }
 
   public Command getRotateForBumpCommand() {
@@ -327,6 +327,6 @@ public class CommandFactory {
         new RunTransferCommand(subsystemManager.getTransferSubsystem()),
         new RunShooterAtLiveSpeedCommand(subsystemManager.getShooterSubsystem()),
         new ManualTurretCommand(subsystemManager.getTurretSubsystem(), 0),
-        new ManualHoodCommand(subsystemManager.getHoodSubsystem(), 25));
+        new ManualHoodCommand(subsystemManager.getHoodSubsystem(), 14.9));
   }
 }

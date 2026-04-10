@@ -477,15 +477,15 @@ public final class RobotConstants {
     // TODO: make these real
     public static final double POSITION_CONVERSION_FACTOR_DEGREES = 3.1269000260575;
     public static final double VELOCITY_CONVERSION_FACTOR_DEGREES_PER_SECOND_PER_RPM = 3.1269000260575 / 60.0;
-    public static final double HOOD_P = 0.00001;
+    public static final double HOOD_P = 1.0;
     public static final double HOOD_I = 0.0;
     public static final double HOOD_D = 0.0;
     public static final double INITIAL_POSITION_DEGREES = 0.0;
     public static final double HOOD_LOWER_LIMIT_DEGREES = 0.0;
     public static final double HOOD_UPPER_LIMIT_DEGREES = 15.0;
-    public static final double HOOD_POSITION_TOLERANCE_DEGREES = 1.0;
-    public static final AngularVelocity HOOD_CRUISE_VELOCITY = DegreesPerSecond.of(10);
-    public static final AngularAcceleration HOOD_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(150);
+    public static final double HOOD_POSITION_TOLERANCE_DEGREES = 0.1;
+    public static final AngularVelocity HOOD_CRUISE_VELOCITY = DegreesPerSecond.of(750);
+    public static final AngularAcceleration HOOD_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(10000);
     public static final double HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5;
 
     public static final double HOOD_JOG_STEP_DEGREES = 5.0; // Change this value

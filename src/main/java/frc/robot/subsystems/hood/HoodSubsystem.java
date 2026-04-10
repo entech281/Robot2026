@@ -22,7 +22,7 @@ import frc.robot.RobotConstants;
 import frc.robot.io.RobotIO;
 
 public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
-    private static final boolean ENABLED = false;
+    private static final boolean ENABLED = true;
 
     private SparkMax hoodMotor;
     private SparkClosedLoopController hoodPIDController;
@@ -70,6 +70,7 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
         hoodMotor.configure(hoodConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         hoodEncoder = hoodMotor.getEncoder();
+        hoodEncoder.setPosition(0.0);
 
         hoodPIDController = hoodMotor.getClosedLoopController();
         hoodPIDController.setSetpoint(hoodEncoder.getPosition(), ControlType.kPosition);
@@ -127,7 +128,8 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
 
         if (Math.abs(hoodEncoder.getPosition()
                 - latestInput.getRequestedPosition()) > RobotConstants.HOOD.HOOD_POSITION_TOLERANCE_DEGREES) {
-            hoodPIDController.setSetpoint(desiredAngle, ControlType.kMAXMotionPositionControl);
+            hoodPIDController.setSetpoint(desiredAngle,
+                    ControlType.kMAXMotionPositionControl);
         } else {
             hoodMotor.set(0.0);
         }
@@ -138,9 +140,6 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
         if (!ENABLED)
             return;
 
-        if (hoodMotor.getReverseLimitSwitch().isPressed() && latestInput.getRequestedPosition() == 0.0) {
-            hoodEncoder.setPosition(0);
-        }
         double desiredPos = latestInput.getRequestedPosition();
         if (hoodPIDController != null) {
             setHoodPosition(desiredPos);

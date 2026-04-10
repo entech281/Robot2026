@@ -31,6 +31,7 @@ import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.RunIntakeVariableCommand;
 import frc.robot.commands.RunShooterCommand;
 import frc.robot.commands.RunTransferCommand;
+import frc.robot.commands.ShooterLag;
 import frc.robot.commands.TurretContinuousNudgeCommand;
 import frc.robot.commands.TurretJogCommand;
 import frc.robot.commands.TwistCommand;
@@ -268,13 +269,15 @@ public class OperatorInterface
         new RunShooterCommand(subsystemManager.getShooterSubsystem()), new SequentialCommandGroup(new WaitCommand(2),
             new RunTransferCommand(subsystemManager.getTransferSubsystem()))));
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.AUTO_FIRE)
-        .whileTrue(commandFactory.getFullShootCommand());
+        .whileTrue(commandFactory.getFullShootCommand())
+        .onFalse(new ShooterLag(subsystemManager.getShooterSubsystem()));
 
     // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.SNOWBLOW_FIRE)
     // .whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SNOW_BLOW_PRESET));
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.SNOWBLOW_FIRE)
         .and(xboxController.y().negate())
-        .whileTrue(commandFactory.getSnowblowCommand());
+        .whileTrue(commandFactory.getSnowblowCommand())
+        .onFalse(new ShooterLag(subsystemManager.getShooterSubsystem()));
 
     scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INTAKE)
         .whileTrue(new RunIntakeVariableCommand(subsystemManager.getIntakeSubsystem(), this));
