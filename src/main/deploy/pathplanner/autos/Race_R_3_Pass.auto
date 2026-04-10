@@ -44,6 +44,12 @@
                 "data": {
                   "pathName": "Right_Side_Shoot_Get_Shoot"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
               }
             ]
           }
@@ -84,12 +90,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
           }
         },
         {
