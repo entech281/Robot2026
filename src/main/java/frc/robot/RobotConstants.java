@@ -450,21 +450,29 @@ public final class RobotConstants {
     public static final Pose3d RED_HUB_LOCATION = new Pose3d(Inches.of(469.11).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
 
-    public static final Transform3d SNOWBLOW_CORNER_OFFSET = new Transform3d(Feet.of(4).in(Meters),
-        Feet.of(4).in(Meters), Feet.of(0).in(Meters),
-        new Rotation3d());
+    // public static final Transform3d SNOWBLOW_CORNER_OFFSET_BOTTOM = new
+    // Transform3d(Feet.of(4).in(Meters),
+    // Feet.of(6).in(Meters), Feet.of(0).in(Meters),
+    // new Rotation3d());
+
+    public static final Distance SNOWBLOW_OFFSET_Y = Feet.of(6);
+    public static final Distance SNOWBLOW_OFFSET_X = Feet.of(4);
 
     public static final Pose3d BLUE_SNOWBLOW_TARGET_TOP = new Pose3d(0.0,
-        Inches.of(317.69).in(Meters), Inches.of(0).in(Meters), new Rotation3d()).plus(SNOWBLOW_CORNER_OFFSET);
+        Inches.of(317.69).in(Meters), Inches.of(0).in(Meters), new Rotation3d())
+        .plus(new Transform3d(SNOWBLOW_OFFSET_X.in(Meters), -SNOWBLOW_OFFSET_Y.in(Meters), 0.0, new Rotation3d()));
 
     public static final Pose3d BLUE_SNOWBLOW_TARGET_BOTTOM = new Pose3d(0.0,
-        Inches.of(0.0).in(Meters), Inches.of(0).in(Meters), new Rotation3d()).plus(SNOWBLOW_CORNER_OFFSET);
+        Inches.of(0.0).in(Meters), Inches.of(0).in(Meters), new Rotation3d())
+        .plus(new Transform3d(SNOWBLOW_OFFSET_X.in(Meters), SNOWBLOW_OFFSET_Y.in(Meters), 0.0, new Rotation3d()));
 
     public static final Pose3d RED_SNOWBLOW_TARGET_TOP = new Pose3d(Inches.of(651.22).in(Meters),
-        Inches.of(317.69).in(Meters), Inches.of(0).in(Meters), new Rotation3d()).plus(SNOWBLOW_CORNER_OFFSET);
+        Inches.of(317.69).in(Meters), Inches.of(0).in(Meters), new Rotation3d())
+        .plus(new Transform3d(-SNOWBLOW_OFFSET_X.in(Meters), -SNOWBLOW_OFFSET_Y.in(Meters), 0.0, new Rotation3d()));
 
     public static final Pose3d RED_SNOWBLOW_TARGET_BOTTOM = new Pose3d(Inches.of(651.22).in(Meters),
-        Inches.of(0.0).in(Meters), Inches.of(0).in(Meters), new Rotation3d()).plus(SNOWBLOW_CORNER_OFFSET);
+        Inches.of(0.0).in(Meters), Inches.of(0).in(Meters), new Rotation3d())
+        .plus(new Transform3d(-SNOWBLOW_OFFSET_X.in(Meters), SNOWBLOW_OFFSET_Y.in(Meters), 0.0, new Rotation3d()));
 
     public static final Translation2d TURRET_OFFSET = new Translation2d(Units.inchesToMeters(-6.75),
         Units.inchesToMeters(-3.0));
