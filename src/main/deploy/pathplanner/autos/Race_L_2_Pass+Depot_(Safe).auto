@@ -42,7 +42,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Shoot_Get_Shoot_End_Slow"
+                  "pathName": "Shoot_Get_Shoot"
                 }
               },
               {
@@ -99,7 +99,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Shoot_Get_Shoot_End_Slow"
+                  "pathName": "Copy of Shoot_Get_Shoot"
                 }
               },
               {
