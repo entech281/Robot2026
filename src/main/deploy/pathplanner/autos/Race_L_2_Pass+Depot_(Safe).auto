@@ -59,9 +59,9 @@
           "data": {
             "commands": [
               {
-                "type": "wait",
+                "type": "path",
                 "data": {
-                  "waitTime": 7.5
+                  "pathName": "L_Back_Rotate_Slow"
                 }
               },
               {
@@ -78,9 +78,9 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "wait",
                 "data": {
-                  "pathName": "L_Back_Rotate_Slow"
+                  "waitTime": 7.5
                 }
               },
               {

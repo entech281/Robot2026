@@ -48,6 +48,7 @@ import frc.robot.commands.FaceTargetLocationTurretCommand;
 import frc.robot.commands.ShootAtTargetCommand;
 import frc.robot.commands.ShooterLag;
 import frc.robot.commands.VirtualTargetAutoShootCommand;
+import frc.robot.commands.XDriveCommand;
 import frc.robot.commands.ManualShootCommand;
 import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.ManualTurretCommandSupplier;
@@ -136,6 +137,7 @@ public class CommandFactory {
     // NamedCommands.registerCommand("TowerPreset",
     // Commands.none());
     NamedCommands.registerCommand("Snowblow", getSnowblowCommand());
+    NamedCommands.registerCommand("X", new XDriveCommand(driveSubsystem));
 
     autoChooser = AutoBuilder.buildAutoChooser();
 

@@ -55,6 +55,12 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "L_Back_Rotate_Slow"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "AutoShoot"
