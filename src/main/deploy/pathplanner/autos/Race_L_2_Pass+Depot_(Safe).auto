@@ -17,7 +17,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 4.75
                 }
               },
               {
@@ -69,6 +69,12 @@
                 "data": {
                   "name": "AutoShoot"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
               }
             ]
           }
@@ -80,13 +86,19 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 7.5
+                  "waitTime": 5.75
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "AutoShoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
                 }
               }
             ]

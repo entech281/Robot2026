@@ -82,11 +82,11 @@ public class OperatorInterface
     // enableJoystickBindings();
     // }
 
-    // if (DriverControllerUtils
-    // .controllerIsPresent(RobotConstants.PORTS.CONTROLLER.TUNING_CONTROLLER)) {
-    tuningController = new CommandXboxController(RobotConstants.PORTS.CONTROLLER.TUNING_CONTROLLER);
-    enableTuningControllerBindings();
-    // }
+    if (DriverControllerUtils
+        .controllerIsPresent(RobotConstants.PORTS.CONTROLLER.TUNING_CONTROLLER)) {
+      tuningController = new CommandXboxController(RobotConstants.PORTS.CONTROLLER.TUNING_CONTROLLER);
+      enableTuningControllerBindings();
+    }
 
     if (DriverControllerUtils
         .controllerIsPresent(RobotConstants.PORTS.CONTROLLER.SHIFT_LIGHT_OUTPUT)) {

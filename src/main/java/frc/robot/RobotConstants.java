@@ -94,7 +94,7 @@ public final class RobotConstants {
 
     // Calculations required for driving motor conversion factors and feed forward
     public static final double DRIVING_MOTOR_FREE_SPEED_RPS = FREE_SPEED_RPM / 60;
-    public static final double WHEEL_DIAMETER_METERS = 0.099793655;
+    public static final double WHEEL_DIAMETER_METERS = 0.09889302;
     public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
     public static final double DRIVING_MOTOR_REDUCTION = (45.0 * 17 * 50) / (DRIVING_MOTOR_PINION_TEETH * 15 * 27);
     public static final double DRIVE_WHEEL_FREE_SPEED_RPS = (DRIVING_MOTOR_FREE_SPEED_RPS * WHEEL_CIRCUMFERENCE_METERS)
