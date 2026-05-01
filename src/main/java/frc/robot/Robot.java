@@ -74,6 +74,7 @@ public class Robot extends LoggedRobot {
     subsystemManager = new HardwareManager();
     odometry = new OdometryProcessor();
     commandFactory = new CommandFactory(subsystemManager, odometry);
+    commandFactory.setSubsystemDefaultCommands();
     operatorInterface = new OperatorInterface(commandFactory, subsystemManager, odometry);
     operatorInterface.create();
     odometry.createEstimator();
