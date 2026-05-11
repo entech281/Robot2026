@@ -41,6 +41,7 @@ import frc.entech.TestableHardwareI;
 import frc.entech.commands.AutonomousException;
 import frc.entech.commands.InstantAnytimeCommand;
 import frc.robot.commands.GyroResetByAngleCommand;
+import frc.robot.commands.KillDriveCommand;
 import frc.robot.commands.ManualHoodCommand;
 import frc.robot.commands.RotateToAngleCommand;
 import frc.robot.commands.RunIntakeCommand;
@@ -108,6 +109,7 @@ public class CommandFactory {
     SmartDashboard.putData("Test Chooser", testChooser);
     Shuffleboard.getTab("stuffs").add("Run Test", new RunTestCommand(testChooser));
     tab.add("FOUNTAIN", getFountainCommand());
+    tab.add("KILL DRIVE", new KillDriveCommand(subsystemManager.getDriveSubsystem()));
 
     AutoBuilder.configure(odometry::getEstimatedPose,
         odometry::resetOdometry,
