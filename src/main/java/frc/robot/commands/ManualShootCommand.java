@@ -6,7 +6,7 @@ import static edu.wpi.first.units.Units.RPM;
 
 import java.util.function.Supplier;
 
-import org.littletonrobotics.junction.Logger;
+import frc.robot.Logger;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;

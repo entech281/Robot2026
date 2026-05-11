@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.subsystems.SparkOutput;
 import frc.robot.RobotConstants;
-import frc.robot.io.RobotIO;
 
 public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
     private static final boolean ENABLED = true;
@@ -83,7 +82,7 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
 
     @Override
     public void updateInputs(HoodInput input) {
-        RobotIO.processInput(input);
+        input.log();
         this.latestInput = input;
     }
 

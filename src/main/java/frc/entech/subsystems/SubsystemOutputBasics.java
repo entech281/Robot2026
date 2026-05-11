@@ -1,6 +1,6 @@
 package frc.entech.subsystems;
 
-import org.littletonrobotics.junction.Logger;
+import frc.robot.Logger;
 
 public abstract class SubsystemOutputBasics extends SubsystemOutput {
   protected boolean active;

@@ -1,20 +1,14 @@
 package frc.robot.subsystems.shooter;
 
-import org.littletonrobotics.junction.LogTable;
-
 import frc.entech.subsystems.SubsystemInput;
+import frc.robot.Logger;
 
-public class ShooterInput implements SubsystemInput {
+public class ShooterInput extends SubsystemInput {
     private double speed = 0.0;
 
     @Override
-    public void toLog(LogTable table) {
-        table.put("speed", speed);
-    }
-
-    @Override
-    public void fromLog(LogTable table) {
-        speed = table.get("speed", 0);
+    public void toLog() {
+        Logger.recordOutput("ShooterInput/speed", speed);
     }
 
     /**

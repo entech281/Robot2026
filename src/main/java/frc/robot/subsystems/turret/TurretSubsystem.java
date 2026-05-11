@@ -27,7 +27,6 @@ import frc.entech.subsystems.SparkOutput;
 import frc.entech.util.EntechUtils;
 import frc.entech.util.stall.MotorStallDetector;
 import frc.robot.RobotConstants;
-import frc.robot.io.RobotIO;
 import frc.robot.livetuning.LiveTuningHandler;
 
 /**
@@ -182,7 +181,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
 
     @Override
     public void updateInputs(TurretInput input) {
-        RobotIO.processInput(input);
+        input.log();
         this.latestInput = input;
     }
 

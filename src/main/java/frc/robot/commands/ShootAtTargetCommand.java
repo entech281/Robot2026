@@ -7,7 +7,7 @@ import static edu.wpi.first.units.Units.RPM;
 
 import java.util.function.Supplier;
 
-import org.littletonrobotics.junction.Logger;
+import frc.robot.Logger;
 
 import frc.entech.commands.EntechCommand;
 import frc.entech.util.Triboolean;
@@ -126,7 +126,7 @@ public class ShootAtTargetCommand extends EntechCommand {
         }
 
         // if (snowblow) {
-        //     turretReady = true;
+        // turretReady = true;
         // }
 
         boolean isReadyToShoot = turretReady

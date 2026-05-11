@@ -29,11 +29,11 @@ public class DriveInputProcessor {
     for (DriveFilterI filter : driveFilters) {
       processedInput = filter.process(processedInput);
       processedInput.setKey(filter.getClass().getSimpleName());
-      RobotIO.processInput(processedInput);
+      processedInput.log();
     }
 
     processedInput.setKey("final");
-    RobotIO.processInput(processedInput);
+    processedInput.log();
 
     return processedInput;
   }

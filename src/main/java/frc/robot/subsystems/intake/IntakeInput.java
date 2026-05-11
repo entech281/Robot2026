@@ -1,20 +1,14 @@
 package frc.robot.subsystems.intake;
 
-import org.littletonrobotics.junction.LogTable;
-
 import frc.entech.subsystems.SubsystemInput;
+import frc.robot.Logger;
 
-public class IntakeInput implements SubsystemInput {
+public class IntakeInput extends SubsystemInput {
     private double speed = 0;
 
     @Override
-    public void fromLog(LogTable table) {
-        speed = table.get("speed", speed);
-    }
-
-    @Override
-    public void toLog(LogTable table) {
-        table.put("speed", speed);
+    public void toLog() {
+        Logger.recordOutput("IntakeInput/speed", speed);
     }
 
     /**

@@ -1,6 +1,6 @@
 package frc.robot.commands;
 
-import org.littletonrobotics.junction.Logger;
+import frc.robot.Logger;
 import frc.entech.commands.EntechCommand;
 import frc.robot.RobotConstants;
 import frc.robot.io.DriveInputSupplier;

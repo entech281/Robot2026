@@ -16,9 +16,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.subsystems.SparkOutput;
-import frc.robot.Robot;
 import frc.robot.RobotConstants;
-import frc.robot.io.RobotIO;
 import frc.robot.livetuning.LiveTuningHandler;
 
 public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutput> {
@@ -50,7 +48,7 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
 
     @Override
     public void updateInputs(ShooterInput input) {
-        RobotIO.processInput(input);
+        input.log();
         if (ENABLED) {
             setSpeed = input.getSpeed();
             if (setSpeed > RobotConstants.SHOOTER.MAX_RPM.in(RPM)) {

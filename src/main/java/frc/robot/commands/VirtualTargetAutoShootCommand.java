@@ -6,7 +6,7 @@ import static edu.wpi.first.units.Units.RPM;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import org.littletonrobotics.junction.Logger;
+import frc.robot.Logger;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;

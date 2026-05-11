@@ -2,8 +2,7 @@ package frc.robot.io;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.inputs.LoggableInputs;
+import frc.robot.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -25,10 +24,6 @@ public class RobotIO implements DriveInputSupplier {
     return instance;
   }
 
-  public static void processInput(LoggableInputs in) {
-    Logger.processInputs(in.getClass().getSimpleName(), in);
-  }
-
   private RobotIO() {
   }
 
@@ -41,7 +36,7 @@ public class RobotIO implements DriveInputSupplier {
     di.setRotation(0.0);
     di.setXSpeed(0.0);
     di.setYSpeed(0.0);
-    processInput(di);
+    di.log();
     return di;
   }
 

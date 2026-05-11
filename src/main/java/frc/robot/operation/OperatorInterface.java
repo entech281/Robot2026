@@ -19,13 +19,11 @@ import frc.entech.operatorpanel.OutputJoystick.Color;
 import frc.entech.operatorpanel.OutputJoystick.LedNumber;
 import frc.robot.CommandFactory;
 import frc.robot.HardwareManager;
-import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.GyroReset;
 import frc.robot.commands.HoodJogCommand;
 import frc.robot.commands.ManualHoodCommand;
-import frc.robot.commands.ManualTurretCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.RunIntakeVariableCommand;
@@ -36,11 +34,7 @@ import frc.robot.commands.TurretContinuousNudgeCommand;
 import frc.robot.commands.TurretJogCommand;
 import frc.robot.commands.TwistCommand;
 import frc.robot.commands.XDriveCommand;
-import frc.robot.io.DebugInput;
-import frc.robot.io.DebugInputSupplier;
 import frc.robot.io.DriveInputSupplier;
-import frc.robot.io.OperatorInput;
-import frc.robot.io.OperatorInputSupplier;
 import frc.robot.io.RobotIO;
 import frc.robot.processors.OdometryProcessor;
 import frc.robot.subsystems.drive.DriveInput;
@@ -48,7 +42,7 @@ import frc.robot.util.ShiftStateTracker;
 import frc.robot.util.ShiftStateTracker.ShiftState;
 
 public class OperatorInterface
-    implements DriveInputSupplier, DebugInputSupplier, OperatorInputSupplier {
+    implements DriveInputSupplier {
   private CommandJoystick joystickController;
   private CommandXboxController xboxController;
 
@@ -453,12 +447,6 @@ public class OperatorInterface
    * we log any inputs
    * handed to consumers, so they dont have to
    */
-  @Override
-  public DebugInput getDebugInput() {
-    DebugInput di = new DebugInput();
-    RobotIO.processInput(di);
-    return di;
-  }
 
   @Override
   public DriveInput getDriveInput() {
@@ -482,14 +470,7 @@ public class OperatorInterface
       di.setRotation(0);
     }
 
-    RobotIO.processInput(di);
+    di.log();
     return di;
-  }
-
-  @Override
-  public OperatorInput getOperatorInput() {
-    OperatorInput oi = new OperatorInput();
-    RobotIO.processInput(oi);
-    return oi;
   }
 }
