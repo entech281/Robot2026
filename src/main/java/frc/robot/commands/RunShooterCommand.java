@@ -33,13 +33,13 @@ public class RunShooterCommand extends EntechCommand {
         ShooterInput input = new ShooterInput();
         double speed = UserPolicy.getInstance().getShooterRPM().in(RPM);
         input.setSpeed(speed);
-        shooter.updateInputs(input);
+        shooter.acceptInputs(input);
     }
 
     @Override
 
     public void end(boolean interrupted) {
-        shooter.updateInputs(new ShooterInput());
+        shooter.acceptInputs(new ShooterInput());
     }
 
     @Override

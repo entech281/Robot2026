@@ -60,9 +60,9 @@ public class ManualShootCommand extends EntechCommand {
         hoodInput = new HoodInput();
         shooterInput = new ShooterInput();
 
-        transferSS.updateInputs(transferInput);
-        hoodSS.updateInputs(hoodInput);
-        shooterSS.updateInputs(shooterInput);
+        transferSS.acceptInputs(transferInput);
+        hoodSS.acceptInputs(hoodInput);
+        shooterSS.acceptInputs(shooterInput);
     }
 
     @Override
@@ -72,11 +72,11 @@ public class ManualShootCommand extends EntechCommand {
         hoodInput.setRequestedPosition(hoodAngle.in(Degrees));
         if (moveTurret) {
             turretInput.setRequestedPosition(turretAngle);
-            turretSS.updateInputs(turretInput);
+            turretSS.acceptInputs(turretInput);
         }
 
-        shooterSS.updateInputs(shooterInput);
-        hoodSS.updateInputs(hoodInput);
+        shooterSS.acceptInputs(shooterInput);
+        hoodSS.acceptInputs(hoodInput);
 
         boolean turretIsReady = turretSS.getOutputs().isAtRequestedPosition();
         boolean hoodIsReady = hoodSS.getOutputs().isAtRequestedPosition();
@@ -86,10 +86,10 @@ public class ManualShootCommand extends EntechCommand {
 
         if (isReadyToShoot) {
             transferInput.setSpeed(LiveTuningHandler.getInstance().getValue("TransferSubsystem/SetSpeed"));
-            transferSS.updateInputs(transferInput);
+            transferSS.acceptInputs(transferInput);
         } else {
             transferInput.setSpeed(0.0);
-            transferSS.updateInputs(transferInput);
+            transferSS.acceptInputs(transferInput);
         }
 
         Logger.recordOutput("TurretIsReadyToShoot", turretIsReady + "");

@@ -42,7 +42,7 @@ public final class RobotConstants {
   public static interface DrivetrainConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double MAX_SPEED_METERS_PER_SECOND = 6.0; // 4.42; //4.8;
+    public static final double MAX_SPEED_METERS_PER_SECOND = 6.0;
     public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 4 * Math.PI;
     // radians per second
 
@@ -321,23 +321,9 @@ public final class RobotConstants {
       public static final String CAMERA_D = "Arducam_Delta";
     }
 
-    public static interface Filters {
-      public static final double MAX_AMBIGUITY = 0.3; // Lower = more strict (0.2-0.3 is good)
-      public static final double MAX_DISTANCE = 5.0; // Max distance to trust tags (meters)
-      public static final int[] ALLOWED_TAGS = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }; // Update with
-                                                                                                          // actual 2026
-                                                                                                          // tag IDs
-
-    }
-
-    public static interface Resolution {
-      public static final double[] COLOR_RESOLUTION = { 320, 240 };
-    }
-
     public static interface Transforms {
       // Define where your camera is mounted on the robot/rig
       // *** YOU MUST MEASURE AND UPDATE THESE VALUES ***
-      // Example values shown below - camera 0.3m forward, centered, 0.4m high, tilted
       // left Rear
       Transform3d robotToCameraA = new Transform3d(
           new Translation3d(
@@ -405,7 +391,7 @@ public final class RobotConstants {
   }
 
   public static interface ODOMETRY {
-    public static final double xyStdDevCoefficient = 2.0;
+    public static final double XY_STD_DEV_COEFFICIENT = 2.0;
     public static final double FIELD_BORDER_MARGIN = 0.5;
     public static final int ODOMETRY_FREQUENCY = 150;
     public static final double FIELD_LENGTH_INCHES = 54 * 12 + 3.25;
@@ -446,11 +432,6 @@ public final class RobotConstants {
     public static final Pose3d RED_HUB_LOCATION = new Pose3d(Inches.of(469.11).in(Meters),
         Inches.of(158.845).in(Meters), Inches.of(0).in(Meters), new Rotation3d());
 
-    // public static final Transform3d SNOWBLOW_CORNER_OFFSET_BOTTOM = new
-    // Transform3d(Feet.of(4).in(Meters),
-    // Feet.of(6).in(Meters), Feet.of(0).in(Meters),
-    // new Rotation3d());
-
     public static final Distance SNOWBLOW_OFFSET_Y = Feet.of(6);
     public static final Distance SNOWBLOW_OFFSET_X = Feet.of(10);
 
@@ -478,7 +459,6 @@ public final class RobotConstants {
   }
 
   public static interface HOOD {
-    // TODO: make these real
     public static final double POSITION_CONVERSION_FACTOR_DEGREES = 3.1269000260575;
     public static final double VELOCITY_CONVERSION_FACTOR_DEGREES_PER_SECOND_PER_RPM = 3.1269000260575 / 60.0;
     public static final double HOOD_P = 1.0;
@@ -493,8 +473,7 @@ public final class RobotConstants {
     public static final double HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5;
 
     public static final double HOOD_JOG_STEP_DEGREES = 5.0; // Change this value
-    public static final Angle HOOD_OFFSET = Degrees.of(0.0); // TODO, when switching from interpolation
-                                                             // strategy make this real and implement
+    public static final Angle HOOD_OFFSET = Degrees.of(0.0);
 
   }
 

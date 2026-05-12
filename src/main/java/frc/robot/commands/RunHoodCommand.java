@@ -27,7 +27,7 @@ public class RunHoodCommand extends EntechCommand {
 
     @Override
     public void end(boolean interrupted) {
-        hood.updateInputs(new HoodInput());
+        hood.acceptInputs(new HoodInput());
     }
 
     @Override
@@ -40,10 +40,10 @@ public class RunHoodCommand extends EntechCommand {
         } else {
             input.setRequestedPosition(otherRequestedPosition);
         }
-        hood.updateInputs(input);
+        hood.acceptInputs(input);
     }
 
-    public void runHood(){
+    public void runHood() {
         HoodInput input = new HoodInput();
         input.setRequestedPosition(input.getRequestedPosition() + 5);
     }
@@ -58,7 +58,7 @@ public class RunHoodCommand extends EntechCommand {
         } else {
             input.setRequestedPosition(requestedPosition);
         }
-        hood.updateInputs(input);
+        hood.acceptInputs(input);
     }
 
     @Override

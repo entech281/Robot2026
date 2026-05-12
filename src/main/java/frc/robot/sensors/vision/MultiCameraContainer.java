@@ -5,60 +5,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import frc.entech.util.EntechGeometryUtils;
 
 public class MultiCameraContainer implements CameraContainerI {
   private final CameraContainerI[] cameraContainers;
 
   public MultiCameraContainer(CameraContainerI... cameraContainers) {
     this.cameraContainers = cameraContainers;
-  }
-
-  @Override
-  public Optional<Pose2d> getEstimatedPose() {
-    List<Pose2d> estimatedPoses = new ArrayList<>();
-
-    for (CameraContainerI cameraContainer : cameraContainers) {
-      Optional<Pose2d> estPose = cameraContainer.getEstimatedPose();
-      if (estPose.isPresent()) {
-        estimatedPoses.add(estPose.get());
-      }
-    }
-
-    if (estimatedPoses.isEmpty())
-      return Optional.empty();
-
-    if (estimatedPoses.size() == 1)
-      return Optional.of(estimatedPoses.get(0));
-
-    // Average multiple camera poses
-    Pose2d averagePose = estimatedPoses.get(0);
-    for (int i = 1; i < estimatedPoses.size(); i++) {
-      averagePose = EntechGeometryUtils.averagePose2d(averagePose, estimatedPoses.get(i));
-    }
-
-    return Optional.of(averagePose);
-  }
-
-  @Override
-  public PhotonPipelineResult getFilteredResult() {
-    List<PhotonTrackedTarget> allTargets = new ArrayList<>();
-
-    for (CameraContainerI cameraContainer : cameraContainers) {
-      PhotonPipelineResult result = cameraContainer.getFilteredResult();
-      allTargets.addAll(result.getTargets());
-    }
-
-    // Return a simple result with all combined targets
-    // Since we can't easily merge metadata, just return targets
-    PhotonPipelineResult combined = new PhotonPipelineResult();
-    // Note: This creates an empty result - targets will need to be accessed via
-    // individual cameras
-    // This is a limitation of the multi-camera approach with the new API
-    return combined;
   }
 
   @Override

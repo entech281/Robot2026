@@ -81,7 +81,7 @@ public class HoodSubsystem extends EntechSubsystem<HoodInput, HoodOutput> {
     }
 
     @Override
-    public void updateInputs(HoodInput input) {
+    public void acceptInputs(HoodInput input) {
         input.log();
         this.latestInput = input;
     }

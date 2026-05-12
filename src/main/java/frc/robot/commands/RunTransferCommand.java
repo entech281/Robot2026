@@ -37,12 +37,12 @@ public class RunTransferCommand extends EntechCommand {
         } else {
             input.setSpeed(-speed);
         }
-        transfer.updateInputs(input);
+        transfer.acceptInputs(input);
     }
 
     @Override
     public void end(boolean interrupted) {
-        transfer.updateInputs(new TransferInput());
+        transfer.acceptInputs(new TransferInput());
     }
 
     @Override

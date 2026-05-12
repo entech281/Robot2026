@@ -36,13 +36,13 @@ public class NudgeTurretCommand extends EntechCommand {
           .minus(Degrees.of(LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount")));
     }
     turretInput.setRequestedPosition(position);
-    turretSS.updateInputs(turretInput);
+    turretSS.acceptInputs(turretInput);
   }
 
   @Override
   public void execute() {
     turretInput.setRequestedPosition(position);
-    turretSS.updateInputs(turretInput);
+    turretSS.acceptInputs(turretInput);
   }
 
   @Override

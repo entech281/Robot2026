@@ -58,7 +58,7 @@ public class DriveSubsystem extends EntechSubsystem<DriveInput, DriveOutput> {
       Rotation2d.fromDegrees(0.0));
 
   @Override
-  public void updateInputs(DriveInput input) {
+  public void acceptInputs(DriveInput input) {
     if (ENABLED) {
       double xSpeedCommanded;
       double ySpeedCommanded;

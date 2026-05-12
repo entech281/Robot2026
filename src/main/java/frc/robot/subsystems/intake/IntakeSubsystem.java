@@ -39,7 +39,7 @@ public class IntakeSubsystem extends EntechSubsystem<IntakeInput, IntakeOutput> 
     }
 
     @Override
-    public void updateInputs(IntakeInput input) {
+    public void acceptInputs(IntakeInput input) {
         input.log();
         if (ENABLED) {
             if (setSpeed != input.getSpeed()) {

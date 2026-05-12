@@ -47,7 +47,7 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
     }
 
     @Override
-    public void updateInputs(ShooterInput input) {
+    public void acceptInputs(ShooterInput input) {
         input.log();
         if (ENABLED) {
             setSpeed = input.getSpeed();

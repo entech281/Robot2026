@@ -30,7 +30,7 @@ public class HoodJogCommand extends EntechCommand {
         current = RobotIO.getInstance().getHoodOutput().getCurrentPosition();
         HoodInput in = new HoodInput();
         in.setRequestedPosition(current + stepDegrees);
-        hood.updateInputs(in);
+        hood.acceptInputs(in);
     }
 
     @Override

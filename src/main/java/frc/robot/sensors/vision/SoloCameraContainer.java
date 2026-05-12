@@ -11,11 +11,8 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.RobotConstants;
 
 public class SoloCameraContainer implements CameraContainerI {
   private final PhotonCamera camera;
@@ -29,7 +26,7 @@ public class SoloCameraContainer implements CameraContainerI {
     camera = new PhotonCamera(cameraName);
     estimator = new PhotonPoseEstimator(fieldLayout, robotToCamera);
     camera.setDriverMode(false);
-    latestResult = new PhotonPipelineResult(); // Initialize with empty result
+    latestResult = new PhotonPipelineResult();
     this.robotToCamera = robotToCamera;
   }
 
@@ -38,95 +35,38 @@ public class SoloCameraContainer implements CameraContainerI {
     camera = new PhotonCamera(ni, cameraName);
     estimator = new PhotonPoseEstimator(fieldLayout, robotToCamera);
     camera.setDriverMode(false);
-    latestResult = new PhotonPipelineResult(); // Initialize with empty result
+    latestResult = new PhotonPipelineResult();
     this.robotToCamera = robotToCamera;
   }
 
-  @Override
-  public PhotonPipelineResult getFilteredResult() {
-    var results = camera.getAllUnreadResults();
-
-    if (results.isEmpty()) {
-      return latestResult; // Return the last known result if no new ones
+  private Optional<EstimatedRobotPose> calculateEstimatedPose(PhotonPipelineResult result) {
+    Optional<EstimatedRobotPose> estimate = estimator.estimateCoprocMultiTagPose(result);
+    if (!estimate.isPresent()) {
+      estimate = estimator.estimateLowestAmbiguityPose(result);
     }
-
-    // Get the most recent result and store it
-    PhotonPipelineResult result = results.get(results.size() - 1);
-    latestResult = result; // Cache for latency access
-
-    List<PhotonTrackedTarget> filteredTargets = new ArrayList<>();
-
-    for (PhotonTrackedTarget target : result.getTargets()) {
-      // Filter by ambiguity
-      if (target.getPoseAmbiguity() > RobotConstants.Vision.Filters.MAX_AMBIGUITY) {
-        continue;
-      }
-
-      // Filter by distance
-      if (Math.abs(target.getBestCameraToTarget().getX()) > RobotConstants.Vision.Filters.MAX_DISTANCE) {
-        continue;
-      }
-
-      // Filter by allowed tag IDs
-      boolean allowed = false;
-      for (int id : RobotConstants.Vision.Filters.ALLOWED_TAGS) {
-        if (target.getFiducialId() == id) {
-          allowed = true;
-          break;
-        }
-      }
-
-      if (!allowed) {
-        continue;
-      }
-
-      filteredTargets.add(target);
-    }
-
-    // Create new result with filtered targets
-    return new PhotonPipelineResult(
-        result.metadata,
-        filteredTargets,
-        result.getMultiTagResult());
+    return estimate;
   }
 
-  private PhotonPipelineResult getFilteredResult(PhotonPipelineResult result) {
-    List<PhotonTrackedTarget> filteredTargets = new ArrayList<>();
+  private double calculateVisionPoseAmbiguity(List<PhotonTrackedTarget> targets) {
+    double ambiguity = 0.0;
+    for (PhotonTrackedTarget target : targets) {
+      ambiguity += target.getPoseAmbiguity();
+    }
+    ambiguity /= targets.size();
+    return ambiguity;
+  }
 
-    for (PhotonTrackedTarget target : result.getTargets()) {
-      // Filter by ambiguity
-      // if (target.getPoseAmbiguity() > RobotConstants.Vision.Filters.MAX_AMBIGUITY)
-      // {
-      // continue;
-      // }
-
-      // Filter by distance
-      // if (Math.abs(target.getBestCameraToTarget().getX()) >
-      // RobotConstants.Vision.Filters.MAX_DISTANCE) {
-      // continue;
-      // }
-
-      // Filter by allowed tag IDs
-      // boolean allowed = false;
-      // for (int id : RobotConstants.Vision.Filters.ALLOWED_TAGS) {
-      // if (target.getFiducialId() == id) {
-      // allowed = true;
-      // break;
-      // }
-      // }
-
-      // if (!allowed) {
-      // continue;
-      // }
-
-      filteredTargets.add(target);
+  private double calculateVisionPoseAverageDistance(List<PhotonTrackedTarget> targets) {
+    List<Transform3d> camToTargetTransforms = new ArrayList<>();
+    for (PhotonTrackedTarget target : targets) {
+      camToTargetTransforms.add(target.getBestCameraToTarget());
     }
 
-    // Create new result with filtered targets
-    return new PhotonPipelineResult(
-        result.metadata,
-        filteredTargets,
-        result.getMultiTagResult());
+    double totalDistance = 0.0;
+    for (Transform3d transform : camToTargetTransforms) {
+      totalDistance += transform.getTranslation().getDistance(robotToCamera.getTranslation());
+    }
+    return totalDistance / targets.size();
   }
 
   @Override
@@ -135,44 +75,25 @@ public class SoloCameraContainer implements CameraContainerI {
     List<PhotonPipelineResult> filteredList = new ArrayList<>();
 
     for (PhotonPipelineResult result : latestReadResults) {
-      filteredList.add(getFilteredResult(result));
+      if (result.hasTargets()) {
+        filteredList.add(result);
+      }
+      latestResult = result;
     }
 
     List<VisionPose> visionPoses = new ArrayList<>();
 
     for (PhotonPipelineResult result : filteredList) {
-      if (!result.hasTargets()) {
-        continue;
-      }
-      Optional<EstimatedRobotPose> estimatedPose = estimator.estimateCoprocMultiTagPose(result);
-      if (!estimatedPose.isPresent()) {
-        estimatedPose = estimator.estimateLowestAmbiguityPose(result);
-      }
-
+      Optional<EstimatedRobotPose> estimatedPose = calculateEstimatedPose(result);
       if (estimatedPose.isPresent()) {
-        Pose3d pose = estimatedPose.get().estimatedPose;
-        double timeStamp = result.getTimestampSeconds();
+        EstimatedRobotPose estimate = estimatedPose.get();
 
-        double ambiguity = 0.0;
-        for (PhotonTrackedTarget target : estimatedPose.get().targetsUsed) {
-          ambiguity += target.getPoseAmbiguity();
-        }
-        ambiguity /= estimatedPose.get().targetsUsed.size();
-
-        List<Transform3d> camToTargetTransforms = new ArrayList<>();
-        for (PhotonTrackedTarget target : estimatedPose.get().targetsUsed) {
-          camToTargetTransforms.add(target.getBestCameraToTarget());
-        }
-
-        // Calculate average distance to tag
-        double totalDistance = 0.0;
-        for (Transform3d transform : camToTargetTransforms) {
-          totalDistance += transform.getTranslation().getDistance(robotToCamera.getTranslation());
-        }
-        double avgDistance = totalDistance / estimatedPose.get().targetsUsed.size();
+        double ambiguity = calculateVisionPoseAmbiguity(estimate.targetsUsed);
+        double avgDistance = calculateVisionPoseAverageDistance(estimate.targetsUsed);
 
         visionPoses
-            .add(new VisionPose(pose, timeStamp, ambiguity, camera.getName(), estimatedPose.get().targetsUsed,
+            .add(new VisionPose(estimate.estimatedPose, result.getTimestampSeconds(), ambiguity, camera.getName(),
+                estimate.targetsUsed,
                 avgDistance));
       }
     }
@@ -185,19 +106,7 @@ public class SoloCameraContainer implements CameraContainerI {
   }
 
   @Override
-  public Optional<Pose2d> getEstimatedPose() {
-    Optional<List<VisionPose>> latestVisionPose = getEstimatedPoses();
-
-    if (latestVisionPose.isEmpty()) {
-      return Optional.empty();
-    }
-
-    return Optional.of(latestVisionPose.get().get(latestVisionPose.get().size() - 1).getPose2d());
-  }
-
-  @Override
   public double getLatency() {
-    // Access latency from metadata
     if (latestResult != null && latestResult.metadata != null) {
       return latestResult.metadata.getLatencyMillis();
     }
@@ -206,17 +115,17 @@ public class SoloCameraContainer implements CameraContainerI {
 
   @Override
   public boolean hasTargets() {
-    return getFilteredResult().hasTargets();
+    return latestResult.hasTargets();
   }
 
   @Override
   public int getTargetCount() {
-    return getFilteredResult().getTargets().size();
+    return latestResult.getTargets().size();
   }
 
   @Override
   public List<EntechTargetData> getTargetData() {
-    List<PhotonTrackedTarget> targets = getFilteredResult().getTargets();
+    List<PhotonTrackedTarget> targets = latestResult.getTargets();
     List<Integer> targetIds = new ArrayList<>();
 
     for (PhotonTrackedTarget target : targets) {

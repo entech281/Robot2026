@@ -5,30 +5,31 @@ import frc.robot.io.RobotIO;
 import frc.robot.subsystems.hood.HoodInput;
 import frc.robot.subsystems.hood.HoodSubsystem;
 
-public class ManualHoodCommand extends EntechCommand{
+public class ManualHoodCommand extends EntechCommand {
   private final HoodInput turretInput = new HoodInput();
   private final HoodSubsystem hoodSS;
   private double position;
 
   public ManualHoodCommand(HoodSubsystem hoodSubsystem, double position) {
-      super(hoodSubsystem);
-      this.hoodSS = hoodSubsystem;
-      this.position = position;
+    super(hoodSubsystem);
+    this.hoodSS = hoodSubsystem;
+    this.position = position;
   }
 
   @Override
   public void initialize() {
-      turretInput.setRequestedPosition(position);
-      hoodSS.updateInputs(turretInput);
+    turretInput.setRequestedPosition(position);
+    hoodSS.acceptInputs(turretInput);
   }
 
   @Override
   public void execute() {
-      hoodSS.updateInputs(turretInput);
+    hoodSS.acceptInputs(turretInput);
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   @Override
   public boolean isFinished() {

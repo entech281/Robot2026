@@ -41,7 +41,7 @@ public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOu
     }
 
     @Override
-    public void updateInputs(TransferInput input) {
+    public void acceptInputs(TransferInput input) {
         input.log();
         if (ENABLED) {
             if (input.getSpeed() != setSpeed) {

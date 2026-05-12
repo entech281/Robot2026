@@ -19,7 +19,7 @@ public class AimTurretLiveCommand extends EntechCommand {
         TurretInput in = new TurretInput();
         in.setActivate(false);
         in.setRequestedPosition(Degrees.of(0.0));
-        turret.updateInputs(in);
+        turret.acceptInputs(in);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class AimTurretLiveCommand extends EntechCommand {
         TurretInput in = new TurretInput();
         in.setActivate(false);
         in.setRequestedPosition(Degrees.of(LiveTuningHandler.getInstance().getValue("TurretSubsystem/LiveAngle")));
-        turret.updateInputs(in);
+        turret.acceptInputs(in);
     }
 
     @Override

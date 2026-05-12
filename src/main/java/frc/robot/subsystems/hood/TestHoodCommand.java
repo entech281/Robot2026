@@ -18,14 +18,14 @@ public class TestHoodCommand extends EntechCommand {
         counter.reset();
         HoodInput in = new HoodInput();
         in.setRequestedPosition(10.0);
-        hood.updateInputs(in);
+        hood.acceptInputs(in);
     }
 
     @Override
     public void end(boolean interrupted) {
         HoodInput in = new HoodInput();
         in.setRequestedPosition(0.0);
-        hood.updateInputs(in);
+        hood.acceptInputs(in);
     }
 
     @Override

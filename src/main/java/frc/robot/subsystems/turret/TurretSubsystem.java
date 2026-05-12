@@ -180,7 +180,7 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     }
 
     @Override
-    public void updateInputs(TurretInput input) {
+    public void acceptInputs(TurretInput input) {
         input.log();
         this.latestInput = input;
     }

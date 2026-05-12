@@ -17,7 +17,7 @@ public class TestShooterCommand extends EntechCommand {
     public void end(boolean interrupted) {
         ShooterInput input = new ShooterInput();
         input.setSpeed(0.0);
-        shooterSubsystem.updateInputs(input);
+        shooterSubsystem.acceptInputs(input);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class TestShooterCommand extends EntechCommand {
         counter.reset();
         ShooterInput input = new ShooterInput();
         input.setSpeed(4000.0);
-        shooterSubsystem.updateInputs(input);
+        shooterSubsystem.acceptInputs(input);
     }
 
     @Override
