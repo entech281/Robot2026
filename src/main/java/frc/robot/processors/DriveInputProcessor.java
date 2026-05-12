@@ -3,7 +3,6 @@ package frc.robot.processors;
 import java.util.ArrayList;
 import java.util.List;
 
-import frc.robot.io.RobotIO;
 import frc.robot.processors.filters.AutoYawFilter;
 import frc.robot.processors.filters.DriveFilterI;
 import frc.robot.processors.filters.HoldYawFilter;

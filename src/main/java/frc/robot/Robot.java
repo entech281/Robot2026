@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.ResetTurningEncoderCommand;
@@ -27,14 +26,11 @@ import frc.robot.processors.OdometryProcessor;
 
 // branch test comment
 public class Robot extends TimedRobot {
-
-  public static final double SIMULATION_TIME_MILLIS = 50000;
   private Command autonomousCommand;
   private HardwareManager subsystemManager;
   private CommandFactory commandFactory;
   private OdometryProcessor odometry;
   private OperatorInterface operatorInterface;
-  private long robotStartTime = 0;
 
   public void loggerInit() {
     Logger.start();
@@ -50,7 +46,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    robotStartTime = System.currentTimeMillis();
     try {
       loggerInit();
     } catch (Exception e) {
@@ -68,12 +63,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationPeriodic() {
-    // long elapsedMilliSecondsSinceStart = System.currentTimeMillis() -
-    // robotStartTime;
-    // if (elapsedMilliSecondsSinceStart > SIMULATION_TIME_MILLIS) {
-    // DriverStation.reportWarning("Simulation Success : Ending", false);
-    // System.exit(0);
-    // }
     robotPeriodic();
   }
 

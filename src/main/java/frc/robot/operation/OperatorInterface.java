@@ -4,7 +4,6 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RPM;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -14,9 +13,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.entech.operatorpanel.OutputJoystick;
-import frc.entech.operatorpanel.OutputJoystick.Color;
-import frc.entech.operatorpanel.OutputJoystick.LedNumber;
 import frc.robot.CommandFactory;
 import frc.robot.HardwareManager;
 import frc.robot.RobotConstants;
@@ -24,6 +20,7 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.GyroReset;
 import frc.robot.commands.HoodJogCommand;
 import frc.robot.commands.ManualHoodCommand;
+import frc.robot.commands.ManualShootCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.RunIntakeVariableCommand;
@@ -36,10 +33,9 @@ import frc.robot.commands.TwistCommand;
 import frc.robot.commands.XDriveCommand;
 import frc.robot.io.DriveInputSupplier;
 import frc.robot.io.RobotIO;
+import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.processors.OdometryProcessor;
 import frc.robot.subsystems.drive.DriveInput;
-import frc.robot.util.ShiftStateTracker;
-import frc.robot.util.ShiftStateTracker.ShiftState;
 
 public class OperatorInterface
     implements DriveInputSupplier {
@@ -48,10 +44,7 @@ public class OperatorInterface
 
   private CommandXboxController tuningController;
 
-  private CommandJoystick scoreOperatorPanel;
-  private CommandJoystick alignOperatorPanel;
-
-  private OutputJoystick shiftLightOutput;
+  private CommandJoystick operatorPanel;
 
   private final CommandFactory commandFactory;
   private final HardwareManager subsystemManager;
@@ -68,13 +61,6 @@ public class OperatorInterface
 
     xboxController = new CommandXboxController(RobotConstants.PORTS.CONTROLLER.DRIVER_CONTROLLER);
     enableXboxBindings();
-    // if
-    // (DriverControllerUtils.controllerIsPresent(RobotConstants.PORTS.CONTROLLER.TEST_JOYSTICK))
-    // {
-    // joystickController = new
-    // CommandJoystick(RobotConstants.PORTS.CONTROLLER.TEST_JOYSTICK);
-    // enableJoystickBindings();
-    // }
 
     if (DriverControllerUtils
         .controllerIsPresent(RobotConstants.PORTS.CONTROLLER.TUNING_CONTROLLER)) {
@@ -82,38 +68,22 @@ public class OperatorInterface
       enableTuningControllerBindings();
     }
 
-    if (DriverControllerUtils
-        .controllerIsPresent(RobotConstants.PORTS.CONTROLLER.SHIFT_LIGHT_OUTPUT)) {
-      shiftLightOutput = new OutputJoystick(RobotConstants.PORTS.CONTROLLER.SHIFT_LIGHT_OUTPUT);
-      enableOperatorOutputBindings();
-    }
-
     enableTriggers();
 
-    scoreOperatorPanel = new CommandJoystick(RobotConstants.PORTS.CONTROLLER.SCORE_PANEL);
+    operatorPanel = new CommandJoystick(RobotConstants.PORTS.CONTROLLER.SCORE_PANEL);
     scoreOperatorBindings();
-
-    // alignOperatorPanel = new
-    // CommandJoystick(RobotConstants.PORTS.CONTROLLER.ALIGN_PANEL);
-    // alignOperatorBindings();
-
   }
 
   public void enableTuningControllerBindings() {
-    // Basic motor toggles for quick tuning
     tuningController.a().whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
     tuningController.b().whileTrue(new RunTransferCommand(subsystemManager.getTransferSubsystem()));
     tuningController.x().whileTrue(new RunShooterCommand(subsystemManager.getShooterSubsystem()));
-    // .onFalse(commandFactory.getStopShootingCommand());
-    // Momentary drop-then-raise hopper cycle for tuning
 
-    // Turret tuning: bumpers jog left/right alrwhile held (small steps)
     tuningController.povLeft()
         .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), 10.0));
     tuningController.povRight()
         .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(), -10.0));
 
-    // Hood tuning: use POV (d-pad) up/down to jog hood +/-1 degrees while held
     tuningController.povDown().onTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), -1.0));
 
     tuningController.povUp().onTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), 1.0));
@@ -164,50 +134,8 @@ public class OperatorInterface
     xboxController.y().whileTrue(new RepeatCommand(
         new ManualHoodCommand(subsystemManager.getHoodSubsystem(), 0)));
 
-    // xboxController.a().whileTrue(new
-    // ManualTurretCommand(subsystemManager.getTurretSubsystem(),
-    // 0));
-
-    // xboxController.b().whileTrue(new
-    // ManualTurretCommand(subsystemManager.getTurretSubsystem(),
-    // 30));
-
-    // xboxController.y().whileTrue(new
-    // ManualTurretCommand(subsystemManager.getTurretSubsystem(),
-    // -30));
-
     xboxController.leftBumper().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
     xboxController.rightBumper().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
-  }
-
-  public void enableOperatorOutputBindings() {
-    // Shift light LED triggers — reads wonAuto live from UserPolicy each cycle
-    // No yellow on OutputJoystick so warning states use FAST blink instead
-    shiftLightOutput.setLED(LedNumber.k1, Color.GREEN, true);
-
-    new Trigger(() -> getShiftState() == ShiftState.YOUR_SHIFT)
-        .onTrue(new InstantCommand(() -> {
-          DriverStation.reportWarning("Green Solid", false);
-          shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, false);
-        }));
-
-    new Trigger(() -> getShiftState() == ShiftState.SHIFT_ENDING)
-        .onTrue(new InstantCommand(() -> {
-          DriverStation.reportWarning("Green Blinking", false);
-          shiftLightOutput.setLED(LedNumber.k0, Color.GREEN, true);
-        }));
-
-    new Trigger(() -> getShiftState() == ShiftState.THEIR_SHIFT)
-        .onTrue(new InstantCommand(() -> {
-          DriverStation.reportWarning("Red Solid", false);
-          shiftLightOutput.setLED(LedNumber.k0, Color.RED, false);
-        }));
-
-    new Trigger(() -> getShiftState() == ShiftState.SHIFT_STARTING)
-        .onTrue(new InstantCommand(() -> {
-          DriverStation.reportWarning("Red Blinking", false);
-          shiftLightOutput.setLED(LedNumber.k0, Color.RED, true);
-        }));
   }
 
   public void enableTriggers() {
@@ -221,225 +149,64 @@ public class OperatorInterface
 
   }
 
-  private ShiftState getShiftState() {
-    ShiftStateTracker liveTracker = new ShiftStateTracker(ShiftStateTracker.areWeFirstAlliance(),
-        RobotConstants.LiveTuning.VALUES.get("ShiftStateTracker/WarningSeconds"));
-    return liveTracker.getState(DriverStation.getMatchTime());
-  }
-
   public void scoreOperatorBindings() {
-    // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.FIRE)
-    // .whileTrue(new ManualShootCommand(subsystemManager.getShooterSubsystem(),
-    // subsystemManager.getHoodSubsystem(),
-    // subsystemManager.getTransferSubsystem(),
-    // subsystemManager.getTurretSubsystem(),
-    // subsystemManager.getTurretSubsystem().getOutputs().getCurrentPosition(),
-    // () -> {
-
-    // Angle angle = subsystemManager.getGyroSubsystem().getOutputs().getYaw();
-
-    // angle = Degrees.of(angle.in(Degrees) % 360);
-
-    // Pose3d currentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
-    // .plus(RobotConstants.SHOOTER.SHOT_TRANSFORM);
-    // Pose3d targetPose = currentPose.plus(
-    // new Transform3d(UserPolicy.getInstance().getHubOffset().in(Meters) *
-    // Math.sin(angle.in(Radians)),
-    // UserPolicy.getInstance().getHubOffset().in(Meters) *
-    // Math.cos(angle.in(Radians)), 0.0,
-    // new Rotation3d()));
-
-    // return new
-    // ShooterCalculator(subsystemManager.getDriveSubsystem().getChassisSpeeds(),
-    // currentPose,
-    // targetPose, Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS),
-    // RobotConstants.SHOOTER.MAX_SHOT_SPEED, RobotConstants.SHOOTER.MIN_SHOT_SPEED,
-    // RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
-    // RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
-    // }))
-    // .onFalse(commandFactory.getStopShootingCommand());
-
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.FIRE).whileTrue(new ParallelCommandGroup(
+    operatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.FIRE).whileTrue(new ParallelCommandGroup(
         new RunShooterCommand(subsystemManager.getShooterSubsystem()), new SequentialCommandGroup(new WaitCommand(2),
             new RunTransferCommand(subsystemManager.getTransferSubsystem()))));
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.AUTO_FIRE)
+    operatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.AUTO_FIRE)
         .whileTrue(commandFactory.getFullShootCommand())
         .onFalse(new ShooterLag(subsystemManager.getShooterSubsystem()));
 
-    // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.SNOWBLOW_FIRE)
-    // .whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SNOW_BLOW_PRESET));
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.SNOWBLOW_FIRE)
+    operatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.SNOWBLOW_FIRE)
         .and(xboxController.y().negate())
         .whileTrue(commandFactory.getSnowblowCommand())
         .onFalse(new ShooterLag(subsystemManager.getShooterSubsystem()));
 
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INTAKE)
+    operatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INTAKE)
         .whileTrue(new RunIntakeVariableCommand(subsystemManager.getIntakeSubsystem()));
-    // TODO add stop intake for both of these onFalse()
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.OUTTAKE)
+
+    operatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.OUTTAKE)
         .whileTrue(new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false))
         .whileTrue(new RunTransferCommand(subsystemManager.getTransferSubsystem(), false));
 
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.PRESET_1_FIRE)
-        .whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_ONE));
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.PRESET_2_FIRE)
-        .whileTrue(commandFactory.getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_TWO));
+    operatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.PRESET_1_FIRE)
+        .whileTrue(new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
+            subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(),
+            RobotIO.getInstance().getTurretOutput().getCurrentPosition(),
+            RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetOneRPM")),
+            Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")),
+            false));
+    operatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.PRESET_2_FIRE)
+        .whileTrue(new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
+            subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(),
+            RobotIO.getInstance().getTurretOutput().getCurrentPosition(),
+            RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
+            Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")), false));
 
-    // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_UP)
-    // .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(),
-    // LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount")));
-
-    // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_DOWN)
-    // .onTrue(new TurretJogCommand(subsystemManager.getTurretSubsystem(),
-    // -LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount")))
-
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_UP)
+    operatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_UP)
         .onTrue(new InstantCommand(() -> UserPolicy.getInstance()
             .setShooterCalculatorSpeedMultiplier(
                 UserPolicy.getInstance().getShooterCalculatorSpeedMultiplier() + 0.1)));
 
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_DOWN)
+    operatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_DOWN)
         .onTrue(new InstantCommand(() -> UserPolicy.getInstance()
             .setShooterCalculatorSpeedMultiplier(
                 UserPolicy.getInstance().getShooterCalculatorSpeedMultiplier() - 0.1)));
 
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.CLIMB).onTrue(new RepeatCommand(
+    operatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.CLIMB).onTrue(new RepeatCommand(
         new ManualHoodCommand(subsystemManager.getHoodSubsystem(), 0)));
 
-    scoreOperatorPanel.button(12)
+    operatorPanel.button(12)
         .whileTrue(new TurretContinuousNudgeCommand(subsystemManager.getTurretSubsystem(), true));
 
-    scoreOperatorPanel.button(6)
+    operatorPanel.button(6)
         .whileTrue(new TurretContinuousNudgeCommand(subsystemManager.getTurretSubsystem(), false));
 
-    // Latching toggle switch — pressed down = won auto, released = did not win auto
-    // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.WON_AUTO_SWITCH)
-    // .onTrue(new InstantCommand(() ->
-    // UserPolicy.getInstance().setIsAutoWon(true)))
-    // .onFalse(new InstantCommand(() ->
-    // UserPolicy.getInstance().setIsAutoWon(false)));
-
-    // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_UP)
-    // .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), true))
-    // .onFalse(commandFactory.getStopShootingCommand());
-    // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.TURRET_NUDGE_DOWN)
-    // .onTrue(new NudgeTurretCommand(subsystemManager.getTurretSubsystem(), false))
-    // .onFalse(commandFactory.getStopShootingCommand());
-
-    // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DISTANCE_UP)
-    // .onTrue(
-    // new ParallelCommandGroup(
-    // new InstantCommand(() -> UserPolicy.getInstance()
-    // .setHubOffset(UserPolicy.getInstance().getHubOffset().plus(
-    // Meters.of(LiveTuningHandler.getInstance().getValue("UserPolicy/DistanceNudgeAmountMeters"))))),
-    // new InstantCommand(() -> {
-    // Angle angle = subsystemManager.getGyroSubsystem().getOutputs().getYaw();
-
-    // angle = Degrees.of(angle.in(Degrees) % 360);
-
-    // Pose3d currentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
-    // .plus(RobotConstants.SHOOTER.SHOT_TRANSFORM);
-    // Pose3d targetPose = currentPose.plus(
-    // new Transform3d(UserPolicy.getInstance().getHubOffset().in(Meters) *
-    // Math.sin(angle.in(Radians)),
-    // UserPolicy.getInstance().getHubOffset().in(Meters) *
-    // Math.cos(angle.in(Radians)), 0.0,
-    // new Rotation3d()));
-
-    // ShooterCalculator shooterCalculator = new ShooterCalculator(
-    // subsystemManager.getDriveSubsystem().getChassisSpeeds(), currentPose,
-    // targetPose,
-    // Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS),
-    // RobotConstants.SHOOTER.MAX_SHOT_SPEED,
-    // RobotConstants.SHOOTER.MIN_SHOT_SPEED,
-    // RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
-    // RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
-
-    // CommandScheduler.getInstance().schedule(new
-    // ManualHoodCommand(subsystemManager.getHoodSubsystem(),
-    // shooterCalculator.calculateShot().getIdealShot().getHoodAngle().in(Degrees)));
-    // })));
-
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DISTANCE_DOWN)
+    operatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DISTANCE_DOWN)
         .onTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), -5.0));
 
-    scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DISTANCE_UP)
+    operatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DISTANCE_UP)
         .onTrue(new HoodJogCommand(subsystemManager.getHoodSubsystem(), 5.0));
-
-    // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.INCREASE_DISTANCE_OFFSET)
-    // .onTrue(
-    // new ParallelCommandGroup(
-    // new InstantCommand(() -> UserPolicy.getInstance()
-    // .setHubOffset(UserPolicy.getInstance().getHubOffset().minus(
-    // Meters.of(LiveTuningHandler.getInstance().getValue("UserPolicy/DistanceNudgeAmountMeters"))))),
-    // new InstantCommand(() -> {
-    // Angle angle = subsystemManager.getGyroSubsystem().getOutputs().getYaw();
-    // }
-    // )));
-
-    // scoreOperatorPanel.button(RobotConstants.SCORE_OPERATOR_PANEL.BUTTONS.DISTANCE_DOWN)
-    // .onTrue(
-    // new SequentialCommandGroup(
-    // new InstantCommand(() -> UserPolicy.getInstance()
-    // .setHubOffset(UserPolicy.getInstance().getHubOffset().minus(
-    // Meters.of(LiveTuningHandler.getInstance().getValue("UserPolicy/DistanceNudgeAmountMeters"))))),
-    // new InstantCommand(() -> {
-    // Angle angle = subsystemManager.getGyroSubsystem().getOutputs().getYaw();
-
-    // Pose3d currentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
-    // .plus(RobotConstants.SHOOTER.SHOT_TRANSFORM);
-    // Pose3d targetPose = currentPose.plus(
-    // new Transform3d(-UserPolicy.getInstance().getHubOffset().in(Meters) *
-    // Math.sin(angle.in(Radians)),
-    // -UserPolicy.getInstance().getHubOffset().in(Meters) *
-    // Math.cos(angle.in(Radians)), 0.0,
-    // new Rotation3d()));
-
-    // ShooterCalculator shooterCalculator = new ShooterCalculator(
-    // subsystemManager.getDriveSubsystem().getChassisSpeeds(), currentPose,
-    // targetPose,
-    // Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS),
-    // RobotConstants.SHOOTER.MAX_SHOT_SPEED,
-    // RobotConstants.SHOOTER.MIN_SHOT_SPEED,
-    // RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
-    // RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
-
-    // CommandScheduler.getInstance().schedule(new
-    // ManualHoodCommand(subsystemManager.getHoodSubsystem(),
-    // shooterCalculator.calculateShot().getIdealShot().getHoodAngle().in(Degrees)));
-    // })));
-  }
-
-  // adding more later
-  public void driverShiftWarning() {
-    // TODO
-    // will be fixed later, just a placeholder for now
-  }
-
-  public void alignOperatorBindings() {
-
-    // TODO: Move to CommandFactory
-    // Optional<Alliance> alliance = DriverStation.getAlliance();
-    // if (alliance.isPresent()) {
-    // if (alliance.get() == DriverStation.Alliance.Blue) {
-    // subsystemManager.getTurretSubsystem().setDefaultCommand(new
-    // FaceTargetLocationTurretCommand(
-    // subsystemManager.getTurretSubsystem(),
-    // RobotConstants.TURRET.BLUE_HUB_LOCATION.toPose2d()));
-    // } else if (alliance.get() == DriverStation.Alliance.Red) {
-    // subsystemManager.getTurretSubsystem().setDefaultCommand(new
-    // FaceTargetLocationTurretCommand(
-    // subsystemManager.getTurretSubsystem(),
-    // RobotConstants.TURRET.RED_HUB_LOCATION.toPose2d()));
-    // }
-    // } else {
-    // DriverStation.reportWarning("Could not get alliance, TurretSubsystem not set
-    // to track by default", false);
-    // }
-    // subsystemManager.getTurretSubsystem()
-    // .setDefaultCommand(new
-    // AimTurretLiveCommand(subsystemManager.getTurretSubsystem()));
-
   }
 
   /*

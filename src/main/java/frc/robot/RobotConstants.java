@@ -27,10 +27,7 @@ import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Time;
-import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.sensors.gyro.GyroSensor.GyroHardware;
-import frc.robot.util.ShooterCalculator;
-import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
 
 public final class RobotConstants {
   public static final GyroHardware GYRO_HARDWARE = GyroHardware.NAVX3;
@@ -506,18 +503,6 @@ public final class RobotConstants {
     public static final double WHEEL_RADIUS_METERS = 0.048229115; // TODO: Idk my ai made this number
     public static final AngularVelocity MAX_RPM = RPM.of(6000.0);
     public static final AngularVelocity MIN_RPM = RPM.of(3000.0);
-    public static final ShotData SHOT_PRESET_ONE = new ShooterCalculator().new ShotDataRange().new ShotData(
-        Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")),
-        RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetOneRPM")),
-        Meters.of(WHEEL_RADIUS_METERS));
-    public static final ShotData SHOT_PRESET_TWO = new ShooterCalculator().new ShotDataRange().new ShotData(
-        Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")),
-        RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
-        Meters.of(WHEEL_RADIUS_METERS));
-    public static final ShotData SNOW_BLOW_PRESET = new ShooterCalculator().new ShotDataRange().new ShotData(
-        Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/SnowBlowPresetDegrees")),
-        RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SnowBlowPresetRPM")),
-        Meters.of(WHEEL_RADIUS_METERS));
     public static final Distance MIN_SHOT_DISTANCE = Meters.of(8);
     public static final Distance MAX_SHOT_DISTANCE = Feet.of(14);
     public static final AngularVelocity TOLERANCE = RPM.of(100); // 200
