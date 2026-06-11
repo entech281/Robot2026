@@ -12,11 +12,6 @@ import frc.robot.io.RobotIO;
 import frc.robot.sensors.gyro.GyroSensor;
 import frc.robot.sensors.vision.VisionSensor;
 import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.hood.HoodSubsystem;
-import frc.robot.subsystems.intake.IntakeSubsystem;
-import frc.robot.subsystems.shooter.ShooterSubsystem;
-import frc.robot.subsystems.transfer.TransferSubsystem;
-import frc.robot.subsystems.turret.TurretSubsystem;
 
 /**
  * Manages the subsystems and the interactions between them.
@@ -26,22 +21,11 @@ public class HardwareManager {
   private final GyroSensor gyroSensor = new GyroSensor();
 
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
-  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
-  private final HoodSubsystem hoodSubsystem = new HoodSubsystem();
-  private final TurretSubsystem turretSubsystem = new TurretSubsystem();
-  private final TransferSubsystem transferSubsystem = new TransferSubsystem();
-  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
   public HardwareManager() {
     gyroSensor.initialize();
     driveSubsystem.initialize();
-    shooterSubsystem.initialize();
     visionSensor.initialize();
-    hoodSubsystem.initialize();
-    turretSubsystem.initialize();
-    intakeSubsystem.initialize();
-    transferSubsystem.initialize();
-
     periodic();
   }
 
@@ -53,38 +37,16 @@ public class HardwareManager {
     return gyroSensor;
   }
 
-  public ShooterSubsystem getShooterSubsystem() {
-    return shooterSubsystem;
-  }
 
   public VisionSensor getVisionSensor() {
     return visionSensor;
   }
 
-  public HoodSubsystem getHoodSubsystem() {
-    return hoodSubsystem;
-  }
 
-  public IntakeSubsystem getIntakeSubsystem() {
-    return intakeSubsystem;
-  }
-
-  public TurretSubsystem getTurretSubsystem() {
-    return turretSubsystem;
-  }
-
-  public TransferSubsystem getTransferSubsystem() {
-    return transferSubsystem;
-  }
 
   public List<TestableHardwareI> getSubsystemList() {
     ArrayList<TestableHardwareI> r = new ArrayList<>();
     r.add(driveSubsystem);
-    r.add(shooterSubsystem);
-    r.add(intakeSubsystem);
-    r.add(transferSubsystem);
-    r.add(turretSubsystem);
-    r.add(hoodSubsystem);
     r.add(gyroSensor);
     r.add(visionSensor);
     return r;
@@ -97,15 +59,7 @@ public class HardwareManager {
 
     outputs.updateGyro(gyroSensor.getOutputs());
 
-    outputs.updateShooter(shooterSubsystem.getOutputs());
 
     outputs.updateVision(visionSensor.getOutputs());
-    outputs.updateHood(hoodSubsystem.getOutputs());
-
-    outputs.updateIntake(intakeSubsystem.getOutputs());
-
-    outputs.updateTransfer(transferSubsystem.getOutputs());
-
-    outputs.updateTurret(turretSubsystem.getOutputs());
   }
 }
