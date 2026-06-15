@@ -227,7 +227,8 @@ public final class RobotConstants {
         Map.entry("ShotFlightTime/18ft", 1.5),
         Map.entry("ShotFlightTime/19ft", 1.5),
         Map.entry("ShotFlightTime/20ft", 1.5),
-        Map.entry("ShotFlightTime/21ft", 1.5));
+        Map.entry("ShotFlightTime/21ft", 1.5)),
+        Map.entry("Speed", 0.1);
   }
 
   public static interface PORTS {

@@ -110,6 +110,8 @@ public class OperatorInterface
 
     xboxController.leftBumper().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
     xboxController.rightBumper().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
+    xboxController.a().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
+    xboxController.b().whileTrue(new RepeatCommand(commandFactory.getRotateForBumpCommand()));
   }
 
  
