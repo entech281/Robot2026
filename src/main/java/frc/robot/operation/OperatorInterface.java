@@ -23,6 +23,8 @@ import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.GyroReset;
+import frc.robot.commands.Prototype2SpeedInputCommand;
+import frc.robot.commands.PrototypeSpeedInputCommand;
 import frc.robot.commands.ResetOdometryCommand;
 
 import frc.robot.commands.TwistCommand;

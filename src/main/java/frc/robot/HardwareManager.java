@@ -12,6 +12,9 @@ import frc.robot.io.RobotIO;
 import frc.robot.sensors.gyro.GyroSensor;
 import frc.robot.sensors.vision.VisionSensor;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.prototype.PrototypeSubsystem;
+import frc.robot.subsystems.prototype2.PrototypeSubsystem2;
+
 
 /**
  * Manages the subsystems and the interactions between them.

@@ -12,6 +12,11 @@ import frc.robot.subsystems.drive.DriveInput;
 import frc.robot.subsystems.drive.DriveOutput;
 import frc.robot.sensors.gyro.GyroOutput;
 import frc.robot.sensors.vision.VisionOutput;
+import frc.robot.subsystems.prototype.PrototypeOutput;
+import frc.robot.subsystems.prototype2.PrototypeOutput2;
+import frc.robot.subsystems.prototype.PrototypeInput;
+import frc.robot.subsystems.prototype2.PrototypeInput2;
+
 
 
 public class RobotIO implements DriveInputSupplier {
