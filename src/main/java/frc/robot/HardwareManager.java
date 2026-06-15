@@ -22,15 +22,29 @@ public class HardwareManager {
 
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
 
+  private final PrototypeSubsystem prototypeSubsystem = new PrototypeSubsystem();
+  private final PrototypeSubsystem2 prototypeSubsystem2 = new PrototypeSubsystem2();
+
+
   public HardwareManager() {
     gyroSensor.initialize();
     driveSubsystem.initialize();
     visionSensor.initialize();
+    prototypeSubsystem.initialize();
+    prototypeSubsystem2.initialize();
     periodic();
   }
 
   public DriveSubsystem getDriveSubsystem() {
     return driveSubsystem;
+  }
+  
+  public PrototypeSubsystem getPrototypeSubsystem() {
+    return prototypeSubsystem;
+  }
+
+  public PrototypeSubsystem2 getPrototypeSubsystem2() {
+    return prototypeSubsystem2;
   }
 
   public GyroSensor getGyroSubsystem() {
@@ -47,6 +61,8 @@ public class HardwareManager {
   public List<TestableHardwareI> getSubsystemList() {
     ArrayList<TestableHardwareI> r = new ArrayList<>();
     r.add(driveSubsystem);
+    r.add(prototypeSubsystem);
+    r.add(prototypeSubsystem2);
     r.add(gyroSensor);
     r.add(visionSensor);
     return r;
@@ -56,6 +72,8 @@ public class HardwareManager {
     RobotIO outputs = RobotIO.getInstance();
 
     outputs.updateDrive(driveSubsystem.getOutputs());
+    outputs.updatePrototype(prototypeSubsystem.getOutputs());
+    outputs.updatePrototype2(prototypeSubsystem2.getOutputs());
 
     outputs.updateGyro(gyroSensor.getOutputs());
 

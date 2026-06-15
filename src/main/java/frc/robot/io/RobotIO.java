@@ -54,10 +54,18 @@ public class RobotIO implements DriveInputSupplier {
   }
 
 
-
   public VisionOutput getVisionOutput() {
     return latestVisionOutput;
   }
+
+  public PrototypeOutput getPrototypeOutput() {
+    return latestPrototypeOutput;
+  }
+
+  public PrototypeOutput2 getPrototypeOutput2() {
+    return latestPrototypeOutput2;
+  }
+
 
   
   public void updateGyro(GyroOutput no) {
@@ -81,10 +89,20 @@ public class RobotIO implements DriveInputSupplier {
     vo.log();
   }
 
- 
+  public void updatePrototype(PrototypeOutput po) {
+    latestPrototypeOutput = po;
+    po.log();
+  }
+
+  public void updatePrototype2(PrototypeOutput2 po2) {
+    latestPrototypeOutput2 = po2;
+    po2.log();
+  }
 
   private GyroOutput latestGyroOutput;
   private DriveOutput latestDriveOutput;
   private VisionOutput latestVisionOutput;
+  private PrototypeOutput latestPrototypeOutput;
+  private PrototypeOutput2 latestPrototypeOutput2;
   private Pose2d latestOdometryPose = RobotConstants.ODOMETRY.INITIAL_POSE;
 }
