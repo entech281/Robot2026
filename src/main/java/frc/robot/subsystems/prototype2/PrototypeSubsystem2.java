@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.subsystems.SparkOutput;
+import frc.robot.subsystems.prototype.PrototypeInput;
 
 public class PrototypeSubsystem2 extends EntechSubsystem<PrototypeInput2, PrototypeOutput2> {
     private static final boolean ENABLED = true;
@@ -37,9 +38,9 @@ public class PrototypeSubsystem2 extends EntechSubsystem<PrototypeInput2, Protot
     }
 
     @Override
-    public void updateInputs(PrototypeInput2 input) {
+    public void updateInputs(PrototypeInput2 pi) {
         if (ENABLED){
-            motor.set(input.getSpeed());
+            motor.set(pi.getSpeed());
         }
     }
 
