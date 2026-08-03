@@ -26,7 +26,7 @@ public class HoodContinuousNudgeCommand extends EntechCommand {
             in.setRequestedPosition(RobotIO.getInstance().getHoodOutput().getCurrentPosition()
                     - LiveTuningHandler.getInstance().getValue("HoodSubsystem/NudgeAmount"));
         }
-        hood.updateInputs(in);
+        hood.acceptInputs(in);
     }
 
     @Override

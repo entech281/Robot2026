@@ -2,7 +2,7 @@ package frc.robot.sensors.gyro;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-import org.littletonrobotics.junction.Logger;
+import frc.robot.Logger;
 
 import com.studica.frc.Navx;
 

@@ -80,7 +80,7 @@ public class OdometryProcessor {
       return;
     }
 
-    double xyStdDev = RobotConstants.ODOMETRY.xyStdDevCoefficient
+    double xyStdDev = RobotConstants.ODOMETRY.XY_STD_DEV_COEFFICIENT
         * Math.pow(vp.getAvgDistanceToTags(), 1.2)
         / Math.pow(vp.getTrackedTargets().size(), 2.0);
 

@@ -25,7 +25,7 @@ public class ShooterLag extends EntechCommand {
     public void end(boolean interrupted) {
         input = new ShooterInput();
         input.setSpeed(0.0);
-        shooterSS.updateInputs(input);
+        shooterSS.acceptInputs(input);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ShooterLag extends EntechCommand {
     public void initialize() {
         this.speed = RPM.of(RobotIO.getInstance().getShooterOutput().getShooterMotorA().getCurrentSpeed());
         input.setSpeed(speed.in(RPM));
-        shooterSS.updateInputs(input);
+        shooterSS.acceptInputs(input);
         counter.reset();
     }
 

@@ -1,6 +1,6 @@
 package frc.robot.commands;
 
-import org.littletonrobotics.junction.Logger;
+import frc.robot.Logger;
 import frc.entech.commands.EntechCommand;
 import frc.robot.RobotConstants;
 import frc.robot.io.DriveInputSupplier;
@@ -28,7 +28,7 @@ public class DriveCommand extends EntechCommand {
     stop.setXSpeed(0.0);
     stop.setYSpeed(0.0);
 
-    drive.updateInputs(stop);
+    drive.acceptInputs(stop);
     Logger.recordOutput(RobotConstants.OperatorMessages.SUBSYSTEM_TEST, "No Current Test");
   }
 
@@ -36,7 +36,7 @@ public class DriveCommand extends EntechCommand {
   public void execute() {
     DriveInput input = inputProcessor.processInput(driveInputSource.getDriveInput());
 
-    drive.updateInputs(input);
+    drive.acceptInputs(input);
   }
 
   @Override
@@ -47,7 +47,7 @@ public class DriveCommand extends EntechCommand {
     stop.setXSpeed(0.0);
     stop.setYSpeed(0.0);
 
-    drive.updateInputs(stop);
+    drive.acceptInputs(stop);
   }
 
   @Override

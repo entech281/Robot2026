@@ -1,6 +1,6 @@
 package frc.robot.subsystems.drive;
 
-import org.littletonrobotics.junction.Logger;
+import frc.robot.Logger;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;

@@ -27,7 +27,7 @@ public class DecreaseDistanceCommand extends EntechCommand {
 
         HoodInput input = new HoodInput();
         input.setRequestedPosition(newHoodPos);
-        hood.updateInputs(input);
+        hood.acceptInputs(input);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class DecreaseDistanceCommand extends EntechCommand {
 
         HoodInput input = new HoodInput();
         input.setRequestedPosition(newHoodPos + 1);
-        hood.updateInputs(input);
+        hood.acceptInputs(input);
     }
 
     @Override

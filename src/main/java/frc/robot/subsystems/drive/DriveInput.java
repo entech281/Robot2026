@@ -1,12 +1,12 @@
 package frc.robot.subsystems.drive;
 
-import org.littletonrobotics.junction.LogTable;
+import frc.robot.Logger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.entech.subsystems.SubsystemInput;
-import frc.robot.RobotConstants;
 
-public class DriveInput implements SubsystemInput {
+public class DriveInput extends SubsystemInput {
   private double xSpeed;
   private double ySpeed;
   private double rot;
@@ -14,7 +14,8 @@ public class DriveInput implements SubsystemInput {
   private Pose2d latestOdometryPose;
   private String key = "driveInput";
 
-  public DriveInput() {}
+  public DriveInput() {
+  }
 
   public DriveInput(DriveInput template) {
     xSpeed = template.getXSpeed();
@@ -25,21 +26,12 @@ public class DriveInput implements SubsystemInput {
   }
 
   @Override
-  public void fromLog(LogTable table) {
-    xSpeed = table.get(key + "/xSpeed", 0.0);
-    ySpeed = table.get(key + "/ySpeed", 0.0);
-    rot = table.get(key + "/rot", 0.0);
-    gyroAngle = table.get(key + "/gyroAngle", Rotation2d.fromDegrees(0));
-    latestOdometryPose = table.get(key + "/pose", RobotConstants.ODOMETRY.INITIAL_POSE);
-  }
-
-  @Override
-  public void toLog(LogTable table) {
-    table.put(key + "/xSpeed", xSpeed);
-    table.put(key + "/ySpeed", ySpeed);
-    table.put(key + "/rot", rot);
-    table.put(key + "/gyroAngle", gyroAngle);
-    table.put(key + "/pose", latestOdometryPose);
+  public void toLog() {
+    Logger.recordOutput("DriveInput/" + key + "/xSpeed", xSpeed);
+    Logger.recordOutput("DriveInput/" + key + "/rot", rot);
+    Logger.recordOutput("DriveInput/" + key + "/gyroAngle", gyroAngle);
+    Logger.recordOutput("DriveInput/" + key + "/pose", latestOdometryPose);
+    Logger.recordOutput("DriveInput/" + key + "/ySpeed", ySpeed);
   }
 
   public double getXSpeed() {

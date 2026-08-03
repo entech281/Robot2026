@@ -3,7 +3,7 @@ package frc.robot.operation;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RPM;
 
-import org.littletonrobotics.junction.Logger;
+import frc.robot.Logger;
 
 import edu.wpi.first.units.measure.Distance;
 import frc.robot.livetuning.LiveTuningHandler;
@@ -111,32 +111,33 @@ public class UserPolicy {
     return useBeta;
   }
 
-    /**
-     * @return boolean return the useVirtualRotationCompensation
-     */
-    public boolean isUseVirtualRotationCompensation() {
-        return useVirtualRotationCompensation;
-    }
+  /**
+   * @return boolean return the useVirtualRotationCompensation
+   */
+  public boolean isUseVirtualRotationCompensation() {
+    return useVirtualRotationCompensation;
+  }
 
-    /**
-     * @param useVirtualRotationCompensation the useVirtualRotationCompensation to set
-     */
-    public void setUseVirtualRotationCompensation(boolean useVirtualRotationCompensation) {
-        this.useVirtualRotationCompensation = useVirtualRotationCompensation;
-    }
+  /**
+   * @param useVirtualRotationCompensation the useVirtualRotationCompensation to
+   *                                       set
+   */
+  public void setUseVirtualRotationCompensation(boolean useVirtualRotationCompensation) {
+    this.useVirtualRotationCompensation = useVirtualRotationCompensation;
+  }
 
-    /**
-     * @return VirtualPoseMode return the virtualPoseMode
-     */
-    public VirtualPoseMode getVirtualPoseMode() {
-        return virtualPoseMode;
-    }
+  /**
+   * @return VirtualPoseMode return the virtualPoseMode
+   */
+  public VirtualPoseMode getVirtualPoseMode() {
+    return virtualPoseMode;
+  }
 
-    /**
-     * @param virtualPoseMode the virtualPoseMode to set
-     */
-    public void setVirtualPoseMode(VirtualPoseMode virtualPoseMode) {
-        this.virtualPoseMode = virtualPoseMode;
-    }
+  /**
+   * @param virtualPoseMode the virtualPoseMode to set
+   */
+  public void setVirtualPoseMode(VirtualPoseMode virtualPoseMode) {
+    this.virtualPoseMode = virtualPoseMode;
+  }
 
 }

@@ -4,14 +4,8 @@
 
 package frc.robot;
 
-import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.LoggedPowerDistribution;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.ResetTurningEncoderCommand;
@@ -31,17 +25,16 @@ import frc.robot.processors.OdometryProcessor;
  */
 
 // branch test comment
-public class Robot extends LoggedRobot {
-
-  public static final double SIMULATION_TIME_MILLIS = 50000;
+public class Robot extends TimedRobot {
   private Command autonomousCommand;
   private HardwareManager subsystemManager;
   private CommandFactory commandFactory;
   private OdometryProcessor odometry;
   private OperatorInterface operatorInterface;
-  private long robotStartTime = 0;
 
   public void loggerInit() {
+    Logger.start();
+
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
     Logger.recordMetadata("GITRevision", BuildConstants.GIT_REVISION + "");
     Logger.recordMetadata("GIT_SHA", BuildConstants.GIT_SHA);
@@ -49,22 +42,10 @@ public class Robot extends LoggedRobot {
     Logger.recordMetadata("GIT_Branch", BuildConstants.GIT_BRANCH);
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
     Logger.recordMetadata("BuildUnixTime", BuildConstants.BUILD_UNIX_TIME + "");
-
-    if (isReal()) {
-      Logger.addDataReceiver(new WPILOGWriter());
-      Logger.addDataReceiver(new NT4Publisher());
-      LoggedPowerDistribution.getInstance(RobotConstants.PORTS.CAN.POWER_DISTRIBUTION_HUB, ModuleType.kRev);
-    } else {
-      setUseTiming(false);
-      Logger.addDataReceiver(new NT4Publisher());
-    }
-
-    Logger.start();
   }
 
   @Override
   public void robotInit() {
-    robotStartTime = System.currentTimeMillis();
     try {
       loggerInit();
     } catch (Exception e) {
@@ -82,12 +63,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void simulationPeriodic() {
-    // long elapsedMilliSecondsSinceStart = System.currentTimeMillis() -
-    // robotStartTime;
-    // if (elapsedMilliSecondsSinceStart > SIMULATION_TIME_MILLIS) {
-    // DriverStation.reportWarning("Simulation Success : Ending", false);
-    // System.exit(0);
-    // }
     robotPeriodic();
   }
 
@@ -96,6 +71,7 @@ public class Robot extends LoggedRobot {
     subsystemManager.periodic();
     odometry.update();
     CommandScheduler.getInstance().run();
+    Logger.logRobotStats();
   }
 
   @Override
@@ -119,11 +95,6 @@ public class Robot extends LoggedRobot {
       autonomousCommand.cancel();
     }
     odometry.setIntegrateVision(true);
-  }
-
-  @Override
-  public void teleopPeriodic() {
-    // for things that only happen in teleop
   }
 
   @Override

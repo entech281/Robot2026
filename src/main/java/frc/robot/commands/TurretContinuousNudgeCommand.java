@@ -28,7 +28,7 @@ public class TurretContinuousNudgeCommand extends EntechCommand {
             in.setRequestedPosition(RobotIO.getInstance().getTurretOutput().getCurrentPosition()
                     .minus(Degrees.of(LiveTuningHandler.getInstance().getValue("TurretSubsystem/NudgeAmount"))));
         }
-        turret.updateInputs(in);
+        turret.acceptInputs(in);
     }
 
     @Override

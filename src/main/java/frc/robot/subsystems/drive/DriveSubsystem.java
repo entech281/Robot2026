@@ -58,7 +58,7 @@ public class DriveSubsystem extends EntechSubsystem<DriveInput, DriveOutput> {
       Rotation2d.fromDegrees(0.0));
 
   @Override
-  public void updateInputs(DriveInput input) {
+  public void acceptInputs(DriveInput input) {
     if (ENABLED) {
       double xSpeedCommanded;
       double ySpeedCommanded;
@@ -185,10 +185,10 @@ public class DriveSubsystem extends EntechSubsystem<DriveInput, DriveOutput> {
         output.setSpeeds(RobotConstants.DrivetrainConstants.DRIVE_KINEMATICS.toChassisSpeeds(moduleStates));
 
         // keep SparkMax outputs as before
-        output.setFrontLeftDrive(frontLeft.getDriveOuput());
-        output.setFrontRightDrive(frontRight.getDriveOuput());
-        output.setRearLeftDrive(rearLeft.getDriveOuput());
-        output.setRearRightDrive(rearRight.getDriveOuput());
+        output.setFrontLeftDrive(frontLeft.getDriveOutput());
+        output.setFrontRightDrive(frontRight.getDriveOutput());
+        output.setRearLeftDrive(rearLeft.getDriveOutput());
+        output.setRearRightDrive(rearRight.getDriveOutput());
         output.setFrontRightTurn(frontRight.getTurnOutput());
         output.setRearLeftTurn(rearLeft.getTurnOutput());
         output.setRearRightTurn(rearRight.getTurnOutput());
@@ -395,5 +395,12 @@ public class DriveSubsystem extends EntechSubsystem<DriveInput, DriveOutput> {
   @Override
   public Command getTestCommand() {
     return new TestDriveCommand(this);
+  }
+
+  public void kill() {
+    frontLeft.kill();
+    frontRight.kill();
+    rearLeft.kill();
+    rearRight.kill();
   }
 }

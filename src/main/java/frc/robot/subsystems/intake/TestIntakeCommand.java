@@ -18,14 +18,14 @@ public class TestIntakeCommand extends EntechCommand {
         counter.reset();
         IntakeInput in = new IntakeInput();
         in.setSpeed(0.5);
-        intake.updateInputs(in);
+        intake.acceptInputs(in);
     }
 
     @Override
     public void end(boolean interrupted) {
         IntakeInput in = new IntakeInput();
         in.setSpeed(0.0);
-        intake.updateInputs(in);
+        intake.acceptInputs(in);
     }
 
     @Override

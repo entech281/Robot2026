@@ -26,14 +26,15 @@ public class IncreaseShooterSpeedCommand extends EntechCommand {
     public void initialize() {
         double currentSpeed = LiveTuningHandler.getInstance().getValue(SPEED_KEY);
         double newSpeed = currentSpeed + INCREMENT;
-        
+
         // Run shooter at new speed
         ShooterInput input = new ShooterInput();
         input.setSpeed(newSpeed);
-        shooter.updateInputs(input);
-        
+        shooter.acceptInputs(input);
+
         // Note: The new speed will be used for subsequent whileTrue runs
-        // Next time this command initializes, it will read the new speed from LiveTuningHandler
+        // Next time this command initializes, it will read the new speed from
+        // LiveTuningHandler
     }
 
     @Override
@@ -42,7 +43,7 @@ public class IncreaseShooterSpeedCommand extends EntechCommand {
         double currentSpeed = LiveTuningHandler.getInstance().getValue(SPEED_KEY);
         ShooterInput input = new ShooterInput();
         input.setSpeed(currentSpeed + INCREMENT);
-        shooter.updateInputs(input);
+        shooter.acceptInputs(input);
     }
 
     @Override

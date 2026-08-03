@@ -1,6 +1,6 @@
 package frc.robot.subsystems.transfer;
 
-import org.littletonrobotics.junction.Logger;
+import frc.robot.Logger;
 
 import frc.entech.subsystems.SparkOutput;
 import frc.entech.subsystems.SubsystemOutput;

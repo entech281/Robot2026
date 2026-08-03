@@ -17,21 +17,21 @@ public class RunShooterAtLiveSpeedCommand extends EntechCommand {
     public void end(boolean interrupted) {
         ShooterInput si = new ShooterInput();
         si.setSpeed(0.0);
-        shooterSubsystem.updateInputs(si);
+        shooterSubsystem.acceptInputs(si);
     }
 
     @Override
     public void execute() {
         ShooterInput si = new ShooterInput();
         si.setSpeed(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed"));
-        shooterSubsystem.updateInputs(si);
+        shooterSubsystem.acceptInputs(si);
     }
 
     @Override
     public void initialize() {
         ShooterInput si = new ShooterInput();
         si.setSpeed(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/SetSpeed"));
-        shooterSubsystem.updateInputs(si);
+        shooterSubsystem.acceptInputs(si);
     }
 
     @Override

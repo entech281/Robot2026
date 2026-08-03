@@ -19,7 +19,6 @@ import frc.robot.processors.OdometryProcessor;
 import frc.robot.sensors.gyro.GyroSensor;
 
 public class GyroResetByAngleCommand extends EntechCommand {
-  private final Runnable reset;
   private final Runnable set;
   private final Runnable correctOdometry;
   private final double angle;
@@ -40,7 +39,6 @@ public class GyroResetByAngleCommand extends EntechCommand {
       angle = startPath.getStartingDifferentialPose().getRotation().getDegrees();
     }
 
-    reset = gyro::zeroYaw;
     Optional<Alliance> teamOpt = DriverStation.getAlliance();
     if (teamOpt.isPresent()) {
       if (teamOpt.get() == Alliance.Blue) {
@@ -69,7 +67,6 @@ public class GyroResetByAngleCommand extends EntechCommand {
 
   @Override
   public void initialize() {
-    // reset.run();
     correctOdometry.run();
     set.run();
   }

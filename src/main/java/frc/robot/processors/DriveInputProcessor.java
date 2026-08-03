@@ -3,7 +3,6 @@ package frc.robot.processors;
 import java.util.ArrayList;
 import java.util.List;
 
-import frc.robot.io.RobotIO;
 import frc.robot.processors.filters.AutoYawFilter;
 import frc.robot.processors.filters.DriveFilterI;
 import frc.robot.processors.filters.HoldYawFilter;
@@ -29,11 +28,11 @@ public class DriveInputProcessor {
     for (DriveFilterI filter : driveFilters) {
       processedInput = filter.process(processedInput);
       processedInput.setKey(filter.getClass().getSimpleName());
-      RobotIO.processInput(processedInput);
+      processedInput.log();
     }
 
     processedInput.setKey("final");
-    RobotIO.processInput(processedInput);
+    processedInput.log();
 
     return processedInput;
   }

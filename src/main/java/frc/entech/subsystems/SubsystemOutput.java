@@ -1,6 +1,6 @@
 package frc.entech.subsystems;
 
-import org.littletonrobotics.junction.Logger;
+import frc.robot.Logger;
 
 public abstract class SubsystemOutput {
   private String currentCommand;

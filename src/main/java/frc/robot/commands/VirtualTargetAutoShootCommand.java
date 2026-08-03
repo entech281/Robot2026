@@ -6,7 +6,7 @@ import static edu.wpi.first.units.Units.RPM;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import org.littletonrobotics.junction.Logger;
+import frc.robot.Logger;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -61,8 +61,8 @@ public class VirtualTargetAutoShootCommand extends EntechCommand {
 
     @Override
     public void end(boolean interrupted) {
-        hood.updateInputs(new HoodInput());
-        transfer.updateInputs(new TransferInput());
+        hood.acceptInputs(new HoodInput());
+        transfer.acceptInputs(new TransferInput());
 
         speedReached = false;
     }
@@ -90,9 +90,9 @@ public class VirtualTargetAutoShootCommand extends EntechCommand {
         si.setSpeed(shotData.getShooterSpeed().in(RPM));
         tui.setRequestedPosition(shotData.getTurretAngle());
 
-        turret.updateInputs(tui);
-        shooter.updateInputs(si);
-        hood.updateInputs(hi);
+        turret.acceptInputs(tui);
+        shooter.acceptInputs(si);
+        hood.acceptInputs(hi);
 
         if (!speedReached) {
             speedReached = shooter.getOutputs().isAtSpeed();
@@ -102,7 +102,7 @@ public class VirtualTargetAutoShootCommand extends EntechCommand {
             tri.setSpeed(LiveTuningHandler.getInstance().getValue("TransferSubsystem/SetSpeed"));
         }
 
-        transfer.updateInputs(tri);
+        transfer.acceptInputs(tri);
     }
 
     @Override

@@ -1,12 +1,5 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018 FIRST. All Rights Reserved. */
-/* Open Source Software - may be modified and shared by FRC teams. The code */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project. */
-/*----------------------------------------------------------------------------*/
 package frc.entech.subsystems;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.entech.TestableHardwareI;
 
@@ -18,11 +11,12 @@ public abstract class EntechSubsystem<I extends SubsystemInput, R extends Subsys
 
   public abstract void initialize();
 
-  public abstract boolean isEnabled();
+  public void updateInputs(I input) {
+    input.log();
+    acceptInputs(input);
+  }
 
-  public abstract void updateInputs(I input);
-
-  public abstract Command getTestCommand();
+  protected abstract void acceptInputs(I input);
 
   protected abstract R toOutputs();
 
@@ -32,5 +26,4 @@ public abstract class EntechSubsystem<I extends SubsystemInput, R extends Subsys
     out.setDefaultCommand(this.getDefaultCommand() + "");
     return out;
   }
-
 }

@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.subsystems.SparkOutput;
 import frc.robot.RobotConstants;
-import frc.robot.io.RobotIO;
 
 public class IntakeSubsystem extends EntechSubsystem<IntakeInput, IntakeOutput> {
     private static final boolean ENABLED = true;
@@ -40,8 +39,8 @@ public class IntakeSubsystem extends EntechSubsystem<IntakeInput, IntakeOutput> 
     }
 
     @Override
-    public void updateInputs(IntakeInput input) {
-        RobotIO.processInput(input);
+    public void acceptInputs(IntakeInput input) {
+        input.log();
         if (ENABLED) {
             if (setSpeed != input.getSpeed()) {
                 intakeMotor.set(input.getSpeed());

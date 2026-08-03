@@ -4,13 +4,9 @@
 
 package frc.robot.subsystems.drive;
 
-import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.ControlType;
 
-import java.util.function.Supplier;
-
 import com.revrobotics.PersistMode;
-import com.revrobotics.REVLibError;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig;
@@ -29,6 +25,7 @@ import frc.robot.sensors.ThriftyEncoder;
  * module.
  */
 public class SwerveModule {
+  private boolean canRunMotors = true;
   private final SparkFlex drivingSparkMax;
   private final SparkFlex turningSparkMax;
 
@@ -103,11 +100,13 @@ public class SwerveModule {
       drivingSparkMax.set(0); // no point in doing anything
       turningSparkMax.set(0);
     } else {
-      // Command driving and turning SPARKS MAX towards their respective setpoints.
-      drivingPIDController.setSetpoint(desiredState.speedMetersPerSecond,
-          ControlType.kVelocity);
-      turningPIDController.setSetpoint(desiredState.angle.getRadians(),
-          ControlType.kPosition);
+      if (canRunMotors) {
+        // Command driving and turning SPARKS MAX towards their respective setpoints.
+        drivingPIDController.setSetpoint(desiredState.speedMetersPerSecond,
+            ControlType.kVelocity);
+        turningPIDController.setSetpoint(desiredState.angle.getRadians(),
+            ControlType.kPosition);
+      }
     }
 
     this.desiredState = desiredState;
@@ -159,21 +158,14 @@ public class SwerveModule {
     return smo;
   }
 
-  public SparkOutput getDriveOuput() {
+  public SparkOutput getDriveOutput() {
     SparkOutput smo = SparkOutput.createOutput(drivingSparkMax);
     return smo;
   }
 
-  public static boolean sparkStickyFault = false;
-
-  public static void tryUntilOk(SparkBase spark, int maxAttempts, Supplier<REVLibError> command) {
-    for (int i = 0; i < maxAttempts; i++) {
-      var error = command.get();
-      if (error == REVLibError.kOk) {
-        break;
-      } else {
-        sparkStickyFault = true;
-      }
-    }
+  public void kill() {
+    turningSparkMax.stopMotor();
+    drivingSparkMax.stopMotor();
+    canRunMotors = false;
   }
 }

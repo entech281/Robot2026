@@ -2,7 +2,7 @@ package frc.robot.sensors.vision;
 
 import java.util.List;
 
-import org.littletonrobotics.junction.Logger;
+import frc.robot.Logger;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 import frc.entech.commands.EntechCommand;

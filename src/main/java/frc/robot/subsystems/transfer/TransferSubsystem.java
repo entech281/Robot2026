@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.subsystems.SparkOutput;
 import frc.robot.RobotConstants;
-import frc.robot.io.RobotIO;
 
 public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOutput> {
     private static final boolean ENABLED = true;
@@ -42,8 +41,8 @@ public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOu
     }
 
     @Override
-    public void updateInputs(TransferInput input) {
-        RobotIO.processInput(input);
+    public void acceptInputs(TransferInput input) {
+        input.log();
         if (ENABLED) {
             if (input.getSpeed() != setSpeed) {
                 setSpeed = input.getSpeed();

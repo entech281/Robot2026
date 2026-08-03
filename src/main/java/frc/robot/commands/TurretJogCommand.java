@@ -34,7 +34,7 @@ public class TurretJogCommand extends EntechCommand {
         Angle current = RobotIO.getInstance().getTurretOutput().getCurrentPosition();
         Angle adding = Degrees.of(stepDegrees);
         in.setRequestedPosition(current.plus(adding));
-        turret.updateInputs(in);
+        turret.acceptInputs(in);
     }
 
     @Override

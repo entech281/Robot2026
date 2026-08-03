@@ -35,7 +35,7 @@ public class RunIntakeCommand extends EntechCommand {
         } else {
             input.setSpeed(speed);
         }
-        intakeSS.updateInputs(input);
+        intakeSS.acceptInputs(input);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class RunIntakeCommand extends EntechCommand {
         } else {
             input.setSpeed(-speed);
         }
-        intakeSS.updateInputs(input);
+        intakeSS.acceptInputs(input);
     }
 
     public void runIntake() {
@@ -57,7 +57,7 @@ public class RunIntakeCommand extends EntechCommand {
 
     @Override
     public void end(boolean interrupted) {
-        intakeSS.updateInputs(new IntakeInput());
+        intakeSS.acceptInputs(new IntakeInput());
     }
 
     @Override

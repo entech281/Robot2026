@@ -19,7 +19,7 @@ public class TestTurretCommand extends EntechCommand {
     public void end(boolean interrupted) {
         TurretInput input = new TurretInput();
         input.setRequestedPosition(Degrees.of(0.0));
-        turretSubsystem.updateInputs(input);
+        turretSubsystem.acceptInputs(input);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class TestTurretCommand extends EntechCommand {
         counter.reset();
         TurretInput input = new TurretInput();
         input.setRequestedPosition(Degrees.of(180.0));
-        turretSubsystem.updateInputs(input);
+        turretSubsystem.acceptInputs(input);
     }
 
     @Override

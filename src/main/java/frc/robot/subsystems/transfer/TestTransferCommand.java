@@ -18,14 +18,14 @@ public class TestTransferCommand extends EntechCommand {
         counter.reset();
         TransferInput input = new TransferInput();
         input.setSpeed(0.5);
-        transferSubsystem.updateInputs(input);
+        transferSubsystem.acceptInputs(input);
     }
 
     @Override
     public void end(boolean interrupted) {
         TransferInput input = new TransferInput();
         input.setSpeed(0.0);
-        transferSubsystem.updateInputs(input);
+        transferSubsystem.acceptInputs(input);
     }
 
     @Override

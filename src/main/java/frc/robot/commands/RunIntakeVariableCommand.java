@@ -34,13 +34,13 @@ public class RunIntakeVariableCommand extends EntechCommand {
 
         IntakeInput input = new IntakeInput();
         input.setSpeed(speed);
-        intakeSS.updateInputs(input);
+        intakeSS.acceptInputs(input);
     }
 
     @Override
     public void end(boolean interrupted) {
         IntakeInput input = new IntakeInput();
-        intakeSS.updateInputs(input);
+        intakeSS.acceptInputs(input);
     }
 
     @Override

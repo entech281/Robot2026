@@ -9,8 +9,7 @@ import frc.robot.RobotConstants;
 
 public class TestDriveCommand extends EntechCommand {
   private final DriveSubsystem drive;
-  private final StoppingCounter counter =
-      new StoppingCounter(RobotConstants.TEST_CONSTANTS.STANDARD_TEST_LENGTH);
+  private final StoppingCounter counter = new StoppingCounter(RobotConstants.TEST_CONSTANTS.STANDARD_TEST_LENGTH);
   private static final double DRIVE_POWER = 0.15;
   private int stage = 0;
 
@@ -52,7 +51,9 @@ public class TestDriveCommand extends EntechCommand {
         counter.isFinished(sum < 0.0001);
       }
       case 9 -> drive.setX();
-      default -> { break; }
+      default -> {
+        break;
+      }
     }
 
     if (counter.isFinished(true)) {
@@ -61,7 +62,7 @@ public class TestDriveCommand extends EntechCommand {
     }
 
     if (stage != 9)
-      drive.updateInputs(input);
+      drive.acceptInputs(input);
   }
 
   @Override
@@ -76,7 +77,7 @@ public class TestDriveCommand extends EntechCommand {
     stop.setXSpeed(0.0);
     stop.setYSpeed(0.0);
 
-    drive.updateInputs(stop);
+    drive.acceptInputs(stop);
   }
 
   @Override
@@ -94,6 +95,6 @@ public class TestDriveCommand extends EntechCommand {
     stop.setXSpeed(0.0);
     stop.setXSpeed(0.0);
 
-    drive.updateInputs(stop);
+    drive.acceptInputs(stop);
   }
 }

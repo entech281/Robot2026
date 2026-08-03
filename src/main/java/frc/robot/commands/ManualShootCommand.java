@@ -1,17 +1,13 @@
 package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RPM;
 
-import java.util.function.Supplier;
-
-import org.littletonrobotics.junction.Logger;
+import frc.robot.Logger;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.entech.commands.EntechCommand;
-import frc.robot.RobotConstants;
 import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.subsystems.hood.HoodInput;
 import frc.robot.subsystems.hood.HoodSubsystem;
@@ -21,7 +17,6 @@ import frc.robot.subsystems.transfer.TransferInput;
 import frc.robot.subsystems.transfer.TransferSubsystem;
 import frc.robot.subsystems.turret.TurretInput;
 import frc.robot.subsystems.turret.TurretSubsystem;
-import frc.robot.util.ShooterCalculator;
 
 public class ManualShootCommand extends EntechCommand {
     private final HoodSubsystem hoodSS;
@@ -58,15 +53,6 @@ public class ManualShootCommand extends EntechCommand {
                 true);
     }
 
-    public ManualShootCommand(ShooterSubsystem shooterSubsystem, HoodSubsystem hoodSubsystem,
-            TransferSubsystem transferSubsystem, TurretSubsystem turretSubsystem, Angle turretAngle,
-            Supplier<ShooterCalculator> shooterCalculator) {
-        this(shooterSubsystem, hoodSubsystem, transferSubsystem, turretSubsystem, turretAngle,
-                shooterCalculator.get().calculateShot().getIdealShot()
-                        .getShotAngularVelocity(Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS)),
-                shooterCalculator.get().calculateShot().getIdealShot().getHoodAngle());
-    }
-
     // no sudden ends
     @Override
     public void end(boolean interrupted) {
@@ -74,9 +60,9 @@ public class ManualShootCommand extends EntechCommand {
         hoodInput = new HoodInput();
         shooterInput = new ShooterInput();
 
-        transferSS.updateInputs(transferInput);
-        hoodSS.updateInputs(hoodInput);
-        shooterSS.updateInputs(shooterInput);
+        transferSS.acceptInputs(transferInput);
+        hoodSS.acceptInputs(hoodInput);
+        shooterSS.acceptInputs(shooterInput);
     }
 
     @Override
@@ -86,11 +72,11 @@ public class ManualShootCommand extends EntechCommand {
         hoodInput.setRequestedPosition(hoodAngle.in(Degrees));
         if (moveTurret) {
             turretInput.setRequestedPosition(turretAngle);
-            turretSS.updateInputs(turretInput);
+            turretSS.acceptInputs(turretInput);
         }
 
-        shooterSS.updateInputs(shooterInput);
-        hoodSS.updateInputs(hoodInput);
+        shooterSS.acceptInputs(shooterInput);
+        hoodSS.acceptInputs(hoodInput);
 
         boolean turretIsReady = turretSS.getOutputs().isAtRequestedPosition();
         boolean hoodIsReady = hoodSS.getOutputs().isAtRequestedPosition();
@@ -100,10 +86,10 @@ public class ManualShootCommand extends EntechCommand {
 
         if (isReadyToShoot) {
             transferInput.setSpeed(LiveTuningHandler.getInstance().getValue("TransferSubsystem/SetSpeed"));
-            transferSS.updateInputs(transferInput);
+            transferSS.acceptInputs(transferInput);
         } else {
             transferInput.setSpeed(0.0);
-            transferSS.updateInputs(transferInput);
+            transferSS.acceptInputs(transferInput);
         }
 
         Logger.recordOutput("TurretIsReadyToShoot", turretIsReady + "");

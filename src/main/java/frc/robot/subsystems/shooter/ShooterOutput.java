@@ -1,6 +1,6 @@
 package frc.robot.subsystems.shooter;
 
-import org.littletonrobotics.junction.Logger;
+import frc.robot.Logger;
 
 import frc.entech.subsystems.SparkOutput;
 import frc.entech.subsystems.SubsystemOutput;

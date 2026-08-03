@@ -12,7 +12,7 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
+import frc.robot.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -41,22 +41,19 @@ import frc.entech.TestableHardwareI;
 import frc.entech.commands.AutonomousException;
 import frc.entech.commands.InstantAnytimeCommand;
 import frc.robot.commands.GyroResetByAngleCommand;
+import frc.robot.commands.KillDriveCommand;
 import frc.robot.commands.ManualHoodCommand;
 import frc.robot.commands.RotateToAngleCommand;
 import frc.robot.commands.RunIntakeCommand;
-import frc.robot.commands.FaceTargetLocationTurretCommand;
-import frc.robot.commands.ShootAtTargetCommand;
 import frc.robot.commands.ShooterLag;
 import frc.robot.commands.VirtualTargetAutoShootCommand;
 import frc.robot.commands.XDriveCommand;
 import frc.robot.commands.ManualShootCommand;
 import frc.robot.commands.ManualTurretCommand;
-import frc.robot.commands.ManualTurretCommandSupplier;
 import frc.robot.commands.RunShooterAtLiveSpeedCommand;
 import frc.robot.commands.RunShooterCommand;
 import frc.robot.commands.RunTestCommand;
 import frc.robot.commands.RunTransferCommand;
-import frc.robot.commands.ShootAtTargetCommand;
 import frc.robot.io.RobotIO;
 import frc.robot.livetuning.LiveTuningHandler;
 import frc.robot.livetuning.WheelDiameterCharacterizer;
@@ -65,9 +62,6 @@ import frc.robot.processors.OdometryProcessor;
 import frc.robot.sensors.gyro.GyroSensor;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
-import frc.robot.util.ShooterCalculator;
-import frc.robot.util.ShooterCalculator.ShotDataRange.ShotData;
-import frc.robot.util.TurretCalculator;
 
 @SuppressWarnings("unused")
 public class CommandFactory {
@@ -108,6 +102,7 @@ public class CommandFactory {
     SmartDashboard.putData("Test Chooser", testChooser);
     Shuffleboard.getTab("stuffs").add("Run Test", new RunTestCommand(testChooser));
     tab.add("FOUNTAIN", getFountainCommand());
+    tab.add("KILL DRIVE", new KillDriveCommand(subsystemManager.getDriveSubsystem()));
 
     AutoBuilder.configure(odometry::getEstimatedPose,
         odometry::resetOdometry,
@@ -129,9 +124,18 @@ public class CommandFactory {
     NamedCommands.registerCommand("Intake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem()));
     NamedCommands.registerCommand("ReverseIntake", new RunIntakeCommand(subsystemManager.getIntakeSubsystem(), false));
     NamedCommands.registerCommand("TrenchPreset",
-        getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_TWO));
+        new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
+            subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(),
+            RobotIO.getInstance().getTurretOutput().getCurrentPosition(),
+            RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
+            Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")), false));
     NamedCommands.registerCommand("TowerPreset",
-        getPresetShootCommand(RobotConstants.SHOOTER.SHOT_PRESET_ONE));
+        new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
+            subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(),
+            RobotIO.getInstance().getTurretOutput().getCurrentPosition(),
+            RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetOneRPM")),
+            Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")),
+            false));
     // NamedCommands.registerCommand("TrenchPreset",
     // Commands.none());
     // NamedCommands.registerCommand("TowerPreset",
@@ -257,52 +261,6 @@ public class CommandFactory {
     return new VirtualTargetAutoShootCommand(subsystemManager.getShooterSubsystem(),
         subsystemManager.getHoodSubsystem(), subsystemManager.getTransferSubsystem(),
         subsystemManager.getTurretSubsystem(), true, () -> getSnowblowTarget(RobotIO.getInstance().getOdometryPose()));
-  }
-
-  public Command getPresetShootCommand(ShotData preset) {
-    if (preset == RobotConstants.SHOOTER.SHOT_PRESET_ONE) {
-      return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
-          subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(),
-          RobotIO.getInstance().getTurretOutput().getCurrentPosition(),
-          RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetOneRPM")),
-          Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")),
-          false);
-    } else if (preset == RobotConstants.SHOOTER.SHOT_PRESET_TWO) {
-      return new ManualShootCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
-          subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(),
-          RobotIO.getInstance().getTurretOutput().getCurrentPosition(),
-          RPM.of(LiveTuningHandler.getInstance().getValue("ShooterSubsystem/PresetTwoRPM")),
-          Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetTwoDegrees")), false);
-    } else {
-      Supplier<TurretCalculator> turretCalculatorSupplier = () -> {
-        Pose3d target = getSnowblowTarget(RobotIO.getInstance().getOdometryPose());
-
-        Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
-            .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
-        return new TurretCalculator(target.toPose2d(),
-            RobotIO.getInstance().getOdometryPose(), RobotIO.getInstance().getDriveOutput().getSpeeds());
-      };
-
-      Supplier<ShooterCalculator> shooterCalculatorSupplier = () -> {
-        Pose2d target2d = RobotIO.getInstance().getOdometryPose();
-
-        Pose3d target = new Pose3d(target2d.getX(), target2d.getY(), 0.0, new Rotation3d());
-
-        Pose3d shooterCurrentPose = new Pose3d(RobotIO.getInstance().getOdometryPose())
-            .transformBy(RobotConstants.SHOOTER.SHOT_TRANSFORM);
-
-        return new ShooterCalculator(
-            ChassisSpeeds.fromRobotRelativeSpeeds(RobotIO.getInstance().getDriveOutput().getSpeeds(),
-                RobotIO.getInstance().getOdometryPose().getRotation()),
-            shooterCurrentPose, target,
-            Meters.of(RobotConstants.SHOOTER.WHEEL_RADIUS_METERS), RobotConstants.SHOOTER.MAX_RPM,
-            RobotConstants.SHOOTER.MIN_RPM, RobotConstants.SHOOTER.MAX_SHOT_DISTANCE,
-            RobotConstants.SHOOTER.MIN_SHOT_DISTANCE);
-      };
-      return new ShootAtTargetCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getHoodSubsystem(),
-          subsystemManager.getTransferSubsystem(), subsystemManager.getTurretSubsystem(), turretCalculatorSupplier,
-          shooterCalculatorSupplier, true);
-    }
   }
 
   public Command getStopShootingCommand() {
