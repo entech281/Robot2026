@@ -2,28 +2,30 @@ package frc.robot.subsystems.transfer;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.drive.RobotDriveBase.MotorType;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.subsystems.SparkOutput;
 import frc.robot.RobotConstants;
 import frc.robot.io.RobotIO;
 
-private static final int HEALTH_CHECK_PERIOD_LOOPS = 10;
 
-private int loopCount = 0;
-private boolean motor1Connected = false;
-private boolean motor2Connected = false;
+
 
 public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOutput> {
+    private int loopCount = 0;
+    private boolean motor1Connected = false;
+    private boolean motor2Connected = false;
+    private static final int HEALTH_CHECK_PERIOD_LOOPS = 10;
+
     private static final boolean ENABLED = true;
     private static final boolean BRAKING = false;
 
