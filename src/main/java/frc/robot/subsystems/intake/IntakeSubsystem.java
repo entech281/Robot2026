@@ -43,9 +43,10 @@ public class IntakeSubsystem extends EntechSubsystem<IntakeInput, IntakeOutput> 
     public void updateInputs(IntakeInput input) {
         RobotIO.processInput(input);
         if (ENABLED) {
-            if (setSpeed != input.getSpeed()) {
-                intakeMotor.set(input.getSpeed());
-                setSpeed = input.getSpeed();
+            double requestedSpeed = Math.max(-1.0, Math.min(1.0, input.getSpeed()));
+            if (setSpeed != requestedSpeed) {
+                intakeMotor.set(requestedSpeed);
+                setSpeed = requestedSpeed;
             }
         }
     }

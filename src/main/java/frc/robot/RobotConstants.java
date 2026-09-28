@@ -258,9 +258,12 @@ public final class RobotConstants {
       public static final int POWER_DISTRIBUTION_HUB = 1;
       public static final int TURRET_MOTOR = 57;
       public static final int HOOD_MOTOR = 52;
-      public static final int HOPPER_MOTOR = 60;
-      public static final int TRANSFER_MOTOR = 58;
+      /** CAN 58 is the Neo kicker/ball-transfer motor listed in the hardware sheet. */
+      public static final int TRANSFER_MOTOR_1 = 58;
+      /** Retained for existing command code; this is the CAN 58 kicker/transfer motor. */
+      public static final int TRANSFER_MOTOR_2 = 61;
       public static final int CLIMB_MOTOR = 59;
+      public static final int HOPPER_MOTOR = 60;
     }
 
     public static interface CONTROLLER {
@@ -495,6 +498,9 @@ public final class RobotConstants {
     public static final AngularVelocity HOOD_CRUISE_VELOCITY = DegreesPerSecond.of(750);
     public static final AngularAcceleration HOOD_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(10000);
     public static final double HOOD_ALLOWED_PROFILE_ERROR_ROTATIONS = 0.5;
+    // A Neo 550 should not be configured with the previous 5 A limit; it cannot
+    // reliably move the 115.13:1 hood mechanism at that limit.
+    public static final int CURRENT_LIMIT_AMPS = 20;
 
     public static final double HOOD_JOG_STEP_DEGREES = 5.0; // Change this value
     public static final Angle HOOD_OFFSET = Degrees.of(0.0); // TODO, when switching from interpolation
@@ -505,7 +511,8 @@ public final class RobotConstants {
   public static interface SHOOTER {
     public static final Transform3d SHOT_TRANSFORM = new Transform3d(0, 0, 0, new Rotation3d());
     public static final double WHEEL_RADIUS_METERS = 0.048229115; // TODO: Idk my ai made this number
-    public static final AngularVelocity MAX_RPM = RPM.of(6000.0);
+    // Neo Vortex free speed from the hardware sheet. Keep requests below it.
+    public static final AngularVelocity MAX_RPM = RPM.of(6784.0);
     public static final AngularVelocity MIN_RPM = RPM.of(3000.0);
     public static final ShotData SHOT_PRESET_ONE = new ShooterCalculator().new ShotDataRange().new ShotData(
         Degrees.of(LiveTuningHandler.getInstance().getValue("HoodSubsystem/PresetOneDegrees")),

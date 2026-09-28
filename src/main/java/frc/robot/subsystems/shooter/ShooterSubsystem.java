@@ -52,10 +52,7 @@ public class ShooterSubsystem extends EntechSubsystem<ShooterInput, ShooterOutpu
     public void updateInputs(ShooterInput input) {
         RobotIO.processInput(input);
         if (ENABLED) {
-            setSpeed = input.getSpeed();
-            if (setSpeed > RobotConstants.SHOOTER.MAX_RPM.in(RPM)) {
-                setSpeed = RobotConstants.SHOOTER.MAX_RPM.in(RPM);
-            }
+            setSpeed = Math.max(0.0, Math.min(input.getSpeed(), RobotConstants.SHOOTER.MAX_RPM.in(RPM)));
             if (setSpeed == 0.0) {
                 shooterMotorA.set(0);
             } else {

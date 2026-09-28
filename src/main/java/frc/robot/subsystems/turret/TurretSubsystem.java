@@ -20,7 +20,6 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.subsystems.SparkOutput;
@@ -47,8 +46,6 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     private MotorStallDetector stallDetector;
     private double PID_MAX = 1;
     private double PID_MIN = -1;
-    private DigitalInput reverseLimitSwitch;
-    private DigitalInput forwardLimitSwitch;
     private boolean inverted = false;
 
     private boolean lastLimitSwitchState = false;
@@ -67,9 +64,6 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     public void initialize() {
         if (!ENABLED)
             return;
-        reverseLimitSwitch = new DigitalInput(RobotConstants.PORTS.DIO.HOME_TURRET_SWITCH);
-        forwardLimitSwitch = new DigitalInput(RobotConstants.PORTS.DIO.FORWARD_TURRET_SWITCH);
-
         turretMotor = new SparkMax(RobotConstants.PORTS.CAN.TURRET_MOTOR, MotorType.kBrushless);
         turretConfig = new SparkMaxConfig();
         turretConfig.idleMode(IdleMode.kBrake);
@@ -117,14 +111,9 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         double lowerLimit = LiveTuningHandler.getInstance().getValue("TurretSubsystem/LowerLimitDegrees");
         double upperLimit = LiveTuningHandler.getInstance().getValue("TurretSubsystem/UpperLimitDegrees");
 
-        double clamped = desiredAngle.in(Degrees);
-
-        if (desiredAngle.in(Degrees) > upperLimit || desiredAngle.in(Degrees) < lowerLimit) {
-            double distToLower = circularDistance(desiredAngle.in(Degrees), lowerLimit);
-            double distToUpper = circularDistance(desiredAngle.in(Degrees), upperLimit);
-
-            clamped = (distToLower < distToUpper) ? lowerLimit : upperLimit;
-        }
+        // This is a cable-limited turret, not a continuously rotating mechanism.
+        // Do not wrap a request across 0 degrees: that could pull the cables tight.
+        double clamped = Math.max(lowerLimit, Math.min(upperLimit, desiredAngle.in(Degrees)));
 
         if (inverted) {
             clamped = -clamped;
@@ -149,9 +138,13 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
         // getForwardLimitSwitch()) {
         // turretMotor.set(0.0);
         // } else {
-        turretMotor
-                .set(EntechUtils.capDoubleValue(control.calculate(turretEncoder.getPosition(), m_setpoint.position),
-                        PID_MIN, PID_MAX));
+        double output = EntechUtils.capDoubleValue(
+                control.calculate(turretEncoder.getPosition(), m_setpoint.position), PID_MIN, PID_MAX);
+        if ((getReverseLimitSwitch() && output < 0.0) || (getForwardLimitSwitch() && output > 0.0)) {
+            turretMotor.set(0.0);
+        } else {
+            turretMotor.set(output);
+        }
         // }
     }
 
@@ -251,10 +244,12 @@ public class TurretSubsystem extends EntechSubsystem<TurretInput, TurretOutput> 
     }
 
     private boolean getReverseLimitSwitch() {
-        return reverseLimitSwitch.get();
+        // The hardware sheet specifies that both switches are wired to the
+        // turret SparkMax, so read them over CAN instead of unassigned DIO ports.
+        return turretMotor.getReverseLimitSwitch().isPressed();
     }
 
     private boolean getForwardLimitSwitch() {
-        return forwardLimitSwitch.get();
+        return turretMotor.getForwardLimitSwitch().isPressed();
     }
 }

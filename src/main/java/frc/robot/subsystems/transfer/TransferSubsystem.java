@@ -2,37 +2,86 @@ package frc.robot.subsystems.transfer;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.entech.subsystems.EntechSubsystem;
 import frc.entech.subsystems.SparkOutput;
 import frc.robot.RobotConstants;
 import frc.robot.io.RobotIO;
 
+private static final int HEALTH_CHECK_PERIOD_LOOPS = 10;
+
+private int loopCount = 0;
+private boolean motor1Connected = false;
+private boolean motor2Connected = false;
+
 public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOutput> {
     private static final boolean ENABLED = true;
     private static final boolean BRAKING = false;
 
-    private double setSpeed = 0.0;
-
-    private SparkMax transferMotor;
+    private SparkMax transferMotor1;
+    private SparkFlex transferMotor2;
 
     @Override
     public void initialize() {
-        if (ENABLED) {
-            transferMotor = new SparkMax(RobotConstants.PORTS.CAN.TRANSFER_MOTOR, MotorType.kBrushless);
+        if (!ENABLED) {
+            return;
+        }
 
-            SparkMaxConfig config = new SparkMaxConfig();
+        try {
+            transferMotor1 = new SparkMax(
+                RobotConstants.PORTS.CAN.TRANSFER_MOTOR_1,
+                MotorType.kBrushless
+            );
 
-            config.idleMode(BRAKING ? IdleMode.kBrake : IdleMode.kCoast);
+            SparkMaxConfig motor1Config = new SparkMaxConfig();
+            motor1Config
+                .idleMode(BRAKING ? IdleMode.kBrake : IdleMode.kCoast)
+                .smartCurrentLimit(30);
 
-            config.secondaryCurrentLimit(30);
+            transferMotor1.configure(
+                motor1Config,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters
+            );
+        } catch (Exception exception) {
+            transferMotor1 = null;
+            DriverStation.reportWarning(
+                "Transfer motor 1 failed to initialize: " + exception.getMessage(),
+                false
+            );
+        }
 
-            transferMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        try {
+            transferMotor2 = new SparkFlex(
+                RobotConstants.PORTS.CAN.TRANSFER_MOTOR_2,
+                MotorType.kBrushless
+            );
+
+            SparkFlexConfig motor2Config = new SparkFlexConfig();
+            motor2Config
+                .idleMode(BRAKING ? IdleMode.kBrake : IdleMode.kCoast)
+                .smartCurrentLimit(30);
+
+            transferMotor2.configure(
+                motor2Config,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters
+            );
+        } catch (Exception exception) {
+            transferMotor2 = null;
+            DriverStation.reportWarning(
+                "Transfer motor 2 failed to initialize: " + exception.getMessage(),
+                false
+            );
         }
     }
 
@@ -44,13 +93,27 @@ public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOu
     @Override
     public void updateInputs(TransferInput input) {
         RobotIO.processInput(input);
-        if (ENABLED) {
-            if (input.getSpeed() != setSpeed) {
-                setSpeed = input.getSpeed();
-                transferMotor.set(-input.getSpeed());
-            }
+
+        if (!ENABLED) {
+            return;
         }
-    }
+
+        // At 50 Hz, this checks CAN status every 0.2 seconds.
+        if (loopCount++ % HEALTH_CHECK_PERIOD_LOOPS == 0) {
+            motor1Connected = isMotorConnected(transferMotor1);
+            motor2Connected = isMotorConnected(transferMotor2);
+        }
+
+        double speed = input.getSpeed();
+
+        if (motor1Connected) {
+            transferMotor1.set(-speed);
+        }
+
+        if (motor2Connected) {
+            transferMotor2.set(-speed);
+        }
+}
 
     @Override
     public Command getTestCommand() {
@@ -60,13 +123,20 @@ public class TransferSubsystem extends EntechSubsystem<TransferInput, TransferOu
     @Override
     protected TransferOutput toOutputs() {
         TransferOutput output = new TransferOutput();
-
         output.setBraking(BRAKING);
-        if (ENABLED) {
-            output.setTransferMotorOutput(SparkOutput.createOutput(transferMotor));
+
+        if (transferMotor1 != null) {
+            output.setTransferMotorOutput1(SparkOutput.createOutput(transferMotor1));
+        }
+
+        if (transferMotor2 != null) {
+            output.setTransferMotorOutput2(SparkOutput.createOutput(transferMotor2));
         }
 
         return output;
     }
 
+    private boolean isMotorConnected(SparkBase motor) {
+        return motor != null && motor.getBusVoltage().isValid();
+}
 }
