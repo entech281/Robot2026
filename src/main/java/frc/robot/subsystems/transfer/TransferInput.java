@@ -1,20 +1,35 @@
-package frc.robot.subsystems.transfer; 
-
+package frc.robot.subsystems.transfer;
 import org.littletonrobotics.junction.LogTable;
-
 import frc.entech.subsystems.SubsystemInput;
 
 public class TransferInput implements SubsystemInput {
     private double speed = 0.0;
+    private double flexSpeed = 0.0;
 
     @Override
     public void fromLog(LogTable table) {
         speed = table.get("speed", 0.0);
+        flexSpeed = table.get("flexSpeed", 0.0);
     }
 
     @Override
     public void toLog(LogTable table) {
         table.put("speed", speed);
+        table.put("flexSpeed", flexSpeed);
+    }
+
+    /**
+     * @return double return the flexSpeed
+     */
+    public double getFlexSpeed() {
+        return flexSpeed;
+    }
+
+    /**
+     * @param flexSpeed the flexSpeed to set
+     */
+    public void setFlexSpeed(double flexSpeed) {
+        this.flexSpeed = flexSpeed;
     }
 
     /**
