@@ -153,6 +153,7 @@ public final class RobotConstants {
         Map.entry("ShooterSubsystem/SetSpeed", 700.0),
         Map.entry("IntakeSubsystem/SetSpeed", 0.75),
         Map.entry("TransferSubsystem/SetSpeed", 1.0),
+        Map.entry("TransferSubsystem/SetFlexSpeed", 0.5),
         Map.entry("TurretSubsystem/LowerLimitDegrees", 0.0),
         Map.entry("TurretSubsystem/UpperLimitDegrees", 270.0),
         Map.entry("TurretSubsystem/SofterLowerLimitDegrees", 20.0),
@@ -260,6 +261,7 @@ public final class RobotConstants {
       public static final int HOOD_MOTOR = 52;
       public static final int HOPPER_MOTOR = 60;
       public static final int TRANSFER_MOTOR = 58;
+      public static final int TRANSFER_FLEX_MOTOR = 61;
       public static final int CLIMB_MOTOR = 59;
     }
 
@@ -316,7 +318,10 @@ public final class RobotConstants {
     public static interface SWITCHES {
     }
   }
-
+  public static interface TRANSFER {
+    public static final String FLEX_SPEED_KEY = "TransferSubsystem/SetFlexSpeed";
+    public static final double MAX_OUTPUT = 1.0;
+  }
   public static interface Vision {
     public static interface Cameras {
       public static final String CAMERA_A = "Arducam_Alpha";

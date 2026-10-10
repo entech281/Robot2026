@@ -8,12 +8,15 @@ import frc.entech.subsystems.SubsystemOutput;
 public class TransferOutput extends SubsystemOutput {
     private boolean braking = false;
     private SparkOutput transferMotorOutput;
+    private SparkOutput transferFlexMotorOutput;
+
 
     @Override
     protected void toLog() {
         Logger.recordOutput("TransferOutput/braking", braking);
 
         if (transferMotorOutput != null) {
+            transferFlexMotorOutput.log("TransferOutput/transferFlexMotor");
             transferMotorOutput.log("TransferOutput/transferMotor");
         }
     }
@@ -30,6 +33,17 @@ public class TransferOutput extends SubsystemOutput {
      */
     public void setTransferMotorOutput(SparkOutput transferMotorOutput) {
         this.transferMotorOutput = transferMotorOutput;
+    }
+
+    public SparkOutput getTransferFlexMotorOutput() {
+        return transferFlexMotorOutput;
+    }
+
+    /**
+     * @param transferFlexMotorOutput the transferFlexMotorOutput to set
+     */
+    public void setTransferFlexMotorOutput(SparkOutput transferFlexMotorOutput) {
+        this.transferFlexMotorOutput = transferFlexMotorOutput;
     }
 
     /**
